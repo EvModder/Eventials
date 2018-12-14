@@ -3,9 +3,9 @@
 * Every command and feature comes with complete, carefully designed permissions
 * Each section can be enabled/disabled in the config
 * Carefully structured Time complexity (This plugin won't lag)
-* Almost all displayed messages are configurable
-<br>
-Although I plan to eventually do a public release of this plugin, there currently is too much legacy code and dependance on my other plugins for **Eventials** to be very useful to any other server in its current form.
+* Almost all displayed messages are configurable<br>
+
+Although I plan to eventually do a public release of this plugin, there is currently too much legacy code and dependance on my other plugins for **Eventials** to be very useful to any other server in its current form.
 
 ### Economy
 * Non-infinite server balance `/serverbal [add/take/transfer]` | Config: starting balance, min balance, max balance
