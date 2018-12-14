@@ -1,0 +1,44 @@
+1/1 -> &aHappy 2017!!
+1/28 -> &6&lHappy Birthday Alternatecraft!!&7 - &d&l<3&7 - &b4yrs old
+2/14 -> &d&lHappy Valentines!!
+2/15 -> &6Presidents' Day
+3/10/Saturday -> &aS&2p&ar&2i&an&2g &aB&2r&ae&2a&ak&b!&f&l =D
+3/11/Sunday -> &aS&2p&ar&2i&an&2g &aB&2r&ae&2a&ak&b!&f&l :D
+3/12/Monday -> &aS&2p&ar&2i&an&2g &aB&2r&ae&2a&ak&b!&f&l :D
+3/13/Tuesday -> &aS&2p&ar&2i&an&2g &aB&2r&ae&2a&ak&b!&f&l :D
+3/14 -> &cToday is PI day!
+3/17 -> &2Saint Patrick&f'&2s Day&f!
+4/1 -> &c&nA&ep&2&nr&ci&9&nl&f &b&nF&fo&7o&6&nl&3'&fs &b&lD&d&na&cy&a!&2!&a&n!
+4/1/Sunday -> Easter?
+4/11 -> &7Int. Tabletop Day, why are you here??
+4/30 -> &7Int. Honesty Day (not kidding)
+5/13 -> &7It's &bMother's Day&a!
+5/17 -> &6&lHappy Birthday Minecraft!
+5/22 -> &aToday is Earth Day! Let's be good to our planet :)
+5/28/Monday -> US Dead Soldier Patriotism/Propaganda Day
+#6/8 -> &4&l&nThe Purge
+6/20/Sunday -> &9Father's Day, go be nice to Dad!
+7/4 -> &7&l * &c&l&nH&f&l&nA&9&l&nP&c&l&nP&f&l&nY&7&l * &9&l&nB&c&l&nD&f&l&nA&9&l&nY&7&l * &c&l&nM&f&l&nU&9&l&nR&c&l&nI&f&l&nC&9&l&nA&7&l *
+6/21 -> &e&lS&6&lum&c&lm&6&lrr &2&lSols&a&ltice&6&l!
+9/12 -> &7National video games day
+9/16 -> Collect rocks day
+9/18 -> &aSoftware Freedom day
+9/22 -> Autumn Equinox -- Hello fall!
+9/27 -> &7Today is &lCrush a can day
+10/3 -> Virus Appreciation Day
+10/16 -> Bosses day
+10/31 -> &8&lH&4&la&0&ll&8&ll&6o&8&lwe&4&len&8...!
+11/25/Thursday -> &c}&6&lEAT TURKEY!!!&c{
+11/26/Friday -> &8&lBLACK FRIDAY!
+11/29/Monday -> &3&oCyber Monday!
+12/1/Sunday -> Advent Sunday #1
+12/7/Sunday -> Advent Sunday #2!
+12/14/Sunday -> Advent Sunday #3!!
+12/21/Sunday -> Advent Sunday #4!!!
+12/23 -> &7Christmas Eve Eve =P :D
+12/24 -> &f&oChristmas Eve.. :o
+12/25 -> &2M&ce&2r&cr&2y &cC&2h&cr&2i&cs&2t&cm&2a&cs&2!
+
+...etc.
+
+Earliest known day in AC history: 1/29/2013 (M/D/Y, Multiverse-Core.jar in backup, probably a bit older)

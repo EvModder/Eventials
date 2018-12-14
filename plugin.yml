@@ -1,0 +1,388 @@
+name: Eventials
+main: Eventials.Eventials
+author: EvModder/EvDoc/Evil_Witchdoctor
+version: 1.1.6
+softdepend: [Votifier, Essentials]
+
+commands:
+#======== Economy
+   advertise:
+      description: Advertise in the motd!
+      usage: /ad <Your advertisement here>
+      aliases: [ad,advt,adv,advertise,advert,advt,adv-msg,advertisement]
+      permission: eventials.advertise
+      permission-message: You do not have permission to do this.
+
+   deposit:
+      description: Deposit item-money in the bank
+      usage: /deposit [amount]
+      aliases: [d]
+      permission: eventials.deposit
+      permission-message: You do not have permission to do this.
+
+   donateserver:
+      description: Donate to the server's bank account
+      usage: /donate <amount>
+      aliases: [donate,serverdonate,donatetoserver,giveserver]
+      permission: eventials.donateserver
+      permission-message: You do not have permission to do this.
+
+   donatetop:
+      description: Rank list of top donators to server bank
+      usage: /topdonators
+      aliases: [donators,donated,dtop,dontop,donateplayers,topdonates,topdonate,topdonators,topdonated,donatedtop]
+      permission: eventials.donatetop
+      permission-message: You do not have permission to do this.
+
+   globalbal:
+      description: View the total amount of money in play
+      usage: /globalbal 
+      aliases: [totalcash]
+      permission: eventials.globalbal
+      permission-message: You do not have permission to do this.
+
+   moneyorder:
+      description: Turn virtual cash into virtual paper! (25% fee)
+      usage: /mo [10 < amount < 1000]
+      aliases: [mo,money-order,papermoney]
+      permission: eventials.moneyorder
+      permission-message: You do not have permission to do this.
+
+   serverbal:
+      description: View the amount of money in the Server bank
+      usage: /serverbal [add/take/transfer] [amt] [player]
+      aliases: [servercash,balserver]
+      permission: eventials.serverbal
+      permission-message: You do not have permission to do this.
+
+   withdraw:
+      description: Withdraw money in item form
+      usage: /withdraw [amount]
+      aliases: [w]
+      permission: eventials.withdraw
+      permission-message: You do not have permission to do this.
+
+#======== Spawners
+
+#======== Bows
+   makebow:
+      description: Create a special bow item
+      usage: /makebow <type>
+      permission: eventials.makebow
+      permission-message: You do not have permission to do this.
+
+#======== Votes
+   vote:
+      description: Display voting links
+      usage: /vote
+      aliases: [votelist,votewhere,votelinks]
+      permission: eventials.vote
+      permission-message: You do not have permission to do this.
+
+#======== Extras (Admin Tools & Game Modifying)
+   breakphysics:
+      description: Prevent all nearby block physics updates
+      usage: /nophysics [name]
+      aliases: [noblockupdate,noblockphysics,nophysics]
+      permission: eventials.breakphysics
+      permission-message: You do not have permission to do this.
+
+   clearentities:
+      description: Clear mobs specified by flags.
+      usage: /clear-ents [worldname] [flag1, flag2, ...] (where a=animals c=complex n=named h=hostile e=nonliving f=compound)
+      aliases: [clear-ents,clearents,clear-entities,b]
+      permission: eventials.butcher
+      permission-message: You do not have permission to do this.
+
+   eventials:
+      description: Unregister and reregister the Eventials plugin
+      usage: /eventials reload
+      aliases: [evreload,eventialsreload,eventialsr,evr]
+      permission: eventials.reload
+      permission-message: You do not have permission to do this.
+
+   floatingtext:
+      description: Place floating text
+      usage: /ftxt <place/remove/list/edit/move/help>
+      aliases: [ftx,fxt,ftxt,fltx,fltxt,floattxt,floattext,floatxt,floatext,hologram,holo]
+      permission: eventials.floatingtext
+      permission-message: You do not have permission to do this.
+
+   ghost:
+      description: Return as a spector to haunt your friends
+      usage: /ghost
+      permission: eventials.ghost
+      permission-message: You do not have permission to do this.
+
+   insight:
+      description: View information about a player via UUID or name.
+      usage: /insight <UUID/name>
+      permission: eventials.insight
+      permission-message: You do not have permission to do this.
+
+   itemname:
+      description: Name the item being held
+      usage: /name <text>
+      aliases: [nameitem,iname,name,setname]
+      permission: eventials.itemname
+      permission-message: You do not have permission to do this.
+
+   itemprefix:
+      description: Add a prefix to the name the item being held
+      usage: /prefix <text>
+      aliases: [iprefix,prefix]
+      permission: eventials.itemname
+      permission-message: You do not have permission to do this.
+
+   itemsuffix:
+      description: Add a suffix to the name the item being held
+      usage: /suffix <text>
+      aliases: [isuffix,suffix]
+      permission: eventials.itemname
+      permission-message: You do not have permission to do this.
+
+   particles:
+      description: Access to a set of particle effects
+      usage: /particles [effect]
+      aliases: [particleeffects,effects,peffects]
+      permission: eventials.particles
+      permission-message: You do not have permission to do this.
+
+   pig:
+      description: Allows one to gorge themselves beyond the limit.
+      usage: /pigout
+      aliases: [eateateat,chowfest,neverfull,infhunger,piggy,pigout,piggypig]
+      permission: eventials.pig
+      permission-message: You do not have permission to do this.
+
+   recentjoins:
+      description: View a list of the most recently online players
+      usage: /recentjoins
+      permission: eventials.recentjoins
+      permission-message: You do not have permission to do this.
+
+   regiondelete:
+      description: Delete a world-region
+      usage: /delregion [world] [region-x] [region-z]
+      aliases: [delregion,regiondel]
+      permission: eventials.regiondel
+      permission-message: You do not have permission to do this.
+
+   regionpos:
+      description: Get the coordinates of the region you are in
+      usage: /regionpos
+      aliases: [posregion,rpos]
+      permission: eventials.regionpos
+      permission-message: You do not have permission to do this.
+
+   regiontp:
+      description: Teleport to the specified .mca region
+      usage: /regiontp <region>
+      aliases: [tpregion]
+      permission: eventials.regiontp
+      permission-message: You do not have permission to do this.
+
+   setlore:
+      description: Set an item's lore
+      usage: /setlore <lore>
+      permission: eventials.setlore
+      permission-message: You do not have permission to do this.
+
+   signtool:
+      description: Build a sign-editing item
+      usage: /signtool [sign text, use \n and \s]
+      permission: eventials.signtool
+      permission-message: You do not have permission to do this.
+
+   statsclear:
+      description: Delete all data files related to a player
+      usage: /statsclear <name/uuid>
+      aliases: [clearstats,statsdelete,deletestats]
+      permission: eventials.clearstats
+      permission-message: You do not have permission to do this.
+
+   statsrestore:
+      description: Recover data for a deleted player
+      usage: /statsrestore <name/uuid>
+      aliases: [restorestats,statsrecover,recoverstats]
+      permission: eventials.clearstats
+      permission-message: You do not have permission to do this.
+
+   vipgive:
+      description: Grant Vip status
+      usage: /vipgive <name>
+      aliases: [givevip,givegift,giftgive]
+      permission: eventials.givevip
+      permission-message: You do not have permission to do this.
+
+   viptake:
+      description: Take away Vip status
+      usage: /viptake <name>
+      aliases: [takevip,takegift,gifttake]
+      permission: eventials.givevip
+      permission-message: You do not have permission to do this.
+
+   weaponstats:
+      description: Collect kill stats for a given weapon
+      usage: /weaponstats
+      aliases: [swordstats,swordstat,weaponstat]
+      permission: eventials.weaponstats
+      permission-message: You do not have permission to do this.
+
+permissions:
+#======== Economy
+   eventials.advertise:
+      description: Permission to use /advertise
+      default: true
+
+   eventials.deposit:
+      description: Permission to use /deposit
+      default: true
+
+   eventials.donateserver:
+      description: Permission to use /donateserver
+      default: true
+
+   eventials.donatetop:
+      description: Permission to use /topdonators
+      default: true
+
+   eventials.withdraw:
+      description: Permission to use /withdraw
+      default: true
+
+   eventials.moneyorder:
+      description: Permission to use /moneyorder
+      default: true
+
+   eventials.globalbal:
+      description: Permissions to use /globalbal
+      default: op
+
+   eventials.serverbal:
+      description: Permission to use /serverbal
+      default: op
+
+   eventials.serverbal.transfer:
+      description: Permission to use /serverbal transfer
+      default: op
+
+   eventials.serverbal.modify:
+      description: Permission to use /serverbal add/take
+      default: false
+
+   eventials.setadminshop:
+      description: Permission to use sneak-click an adminshop sign to enable/disable it
+      default: true
+
+   eventials.bypass.paidcommands:
+      description: Permission to bypass the price on all paid-commands
+      default: op
+
+#======== Spawners
+   eventials.minespawner:
+      description: Permission to get mined spawners
+      default: true
+
+   eventials.placespawner:
+      description: Permission to place spawners
+      default: true
+
+#======== Bows
+   eventials.makebow:
+      description: Permission to use /makebow
+      default: false
+
+#======== Votes
+   eventials.vote:
+      description: Permission to use /vote
+      default: true
+
+#======== Extras (Admin Tools & Game Modifying)
+   eventials.breakphysics:
+      description: Permission to use /breakphysics
+      default: op
+
+   eventials.butcher:
+      description: Permission to use /clearentities
+      default: op
+
+   eventials.clearstats:
+      description: Permission to use /clearstats
+      default: false
+
+   eventials.commandblockcolor:
+      description: Permission to use '&' to format command blocks
+      default: op
+
+   eventials.reload:
+      description: Permission to use /eventials reload
+      default: op
+
+   eventials.floatingtext:
+      description: Permission to use /fltx
+      default: op
+
+   eventials.ghost:
+      description: Permission to use /ghost
+      default: op
+
+   eventials.skipcooldown:
+      description: Permission to bypass global command cool-downs
+      default: op
+
+   eventials.insight:
+      description: Permission to use /insight
+      default: op
+
+   eventials.itemname:
+      description: Permission to use /itemname, /itemprefix, and /itemsuffix
+      default: op
+
+   eventials.particles:
+      description: Permission to use /particles
+      default: op
+
+   eventials.particles.others:
+      description: Permission to use /particles on other players
+      default: op
+
+   eventials.pig:
+      description: Permission to use /pig
+      default: op
+
+   eventials.recentjoins:
+      description: Permission to use /recentjoins
+      default: op
+
+   eventials.regiondel:
+      description: Permission to use /delregion
+      default: op
+
+   eventials.regionpos:
+      description: Permission to use /regionpos
+      default: op
+
+   eventials.regiontp:
+      description: Permission to use /regiontp
+      default: op
+
+   eventials.setlore:
+      description: Permission to use /setlore
+      default: op
+
+   eventials.signtool:
+      description: Permission to use /signtool
+      default: op
+
+   eventials.sneakjoin:
+      description: Permission to sneak on join to cancel login message
+      default: op
+
+   eventials.givevip:
+      description: Permission to give/take vip status
+      default: op
+
+   eventials.weaponstats:
+      description: Permission to use /weaponstats
+      default: op

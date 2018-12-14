@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Vault.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Essentials.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/EvKits.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/GoogleAnalyticsLinker.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Votifier.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/EssentialsGroupManager.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/FactionsOne.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Renewable.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/spigot_server-1.12.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/bukkit-1.12.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
