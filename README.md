@@ -80,6 +80,7 @@ Although I plan to eventually do a public release of this plugin, there is curre
 * Become transparent but not invisible `/ghost [name]`
 * Place floating text `/ftxt <place/remove/list/edit/move/help>`
 * Option to hide player login/quit messages
+* Change the author on or unsign written books (currently broken)
 * Disguise a player as a mob (currently broken)
 
 ### Particles
