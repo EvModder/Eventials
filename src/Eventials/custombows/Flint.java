@@ -1,8 +1,8 @@
 package Eventials.custombows;
 
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import net.minecraft.server.v1_12_R1.NBTTagList;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.NBTTagList;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -20,7 +20,7 @@ public class Flint{
 	public static ItemStack makeBow(){
 		ItemStack item = new ItemStack(Material.BOW);
 
-		net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+		net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
 		NBTTagList atributeModifiers = new NBTTagList();//Attribute list
 		if(nmsItem.getTag() == null) nmsItem.setTag(new NBTTagCompound());
 

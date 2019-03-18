@@ -70,7 +70,7 @@ public abstract class SongPlayer{
 
 	protected void createThread(){
 		playerThread = new Thread(new Runnable(){
-			@Override public void run(){
+			@SuppressWarnings("deprecation") @Override public void run(){
 				while(!destroyed){
 					long startTime = System.currentTimeMillis();
 					synchronized(SongPlayer.this){

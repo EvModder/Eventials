@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.anjocaido.groupmanager.dataholder.WorldDataHolder;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -72,8 +73,9 @@ public class CommandVipGive implements CommandExecutor{
 			// "nametag" for whose items these are
 			ItemStack donationslip = new ItemStack(Material.PAPER);
 			ItemMeta meta = donationslip.getItemMeta();
-			meta.setDisplayName("�7"+args[0]);
-			ArrayList<String> lore = new ArrayList<String>(); lore.add("�9> 32 diamonds"); meta.setLore(lore);
+			meta.setDisplayName(ChatColor.GRAY+args[0]);
+			ArrayList<String> lore = new ArrayList<String>(); lore.add(ChatColor.BLUE+"> 32 diamonds");
+			meta.setLore(lore);
 			donationslip.setItemMeta(meta);
 			
 			chest.getInventory().addItem(donationslip);
@@ -83,26 +85,17 @@ public class CommandVipGive implements CommandExecutor{
 	}
 	
 	private void giveVipItems(Inventory inv){
-//		// 32 diamonds
-//		ItemStack thx = new ItemStack(Material.DIAMOND);
-//		ItemMeta meta = thx.getItemMeta();
-//		meta.setDisplayName("�aYour first VIP present!");
-//		thx.setItemMeta(meta);
-//		thx.setAmount(32);
-		
-		ItemStack egg = new ItemStack(Material.MONSTER_EGG);
-		egg.setDurability((short) 95); inv.addItem(egg);
-		egg.setDurability((short) 98); inv.addItem(egg);
-		egg.setDurability((short) 90); inv.addItem(egg);
-		egg.setDurability((short) 92); inv.addItem(egg);
-		egg.setDurability((short) 91); inv.addItem(egg);
-		egg.setDurability((short) 100);inv.addItem(egg);
+		inv.addItem(new ItemStack(Material.COW_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.SHEEP_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.PIG_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.HORSE_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.TURTLE_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.RABBIT_SPAWN_EGG, 2));
 		ItemStack thx = new ItemStack(Material.FEATHER);
 		ItemMeta meta = thx.getItemMeta();
-		meta.setDisplayName("�6Thanks for your purchase!");
+		meta.setDisplayName(ChatColor.GOLD+"Thank you for donating!");
 		meta.addEnchant(Enchantment.SILK_TOUCH, 1, true);
 		thx.setItemMeta(meta);
 		inv.addItem(thx);
 	}
-	
 }

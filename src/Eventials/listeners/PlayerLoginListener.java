@@ -109,14 +109,14 @@ public class PlayerLoginListener implements Listener{
 					for(Player p : plugin.getServer().getOnlinePlayers()){
 						if(!p.getUniqueId().equals(uuid)){
 							p.sendMessage(ChatColor.GOLD + hider.getName() + " joined the game");
-							if(playNote) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HARP, 50.0F, 0.75F);
+							if(playNote) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
 						}
 					}
 				}
 			}}.runTaskLater(plugin, 100);//5 seconds
 		}
 		else if(playNote) for(Player p : plugin.getServer().getOnlinePlayers())
-			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HARP, 50.0F, 0.75F);
+			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
 
 		if(showRecentJoins && offP.hasPlayedBefore()){
 			Iterator<String> iterator = recentJoins.iterator();

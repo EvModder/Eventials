@@ -19,8 +19,8 @@ public class Rewards {
 			Sound.ENTITY_HORSE_DEATH, Sound.ENTITY_CAT_DEATH, Sound.ENTITY_GHAST_DEATH,
 			Sound.ENTITY_BLAZE_DEATH, Sound.ENTITY_PLAYER_DEATH, Sound.ENTITY_PIG_DEATH,
 			Sound.BLOCK_ANVIL_LAND, Sound.BLOCK_GLASS_BREAK, Sound.BLOCK_DISPENSER_FAIL,
-			Sound.BLOCK_END_GATEWAY_SPAWN, Sound.BLOCK_ENDERCHEST_CLOSE,
-			Sound.ENTITY_GHAST_SCREAM, Sound.ENTITY_LIGHTNING_THUNDER,
+			Sound.BLOCK_END_GATEWAY_SPAWN, Sound.BLOCK_ENDER_CHEST_CLOSE,
+			Sound.ENTITY_GHAST_SCREAM, Sound.ENTITY_LIGHTNING_BOLT_THUNDER,
 			Sound.ENTITY_PLAYER_BREATH, Sound.ENTITY_PLAYER_BURP,
 			Sound.MUSIC_CREATIVE, Sound.MUSIC_CREDITS, Sound.MUSIC_MENU, Sound.MUSIC_DRAGON
 	};
@@ -29,7 +29,7 @@ public class Rewards {
 		//Firework launch!   ----------------------------------------------------
 		boolean flicker = rand.nextBoolean(), trail = rand.nextBoolean();
 
-		FireworkMeta meta = (FireworkMeta) new ItemStack(Material.FIREWORK).getItemMeta();
+		FireworkMeta meta = (FireworkMeta) new ItemStack(Material.FIREWORK_ROCKET).getItemMeta();
 		meta.setPower(rand.nextInt(3));//returns either 0, 1 or 2
 
 		Type type = Type.values()[rand.nextInt(5)];
@@ -45,7 +45,7 @@ public class Rewards {
 
 //		Firework firework = p.getWorld().spawn(p.getLocation(), Firework.class);
 //		firework.setFireworkMeta(meta);
-		ItemStack firework = new ItemStack(Material.FIREWORK);
+		ItemStack firework = new ItemStack(Material.FIREWORK_ROCKET);
 		firework.setItemMeta(meta);
 		p.getInventory().addItem(firework);
 	}

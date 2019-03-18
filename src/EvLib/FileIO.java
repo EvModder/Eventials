@@ -9,11 +9,28 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class FileIO {
-	public static final String DIR = "./plugins/EvFolder/";
+public class FileIO{
+	static String DIR = "./plugins/EvFolder/";
+
+	static void verifyDir(JavaPlugin evPl){
+		String customDir = "./plugins/"+evPl.getName()+"/";
+		if(!new File(DIR).exists() && UsefulUtils.installedEvPlugins().size() < 2) DIR = customDir;//replace
+		else if(new File(customDir).exists()){//merge
+			Bukkit.getLogger().warning("Relocating data in "+customDir+", this might take a minute..");
+			try{
+				FileUtils.copyDirectory(new File(customDir), new File(DIR));
+				FileUtils.deleteDirectory(new File(customDir));
+			}
+			catch(IOException e){e.printStackTrace();}
+		}
+	}
+
 	public static String loadFile(String filename, InputStream defaultValue){
 		BufferedReader reader = null;
 		try{reader = new BufferedReader(new FileReader(DIR+filename));}
@@ -26,25 +43,20 @@ public class FileIO {
 
 			//Create the file
 			File conf = new File(DIR+filename);
-			StringBuilder builder = new StringBuilder();
-			String content = null;
 			try{
 				conf.createNewFile();
 				reader = new BufferedReader(new InputStreamReader(defaultValue));
 
 				String line = reader.readLine();
-				builder.append(line);
-				while(line != null){
-					builder.append('\n').append(line);
-					line = reader.readLine();
-				}
+				StringBuilder builder = new StringBuilder(line);
+				while((line = reader.readLine()) != null) builder.append('\n').append(line);
 				reader.close();
 
 				BufferedWriter writer = new BufferedWriter(new FileWriter(conf));
-				writer.write(content = builder.toString()); writer.close();
+				writer.write(builder.toString()); writer.close();
+				reader = new BufferedReader(new FileReader(DIR+filename));
 			}
 			catch(IOException e1){e1.printStackTrace();}
-			return content;
 		}
 		StringBuilder file = new StringBuilder();
 		if(reader != null){
@@ -97,7 +109,7 @@ public class FileIO {
 				reader.close();
 			}catch(IOException e){}
 		}
-		return file.length() == 0 ? "" : file.substring(1);
+		return file.length() == 0 ? "" : file.substring(1);//Hmm; return "" or defaultContent
 	}
 
 	public static boolean saveFile(String filename, String content){
@@ -187,8 +199,19 @@ public class FileIO {
 	}
 
 	public static boolean saveYaml(String filename, YamlConfiguration content){
-		try{content.save(DIR+filename);}
+		try{
+			if(!new File(DIR).exists()) new File(DIR).mkdir();
+			content.save(DIR+filename);
+		}
 		catch(IOException e){return false;}
+		return true;
+	}
+	public static boolean saveConfig(String configName, FileConfiguration config){
+		try{
+			if(!new File(DIR).exists()) new File(DIR).mkdir();
+			config.save(DIR+configName);
+		}
+		catch(IOException ex){ex.printStackTrace(); return false;}
 		return true;
 	}
 }

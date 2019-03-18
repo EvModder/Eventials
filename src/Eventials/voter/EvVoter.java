@@ -26,9 +26,9 @@ public class EvVoter implements Listener{
 	final boolean serverPays, trackGlobalBal;
 	final long hrsInMillis = 3600000;
 
-	public EvVoter(){
+	public EvVoter(Eventials pl){
 		voter = this;
-		plugin = Eventials.getPlugin();
+		plugin = pl;
 		eco = Economy.getEconomy();
 		voters = FileIO.loadYaml("voters.yml", "");
 

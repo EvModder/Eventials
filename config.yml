@@ -78,6 +78,7 @@ paid-commands:
   repair: 40
   separate: 5
   weaponstats: 10
+  unsignbook: 5
 
 update-balance-watch: false
 update-balance-on-paid-commands: true
@@ -205,6 +206,35 @@ vote-links:
   - 'MCSL, http://minecraft-server-list.com/server/254265/vote/'
   - 'MC biz, https://minecraftservers.biz/servers/2600/vote/'
 # - 'MC Index, https://www.minecraft-index.com/31471-alternatecraft/vote'
+
+#--------------------------------------#
+#          BookEditor config           #
+#--------------------------------------#
+book-editor-enabled: true
+
+#--------------------------------------#
+#             Split Worlds             #
+#--------------------------------------#
+splitworlds-enabled: true 
+
+vaccinate-players: true
+
+# Groups of worlds that share the inventories. World inventories are separate by default
+# Groups can be named whatever you like, but be precise with world names. * is wild.
+# WARNING: Decide how to group worlds before they are opened; when two or more worlds are
+# joined, only one of them will retain it's playerdata information
+shared-inv-worlds:
+  default_group:
+    - '*'
+    - '*_nether'
+    - '*_the_end'
+  old_worlds:
+    - 'VictoryHills'
+    - 'Events'
+    - 'world'
+  creative_group:
+    - 'Creative'
+    - 'TC Creative'
 
 #--------------------------------------#
 #              More Stuff              #

@@ -1,7 +1,6 @@
 package EvLib;
 
 import java.math.BigDecimal;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 import net.milkbowl.vault.chat.Chat;
@@ -9,18 +8,14 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import com.earth2me.essentials.api.NoLoanPermittedException;
-import com.earth2me.essentials.api.UserDoesNotExistException;
 
 public class VaultHook {
 	private static boolean vaultEnabled;
-	private static Plugin plugin;
 	public static Economy econ = null;
 	public static Permission perms = null;
 	public static Chat chat = null;
 
 	public VaultHook(Plugin pl){
-		plugin = pl;
 		if(!setupEconomy(pl)){
 			if(pl.getServer().getPluginManager().getPlugin("Essentials") == null){
 				pl.getLogger().warning("Unable to connect to Vault or EssentialsEco economies");
@@ -58,19 +53,14 @@ public class VaultHook {
 		return perms != null;
 	}
 
-	public static double getBalance(OfflinePlayer p) throws UserDoesNotExistException {
+	public static double getBalance(OfflinePlayer p) throws Exception{
 		if(VaultHook.vaultEnabled()) return VaultHook.econ.getBalance(p);
-		else return net.ess3.api.Economy.getMoneyExact(p.getName()).doubleValue();
+		else return EssEcoHook.getBalance(p);
 	}
 
 	public static boolean hasAtLeast(OfflinePlayer p, double amount){
-		if(VaultHook.vaultEnabled()){
-			return VaultHook.econ.has(p, amount);
-		}
-		else{
-			try{return net.ess3.api.Economy.hasEnough(p.getName(), new BigDecimal(amount));}
-			catch(UserDoesNotExistException e){return false;}
-		}
+		if(VaultHook.vaultEnabled()) return VaultHook.econ.has(p, amount);
+		else return EssEcoHook.hasAtLeast(p, amount);
 	}
 
 	@Deprecated //Note: Deprecated only to discourage use in preference of serverToPlayer()
@@ -80,13 +70,7 @@ public class VaultHook {
 			EconomyResponse r = VaultHook.econ.depositPlayer(p, amount);
 			return r.transactionSuccess();
 		}
-		else{
-			try{net.ess3.api.Economy.add(p.getName(), new BigDecimal(amount));}
-			// returns false if it encounters an error
-			catch(NoLoanPermittedException e){return false;}
-			catch(UserDoesNotExistException e){return false;}
-			return true;
-		}
+		else return EssEcoHook.giveMoney(p, amount);
 	}
 	@Deprecated //Note: Deprecated only to discourage use in preference of serverToPlayer()
 	public static boolean giveMoney(OfflinePlayer p, BigDecimal amount){
@@ -95,13 +79,7 @@ public class VaultHook {
 			EconomyResponse r = VaultHook.econ.depositPlayer(p, amount.doubleValue());
 			return r.transactionSuccess();
 		}
-		else{
-			try{net.ess3.api.Economy.add(p.getName(), amount);}
-			// returns false if it encounters an error
-			catch(NoLoanPermittedException e){return false;}
-			catch(UserDoesNotExistException e){return false;}
-			return true;
-		}
+		else return EssEcoHook.giveMoney(p, amount);
 	}
 
 	@Deprecated //Note: Deprecated only to discourage use in preference of playerToServer()
@@ -113,19 +91,7 @@ public class VaultHook {
 			else if(amount > 0) return VaultHook.econ.depositPlayer(p, amount).transactionSuccess();
 			else return true;
 		}
-		else{
-			try{net.ess3.api.Economy.setMoney(p.getName(), new BigDecimal(amount));}
-			// returns false if it encounters an error
-			catch(NoLoanPermittedException e){
-				plugin.getLogger().warning(ChatColor.RED+"Failure in setMoney() - NoLoanPermittedException");
-				return false;
-			}
-			catch(UserDoesNotExistException e){
-				plugin.getLogger().warning(ChatColor.RED+"Failure in setMoney() - UserDoesNotExistException");
-				return false;
-			}
-			return true;
-		}
+		else return EssEcoHook.setMoney(p, amount);
 	}
 
 	@Deprecated //Note: Deprecated in preference of playerToServer()
@@ -134,17 +100,7 @@ public class VaultHook {
 			EconomyResponse r = VaultHook.econ.withdrawPlayer(p, amount);
 			if(r.transactionSuccess() == false) return false;
 		}
-		else{
-			// check money
-			try{if(net.ess3.api.Economy.hasEnough(p.getName(), new BigDecimal(amount)) == false) return false;}
-			catch(UserDoesNotExistException e){return false;}
-			
-			// take money
-			try{net.ess3.api.Economy.substract(p.getName(), new BigDecimal(amount));}
-			// returns false if it encounters an error
-			catch(NoLoanPermittedException e){return false;}
-			catch(UserDoesNotExistException e){return false;}
-		}
+		else return EssEcoHook.chargeFee(p, amount);
 		return true;
 	}
 	@Deprecated //Note: Deprecated in preference of playerToServer()
@@ -153,17 +109,7 @@ public class VaultHook {
 			EconomyResponse r = VaultHook.econ.withdrawPlayer(p, amount.doubleValue());
 			if(r.transactionSuccess() == false) return false;
 		}
-		else{
-			// check money
-			try{if(net.ess3.api.Economy.hasEnough(p.getName(), amount) == false) return false;}
-			catch(UserDoesNotExistException e){return false;}
-			
-			// take money
-			try{net.ess3.api.Economy.substract(p.getName(), amount);}
-			// returns false if it encounters an error
-			catch(NoLoanPermittedException e){return false;}
-			catch(UserDoesNotExistException e){return false;}
-		}
+		else return EssEcoHook.chargeFee(p, amount);
 		return true;
 	}
 

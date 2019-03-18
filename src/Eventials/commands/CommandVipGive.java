@@ -59,13 +59,12 @@ public class CommandVipGive extends CommandBase2 {
 			chest.getInventory().addItem(donationslip);
 			inv = chest.getInventory();
 		}
-		ItemStack egg = new ItemStack(Material.MONSTER_EGG);
-		egg.setDurability((short) 95); inv.addItem(egg);
-		egg.setDurability((short) 98); inv.addItem(egg);
-		egg.setDurability((short) 90); inv.addItem(egg);
-		egg.setDurability((short) 92); inv.addItem(egg);
-		egg.setDurability((short) 91); inv.addItem(egg);
-		egg.setDurability((short) 100);inv.addItem(egg);
+		inv.addItem(new ItemStack(Material.COW_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.SHEEP_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.PIG_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.HORSE_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.TURTLE_SPAWN_EGG, 2));
+		inv.addItem(new ItemStack(Material.RABBIT_SPAWN_EGG, 2));
 		ItemStack thx = new ItemStack(Material.FEATHER);
 		ItemMeta meta = thx.getItemMeta();
 		meta.setDisplayName(ChatColor.GOLD+"Thank you for helping the server!");

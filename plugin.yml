@@ -79,6 +79,43 @@ commands:
       permission: eventials.vote
       permission-message: You do not have permission to do this.
 
+#======== Books
+   signbook:
+      description: Sign a held book and quill
+      usage: /sign <title> [author:name]
+      aliases: [sign,booksign,closebook]
+      permission: eventials.books.sign
+      permission-message: You do not have permission to do this.
+
+   unsignbook:
+      description: Unsign a written book
+      usage: /unsign
+      aliases: [unsign,bookunsign,openbook]
+      permission: eventials.books.unsign
+      permission-message: You do not have permission to do this.
+
+   fixbook:
+      description: Fix broken book text (from updates)
+      usage: /fixbook
+      aliases: [bookfix,repairbook,bookrepair]
+      permission: eventials.books.fix
+      permission-message: You do not have permission to do this.
+
+#======== SplitWorlds
+   invsee:
+      description: View inventory contents
+      usage: /invsee [world] [player] 
+      aliases: [invspy,seeinv,spyinv,inventorysee,inventoryspy]
+      permission: eventials.invsee
+      permission-message: You do not have permission to do this.
+
+   enderchest:
+      description: View echest contents
+      usage: /echest [world] [player]
+      aliases: [echest,echestspy,enderspy,endspy,enderchestsee,enderchestspy,echestsee,endersee]
+      permission: eventials.echest
+      permission-message: You do not have permission to do this.
+
 #======== Extras (Admin Tools & Game Modifying)
    breakphysics:
       description: Prevent all nearby block physics updates
@@ -297,6 +334,87 @@ permissions:
    eventials.vote:
       description: Permission to use /vote
       default: true
+
+#======== Books
+   eventials.books.sign:
+      description: Permission to use /signbook
+      default: true
+
+   eventials.books.sign.other:
+      description: Permission to use /signbook with a different author
+      default: op
+
+   eventials.books.unsign:
+      description: Permission to use /unsignbook
+      default: true
+
+   eventials.books.unsign.other:
+      description: Permission to use /unsignbook for a different author
+      default: op
+
+   eventials.books.unsign.copy:
+      description: Permission to use /unsignbook for a non-original copy
+      default: op
+
+   eventials.books.fix:
+      description: Permission to use /fixbook
+      default: op
+
+   eventials.books.*:
+      description: Full BookAuthor access
+      default: false
+      children:
+         eventials.books.sign: true
+         eventials.books.sign.other: true
+         eventials.books.unsign: true
+         eventials.books.unsign.other: true
+         eventials.books.fix: true
+
+#======== SplitWorlds
+   eventials.inventory.universal:
+      description: Players with this permission have the same inventory across all worlds
+      default: false
+
+#TODO: args? /invsave? per-world perms?
+   eventials.invload:
+      description: Permission to use /invload
+      default: op
+
+   eventials.invsee:
+      description: Permission to use /invsee [world]
+      default: op
+
+   eventials.invsee.edit:
+      description: Permission to edit contents of /invsee [world]
+      default: op
+#CHILDREN: eventials.invsee.edit.WORLD_NAME
+
+   eventials.invsee.others:
+      description: Permission to use /invsee [world] [player]
+      default: op
+
+   eventials.invsee.others.edit:
+      description: Permission to edit contents of /invsee [world] [player]
+      default: op
+#CHILDREN: eventials.invsee.others.edit.WORLD_NAME
+
+   eventials.echest:
+      description: Permission to use /echest [world]
+      default: op
+
+   eventials.echest.edit:
+      description: Permission to edit contents of /echest [world]
+      default: op
+#CHILDREN: eventials.echest.edit.WORLD_NAME
+
+   eventials.echest.other:
+      description: Permission to use /echest [world] [player]
+      default: op
+
+   eventials.echest.others.edit:
+      description: Permission to edit contents of /echest [world] [player]
+      default: op
+#CHILDREN: eventials.echest.others.edit.WORLD_NAME
 
 #======== Extras (Admin Tools & Game Modifying)
    eventials.breakphysics:

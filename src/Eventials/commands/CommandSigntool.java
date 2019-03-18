@@ -69,7 +69,7 @@ public class CommandSigntool extends CommandBase2 implements Listener{
 	public void onPlayerInteractBlock(PlayerInteractEvent evt){
 		if(evt.getClickedBlock() != null && !evt.isCancelled() && evt.getAction() == Action.RIGHT_CLICK_BLOCK
 				&& (evt.getClickedBlock().getType() == Material.WALL_SIGN
-				|| evt.getClickedBlock().getType() == Material.SIGN_POST)
+				|| evt.getClickedBlock().getType() == Material.SIGN)
 				&& evt.getItem() != null && evt.getItem().hasItemMeta() && evt.getItem().getItemMeta().hasLore()
 				&& evt.getItem().getItemMeta().getLore().contains(ChatColor.BLUE+"Sign Setter")
 				&& evt.getPlayer().isSneaking())

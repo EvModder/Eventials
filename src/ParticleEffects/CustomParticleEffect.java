@@ -12,13 +12,13 @@ public enum CustomParticleEffect {
 	TRAIL_1(){
 		@Override public void display(Player p, long time){
 			//if(time%15 == 0) p.getWorld().FOOTSTEP.display(0, 0, 0, 0, 1, p.getLocation(), 20);
-			if(time%15 == 0) p.getWorld().spawnParticle(Particle.FOOTSTEP, p.getLocation(), 1);
+			if(time%15 == 0) p.getWorld().spawnParticle(Particle.BLOCK_DUST, p.getLocation(), 1);
 		}
 	},
 	TRAIL_1_LIFTED(){
 		@Override public void display(Player p, long time){
 			//if(time%10 == 0) ParticleEffect.FOOTSTEP.display(0, 0, 0, 0, 1, p.getLocation().add(0,.1,0), 20);
-			if(time%15 == 0) p.getWorld().spawnParticle(Particle.FOOTSTEP, p.getLocation().add(0,.1,0), 1);
+			if(time%15 == 0) p.getWorld().spawnParticle(Particle.BLOCK_DUST, p.getLocation().add(0,.1,0), 1);
 		}
 	},
 	TRAIL_2(){
@@ -158,7 +158,7 @@ public enum CustomParticleEffect {
 			}
 		}
 	},
-	TRAIL_RAINBOW(){
+	/*TRAIL_RAINBOW(){
 		ParticleComboRainbowTrail rainbow = new ParticleComboRainbowTrail();
 		@Override public void display(Player p, long time){
 			if(time%2 == 0) rainbow.display(p.getEyeLocation(), 50);
@@ -168,7 +168,7 @@ public enum CustomParticleEffect {
 				rainbow.display(loc.add(loc.getDirection().multiply(-.07)), 50);
 			}
 		}
-	},
+	},*/
 	OFFLIMITS(){
 		@Override public void display(Player p, long time){
 //			ParticleEffect.BARRIER.display(3, 3, 3, 0, 20, p.getEyeLocation(), 5);
@@ -194,7 +194,7 @@ public enum CustomParticleEffect {
 			if(rand.nextInt(48000) == 0) p.setPlayerWeather(WeatherType.DOWNFALL);
 		}
 	},
-	LUVRAINBOWZ(){
+	/*LUVRAINBOWZ(){
 		ParticleComboRainbowArc rainbow = new ParticleComboRainbowArc();
 		
 		@Override public void display(Player p, long time){
@@ -211,7 +211,7 @@ public enum CustomParticleEffect {
 			//display rainbow
 			if(time%2 == 0) rainbow.display(p.getEyeLocation().setDirection(looking.normalize()), 10);
 		}
-	},
+	},*/
 	DARK_KNIGHT(){
 		ParticleComboBatman batSymbol = new ParticleComboBatman();
 		@Override public void display(Player p, long time){
@@ -276,12 +276,12 @@ public enum CustomParticleEffect {
 			if(time%2 == 0) p.getWorld().spawnParticle(Particle.NOTE, p.getLocation(), 10, 10, 10, 10, 1);
 		}
 	},
-	TEXASFLAG(){
+	/*TEXASFLAG(){
 		ParticleComboTexasFlag flag = new ParticleComboTexasFlag();
 		@Override public void display(Player p, long time){
 			if(time%50 == 0) flag.display(p.getEyeLocation(), 250);
 		}
-	},
+	},*/
 	BLIZZARD(){
 		@Override public void display(Player p, long time){
 			Location loc = p.getLocation(); loc.setY(loc.getY()+7);

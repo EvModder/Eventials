@@ -1,8 +1,8 @@
 package EventAndMisc;
 
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import net.minecraft.server.v1_12_R1.NBTTagList;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.NBTTagList;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -145,7 +145,7 @@ public class AlternateOld implements Listener {
 					evt.getEntity().setItemStack(
 					rand.nextInt(4) != 0 ? (rand.nextInt(8) == 0 ? (rand.nextInt(2) == 0 ? (rand.nextInt(7) == 0 ? (rand.nextInt(16) == 0 ?
 					makeOpEgg() :
-					new ItemStack(Material.GOLDEN_APPLE, 1, (short)1)) :
+					new ItemStack(Material.ENCHANTED_GOLDEN_APPLE)) :
 					new ItemStack(Material.GOLD_BLOCK)) :
 					new ItemStack(Material.GOLDEN_APPLE)) :
 					new ItemStack(Material.GOLD_INGOT)) :
@@ -158,7 +158,7 @@ public class AlternateOld implements Listener {
 	private ItemStack makeOpEgg(){
 		ItemStack item = new ItemStack(Material.EGG);
 		
-		net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+		net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
 		NBTTagCompound tag = nmsItem.getTag();
 		NBTTagList atributeModifiers = new NBTTagList();//Attribute list
 		if(tag == null){

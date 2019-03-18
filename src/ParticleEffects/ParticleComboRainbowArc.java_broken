@@ -1,11 +1,11 @@
 package ParticleEffects;
 
-import net.minecraft.server.v1_12_R1.EnumParticle;
-import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
-import net.minecraft.server.v1_12_R1.PlayerConnection;
+import net.minecraft.server.v1_13_R2.EnumParticle;
+import net.minecraft.server.v1_13_R2.PacketPlayOutWorldParticles;
+import net.minecraft.server.v1_13_R2.PlayerConnection;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 

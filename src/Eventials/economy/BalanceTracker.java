@@ -10,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.earth2me.essentials.api.UserDoesNotExistException;
 import EvLib.FileIO;
 import EvLib.VaultHook;
 
@@ -128,7 +127,7 @@ public abstract class BalanceTracker{
 		OfflinePlayer p = org.bukkit.Bukkit.getServer().getOfflinePlayer(pUUID);
 		long currentBal;
 		try{currentBal = (long) VaultHook.getBalance(p);}
-		catch(UserDoesNotExistException e){currentBal = startingBal;}
+		catch(Exception e){currentBal = startingBal;}
 
 		if(isOnline || currentBal > startingBal){
 			for(PlayerBalance pb : bals) if(pUUID.equals(pb.uuid)){
@@ -157,7 +156,7 @@ public abstract class BalanceTracker{
 			if(p != null){
 				long currentBal;
 				try{currentBal = (long) VaultHook.getBalance(p);}
-				catch(UserDoesNotExistException e){currentBal = startingBal;}
+				catch(Exception e){currentBal = startingBal;}
 				bals.add(new PlayerBalance(p.getName(), pUUID, currentBal));
 //				if(donations > 0) bals.lastElement().donated = donations;
 				return bals.lastElement();

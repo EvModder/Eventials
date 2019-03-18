@@ -31,16 +31,28 @@ public class Determined implements Listener{
 		Eventials.getPlugin().getServer().getPluginManager().registerEvents(this, Eventials.getPlugin());
 	}
 
-	@SuppressWarnings("deprecation")
 	boolean canLoadItem(ItemStack item){//can this item be loaded into BowType.Determined?
-		return !(item.hasItemMeta() && item.getItemMeta().hasLore()) && item.getEnchantments().isEmpty() && (
-				item.getType() == Material.ARROW || item.getType() == Material.ENDER_PEARL ||
-				item.getType() == Material.SNOW_BALL || item.getType() == Material.EGG ||
-				item.getType() == Material.FIREBALL || item.getType() == Material.SPLASH_POTION ||
-				item.getType() == Material.EXP_BOTTLE || item.getType() == Material.SPECTRAL_ARROW ||
-				item.getType() == Material.MONSTER_EGG ||
-				(item.getType() == Material.SKULL_ITEM && item.getData().getData() == 1)
-		);
+		if((item.hasItemMeta() && item.getItemMeta().hasLore() || !item.getEnchantments().isEmpty())) return false;
+		switch(item.getType()){
+			case ARROW:
+			case ENDER_PEARL:
+			case SNOWBALL:
+			case EGG:
+			case FIRE_CHARGE:
+			case SPLASH_POTION:
+			case EXPERIENCE_BOTTLE:
+			case SPECTRAL_ARROW:
+			case WITHER_SKELETON_SKULL:
+			case BAT_SPAWN_EGG:
+			case BLAZE_SPAWN_EGG:
+			case CAVE_SPIDER_SPAWN_EGG:
+			case CHICKEN_SPAWN_EGG:
+			case COD_SPAWN_EGG:
+			case COW_SPAWN_EGG://TODO: ... all the other spawn eggs
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	static void doPower(ProjectileSource shooter, ItemStack bow, Arrow arrow){
@@ -73,23 +85,23 @@ public class Determined implements Listener{
 			case ENDER_PEARL:
 				shooter.launchProjectile(EnderPearl.class, velocity);
 				break;
-			case SNOW_BALL:
+			case SNOWBALL:
 				shooter.launchProjectile(Snowball.class, velocity);
 				break;
 			case EGG:
 				shooter.launchProjectile(Egg.class, velocity);
 				break;
-			case FIREBALL:
+			case FIRE_CHARGE:
 				SmallFireball p = shooter.launchProjectile(SmallFireball.class, velocity);
 				p.setIsIncendiary(true);
 				break;
-			case EXP_BOTTLE:
+			case EXPERIENCE_BOTTLE:
 				shooter.launchProjectile(ThrownExpBottle.class, velocity);
 				break;
 			case SPECTRAL_ARROW:
 				shooter.launchProjectile(SpectralArrow.class, velocity);
 				break;
-			case SKULL_ITEM:
+			case WITHER_SKELETON_SKULL:
 				WitherSkull w = (WitherSkull)shooter.launchProjectile(WitherSkull.class, velocity.multiply(2));
 				w.setCharged(true);
 				w.setGlowing(true);

@@ -10,10 +10,12 @@ import java.util.UUID;
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
+import org.bukkit.FluidCollisionMode;
 import org.bukkit.GameMode;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Note;
 import org.bukkit.Particle;
 import org.bukkit.Server;
@@ -27,7 +29,9 @@ import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.PistonMoveReaction;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.Entity;
@@ -54,6 +58,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 @SuppressWarnings("deprecation")
@@ -330,7 +336,6 @@ public class PlayerMessageInterceptor implements Player{
 	@Override public void resetTitle(){player.resetTitle();}
 	@Override public void saveData(){player.saveData();}
 	@Override public void sendBlockChange(Location loc, Material m, byte b){player.sendBlockChange(loc, m, b);}
-	@Override public void sendBlockChange(Location loc, int i, byte b){player.sendBlockChange(loc, i, b);}
 	@Override public boolean sendChunkChange(Location loc, int x, int y, int z, byte[] b)
 			{return player.sendChunkChange(loc, x, y, z, b);}
 	@Override public void sendMap(MapView mv){player.sendMap(mv);}
@@ -403,5 +408,32 @@ public class PlayerMessageInterceptor implements Player{
 	@Override public void stopSound(Sound s, SoundCategory sc){player.stopSound(s, sc);}
 	@Override public void stopSound(String s, SoundCategory sc){player.stopSound(s, sc);}
 	@Override public void updateInventory(){player.updateInventory();}
-	@Override public Spigot spigot(){return player.spigot();}
+	@Override public boolean discoverRecipe(NamespacedKey k){return player.discoverRecipe(k);}
+	@Override public int discoverRecipes(Collection<NamespacedKey> ks){return player.discoverRecipes(ks);}
+	@Override public Location getBedLocation(){return player.getBedLocation();}
+	@Override public boolean sleep(Location l, boolean b){return player.sleep(l, b);}
+	@Override public boolean undiscoverRecipe(NamespacedKey k){return player.undiscoverRecipe(k);}
+	@Override public int undiscoverRecipes(Collection<NamespacedKey> ks){return player.undiscoverRecipes(ks);}
+	@Override public void wakeup(boolean b){player.wakeup(b);}
+	@Override public Block getTargetBlockExact(int x){return player.getTargetBlockExact(x);}
+	@Override public Block getTargetBlockExact(int x, FluidCollisionMode fm){return player.getTargetBlockExact(x, fm);}
+	@Override public boolean isRiptiding(){return player.isRiptiding();}
+	@Override public boolean isSwimming(){return player.isSwimming();}
+	@Override public RayTraceResult rayTraceBlocks(double d){return player.rayTraceBlocks(d);}
+	@Override public RayTraceResult rayTraceBlocks(double d, FluidCollisionMode fm){return player.rayTraceBlocks(d, fm);}
+	@Override public void setSwimming(boolean b){player.setSwimming(b);}
+	@Override public BoundingBox getBoundingBox(){return player.getBoundingBox();}
+	@Override public BlockFace getFacing(){return player.getFacing();}
+	@Override public boolean isPersistent(){return player.isPersistent();}
+	@Override public void setPersistent(boolean b){player.setPersistent(b);}
+	@Override public int getClientViewDistance(){return player.getClientViewDistance();}
+	@Override public String getPlayerListFooter(){return player.getPlayerListFooter();}
+	@Override public String getPlayerListHeader(){return player.getPlayerListHeader();}
+	@Override public void hidePlayer(Plugin pl, Player p){player.hidePlayer(pl, p);}
+	@Override public void sendBlockChange(Location loc, BlockData bd){player.sendBlockChange(loc, bd);}
+	@Override public void setPlayerListFooter(String s){player.setPlayerListFooter(s);}
+	@Override public void setPlayerListHeader(String s){player.setPlayerListHeader(s);}
+	@Override public void setPlayerListHeaderFooter(String s, String s2){player.setPlayerListHeaderFooter(s, s2);}
+	@Override public void showPlayer(Plugin pl, Player p){player.showPlayer(pl, p);}
+	@Override public void updateCommands(){player.updateCommands();}
 }

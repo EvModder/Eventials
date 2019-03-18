@@ -25,8 +25,8 @@ public class EvSpawner implements Listener {
 	private Eventials plugin;
 	private boolean requireSilk, noNBTContainers, noNBTCommandblock, dropMonsterEggBlocks, colorcodeCommandblock;
 
-	public EvSpawner(){
-		plugin = Eventials.getPlugin();
+	public EvSpawner(Eventials pl){
+		plugin = pl;
 		requireSilk = plugin.getConfig().getBoolean("require-silktouch", true);
 		noNBTContainers = !plugin.getConfig().getBoolean("allow-nbt-container-placement", true);
 		noNBTCommandblock = !plugin.getConfig().getBoolean("allow-nbt-commandblock-placement", true);
@@ -80,16 +80,30 @@ public class EvSpawner implements Listener {
 			}
 		}
 	}
-	
+
+	public boolean isInfested(Material blockType){
+		switch(blockType){
+			case INFESTED_CHISELED_STONE_BRICKS:
+			case INFESTED_COBBLESTONE:
+			case INFESTED_CRACKED_STONE_BRICKS:
+			case INFESTED_MOSSY_STONE_BRICKS:
+			case INFESTED_STONE:
+			case INFESTED_STONE_BRICKS:
+				return true;
+			default:
+				return false;
+		}
+	}
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onSpawnerMine(BlockBreakEvent evt){
 		if(evt.isCancelled()) return;
 		
-		if(evt.getBlock().getType() == Material.MOB_SPAWNER
+		if(evt.getBlock().getType() == Material.SPAWNER
 				&& (!requireSilk || (evt.getPlayer().getInventory().getItemInMainHand() != null
 				&& evt.getPlayer().getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH))))
 		{
-			ItemStack item = new ItemStack(Material.MOB_SPAWNER);
+			ItemStack item = new ItemStack(Material.SPAWNER);
 			CreatureSpawner spawnerState = (CreatureSpawner) evt.getBlock().getState();
 			BlockStateMeta meta = (BlockStateMeta) item.getItemMeta();
 			meta.setBlockState(spawnerState);
@@ -100,7 +114,7 @@ public class EvSpawner implements Listener {
 			evt.getBlock().getWorld().dropItemNaturally(evt.getBlock().getLocation(), item);
 			evt.setExpToDrop(0);
 		}
-		else if(evt.getBlock().getType() == Material.MONSTER_EGGS && dropMonsterEggBlocks
+		else if(isInfested(evt.getBlock().getType()) && dropMonsterEggBlocks
 				&& (!requireSilk || (evt.getPlayer().getInventory().getItemInMainHand() != null
 				&& evt.getPlayer().getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH))))
 		{

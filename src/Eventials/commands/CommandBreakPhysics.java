@@ -35,7 +35,7 @@ public class CommandBreakPhysics extends CommandBase2 implements Listener{
 		teleports = new PriorityQueue<UUID>();
 	}
 
-	@Override
+	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		Player p;
 		if(args.length > 0) p = Eventials.getPlugin().getServer().getPlayer(args[0]);

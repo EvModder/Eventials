@@ -18,7 +18,7 @@ public class CommandGhost extends CommandBase2{
 		ghostFactory = new GhostFactory(p);
 	}
 	
-	@Override
+	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		Player p;
 		if(args.length > 0) p = Eventials.getPlugin().getServer().getPlayer(args[0]);

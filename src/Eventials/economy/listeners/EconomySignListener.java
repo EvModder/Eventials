@@ -26,8 +26,8 @@ public class EconomySignListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerInteractBlock(PlayerInteractEvent evt){
-		if(evt.getAction() == Action.RIGHT_CLICK_BLOCK
-				&& (evt.getClickedBlock().getType() == Material.WALL_SIGN || evt.getClickedBlock().getType() == Material.SIGN_POST))
+		if(evt.getAction() == Action.RIGHT_CLICK_BLOCK && (
+			evt.getClickedBlock().getType() == Material.WALL_SIGN || evt.getClickedBlock().getType() == Material.SIGN))
 		{
 			String[] lines = ((Sign)evt.getClickedBlock().getState()).getLines();
 			if(ChatColor.stripColor(lines[0]).toLowerCase().contains("adminshop")){

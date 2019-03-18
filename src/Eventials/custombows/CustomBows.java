@@ -1,7 +1,7 @@
 package Eventials.custombows;
 
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -21,8 +21,8 @@ public class CustomBows implements Listener{
 	private boolean preventInvulnerable;
 
 	Determined d;//TODO: temp eww
-	public CustomBows(){
-		plugin = Eventials.getPlugin();
+	public CustomBows(Eventials pl){
+		plugin = pl;
 		d=new Determined();
 
 		if(plugin.getConfig().getBoolean("prevent-arrow-invulnerability", true)){

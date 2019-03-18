@@ -8,7 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class CommandBase2 implements CommandExecutor{
 //	protected EvPlugin plugin;
-	final private static CommandExecutor disabledCmdExecutor = new CommandExecutor(){
+	String commandName;
+	final static CommandExecutor disabledCmdExecutor = new CommandExecutor(){
 		@Override
 		public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 			sender.sendMessage(ChatColor.RED+"This command is currently unavailable");
@@ -18,7 +19,7 @@ public abstract class CommandBase2 implements CommandExecutor{
 
 	public CommandBase2(JavaPlugin pl, boolean enabled){
 //		plugin = p;
-		String commandName = getClass().getSimpleName().substring(7).toLowerCase();
+		commandName = getClass().getSimpleName().substring(7).toLowerCase();
 		pl.getCommand(commandName).setExecutor(enabled ? this : disabledCmdExecutor);//TODO: fix? test?
 	}
 

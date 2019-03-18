@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import EvLib.ReflectionUtils;
 import EvLib.ReflectionUtils.*;
-import Eventials.Eventials;
 
 public class Text {
 	private static final RefClass classIChatBaseComponent = ReflectionUtils.getRefClass("{nms}.IChatBaseComponent");
@@ -178,21 +178,21 @@ public class Text {
 			Object playerConnection = fieldPlayerConnection.of(entityPlayer).get();
 			methodSendPacket.of(playerConnection).call(packet);
 		}
-		else for(Player p : Eventials.getPlugin().getServer().getOnlinePlayers()){
+		else for(Player p : Bukkit.getServer().getOnlinePlayers()){
 			Object entityPlayer = methodGetHandle.of(p).call();
 			Object playerConnection = fieldPlayerConnection.of(entityPlayer).get();
 			methodSendPacket.of(playerConnection).call(packet);
 		}
 	}
 
-	static char colorSymbol = ChatColor.WHITE.toString().charAt(0);
+	public static final char colorSymbol = ChatColor.WHITE.toString().charAt(0);
 	static Character[] SET_VALUES = new Character[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 										  'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
 	public static final Set<Character> colorChars = new HashSet<Character>(Arrays.asList(SET_VALUES));
 	public static String translateAlternateColorCodes(char altColorChar, String textToTranslate){
 		char[] msg = textToTranslate.toCharArray();
 		for(int i=1; i<msg.length; ++i){
-			if(msg[i-1] == altColorChar && colorChars.contains(msg[i]) && !isEscaped(msg, 0)){
+			if(msg[i-1] == altColorChar && colorChars.contains(msg[i]) && !isEscaped(msg, i-1)){
 				msg[i-1] = colorSymbol;
 			}
 		}

@@ -12,8 +12,8 @@ import Eventials.Eventials;
 public class EventAndMisc {
 	private Eventials pl;
 
-	public EventAndMisc(){
-		pl = Eventials.getPlugin();
+	public EventAndMisc(Eventials pl){
+		this.pl = pl;
 		pl.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), pl);
 		loadWorldBorders();
 		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
@@ -107,19 +107,19 @@ public class EventAndMisc {
 		pl.getServer().addRecipe(NameTag);
 
 		// Add cracked bricks (mossy cobble & bricks in 1.8+)
-		ItemStack crackedBricks = new ItemStack(Material.BRICK, 1, (byte) 2);
+		ItemStack crackedBricks = new ItemStack(Material.CRACKED_STONE_BRICKS);
 		ShapelessRecipe crackedbrick = (new ShapelessRecipe(new NamespacedKey(pl, "cracked_bricks"),
 				crackedBricks))
 				.addIngredient(Material.BRICK).addIngredient(Material.BRICK)
 				.addIngredient(Material.COBBLESTONE);
 		pl.getServer().addRecipe(crackedbrick);
 
-		// Double stone slabs (id=43)
+/*		// Double stone slabs (id=43)
 		ShapelessRecipe doubleSlab = (new ShapelessRecipe(new NamespacedKey(pl, "double_step"),
 				new ItemStack(Material.DOUBLE_STEP)))
 				.addIngredient(Material.STONE_PLATE)
 				.addIngredient(Material.STONE_PLATE);
-		pl.getServer().addRecipe(doubleSlab);
+		pl.getServer().addRecipe(doubleSlab);*///TODO: figure out what Material type double slabs are these days
 
 //		// Packed Ice
 //		ShapelessRecipe packedIce = (new ShapelessRecipe(new NamespacedKey(pl, "packed_ice"),

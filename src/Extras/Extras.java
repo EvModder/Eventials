@@ -25,7 +25,6 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import com.earth2me.essentials.User;
-import com.earth2me.essentials.api.UserDoesNotExistException;
 import EvLib.UsefulUtils;
 import EvLib.VaultHook;
 import Eventials.Eventials;
@@ -66,7 +65,7 @@ public class Extras {
 		for(OfflinePlayer p : pl.getServer().getOfflinePlayers()){
 			long timeInactive = now - p.getLastPlayed();
 			double userBal;
-			try{userBal = VaultHook.getBalance(p);}catch(UserDoesNotExistException e){userBal=0;}
+			try{userBal = VaultHook.getBalance(p);}catch(Exception e){userBal=0;}
 			if(timeInactive/(24*60*60*1000) < cutoffDays
 					|| (ifLongtime && timeInactive > (p.getLastPlayed()-p.getFirstPlayed()))
 					|| (ifOp && p.isOp()) || (ifWhitelisted && p.isWhitelisted())
@@ -128,7 +127,7 @@ public class Extras {
 			
 			// Extract money directly from server bal
 			try{Economy.getEconomy().chargeServer(VaultHook.getBalance(player));}
-			catch(UserDoesNotExistException e){e.printStackTrace();}
+			catch(Exception e){e.printStackTrace();}
 			
 //			//send money from server to player after restoring profile
 //			try{Economy.getEconomy().serverToPlayer(uuid, VaultHook.getBalance(player));}
@@ -200,8 +199,8 @@ public class Extras {
 
 //			// Alternatively, transfer money to server before deleting profile
 //			try{Economy.getEconomy().playerToServer(uuid, VaultHook.getBalance(player));}
-			catch(UserDoesNotExistException e1){}
-			
+			catch(Exception e1){}
+
 			if(file.renameTo(new File(delFolder.getPath()+'/'+"Essentials-userdata-UUID.yml"))){
 				returnMsg.append(ChatColor.GRAY).append("Deleted ")
 						.append(playerName).append("'s Essentials userdata\n");

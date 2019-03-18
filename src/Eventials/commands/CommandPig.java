@@ -42,7 +42,7 @@ public class CommandPig extends CommandBase2 implements Listener{
 		justAte = new LinkedList<UUID>();
 	}
 
-	@Override
+	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		Player p;
 		if(args.length > 0) p = Eventials.getPlugin().getServer().getPlayer(args[0]);
@@ -80,7 +80,7 @@ public class CommandPig extends CommandBase2 implements Listener{
 
 	@EventHandler
 	public void onPlayerInteractBlock(PlayerInteractEvent evt){
-		if(evt.getClickedBlock() != null && evt.getClickedBlock().getType() == Material.CAKE_BLOCK){
+		if(evt.getClickedBlock() != null && evt.getClickedBlock().getType() == Material.CAKE){
 			if(piggyPigs.contains(evt.getPlayer().getUniqueId())){
 				if(evt.getPlayer().getFoodLevel() >= 18) evt.getPlayer().setFoodLevel(18);
 			}

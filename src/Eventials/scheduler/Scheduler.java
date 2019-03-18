@@ -38,9 +38,9 @@ public final class Scheduler{
 
 	private static Scheduler sch; public static Scheduler getScheduler(){return sch;}
 
-	public Scheduler(){
+	public Scheduler(Eventials pl){
 		sch = this;
-		plugin = Eventials.getPlugin();
+		plugin = pl;
 
 		List<String> list = plugin.getConfig().getStringList("auto-messages");
 		autoMsgs = list.toArray(new String[list.size()]);
@@ -87,7 +87,7 @@ public final class Scheduler{
 			long ticksSinceNewDay = (now % 86400000)/50;
 			List<Player> sendTo = new ArrayList<Player>();
 			for(Player p : plugin.getServer().getOnlinePlayers())
-				if(p.getStatistic(Statistic.PLAY_ONE_TICK) > ticksSinceNewDay) sendTo.add(p);
+				if(p.getStatistic(Statistic.PLAY_ONE_MINUTE)*60*20 > ticksSinceNewDay) sendTo.add(p);
 			
 			if(!sendTo.isEmpty()) payDailyMoney(sendTo.toArray(new Player[sendTo.size()]));
 			//-----------------------------------------------------

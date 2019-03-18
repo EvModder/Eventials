@@ -34,7 +34,7 @@ public class CommandParticles extends CommandBase2 {
 		pl = Eventials.getPlugin();
 	}
 
-	@Override
+	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		Player p = sender instanceof Player ? (Player)sender : null;
 		if(args.length != 0 && sender.hasPermission("eventials.particles.others")){

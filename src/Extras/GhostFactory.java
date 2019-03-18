@@ -75,7 +75,7 @@ public class GhostFactory{
 		for(Player p : player){
 			trueInvis.add(p.getName());
 			for(Player p2 : p.getServer().getOnlinePlayers()){
-				if(!p.getName().equals(p2.getName()) && viewerTeam.hasEntry(p2.getName())) p2.hidePlayer(p);
+				if(!p.getName().equals(p2.getName()) && viewerTeam.hasEntry(p2.getName())) p2.hidePlayer(plugin, p);
 			}
 		}
 		if(!trueInvis.isEmpty()) runInvisDetector();
@@ -104,7 +104,7 @@ public class GhostFactory{
 		for(Player p : player){
 			trueInvis.remove(p.getName());
 			for(Player p2 : p.getServer().getOnlinePlayers()){
-				if(viewerTeam.hasEntry(p2.getName())) p2.showPlayer(p);
+				if(viewerTeam.hasEntry(p2.getName())) p2.showPlayer(plugin, p);
 			}
 			viewerTeam.removeEntry(p.getName());
 			if(ghosts.remove(p.getName())) p.removePotionEffect(PotionEffectType.INVISIBILITY);

@@ -17,6 +17,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import EvLib.ReflectionUtils.RefClass;
 import EvLib.ReflectionUtils.RefField;
 import EvLib.ReflectionUtils.RefMethod;
@@ -133,6 +134,20 @@ public class UsefulUtils{
 			System.out.println(e.getStackTrace());
 			return null;
 		}
+	}
+
+	public static Vector<String> installedEvPlugins(){
+		Vector<String> evPlugins = new Vector<String>();
+		for(Plugin pl : Bukkit.getServer().getPluginManager().getPlugins()){
+			try{
+				@SuppressWarnings("unused")
+				String ver = pl.getClass().getField("EvLib_ver").get(null).toString();
+				evPlugins.add(pl.getName());
+				//TODO: potentially return list of different EvLib versions being used
+			}
+			catch(IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e){}
+		}
+		return evPlugins;
 	}
 
 	static HashMap<String, Boolean> exists = new HashMap<String, Boolean>();

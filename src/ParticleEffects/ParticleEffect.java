@@ -517,8 +517,7 @@ public enum ParticleEffect {
 	 * @return Whether water is at this location or not
 	 */
 	private static boolean isWater(Location location) {
-		Material material = location.getBlock().getType();
-		return material == Material.WATER || material == Material.STATIONARY_WATER;
+		return location.getBlock().getType() == Material.WATER;
 	}
 	/**
 	 * Determine if the distance between @param location and one of the players exceeds 256

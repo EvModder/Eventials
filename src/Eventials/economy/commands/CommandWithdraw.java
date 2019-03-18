@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import com.earth2me.essentials.api.UserDoesNotExistException;
 import EvLib.CommandBase2;
 import EvLib.EvPlugin;
 import EvLib.VaultHook;
@@ -19,7 +18,7 @@ public class CommandWithdraw extends CommandBase2{
 
 	public CommandWithdraw(EvPlugin pl, Economy eco, boolean enabled){
 		super(pl);
-		if(!enabled) pl.getCommand("Deposit").setExecutor(new CommandExecutor(){
+		if(!enabled) pl.getCommand("Withdraw").setExecutor(new CommandExecutor(){
 			@Override
 			public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 				sender.sendMessage(ChatColor.RED+"This command is currently unavailable");
@@ -55,7 +54,7 @@ public class CommandWithdraw extends CommandBase2{
 		Player p = (Player) sender;
 		if(!VaultHook.hasAtLeast(p, withdraw)){
 			try{withdraw = (int) VaultHook.getBalance(p);}
-			catch(UserDoesNotExistException e){sender.sendMessage(ChatColor.RED+"Failed to make withdrawal!"); return true;}
+			catch(Exception e){sender.sendMessage(ChatColor.RED+"Failed to make withdrawal!"); return true;}
 		}
 
 		if(withdraw > 0 && VaultHook.chargeFee(p, withdraw)){

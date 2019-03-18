@@ -7,9 +7,11 @@ import EvLib.FileIO;
 import EvLib.VaultHook;
 import EventAndMisc.EventAndMisc;
 import Eventials.listeners.*;
+import Eventials.books.WriterTools;
 import Eventials.commands.*;
 import Eventials.custombows.CustomBows;
 import Eventials.spawners.*;
+import Eventials.splitworlds.SplitWorlds;
 import Eventials.economy.Economy;
 import Eventials.scheduler.Scheduler;
 import Eventials.voter.EvVoter;
@@ -29,11 +31,13 @@ public class Eventials extends EvPlugin {
 	@Override public void onEvEnable(){
 		plugin = this;
 		new VaultHook(this);
-		if(config.getBoolean("enable-custom-bows", true)) new CustomBows();
+		if(config.getBoolean("book-editor-enabled", true)) new WriterTools(this);
+		if(config.getBoolean("enable-custom-bows", true)) new CustomBows(this);
 		if(config.getBoolean("economy-enabled", true)) eco = new Economy(this);
-		if(config.getBoolean("scheduler-enabled", true)) new Scheduler();
-		if(config.getBoolean("evspawner-enabled", true)) new EvSpawner();
-		if(config.getBoolean("evvoter-enabled", true)) voter = new EvVoter();
+		if(config.getBoolean("scheduler-enabled", true)) new Scheduler(this);
+		if(config.getBoolean("evspawner-enabled", true)) new EvSpawner(this);
+		if(config.getBoolean("evvoter-enabled", true)) voter = new EvVoter(this);
+		if(config.getBoolean("splitworlds-enabled", true)) new SplitWorlds(this);
 		if(config.getBoolean("fancy-help", true)) Extras.loadFancyHelp(this);
 
 		if(config.getBoolean("pre-command", true))
@@ -75,7 +79,7 @@ public class Eventials extends EvPlugin {
 		new CommandVipTake(this);
 		new CommandWeaponStats(this, config.getBoolean("enable-weaponstats", true));
 
-		new EventAndMisc();//TODO: Temporary?
+		new EventAndMisc(this);//TODO: Temporary?
 
 		if(config.getBoolean("prevent-multicraft-list-console-spam")){
 			getServer().getLogger().setFilter(new Filter(){@Override public boolean isLoggable(LogRecord record){

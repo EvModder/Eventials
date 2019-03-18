@@ -1,0 +1,29 @@
+name: SplitWorld
+main: Evil_Code_SplitWorld.SplitWorld
+Author: EvModder
+version: 1.0.2
+softdepend: [EvKitPvP]
+
+commands:
+   invsee:
+      description: View a player's inventory
+      usage: /invsee [Player] -[World]
+      aliases: [viewinv,lookinv,invspy,offlineinv]
+      permission: evp.splitworld.invsee
+      permission-message: You do not have permission to do this.
+      
+   enderchest:
+      description: View a player's enderchest
+      usage: /enderchest [Player] -[World]
+      aliases: [echest,lookender,enderspy,offlineender]
+      permission: evp.splitworld.invsee
+      permission-message: You do not have permission to do this.
+
+permissions:
+   evp.evm.splitworld.bypass:
+        description: Keep same inventory across all worlds
+        default: op
+        
+   evp.evm.splitworld.invsee:
+        description: Keep same inventory across all worlds
+        default: op
