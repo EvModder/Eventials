@@ -7,6 +7,7 @@
 
 Although I plan to eventually do a public release of this plugin, there is currently too much legacy code and dependance on my other plugins for **Eventials** to be very useful to any other server in its current form.
 
+
 ### Economy
 * Non-infinite server balance `/serverbal [add/take/transfer]` | Config: starting balance, min balance, max balance
 * Server balance limit | Config: result when transaction < min or > max, message
@@ -45,6 +46,7 @@ Although I plan to eventually do a public release of this plugin, there is curre
 * Reward for voting daily | Config: message, function(streak)->reward
 * Voting streaks | Config: grace period, streak recovery
 
+
 ### Spawners
 * Mine and place Mob Spawners | Config: require silktouch
 * Chance to spawn Mob Armies | Config: probability, size, standard deviation
@@ -52,6 +54,14 @@ Although I plan to eventually do a public release of this plugin, there is curre
 * Adjust skeleton trap probability
 * Custom mob-butcher `/butcher [worldname] [flag1 flag2 ...] (a=animals c=complex n=named h=hostile e=nonliving f=compound)`
 * Disable nearby block-physics updates `/nophysics [name]` (e.g. for creating floating torches, water, etc.)
+
+
+### Worlds
+* Per-world separation: inventory, enderchest, effects, advancements, etc.
+* Group world inventory sharing any which way, with wildcard \'*\' matching
+* Per-world World Border | Config: center, radius
+* Identify and clean up unused chunk or player data for a world save
+
 
 ### Miscellaneous
 * Custom crafting recipes; default: Horse armor, saddles, nametags, double-slabs
@@ -65,7 +75,6 @@ Although I plan to eventually do a public release of this plugin, there is curre
 * Clear unused world chunks | Config: inactivity, creation date, edited %, filesize, version, distance from 0,0
 * Tell a player his/her coordinates on death and log to console
 * Custom `/plugins` with extra data on hover | Config: shown plugins, plugin descriptions
-* Per-world World Border | Config: center, radius
 * Enable color codes `§` in command blocks
 * Configure text on signs in the chat bar
 * For a price, show statistics on a weapon or tool (e.g. # of mobs killed) | Config: price, items, available stats
@@ -73,15 +82,16 @@ Although I plan to eventually do a public release of this plugin, there is curre
 * Delete/restore all server data pertaining to a player
 * Edit itemlore and name using color codes
 * Check current region (.mca file) or teleport to a specified region
-* Identify and clean up unused chunk or player data for a world save
 * View an orderd list of players most recently online
 * `/pig [name]` food bar will never go above 19 points, enabling endless glutony
 * View detailed information about a player `/insight <name/uuid>`
 * Become transparent but not invisible `/ghost [name]`
 * Place floating text `/ftxt <place/remove/list/edit/move/help>`
 * Option to hide player login/quit messages
+* `/invsee` and `/echest` for online/offline players; can specify world-group if defined (e.g. creative vs. factions)
 * Change the author on or unsign written books (currently broken)
 * Disguise a player as a mob (currently broken)
+
 
 ### Particles
 * 25+ custom particle effects, here are some highlights:
@@ -95,6 +105,7 @@ Although I plan to eventually do a public release of this plugin, there is curre
 * Nova: Random geometric shapes drawn in fine dust around the player
 * Batwings: Large black wings (visual only) sprouting from your shoulder tops
 
+
 ### Bows
 * A suite of custom-made bows (given as Event prizes at one point)
 * All bows have the Unbreakable tag and thus won't lose durability
@@ -103,6 +114,7 @@ Although I plan to eventually do a public release of this plugin, there is curre
 * Ichaival: Fires up to 9 arrows at once, but can't use Infinity
 * Determined: Can be used to fire arrows, epearls, snowballs, eggs, fireballs, splash potions, xp bottles, spawn eggs, or withe skulls
 * Traveler: fires non-gravity arrows (travel 250 blocks max), glowing arrows, +100% kb, +25% velocity 
+
 
 ### Music
 * Upload an mp3 file into Noteblock music
