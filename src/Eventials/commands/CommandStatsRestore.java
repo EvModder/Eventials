@@ -41,7 +41,7 @@ public class CommandStatsRestore extends CommandBase2 {
 				//-----------------------------------------------------------
 				Text.sendModifiedText(""+ChatColor.RED+ChatColor.BOLD+"Warning:"+
 						ChatColor.GRAY+" This will overwrite existing stats!\n"+ChatColor.RED+"[",
-						ChatColor.GOLD+" Confirm ", Text.TextAction.CMD, "/clearstats "+target.getName()+" confirm",
+						ChatColor.GOLD+" Confirm ", Text.TextAction.RUN_CMD, "/clearstats "+target.getName()+" confirm",
 						ChatColor.RED+"]", (Player)sender);
 				//-----------------------------------------------------------
 				return true;

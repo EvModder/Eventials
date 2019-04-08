@@ -24,7 +24,7 @@ public class Economy extends ServerEconomy{
 	final boolean useCurItem, updateBalsOnPayment;
 
 	private static Economy eco; public static Economy getEconomy(){return eco;}
-	private final Material currencyType; public Material getCurrency(){return currencyType;}
+	private static Material currencyType; public Material getCurrency(){return currencyType;}
 
 	public Economy(Eventials pl){
 		super(pl, !pl.getConfig().getBoolean("track-server-balance", true),
@@ -38,12 +38,12 @@ public class Economy extends ServerEconomy{
 		if(serverBal.compareTo(globalBal) > 0) globalBal = serverBal;
 		setIfZero(serverBal, globalBal);
 
-		//Now into the custom Economy stuff
-		eco = this;
-
 		useCurItem = pl.getConfig().getBoolean("use-item-as-currency", true);
 		updateBalsOnPayment = pl.getConfig().getBoolean("update-balance-on-paid-commands", true);
 		currencyType = Material.getMaterial(pl.getConfig().getString("currency-item", "WATER_LILY").toUpperCase());
+
+		//Now into the custom Economy stuff
+		eco = this;
 
 		if(pl.getConfig().getBoolean("economy-signs"))
 			pl.getServer().getPluginManager().registerEvents(new EconomySignListener(), pl);
@@ -99,7 +99,7 @@ public class Economy extends ServerEconomy{
 							if(args.length != 0) cmdValue += " "+StringUtils.join(args, " ");
 							cmdValue += " confirm";
 							String hyperMsg = ChatColor.DARK_GREEN+cmdValue;
-							Text.sendModifiedText(preMsg, hyperMsg, Text.TextAction.CMD, cmdValue, "", (Player)sender);
+							Text.sendModifiedText(preMsg, hyperMsg, Text.TextAction.RUN_CMD, cmdValue, "", (Player)sender);
 							return true;
 						}
 						else{

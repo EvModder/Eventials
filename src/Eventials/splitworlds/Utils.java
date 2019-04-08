@@ -47,7 +47,7 @@ public class Utils{
 		final List<List<String>> matchGroups = new ArrayList<List<String>>();
 		for(String sub : validSubs){
 			final List<String> mGroup = new ArrayList<String>(staticTerms);
-			for(String term : complexTerms) mGroup.add(term.replaceAll("*", sub));
+			for(String term : complexTerms) mGroup.add(term.replace("*", sub));
 			matchGroups.add(mGroup);
 		}
 		return matchGroups;

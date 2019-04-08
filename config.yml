@@ -120,9 +120,14 @@ moneyorder-min: 10
 moneyorder-max: 1000
 moneyorder-tax-percent: 25
 
-chunk-generate-cost: 0.1
-# When a player cannot afford the chunk-generate-cost
-# Possible values are: TP_SPAWN, 
+#Adjust chunk generation cost per-world
+default-chunk-generate-cost: 0
+chunk-generate-cost:
+  MysteryPeaks: 0.1
+  MysteryPeaks_nether: 0.07
+  MysteryPeaks_the_end: 0.05
+# What happens when a player can't afford the chunk-generate-cost
+# Possible values are: TP_SPAWN, NOTHING
 chunk-generate-failure: TP_SPAWN
 
 #--------------------------------------#
@@ -154,7 +159,7 @@ message-prefix: '&3[&7AC&3]&e '
 #(because there are a lot of them)
 
 custom-ping: true
-ping-prefix: '&9&l&m -&7 ' # '  &9&l&m -&7 '
+ping-prefix: '&9&l&m  &7 ' # '  &9&l&m -&7 '
 #Ping messages are at the bottom of this file
 
 blacklisted-ips:
@@ -168,9 +173,9 @@ prevent-multicraft-list-console-spam: true
 evspawner-enabled: true
 require-silktouch: true
 drop-monsteregg-blocks: true
-allow-nbt-container-placement: true
-allow-nbt-commandblock-placement: true
-allow-colorcodes-in-commandblock: true #TODO
+allow-nbt-container-placement: false
+allow-nbt-commandblock-placement: false
+allow-colorcodes-in-commandblock: false #TODO
 
 #These do not require 'evspawner-enabled: true'
 disable-skeleton-traps: true
@@ -215,8 +220,7 @@ book-editor-enabled: true
 #--------------------------------------#
 #             Split Worlds             #
 #--------------------------------------#
-splitworlds-enabled: true 
-
+splitworlds-enabled: false 
 vaccinate-players: true
 
 # Groups of worlds that share the inventories. World inventories are separate by default
@@ -278,10 +282,10 @@ world-borders:
 auto-messages:
   - |
        Look out for periodic &aEvents=>&7The selling point of this server! 
-       Events are all custom-built and come in all different venues,
-       if you're curious check out &baltcraft.net&7, or wait to be surprised!&r!
+       Events are custom-designed and come in many varieties
+       Check out &baltcraft.net&r, or wait and be surprised!
   - 'Warps to important locations can be found at spawn'
-  - '&4[&c&lWarn&4]&r Most land from 2-10k will be reset in 1.13!'
+#  - '&4[&c&lWarning&4]&r Unused parts of the map will be periodically reset!'
   - 'Contact staff to learn about or purchase a Market plot'
   - |
        Running low on cash?
@@ -318,7 +322,7 @@ auto-messages:
        (FYI, it is practically impossible, and no hacks allowed)
   - 'Unwarrented griefing can result in a tempban &m  &r> ban.'
   - |
-       We recommend the \&6LithosCore&r texture pack-
+       We recommend the &6LithosCore&r texture pack-
        You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
   - 'YouTuber? Promote your channel, ask for the prefix!'
   - 'Rare items can be found in the &d@AdminShop&r or &d@Market&r.'
@@ -342,7 +346,7 @@ auto-messages:
        to promote your &d@Marketplace&r shop? Try &2/advertise&r!
   - |
       Like the chickens at the &d@Adminshop&r?
-      Look, but don't touch&m-&r- they have evil powers!
+      Look, but don't touch&m  &r they have dark powers!
   - |
        @ Server admins: Avoid &cClearLagg&r, it sucks!
        Both &cNoLagg&r and &cReduceLag&r are way better

@@ -45,7 +45,7 @@ public class CommandStatsClear extends CommandBase2 {
 			//-----------------------------------------------------------
 			Text.sendModifiedText(""+ChatColor.RED+ChatColor.BOLD+"Warning:"+
 					ChatColor.GRAY+" This action cannot be undone. "+ChatColor.RED+"[",
-					ChatColor.GOLD+" Confirm ", Text.TextAction.CMD, "/clearstats "+target.getName()+" confirm",
+					ChatColor.GOLD+" Confirm ", Text.TextAction.RUN_CMD, "/clearstats "+target.getName()+" confirm",
 					ChatColor.RED+"]", (Player)sender);
 			//-----------------------------------------------------------
 		}

@@ -66,7 +66,7 @@ public class CommandAdvertise extends CommandBase2{
 			Text.sendModifiedText(ChatColor.GRAY+"Click to pay the "+
 									ChatColor.GREEN+curSymbol+COST+ChatColor.GRAY+" and set the ad: [",
 									ChatColor.WHITE+">>"+ChatColor.AQUA+"Pay "+curSymbol+COST+ChatColor.WHITE+"<<",
-									Text.TextAction.CMD, "/advertise pay* "+advert, ChatColor.GRAY+"]", (Player)sender);
+									Text.TextAction.RUN_CMD, "/advertise pay* "+advert, ChatColor.GRAY+"]", (Player)sender);
 			sender.sendMessage(""+ChatColor.BLUE+ChatColor.BOLD+ChatColor.STRIKETHROUGH
 					+"=======================================");
 			sender.sendMessage(ChatColor.DARK_RED+"["+ChatColor.RED+ChatColor.BOLD+"Warn"+ChatColor.DARK_RED+"] "

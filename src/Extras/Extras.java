@@ -83,7 +83,7 @@ public class Extras {
 		Eventials pl = Eventials.getPlugin();
 		String playerName = player.getName();
 		UUID uuid = player.getUniqueId();
-		
+
 		StringBuilder returnMsg = new StringBuilder(ChatColor.GRAY+
 				"\n-----------------------------------------------------\n");
 		File delFolder = new File("./plugins/EvFolder/DELETED/"+playerName);
@@ -361,12 +361,12 @@ public class Extras {
 		String[] preMsgs = new String[warps.size()]; preMsgs[0] = ChatColor.GOLD+"HyperWarps: ";
 		String[] hyperMsgs = new String[warps.size()]; hyperMsgs[0] = ChatColor.GREEN+warps.firstElement();
 		String[] cmdMsgs = new String[warps.size()]; cmdMsgs[0] = "/warp "+warps.firstElement();
-		TextAction[] actions = new TextAction[warps.size()]; actions[0] = TextAction.CMD;
+		TextAction[] actions = new TextAction[warps.size()]; actions[0] = TextAction.RUN_CMD;
 		for(int i=1; i<warps.size(); ++i){
 			preMsgs[i] = ChatColor.GOLD+", ";
 			hyperMsgs[i] = ChatColor.GREEN+warps.get(i);
 			cmdMsgs[i] = "/warp "+warps.get(i);
-			actions[i] = TextAction.CMD;
+			actions[i] = TextAction.RUN_CMD;
 		}
 		Text.sendModifiedText(preMsgs, hyperMsgs, actions, cmdMsgs, null, player);
 	}
@@ -420,33 +420,33 @@ public class Extras {
 			.toString());
 	}
 
-	public static String redIfDisabled(String pluginName){
-		if(Eventials.getPlugin().getServer().getPluginManager().getPlugin(pluginName).isEnabled()) return "";
-		else return ""+ChatColor.RED;
+	public static ChatColor redGreenTest(String pluginName){
+		Plugin plugin = Eventials.getPlugin().getServer().getPluginManager().getPlugin(pluginName);
+		return (plugin != null && plugin.isEnabled()) ? ChatColor.GREEN : ChatColor.RED;
 	}
 
 	public static void showFancyPlugins(Player player){//TODO: Move to EventAndMisc.AlternateNew
 		String raw = Text.TextAction.parseToRaw(
-				"Plugins: §a" +
-				redIfDisabled("OpenTerrainGenerator")+"OTG=>Open Terrain Generator (custom terrain)§r, §a" +
-				redIfDisabled("Renewable")+"Renewable=>Prevents unrenewable items from being destroyed§r, §a" +
-				redIfDisabled("Essentials")+"Essentials=>Collection of useful commands§r, §a" +
-				redIfDisabled("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, §a" +
-				redIfDisabled("Eventials")+"Eventials=>Package of custom-built tools, features, and tweaks§r, \n§a" +
-				redIfDisabled("Factions")+"Factions=>Protect your land and build communities§r, §a" +
-				redIfDisabled("HorseOwners")+"HorseOwners=>Claim, name, teleport, and view stats for horses§r, §a" +
-				redIfDisabled("ChatManager")+"ChatManager=>Keeps chat clean + Color/Format for chat & signs§r, §a" +
-				redIfDisabled("EnchantBook")+"EnchantBook=>Color with anvils, looting on axes, etc!§r, §a" +
-				"More=>\\§a"+
-				redIfDisabled("WorldEdit")+"WorldEdit\\§f, \\§a" +
-				redIfDisabled("WorldGuard")+"WorldGuard\\§f, \\§a" +
-				redIfDisabled("PluginLoader")+"PluginLoader\\§f, \\§a" +
-				redIfDisabled("EssentialsSpawn")+"EssentialsSpawn\\§f, \\§a" +
-				redIfDisabled("Votifier")+"Votifier\\§f, \\§a" +
-				redIfDisabled("EssentialsChat")+"EssentialsChat\\§f, \\§a" +
-				redIfDisabled("BungeeTabListPlus")+"BungeeTabListPlus\\§f, \\§a" +
-				redIfDisabled("PermissionsBukkit")+"PermissionsBukkit§r.\n" +
-				"§7§oHover over a plugin to see more details!",
+				"Plugins: §a\\" +
+				redGreenTest("OpenTerrainGenerator")+"OTG=>Open Terrain Generator (custom terrain)§r, §a\\" +
+				redGreenTest("Renewable")+"Renewable=>Prevents unrenewable items from being destroyed§r, §a\\" +
+				redGreenTest("Essentials")+"Essentials=>Collection of useful commands§r, §a\\" +
+				redGreenTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, §a\\" +
+				redGreenTest("Eventials")+"Eventials=>Package of custom-built tools, features, and tweaks§r, \\\\n§a\\" +
+				redGreenTest("Factions")+"Factions=>Protect your land and build communities§r, §a\\" +
+				redGreenTest("HorseOwners")+"HorseOwners=>Claim, name, teleport, and view stats for horses§r, §a\\" +
+				redGreenTest("ChatManager")+"ChatManager=>Keeps chat clean + Color/Format for chat & signs§r, §a\\" +
+				redGreenTest("EnchantBook")+"EnchantBook=>Color with anvils, looting on axes, etc!§r, §a\\" +
+				"More=>\\"+
+				redGreenTest("WorldEdit")+"WorldEdit\\§f, \\" +
+				redGreenTest("WorldGuard")+"WorldGuard\\§f, \\" +
+				redGreenTest("PluginLoader")+"PluginLoader\\§f, \\" +
+				redGreenTest("EssentialsSpawn")+"EssentialsSpawn\\§f, \\" +
+				redGreenTest("Votifier")+"Votifier\\§f, \\" +
+				redGreenTest("EssentialsChat")+"EssentialsChat\\§f, \\" +
+				redGreenTest("BungeeTabListPlus")+"BungeeTabListPlus\\§f, \\" +
+				redGreenTest("PermissionsBukkit")+"PermissionsBukkit§r.\\\\n" +
+				"\\§7\\§oHover over a plugin to see more details!",
 				"§r"
 		);
 		Eventials.getPlugin().runCommand("tellraw "+player.getName()+' '+raw);

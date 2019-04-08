@@ -25,7 +25,7 @@ public class Text {
 	private static final RefMethod methodAddSibling = classIChatBaseComponent.getMethod("addSibling", classIChatBaseComponent);
 	private static final RefMethod methodGetHandle = classCraftPlayer.getMethod("getHandle");
 	private static final RefMethod methodSendPacket = classPlayerConnection.getMethod("sendPacket", classPacket);
-	
+
 	private static final RefField fieldPlayerConnection = classEntityPlayer.getField("playerConnection");
 	private static final RefConstructor makePacketPlayOutChat = classPacketPlayOutChat.getConstructor(classIChatBaseComponent);
 
@@ -34,11 +34,11 @@ public class Text {
 		//ClickEvent
 		LINK("§b", "open_url", Event.CLICK),
 		FILE("&[something]", "open_file", Event.CLICK),
-		CMD("§2", "run_command", Event.CLICK),
+		RUN_CMD("§2", "run_command", Event.CLICK),
 		SUGGEST_CMD("§9", "suggest_command", Event.CLICK),
 		PAGE("&[something]", "change_page", Event.CLICK),
 		//HoverEvent
-		TEXT("§a", "show_text", Event.HOVER),
+		SHOW_TEXT("§a", "show_text", Event.HOVER),
 		ACHIEVEMENT("&[something]", "show_achievement", Event.HOVER),
 		ITEM("&[something]", "show_item", Event.HOVER),
 		ENTITY("&[something]", "show_entity", Event.HOVER),
@@ -52,10 +52,12 @@ public class Text {
 		String marker, action;
 		TextAction(String s, String a, Event t){marker = s; action = a; type = t;}
 
+		@Override public String toString(){return marker;}
+
 		public static int countNodes(String str){
 			int count = 0;
 			for(TextAction n : TextAction.values()){
-				count += StringUtils.countMatches(str.replaceAll("\\\\"+n.marker, ""), n.marker);
+				count += StringUtils.countMatches(str.replace("\\"+n.marker, ""), n.marker);
 			}
 			return count;
 		}
@@ -82,8 +84,8 @@ public class Text {
 
 				//cut off hyperText
 				int endSpecial = string.indexOf(endIndicator); if(endSpecial == -1) endSpecial = string.length();
-				String hyperText = unescapeString(string.substring(0, endSpecial));
-				string = string.substring(endSpecial);
+				String hyperText = string.substring(0, endSpecial); string = string.substring(endSpecial);
+				hyperText = unescapeString(hyperText);
 
 				String actionText="";
 				//detect underlying command/link/values
@@ -93,7 +95,7 @@ public class Text {
 					actionText = data[1].trim();
 				}
 				else{
-					if(node == TextAction.CMD){
+					if(node == TextAction.RUN_CMD){
 						actionText = hyperText.substring(node.marker.length()).trim();
 					}
 					else if(node == TextAction.WARP){
@@ -106,7 +108,17 @@ public class Text {
 //				Eventials.getPlugin().getLogger().info("HyperText: "+hyperText);
 //				Eventials.getPlugin().getLogger().info("ActionText: "+actionText);
 
-				raw.append(",{\"text\":\"").append(preText).append('"');
+				if(!preText.isEmpty()) raw.append(",{\"text\":\"").append(preText).append("\"}");
+				if(!hyperText.isEmpty()){
+					raw.append(",{\"text\":\"").append(hyperText).append('"');
+					if(node != null) raw
+						.append(",\"").append(node.type == Event.CLICK ? "clickEvent" : "hoverEvent")
+						.append("\":{\"action\":\"").append(node.action).append("\",\"value\":\"")
+						.append(actionText).append("\"}");
+					raw.append('}');
+				}
+				// Old (but perfectly valid) method:
+/*				raw.append(",{\"text\":\"").append(preText).append('"');
 				if(!hyperText.isEmpty()){
 					raw.append(",\"extra\":[{\"text\":\"").append(hyperText).append("\"");
 					if(node != null) raw.append(",\"").append(node.type == Event.CLICK ? "clickEvent" : "hoverEvent")
@@ -114,12 +126,13 @@ public class Text {
 						.append(actionText).append("\"}}");
 					raw.append(']');
 				}
-				raw.append('}');
+				raw.append('}');*/
 
 				// /tellraw @a ["First","Second","Third"]
 				// {"text":"Click","clickEvent":{"action":"open_url","value":"http://google.com"}}
 				// {"text":"xxx","extra":[{"text":"xxx","clickEvent":{"action":"xxx","value":"xxx"}}]}
 			}
+			string = unescapeString(string);
 			if(!string.isEmpty()) raw.append(",{\"text\":\"").append(string).append("\"}");
 			return raw.append(']').toString();
 		}
@@ -224,8 +237,8 @@ public class Text {
 	}
 
 	public static String escapeTextActionCodes(String str){
-		str.replaceAll("\\", "\\\\");//Escape escapes first!
-		for(TextAction n : TextAction.values()) str.replaceAll(n.marker, "\\"+n.marker);
+		str = str.replace("\\", "\\\\");//Escape escapes first!
+		for(TextAction n : TextAction.values()) str.replace(n.marker, "\\"+n.marker);
 		return str;
 	}
 

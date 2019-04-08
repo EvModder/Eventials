@@ -59,6 +59,7 @@ public class CommandFloatingText extends CommandBase2{
 		as.setArms(false);
 		as.setBasePlate(true);
 		as.setCanPickupItems(false);
+		as.setSmall(true);
 		as.setHeadPose(EulerAngle.ZERO);
 		as.setBodyPose(EulerAngle.ZERO);
 		as.setLeftArmPose(EulerAngle.ZERO);
@@ -66,7 +67,7 @@ public class CommandFloatingText extends CommandBase2{
 		as.setLeftLegPose(EulerAngle.ZERO);
 		as.setRightLegPose(EulerAngle.ZERO);
 
-		as.setMaximumAir(1337);
+		//as.setMaximumAir(1337);
 		as.setCustomName(msg);
 		return as;
 	}
@@ -78,7 +79,8 @@ public class CommandFloatingText extends CommandBase2{
 	}
 
 	public static boolean isFloater(ArmorStand e){
-		return e.getMaximumAir() == 1337 && e.getCustomName() != null;
+		return /*e.getMaximumAir() == 1337 && */e.getCustomName() != null;
+		//return e.isSmall() && !e.isCollidable() && !e.isVisible() && e.getCustomName() != null;
 	}
 
 	public static String implodeAndFormat(String[] args, int start, int end){

@@ -13,7 +13,7 @@ import Eventials.economy.Economy;
 import Extras.Text;
 
 public class CommandWithdraw extends CommandBase2{
-	Economy economy;
+	final Economy economy;
 	final String curSymbol;
 
 	public CommandWithdraw(EvPlugin pl, Economy eco, boolean enabled){
