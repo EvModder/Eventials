@@ -1,8 +1,11 @@
 package Eventials.spawners;
 
+import java.util.Random;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.block.CreatureSpawner;
@@ -17,111 +20,136 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import EvLib.TypeUtils;
 import EvLib.UsefulUtils;
 import Eventials.Eventials;
 import Extras.Text;
 
 public class EvSpawner implements Listener {
+	final Random rand;
 	private Eventials plugin;
-	private boolean requireSilk, noNBTContainers, noNBTCommandblock, dropMonsterEggBlocks, colorcodeCommandblock;
+	private final CreatureSpawner BASE_STATE;
+	final boolean requireSilk, stackableSpawners, dropMonsterEggBlocks,
+				noNBTContainers, noNBTCommandblock, colorcodeCommandblock;
 
 	public EvSpawner(Eventials pl){
 		plugin = pl;
 		requireSilk = plugin.getConfig().getBoolean("require-silktouch", true);
+		dropMonsterEggBlocks = plugin.getConfig().getBoolean("drop-monsteregg-blocks", true);
 		noNBTContainers = !plugin.getConfig().getBoolean("allow-nbt-container-placement", true);
 		noNBTCommandblock = !plugin.getConfig().getBoolean("allow-nbt-commandblock-placement", true);
-		dropMonsterEggBlocks = plugin.getConfig().getBoolean("drop-monsteregg-blocks", true);
 		colorcodeCommandblock = plugin.getConfig().getBoolean("allow-colorcodes-in-commandblock", true);
+		stackableSpawners = plugin.getConfig().getBoolean("stackable-spawners", true);
+		if(stackableSpawners){
+			Block baseBlock = Bukkit.getWorlds().get(0).getBlockAt(67, 0, -43);
+			BlockState baseState = baseBlock.getState();
+			baseBlock.setType(Material.SPAWNER);
+			BASE_STATE = (CreatureSpawner) baseBlock.getState();
+			baseState.update(true, false);
+			rand = null;
+		}
+		else{
+			BASE_STATE = null;
+			rand = new Random();
+		}
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		if(plugin.getConfig().getBoolean("feed-slimes", true))
-			plugin.getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(), plugin);
+			plugin.getServer().getPluginManager().registerEvents(new FeedSlimeListener(), plugin);
+	}
+
+	public static void CopySpawnerState(CreatureSpawner from, CreatureSpawner to){
+		to.setRequiredPlayerRange(from.getRequiredPlayerRange());
+		to.setMaxNearbyEntities(from.getMaxNearbyEntities());
+		to.setSpawnedType(from.getSpawnedType());
+		to.setSpawnRange(from.getSpawnRange());
+		if(from.getMinSpawnDelay() > 0) to.setMinSpawnDelay(from.getMinSpawnDelay());
+		if(from.getMaxSpawnDelay() > from.getMinSpawnDelay()) to.setMaxSpawnDelay(from.getMaxSpawnDelay());
+		to.setDelay(from.getDelay());
+		to.setSpawnCount(from.getSpawnCount());
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerPlaceBlock(BlockPlaceEvent evt){
-		if(evt.isCancelled() || evt.getItemInHand() == null) return;
+		if(evt.isCancelled() || TypeUtils.isShulkerBox(evt.getBlockPlaced().getType())) return;
 
 		if(evt.getItemInHand().hasItemMeta() && evt.getItemInHand().getItemMeta() instanceof BlockStateMeta){
 			BlockStateMeta meta = (BlockStateMeta) evt.getItemInHand().getItemMeta();
 			if(meta.hasBlockState()){
 				if(meta.getBlockState() instanceof CreatureSpawner){
 					plugin.getLogger().info("Spawner placed");
-					CreatureSpawner storedState = (CreatureSpawner) meta.getBlockState();
 					CreatureSpawner blockState = (CreatureSpawner) evt.getBlockPlaced().getState();
-					blockState.setSpawnedType(storedState.getSpawnedType());
-					blockState.setDelay(storedState.getDelay());
+					CopySpawnerState((CreatureSpawner)meta.getBlockState(), blockState);
 					blockState.update();
 				}
 				else if(meta.getBlockState() instanceof InventoryHolder && !(meta.getBlockState() instanceof ShulkerBox)){
+					plugin.getLogger().info("Placed (non-shulker) InventoryHolder block");
 					if(noNBTContainers) return;
 					final ItemStack[] invContents = ((InventoryHolder)meta.getBlockState()).getInventory()
 							.getContents().clone();
 					final Location location = evt.getBlock().getLocation();
 					new BukkitRunnable(){@Override public void run(){
 						BlockState state = location.getBlock().getState();
-						if(state instanceof InventoryHolder){
+						if(!evt.isCancelled() && state.getType() == meta.getBlockState().getType()){
 							((InventoryHolder)state).getInventory().setContents(invContents);
-							state.update();
+							state.update(true, false);
+							plugin.getLogger().info("Updated InventoryHolder contents");
 						}
 					}}.runTaskLater(plugin, 1);
 				}
 				else if(meta.getBlockState() instanceof CommandBlock
 						&& evt.getPlayer().hasPermission("evp.evm.commandblockcolor")){
+					plugin.getLogger().info("Placed CommandBlock");
 					if(noNBTCommandblock) return;
 					String cmd = ((CommandBlock)meta.getBlockState()).getCommand();
 					plugin.getLogger().info("Stored command: "+cmd);
 					if(colorcodeCommandblock) cmd = Text.translateAlternateColorCodes('&', cmd);
+					plugin.getLogger().info("New command: " + cmd);
 
 					CommandBlock blockState = (CommandBlock) evt.getBlockPlaced().getState();
 					blockState.setCommand(cmd);
-					blockState.update();
+					blockState.update(true, false);
 				}
 			}
 		}
 	}
 
-	public boolean isInfested(Material blockType){
-		switch(blockType){
-			case INFESTED_CHISELED_STONE_BRICKS:
-			case INFESTED_COBBLESTONE:
-			case INFESTED_CRACKED_STONE_BRICKS:
-			case INFESTED_MOSSY_STONE_BRICKS:
-			case INFESTED_STONE:
-			case INFESTED_STONE_BRICKS:
-				return true;
-			default:
-				return false;
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSpawnerMine(BlockBreakEvent evt){
 		if(evt.isCancelled()) return;
-		
+
 		if(evt.getBlock().getType() == Material.SPAWNER
 				&& (!requireSilk || (evt.getPlayer().getInventory().getItemInMainHand() != null
 				&& evt.getPlayer().getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH))))
 		{
-			ItemStack item = new ItemStack(Material.SPAWNER);
 			CreatureSpawner spawnerState = (CreatureSpawner) evt.getBlock().getState();
-			BlockStateMeta meta = (BlockStateMeta) item.getItemMeta();
-			meta.setBlockState(spawnerState);
-			meta.setDisplayName(ChatColor.WHITE+UsefulUtils.getNormalizedName(spawnerState.getSpawnedType())+" Spawner");
-			item.setItemMeta(meta);
 
-			evt.setDropItems(true);
-			evt.getBlock().getWorld().dropItemNaturally(evt.getBlock().getLocation(), item);
+			ItemStack item = new ItemStack(Material.SPAWNER);
+			BlockStateMeta meta = (BlockStateMeta) item.getItemMeta();
+			meta.setDisplayName(ChatColor.WHITE+UsefulUtils.getNormalizedName(BASE_STATE.getSpawnedType())+" Spawner");
+			if(stackableSpawners){
+				CopySpawnerState(spawnerState, BASE_STATE);
+				meta.setBlockState(BASE_STATE);
+				item.setItemMeta(meta);
+			}
+			else{
+				meta.setBlockState(spawnerState);
+				item.setItemMeta(meta);
+				item = UsefulUtils.addNBTTag(item, "ev_spawner_key", rand.nextInt());
+			}
+
 			evt.setExpToDrop(0);
+			evt.setDropItems(false);
+			evt.getBlock().getWorld().dropItemNaturally(evt.getBlock().getLocation(), item);
 		}
-		else if(isInfested(evt.getBlock().getType()) && dropMonsterEggBlocks
+		else if(TypeUtils.isInfested(evt.getBlock().getType()) && dropMonsterEggBlocks
 				&& (!requireSilk || (evt.getPlayer().getInventory().getItemInMainHand() != null
 				&& evt.getPlayer().getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH))))
 		{
-			evt.setDropItems(true);
-			@SuppressWarnings("deprecation")
-			ItemStack drop = new ItemStack(evt.getBlock().getType(), 1, evt.getBlock().getState().getRawData());
-			evt.getBlock().getWorld().dropItemNaturally(evt.getBlock().getLocation(), drop);
+			evt.setExpToDrop(0);
+			evt.setDropItems(false);
+			ItemStack item = new ItemStack(evt.getBlock().getType());
+			evt.getBlock().getWorld().dropItemNaturally(evt.getBlock().getLocation(), item);
 		}
 	}
 }
