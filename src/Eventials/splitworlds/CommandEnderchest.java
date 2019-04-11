@@ -18,11 +18,11 @@ import org.bukkit.inventory.ItemStack;
 import EvLib.CommandBase2;
 import EvLib.EvPlugin;
 
-public class CommandInvsee extends CommandBase2{
+public class CommandEnderchest extends CommandBase2{
 	private EvPlugin pl;
 	private SplitWorlds splitWorlds;
 
-	public CommandInvsee(EvPlugin p, SplitWorlds sw){
+	public CommandEnderchest(EvPlugin p, SplitWorlds sw){
 		super(p, true);
 		pl = p;
 		splitWorlds = sw;
@@ -32,7 +32,7 @@ public class CommandInvsee extends CommandBase2{
 
 	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd:	/invsee [world] [player]
+		//cmd:	/echest [world] [player]
 		//----- Argument Parsing ---------------------------------------------------------------------------//
 		if(sender instanceof Player == false){
 			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players!");
@@ -54,13 +54,13 @@ public class CommandInvsee extends CommandBase2{
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore())
 					targetPlayer = pl.getServer().getOfflinePlayer(UUID.fromString(args[0]));
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){
-					if(sender.hasPermission("eventials.invsee.others"))
+					if(sender.hasPermission("eventials.echest.others"))
 						sender.sendMessage(ChatColor.RED+"Unable to find world or player matching: "+args[0]);
 					else sender.sendMessage(ChatColor.RED+"Unable to find world: "+args[0]);
 					return false;
 				}
-				else if(sender.hasPermission("eventials.invsee.others") == false){
-					sender.sendMessage(ChatColor.RED+"You do not have permission to view others' inventories ");
+				else if(sender.hasPermission("eventials.echest.others") == false){
+					sender.sendMessage(ChatColor.RED+"You do not have permission to view others' enderchests ");
 					return true;
 				}
 				if(targetPlayer.isOnline()) targetWorld = targetPlayer.getPlayer().getWorld().getName();
@@ -74,13 +74,13 @@ public class CommandInvsee extends CommandBase2{
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore())
 					targetPlayer = pl.getServer().getOfflinePlayer(UUID.fromString(args[1]));
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){
-					if(sender.hasPermission("eventials.invsee.others"))
+					if(sender.hasPermission("eventials.echest.others"))
 						sender.sendMessage(ChatColor.RED+"Unable to find player: "+args[1]);
 					else sender.sendMessage(ChatColor.RED+"Too many arguments");
 					return false;
 				}
-				else if(sender.hasPermission("eventials.invsee.others") == false){
-					sender.sendMessage(ChatColor.RED+"You do not have permission to view others' inventories ");
+				else if(sender.hasPermission("eventials.echest.others") == false){
+					sender.sendMessage(ChatColor.RED+"You do not have permission to view others' enderchests ");
 					return true;
 				}
 			}
@@ -89,19 +89,19 @@ public class CommandInvsee extends CommandBase2{
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore())
 					targetPlayer= pl.getServer().getOfflinePlayer(UUID.fromString(args[0]));
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){
-					if(sender.hasPermission("eventials.invsee.others"))
+					if(sender.hasPermission("eventials.echest.others"))
 						sender.sendMessage(ChatColor.RED+"Unable to find world or player matching: "+args[0]);
 					//else sender.sendMessage(ChatColor.RED+"Unable to find world: "+args[0]);
 					else sender.sendMessage(ChatColor.RED+"Too many arguments");
 					return false;
 				}
-				else if(sender.hasPermission("eventials.invsee.others") == false){
-					sender.sendMessage(ChatColor.RED+"You do not have permission to view others' inventories ");
+				else if(sender.hasPermission("eventials.echest.others") == false){
+					sender.sendMessage(ChatColor.RED+"You do not have permission to view others' enderchests ");
 					return true;
 				}
 				w = pl.getServer().getWorld(args[1]);
 				if(w == null){
-					sender.sendMessage(ChatColor.RED+"Could not find world '"+args[1]+"' for inventory:"+args[0]);
+					sender.sendMessage(ChatColor.RED+"Could not find world '"+args[1]+"' for enderchest:"+args[0]);
 					return false;
 				}
 				targetWorld = w.getName();
@@ -115,14 +115,13 @@ public class CommandInvsee extends CommandBase2{
 		if(sender.getName().equals(targetPlayer.getName()) && (
 				splitWorlds.inSharedInvGroup(targetWorld, player.getWorld().getName()) ||
 				sender.hasPermission("eventials.inventory.universal"))){
-			//sender.sendMessage(ChatColor.RED+"Your "+targetWorld+" inventory is already open");
-			((Player)sender).openWorkbench(null, true);
+			player.openInventory(((Player)sender).getEnderChest());
 			return true;
 		}
 
 		if(targetPlayer.isOnline() &&
 				splitWorlds.inSharedInvGroup(targetWorld, targetPlayer.getPlayer().getWorld().getName())){
-			player.openInventory(targetPlayer.getPlayer().getInventory());
+			player.openInventory(targetPlayer.getPlayer().getEnderChest());
 			return true;
 		}
 
@@ -137,17 +136,17 @@ public class CommandInvsee extends CommandBase2{
 			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
 			return true;
 		}
-		ItemStack[] contents = player.getInventory().getContents();
+		ItemStack[] contents = player.getEnderChest().getContents();
 
 		// Reload my profile
 		splitWorlds.forceLoadProfile(player);
 
-		// Create and display an inventory using the ItemStack[]
+		// Create and display an inventory using the enderchest ItemStack[]
 		final String invName = "> "+targetPlayer.getName()+" - "+splitWorlds.getInvGroup(targetWorld);
-		Inventory targetInv = pl.getServer().createInventory(player, InventoryType.PLAYER, invName);
+		Inventory targetInv = pl.getServer().createInventory(player, InventoryType.ENDER_CHEST, invName);
 		targetInv.setContents(contents);
 		player.openInventory(targetInv);
-		pl.getLogger().info(player.getName()+" viewing inventory of: "+targetPlayer.getName());
+		pl.getLogger().info(player.getName()+" viewing enderchest of: "+targetPlayer.getName());
 
 		// Listener to write back to disk the inventory being viewed once it is closed
 		final String fTargetWorld = targetWorld;
@@ -156,14 +155,14 @@ public class CommandInvsee extends CommandBase2{
 			final UUID snooper = player.getUniqueId();
 			@EventHandler public void inventoryCloseEvent(InventoryCloseEvent evt){
 				if(!evt.getPlayer().getUniqueId().equals(snooper) ||
-						evt.getInventory().getType() != InventoryType.PLAYER ||
+						evt.getInventory().getType() != InventoryType.ENDER_CHEST ||
 						!invName.equals(evt.getInventory().getTitle())) return;
 
 				pl.getLogger().info("Updating inventory: "+fTargetWorld+" > "+fTargetPlayer.getName());
 
 				splitWorlds.forceSaveProfile(player);// Any changes I made in my own inv
 				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true);
-				player.getInventory().setContents(evt.getInventory().getContents());
+				player.getEnderChest().setContents(evt.getInventory().getContents());
 				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true);
 				splitWorlds.forceLoadProfile(player);
 

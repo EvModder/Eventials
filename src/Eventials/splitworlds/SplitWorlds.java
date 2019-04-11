@@ -14,12 +14,11 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import Eventials.Eventials;
 import com.google.common.io.Files;
 
-public final class SplitWorlds implements Listener{
+public final class SplitWorlds{
 	final private Eventials plugin;
 	final private HashMap<String, String> sharedInvWorlds;
 	final String DEFAULT_WORLD;
@@ -75,7 +74,7 @@ public final class SplitWorlds implements Listener{
 
 		plugin.getServer().getPluginManager().registerEvents(new TeleportListener(this), plugin);
 		plugin.getServer().getPluginManager().registerEvents(new RespawnListener(this), plugin);
-		new CommandEchest(plugin, this);
+		new CommandEnderchest(plugin, this);
 		new CommandInvsee(plugin, this);
 	}
 
@@ -99,12 +98,21 @@ public final class SplitWorlds implements Listener{
 	public File getPlayerdata(UUID playerUUID, String worldName, boolean ignoreShared, boolean staticSource){
 		String useWorld = ignoreShared ? worldName : sharedInvWorlds.get(worldName);
 		if(useWorld == null) useWorld = worldName;
-		String subfolder = (staticSource || !inSharedInvGroup(useWorld, getCurrentInvGroup(playerUUID))) ?
-				DEFAULT_WORLD.equals(useWorld) ? "/playerdata_"+DEFAULT_WORLD+"/" : "/playerdata/" :
-				DEFAULT_PLAYERDATA + playerUUID + ".dat";
-		File dataFile = new File("./" + useWorld + subfolder + playerUUID + ".dat");
-		//return dataFile.exists() ? dataFile : null;
-		return dataFile; // Might not exist, but still a destination to move to
+
+		return (!staticSource && inSharedInvGroup(useWorld, getCurrentInvGroup(playerUUID))) ?
+				getMainPlayerdata(playerUUID)
+				: new File("./" + useWorld +
+						(useWorld.equals(DEFAULT_WORLD) ? "/playerdata_"+DEFAULT_WORLD+"/" : "/playerdata/")
+						+ playerUUID + ".dat");
+/*		// Logically equivalent
+		String subfolder = useWorld.equals(DEFAULT_WORLD) ? "/playerdata_"+DEFAULT_WORLD+"/" : "/playerdata/";
+		if(staticSource){
+			return new File("./" + useWorld + subfolder + playerUUID + ".dat");
+		}
+		else{
+			if(inSharedInvGroup(useWorld, getCurrentInvGroup(playerUUID))) return getMainPlayerdata(playerUUID);
+			else return new File("./" + useWorld + subfolder + playerUUID + ".dat");
+		}*/
 	}
 
 	public File getMainPlayerdata(UUID playerUUID){
@@ -201,7 +209,7 @@ public final class SplitWorlds implements Listener{
 
 	public String getCurrentInvGroup(UUID playerUUID){
 		File currentGroup = new File(DEFAULT_PLAYERDATA + playerUUID + ".group");
-		if(currentGroup == null || !currentGroup.exists()) return null;
+		if(currentGroup == null || !currentGroup.exists()) return DEFAULT_WORLD;
 		try{return sharedInvWorlds.get(Files.readFirstLine(currentGroup, Charset.defaultCharset()));}
 		catch(IOException e){e.printStackTrace(); return null;}
 	}
