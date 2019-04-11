@@ -17,6 +17,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import EvLib.ReflectionUtils.RefClass;
 import EvLib.ReflectionUtils.RefField;
@@ -136,6 +138,15 @@ public class UsefulUtils{
 		}
 	}
 
+	public static int maxCapacity(Inventory inv, Material item){
+		int sum = 0;
+		for(ItemStack i : inv.getContents()){
+			if(i == null || i.getType() == Material.AIR) sum += item.getMaxStackSize();
+			else if(i.getType() == item) sum += item.getMaxStackSize() - i.getAmount();
+		}
+		return sum;
+	}
+
 	public static Vector<String> installedEvPlugins(){
 		Vector<String> evPlugins = new Vector<String>();
 		for(Plugin pl : Bukkit.getServer().getPluginManager().getPlugins()){
@@ -148,6 +159,32 @@ public class UsefulUtils{
 			catch(IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e){}
 		}
 		return evPlugins;
+	}
+
+	static final RefClass classItemStack = ReflectionUtils.getRefClass("{nms}.ItemStack");
+	static final RefClass classNBTTagCompound = ReflectionUtils.getRefClass("{nms}.NBTTagCompound");
+	static final RefClass classCraftItemStack = ReflectionUtils.getRefClass("{cb}.inventory.CraftItemStack");
+	static final RefMethod methodAsNMSCopy = classCraftItemStack.getMethod("asNMSCopy", ItemStack.class);
+	static final RefMethod methodAsCraftMirror = classCraftItemStack.getMethod("asCraftMirror", classItemStack);
+	static final RefMethod methodGetTag = classItemStack.getMethod("getTag");
+	static final RefMethod methodSetTag = classItemStack.getMethod("setTag", classNBTTagCompound);
+	static final RefMethod methodSetString = classNBTTagCompound.getMethod("setString", String.class);
+	static final RefMethod methodSetInt = classNBTTagCompound.getMethod("setInt", Integer.class);
+	public static ItemStack addNBTTag(ItemStack item, String key, String value){
+		Object nmsItem = methodAsNMSCopy.of(null).call(item);
+		if(methodGetTag.of(nmsItem).call() == null)
+			methodSetTag.of(nmsItem).call(classNBTTagCompound.findConstructor(0).create());
+		methodSetString.of(methodGetTag.of(nmsItem).call()).call(key, value);
+		item = (ItemStack) methodAsCraftMirror.of(null).call(nmsItem);
+		return item;
+	}
+	public static ItemStack addNBTTag(ItemStack item, String key, int value){
+		Object nmsItem = methodAsNMSCopy.of(null).call(item);
+		if(methodGetTag.of(nmsItem).call() == null)
+			methodSetTag.of(nmsItem).call(classNBTTagCompound.findConstructor(0).create());
+		methodSetInt.of(methodGetTag.of(nmsItem).call()).call(key, value);
+		item = (ItemStack) methodAsCraftMirror.of(null).call(nmsItem);
+		return item;
 	}
 
 	static HashMap<String, Boolean> exists = new HashMap<String, Boolean>();

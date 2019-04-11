@@ -1,6 +1,7 @@
 package Eventials.economy.commands;
 
 import java.math.BigDecimal;
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,6 +16,8 @@ public class CommandGlobalBal extends CommandBase2{
 		super(pl, enabled);
 		economy = serverEconomy;
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

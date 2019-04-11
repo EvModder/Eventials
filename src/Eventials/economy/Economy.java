@@ -40,7 +40,9 @@ public class Economy extends ServerEconomy{
 
 		useCurItem = pl.getConfig().getBoolean("use-item-as-currency", true);
 		updateBalsOnPayment = pl.getConfig().getBoolean("update-balance-on-paid-commands", true);
-		currencyType = Material.getMaterial(pl.getConfig().getString("currency-item", "WATER_LILY").toUpperCase());
+		currencyType = Material.getMaterial(pl.getConfig().getString("currency-item", "LILY_PAD").toUpperCase());
+		if(useCurItem && currencyType == null) pl.getLogger().severe("Unknown currency item: "
+				+ pl.getConfig().getString("currency-item", "LILY_PAD"));
 
 		//Now into the custom Economy stuff
 		eco = this;

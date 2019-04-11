@@ -1,5 +1,6 @@
 package Eventials.books;
 
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,6 +16,8 @@ import Extras.Text;
 
 public class CommandSignBook extends CommandBase2{
 	public CommandSignBook(JavaPlugin pl){super(pl);}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/signbook <title> [author:name]

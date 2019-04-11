@@ -191,7 +191,7 @@ public final class Scheduler{
 
 			for(Player p : ppl){
 //				p.sendRawMessage(raw);//Doesn't work! (last checked: 1.12.1)
-				plugin.runCommand("tellraw "+p.getName()+' '+raw);//p.sendRawMessage(raw);
+				plugin.runCommand("minecraft:tellraw "+p.getName()+' '+raw);//p.sendRawMessage(raw);
 			}
 		}
 	}

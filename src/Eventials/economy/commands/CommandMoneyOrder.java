@@ -1,6 +1,8 @@
 package Eventials.economy.commands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import EvLib.CommandBase2;
 import EvLib.EvPlugin;
+import EvLib.VaultHook;
 import Eventials.economy.Economy;
 import Extras.Text;
 import org.bukkit.ChatColor;
@@ -31,8 +34,21 @@ public class CommandMoneyOrder extends CommandBase2 implements Listener{
 		TAX_MO = pl.getConfig().getInt("moneyorder-tax-percent");
 	}
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
+	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
+		if(args.length == 1 && sender instanceof Player){
+			final List<String> tabCompletes = new ArrayList<String>();
+			args[0] = args[0].toLowerCase();
+			if((""+MIN_MO).startsWith(args[0])) tabCompletes.add(""+MIN_MO);
+			int bal = (int) VaultHook.getBalance((Player)sender);
+			if(MIN_MO < bal && bal < MAX_MO) if((""+bal).startsWith(args[0])) tabCompletes.add(""+bal);
+			if((""+MAX_MO).startsWith(args[0])) tabCompletes.add(""+MAX_MO);
+			return tabCompletes;
+		}
+		return null;
+	}
+
+
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		if(sender instanceof Player == false){
 			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players!");
 			return true;
@@ -61,7 +77,7 @@ public class CommandMoneyOrder extends CommandBase2 implements Listener{
 				int amount = Integer.parseInt(args[0]);
 				if(amount < MIN_MO || amount > MAX_MO){
 					p.sendMessage(ChatColor.RED+"Invalid money amount\n"+ChatColor.GRAY
-							+" (must be between "+MIN_MO+" and "+MAX_MO+", "+TAX_MO+"% tax included)");
+							+" (must be integer between "+MIN_MO+" and "+MAX_MO+", "+TAX_MO+"% tax included)");
 					return false;
 				}
 				if(!economy.playerToServer(p.getUniqueId(), amount*(1 + TAX_MO/100.0))){

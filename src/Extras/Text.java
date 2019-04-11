@@ -5,15 +5,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import EvLib.ReflectionUtils;
-import EvLib.ReflectionUtils.*;
+import Eventials.Eventials;
 
 public class Text {
-	private static final RefClass classIChatBaseComponent = ReflectionUtils.getRefClass("{nms}.IChatBaseComponent");
+/*	private static final RefClass classIChatBaseComponent = ReflectionUtils.getRefClass("{nms}.IChatBaseComponent");
 	private static final RefClass classChatSerializer = ReflectionUtils.getRefClass("{nms}.IChatBaseComponent$ChatSerializer");
 	private static final RefClass classPacketPlayOutChat = ReflectionUtils.getRefClass("{nms}.PacketPlayOutChat");
 	private static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
@@ -28,7 +26,7 @@ public class Text {
 
 	private static final RefField fieldPlayerConnection = classEntityPlayer.getField("playerConnection");
 	private static final RefConstructor makePacketPlayOutChat = classPacketPlayOutChat.getConstructor(classIChatBaseComponent);
-
+*/
 	enum Event{CLICK,HOVER};
 	public enum TextAction{
 		//ClickEvent
@@ -140,61 +138,35 @@ public class Text {
 
 	public static void sendModifiedText(String preMsg, String hyperMsg, TextAction action, String value,
 			String postMsg, Player... recipients){
-		Object comp;
-		if(preMsg != null && !preMsg.isEmpty()){
-			comp = methodA.of(null).call(new StringBuilder("{\"text\":\"").append(preMsg)
-					.append("\",\"extra\":[{\"text\":\"").append(hyperMsg)
-					.append("\",\"clickEvent\":{\"action\":\"").append(action.action)
-					.append("\",\"value\":\"").append(value).append("\"}}]}").toString());
-		}
-		else{
-			comp = methodA.of(null).call(new StringBuilder("{\"extra\":[{\"text\":\"")
-					.append(ChatColor.DARK_GREEN).append(hyperMsg)
-					.append("\",\"clickEvent\":{\"action\":\"").append(action.action)
-					.append("\",\"value\":\"").append(value).append("\"}}]}").toString());
-		}
-		if(postMsg != null && !postMsg.isEmpty()){
-			methodAddSibling.of(comp).call(methodA.of(null).call("{\"text\":\""+postMsg+"\"}"));
-		}
-		Object packet = makePacketPlayOutChat.create(comp);
+		StringBuilder raw = new StringBuilder("[");
+		if(preMsg != null && !preMsg.isEmpty()) raw.append("{\"text\":\"").append(preMsg).append("\"},");
+		raw.append("{\"text\":\"").append(hyperMsg).append("\",\"clickEvent\":{\"action\":\"")
+				.append(action.action).append("\",\"value\":\"").append(value).append("\"}}");
+		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
+		raw.append(']');
 		for(Player p : recipients){
-			Object entityPlayer = methodGetHandle.of(p).call();
-			Object playerConnection = fieldPlayerConnection.of(entityPlayer).get();
-			methodSendPacket.of(playerConnection).call(packet);
+			Eventials.getPlugin().runCommand("minecraft:tellraw "+p.getName()+' '+raw);
+			//p.sendRawMessage(raw);//TODO: Doesn't work! (last checked: 1.12.1)
 		}
 	}
 
 	public static void sendModifiedText(String[] preMsgs, String[] hyperMsgs,
 			TextAction[] actions, String[] values, String postMsg, Player... recipients){
-
 		if(preMsgs.length != hyperMsgs.length || hyperMsgs.length != actions.length || actions.length != values.length ||
 				preMsgs.length == 0) return;
 
-		//{"text":"xxx","extra":[{"text":"xxx","clickEvent":{"action":"xxx","value":"xxx"}}]}
-		Object comp = methodA.of(null).call(new StringBuilder("{\"text\":\"").append(preMsgs[0])
-				.append("\",\"extra\":[{\"text\":\"").append(hyperMsgs[0]).append("\",\"clickEvent\":{\"action\":\"")
-				.append(actions[0].action).append("\",\"value\":\"").append(values[0]).append("\"}}]}").toString());
-
-		for(int i=1; i<hyperMsgs.length; ++i){
-			methodAddSibling.of(comp).call(methodA.of(null).call(
-					new StringBuilder("{\"text\":\"").append(preMsgs[i]).append("\",\"extra\":[{\"text\":\"")
-					.append(hyperMsgs[i]).append("\",\"clickEvent\":{\"action\":\"")
-					.append(actions[i].action).append("\",\"value\":\"").append(values[i]).append("\"}}]}").toString()));
+		StringBuilder raw = new StringBuilder("[");
+		for(int i=0; i<hyperMsgs.length; ++i){
+			if(i != 0) raw.append(',');
+			raw.append("{\"text\":\"").append(preMsgs[i]).append("\"},{\"text\":\"")
+				.append(hyperMsgs[i]).append("\",\"clickEvent\":{\"action\":\"")
+				.append(actions[i].action).append("\",\"value\":\"").append(values[i]).append("\"}}");
 		}
-		if(postMsg != null && !postMsg.isEmpty()){
-			methodAddSibling.of(comp).call(methodA.of(null).call("{\"text\":\""+postMsg+"\"}"));
-		}
-		Object packet = makePacketPlayOutChat.create(comp);
-
-		if(recipients != null && recipients.length != 0) for(Player p : recipients){
-			Object entityPlayer = methodGetHandle.of(p).call();
-			Object playerConnection = fieldPlayerConnection.of(entityPlayer).get();
-			methodSendPacket.of(playerConnection).call(packet);
-		}
-		else for(Player p : Bukkit.getServer().getOnlinePlayers()){
-			Object entityPlayer = methodGetHandle.of(p).call();
-			Object playerConnection = fieldPlayerConnection.of(entityPlayer).get();
-			methodSendPacket.of(playerConnection).call(packet);
+		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
+		raw.append(']');
+		for(Player p : recipients){
+			Eventials.getPlugin().runCommand("minecraft:tellraw "+p.getName()+' '+raw);
+			//p.sendRawMessage(raw);//TODO: Doesn't work! (last checked: 1.12.1)
 		}
 	}
 

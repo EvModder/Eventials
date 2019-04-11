@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.GregorianCalendar;
-
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -36,6 +36,8 @@ public class CommandAdvertise extends CommandBase2{
 		expiresOn = pl.getConfig().getLong("ad-expires-on");
 		curSymbol = Text.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

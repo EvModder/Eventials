@@ -2,6 +2,7 @@ package Eventials.economy.commands;
 
 import org.bukkit.ChatColor;
 import java.math.BigDecimal;
+import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,8 +18,9 @@ public class CommandDonateServer extends CommandBase2{
 		economy = eco;
 	}
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/donateserver [amt]
 
 		if(sender instanceof Player == false){

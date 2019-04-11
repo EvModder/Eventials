@@ -8,6 +8,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import com.earth2me.essentials.api.UserDoesNotExistException;
 
 public class VaultHook {
 	private static boolean vaultEnabled;
@@ -53,9 +54,12 @@ public class VaultHook {
 		return perms != null;
 	}
 
-	public static double getBalance(OfflinePlayer p) throws Exception{
+	public static double getBalance(OfflinePlayer p) {
 		if(VaultHook.vaultEnabled()) return VaultHook.econ.getBalance(p);
-		else return EssEcoHook.getBalance(p);
+		else{
+			try{return EssEcoHook.getBalance(p);}
+			catch(UserDoesNotExistException e){return 0D;}
+		}
 	}
 
 	public static boolean hasAtLeast(OfflinePlayer p, double amount){

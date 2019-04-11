@@ -2,6 +2,8 @@ package Eventials.economy.commands;
 
 import org.bukkit.ChatColor;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -19,6 +21,33 @@ public class CommandServerBal extends CommandBase2{
 		super(pl, enabled);
 		plugin = pl;
 		economy = eco;
+	}
+
+	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
+		if(args.length == 0) return null;
+		args[0] = args[0].toLowerCase();
+		final List<String> tabCompletes = new ArrayList<String>();
+		if(args.length == 1){
+			if("send".startsWith(args[0])) tabCompletes.add("send");
+			if("add".startsWith(args[0])) tabCompletes.add("add");
+			if("charge".startsWith(args[0])) tabCompletes.add("charge");
+			if(args[0].isEmpty()) tabCompletes.add("");//todo: necessary?
+		}
+		else if(args.length == 2){
+			//if(args[0].equals("send")){//auto complete player names
+			//if(args[0].equals("add")){//do nothing
+			if(args[0].equals("charge")){
+				String bal = ""+economy.getServerBal();
+				if(bal.startsWith(args[1])) tabCompletes.add(bal);
+			}
+		}
+		else if(args.length == 3){
+			if(args[0].equals("send")){
+				String bal = ""+economy.getServerBal();
+				if(bal.startsWith(args[1])) tabCompletes.add(bal);
+			}
+		}
+		return tabCompletes;
 	}
 
 	@SuppressWarnings("deprecation") @Override

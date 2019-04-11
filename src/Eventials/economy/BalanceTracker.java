@@ -18,6 +18,7 @@ public abstract class BalanceTracker{
 	private Vector<PlayerBalance> donators;
 	private final long startingBal;
 	public final String CUR_SYMBOL;
+	final int BALS_PER_PAGE = 9;
 
 	class PlayerBalance{
 		String name;
@@ -180,9 +181,8 @@ public abstract class BalanceTracker{
 		}
 	}
 
+	public int numBaltopPages(){return (bals.size()-1+BALS_PER_PAGE)/BALS_PER_PAGE;}
 	public void showBaltop(CommandSender sender, int page){//page count starts at 1
-		final int BALS_PER_PAGE = 9;
-
 		for(Player p : sender.getServer().getOnlinePlayers()) updateBalance(p.getUniqueId(), true);
 		sortBalances();
 
@@ -221,9 +221,8 @@ public abstract class BalanceTracker{
 		sender.sendMessage(builder.toString());
 	}
 
-	public void showDonateTop(CommandSender sender, int page){//page count starts at 1
-		final int BALS_PER_PAGE = 9;
-
+	public int numDonatetopPages(){return (donators.size()-1+BALS_PER_PAGE)/BALS_PER_PAGE;}
+	public void showDonatetop(CommandSender sender, int page){//page count starts at 1
 		sortDonations();
 
 		int startIdx;

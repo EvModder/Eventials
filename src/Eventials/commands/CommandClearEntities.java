@@ -1,5 +1,7 @@
 package Eventials.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,6 +19,18 @@ public class CommandClearEntities extends CommandBase2 {
 		super(p);
 	}
 
+	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
+		final List<String> tabCompletes = new ArrayList<String>();
+		String arg = args[args.length-1].toLowerCase();
+		if("animals".startsWith(arg)) tabCompletes.add("animals");
+		if("hostile".startsWith(arg)) tabCompletes.add("hostile");
+		if("monsters".startsWith(arg)) tabCompletes.add("monsters");
+		if("complex".startsWith(arg)) tabCompletes.add("complex");
+		if("enviroment".startsWith(arg)) tabCompletes.add("enviroment");
+		if("named".startsWith(arg)) tabCompletes.add("named");
+		return tabCompletes;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		World world = null;
@@ -31,12 +45,12 @@ public class CommandClearEntities extends CommandBase2 {
 			if((world = Eventials.getPlugin().getServer().getWorld(arg)) == null){
 				arg = arg.replace("-", "");
 
-				if(arg.equals("a") || arg.equals("animals")) animal = true;
-				else if(arg.equals("h") || arg.equals("hostile") ||
-						arg.equals("m") || arg.contains("monster")) hostile = true;
-				else if(arg.equals("c") || arg.equalsIgnoreCase("complex")) complex = true;
-				else if(arg.equals("e") || arg.equals("enviroment")) nonliving = true;
-				else if(arg.equals("n") || arg.equals("named")) named = true;
+				if(arg.equals("a") || arg.startsWith("animal")) animal = true;
+				else if(arg.equals("h") || arg.startsWith("hostile") ||
+						arg.equals("m") || arg.startsWith("monster")) hostile = true;
+				else if(arg.equals("c") || arg.startsWith("complex")) complex = true;
+				else if(arg.equals("e") || arg.startsWith("enviroment")) nonliving = true;
+				else if(arg.equals("n") || arg.startsWith("name")) named = true;
 				else if(arg.length() > 1) badWorld = true;
 			}
 		}

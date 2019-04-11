@@ -85,7 +85,7 @@ update-balance-on-paid-commands: true
 update-balance-commands: [pay, withdraw, deposit, sell, moneyorder, advertise, repair]
 
 use-item-as-currency: true
-currency-item: WATER_LILY
+currency-item: LILY_PAD
 currency-symbol: '&2L'
 
 ad-cost: 100
@@ -172,10 +172,11 @@ prevent-multicraft-list-console-spam: true
 #--------------------------------------#
 evspawner-enabled: true
 require-silktouch: true
+stackable-spawners: true
 drop-monsteregg-blocks: true
-allow-nbt-container-placement: false
-allow-nbt-commandblock-placement: false
-allow-colorcodes-in-commandblock: false #TODO
+allow-nbt-container-placement: true
+allow-nbt-commandblock-placement: true
+allow-colorcodes-in-commandblock: true #TODO
 
 #These do not require 'evspawner-enabled: true'
 disable-skeleton-traps: true
@@ -220,7 +221,7 @@ book-editor-enabled: true
 #--------------------------------------#
 #             Split Worlds             #
 #--------------------------------------#
-splitworlds-enabled: false 
+splitworlds-enabled: true 
 vaccinate-players: true
 
 # Groups of worlds that share the inventories. World inventories are separate by default
@@ -283,7 +284,7 @@ auto-messages:
   - |
        Look out for periodic &aEvents=>&7The selling point of this server! 
        Events are custom-designed and come in many varieties
-       Check out &baltcraft.net&r, or wait and be surprised!
+       Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
   - 'Warps to important locations can be found at spawn'
 #  - '&4[&c&lWarning&4]&r Unused parts of the map will be periodically reset!'
   - 'Contact staff to learn about or purchase a Market plot'

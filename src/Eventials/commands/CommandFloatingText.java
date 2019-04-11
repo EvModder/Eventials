@@ -6,8 +6,11 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.EulerAngle;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 import org.apache.commons.lang.StringUtils;
@@ -30,6 +33,32 @@ public class CommandFloatingText extends CommandBase2{
 	public CommandFloatingText(EvPlugin p) { super(p); }
 	HashMap<UUID, Vector<ArmorStand>> listResults = new HashMap<UUID, Vector<ArmorStand>>();
 
+	final String[] COMMANDS = new String[]{"help","place","remove","edit","move","list"};
+	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
+		if(sender instanceof Player && args.length > 0){
+			args[0] = args[0].toLowerCase();
+			if(args.length == 1){
+				final List<String> tabCompletes = new ArrayList<String>();
+				for(String c : COMMANDS) if(c.startsWith(args[0])) tabCompletes.add(c);
+				return tabCompletes;
+			}
+			if(args.length == 2 && (args[0].equals("remove") || args[0].equals("edit") || args[0].equals("move"))){
+				final List<String> tabCompletes = new ArrayList<String>();
+				args[1] = args[1].toLowerCase();
+				for(int i=0; i<listResults.get(((Player)sender).getUniqueId()).size(); ++i)
+						if((""+i).startsWith(args[1])) tabCompletes.add(""+i);
+				return tabCompletes;
+			}
+			else if(args.length > 2 && args[0].equals("move")){
+				Location loc = ((Player)sender).getLocation();
+				String pCoords = "" + loc.getBlockX() + ' ' + loc.getBlockY() + ' ' + loc.getBlockZ();
+				String typedCoords = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+				if(pCoords.startsWith(typedCoords)) return Arrays.asList(pCoords);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
 		if(sender instanceof Player == false){
@@ -37,11 +66,11 @@ public class CommandFloatingText extends CommandBase2{
 			return true;
 		}
 		listResults.putIfAbsent(((Player)sender).getUniqueId(), new Vector<ArmorStand>());
-		if(args.length == 0) args = new String[]{"help"};
+		if(args.length == 0) return handleHelp(sender, args);
 		args[0] = args[0].toLowerCase();
 		if(args[0].startsWith("p") || args[0].equals("set")) return handlePlace(sender, args);
-		if(args[0].startsWith("e")) return handleEdit(sender, args);
 		if(args[0].startsWith("r") || args[0].equals("del")) return handleRemove(sender, args);
+		if(args[0].startsWith("e")) return handleEdit(sender, args);
 		if(args[0].startsWith("m")) return handleMove(sender, args);
 		if(args[0].startsWith("l")) return handleList(sender);
 		return handleHelp(sender, args);// send help
@@ -115,7 +144,7 @@ public class CommandFloatingText extends CommandBase2{
 			.append(" - ").append(ChatColor.GRAY).append("Remove a floating text")
 			.append('\n').append(ChatColor.GREEN).append("/ftxt edit <ID>").append(ChatColor.DARK_GRAY)
 			.append(" - ").append(ChatColor.GRAY).append("Edit a floating text")
-			.append('\n').append(ChatColor.GREEN).append("/ftxt move <ID>").append(ChatColor.DARK_GRAY)
+			.append('\n').append(ChatColor.GREEN).append("/ftxt move <ID> <location>").append(ChatColor.DARK_GRAY)
 			.append(" - ").append(ChatColor.GRAY).append("Move a floating text")
 			.append('\n').append(ChatColor.GREEN).append("/ftxt list").append(ChatColor.DARK_GRAY)
 			.append(" - ").append(ChatColor.GRAY).append("List nearby floating texts")
@@ -230,7 +259,7 @@ public class CommandFloatingText extends CommandBase2{
 	}
 
 	private boolean handleMove(CommandSender sender, String... args){
-		if(args.length != 2 && args.length < 5){
+		if(args.length != 3 && args.length < 5){
 			sender.sendMessage(ChatColor.RED + "Too few arguments!");
 			return true;
 		}

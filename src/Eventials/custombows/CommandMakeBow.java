@@ -1,5 +1,7 @@
 package Eventials.custombows;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,6 +18,18 @@ public class CommandMakeBow extends CommandBase2{
 		bowManager = bows;
 	}
 
+	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
+		if(args.length == 1 && sender instanceof Player){
+			final List<String> tabCompletes = new ArrayList<String>();
+			args[0] = args[0].toLowerCase();
+			for(BowType bow : BowType.values()){
+				if(bow.name().toLowerCase().startsWith(args[0])) tabCompletes.add(bow.name().toLowerCase());
+			}
+			return tabCompletes;
+		}
+		return null;
+	}
+
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/makebow <type>
 		if(sender instanceof Player == false){
@@ -23,7 +37,7 @@ public class CommandMakeBow extends CommandBase2{
 			return true;
 		}
 		BowType type;
-		
+
 		if(args.length < 1){
 			sender.sendMessage(ChatColor.RED+"Too few arguments!\n"+ChatColor.GRAY+command.getUsage());
 			return true;

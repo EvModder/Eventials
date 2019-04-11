@@ -69,6 +69,8 @@ public class CommandVote extends CommandBase2{
 		}
 	}
 
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/vote
