@@ -1,4 +1,4 @@
-package EvLib;
+package net.evmodder.EvLib;
 
 import java.math.BigDecimal;
 import org.bukkit.Bukkit;

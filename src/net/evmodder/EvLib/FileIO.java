@@ -1,4 +1,4 @@
-package EvLib;
+package net.evmodder.EvLib;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,13 +14,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.evmodder.EvLib.EvUtils;
 
-public class FileIO{
+public class FileIO{// version = X1.0
 	static String DIR = "./plugins/EvFolder/";
 
 	static void verifyDir(JavaPlugin evPl){
 		String customDir = "./plugins/"+evPl.getName()+"/";
-		if(!new File(DIR).exists() && UsefulUtils.installedEvPlugins().size() < 2) DIR = customDir;//replace
+		if(!new File(DIR).exists() && EvUtils.installedEvPlugins().size() < 2) DIR = customDir;//replace
 		else if(new File(customDir).exists()){//merge
 			Bukkit.getLogger().warning("Relocating data in "+customDir+", this might take a minute..");
 			try{

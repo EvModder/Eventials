@@ -1,4 +1,4 @@
-package EvLib;
+package net.evmodder.EvLib;
 
 import org.bukkit.Location;
 

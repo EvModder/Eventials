@@ -1,8 +1,9 @@
-package EvLib;
+package net.evmodder.EvLib;
 
 import java.io.InputStream;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.evmodder.EvLib.FileIO;
 
 public abstract class EvPlugin extends JavaPlugin{
 	public static final String EvLib_ver = "1.2";

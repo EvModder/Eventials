@@ -1,4 +1,4 @@
-package EvLib;
+package net.evmodder.EvLib;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,17 +14,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import EvLib.ReflectionUtils.RefClass;
-import EvLib.ReflectionUtils.RefField;
-import EvLib.ReflectionUtils.RefMethod;
+import net.evmodder.EvLib.ReflectionUtils;
+import net.evmodder.EvLib.ReflectionUtils.RefClass;
+import net.evmodder.EvLib.ReflectionUtils.RefField;
+import net.evmodder.EvLib.ReflectionUtils.RefMethod;
 
-public class UsefulUtils{
+public class EvUtils{// version = X1.0
 	public static float getBlockStrength(Material block){
 		RefClass classBlock = ReflectionUtils.getRefClass("{nms}.Block");
 		RefMethod methodGetByName = classBlock.getMethod("getByName");
@@ -66,6 +68,17 @@ public class UsefulUtils{
 		}
 		return builder.append(timeColor).append(time / scale[scale.length-1])
 					  .append(unitColor).append(units[units.length-1]).toString();
+	}
+
+	public static Location getLocationFromString(String s){
+		String[] data = s.split(",");
+		World world = org.bukkit.Bukkit.getWorld(data[0]);
+		if(world != null){
+			try{return new Location(world,
+					Integer.parseInt(data[1]), Integer.parseInt(data[2]), Integer.parseInt(data[3]));}
+			catch(NumberFormatException ex){}
+		}
+		return null;
 	}
 
 	public static Collection<Advancement> getVanillaAdvancements(Player p){
@@ -159,32 +172,6 @@ public class UsefulUtils{
 			catch(IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e){}
 		}
 		return evPlugins;
-	}
-
-	static final RefClass classItemStack = ReflectionUtils.getRefClass("{nms}.ItemStack");
-	static final RefClass classNBTTagCompound = ReflectionUtils.getRefClass("{nms}.NBTTagCompound");
-	static final RefClass classCraftItemStack = ReflectionUtils.getRefClass("{cb}.inventory.CraftItemStack");
-	static final RefMethod methodAsNMSCopy = classCraftItemStack.getMethod("asNMSCopy", ItemStack.class);
-	static final RefMethod methodAsCraftMirror = classCraftItemStack.getMethod("asCraftMirror", classItemStack);
-	static final RefMethod methodGetTag = classItemStack.getMethod("getTag");
-	static final RefMethod methodSetTag = classItemStack.getMethod("setTag", classNBTTagCompound);
-	static final RefMethod methodSetString = classNBTTagCompound.getMethod("setString", String.class, String.class);
-	static final RefMethod methodSetInt = classNBTTagCompound.getMethod("setInt", String.class, int.class);
-	public static ItemStack addNBTTag(ItemStack item, String key, String value){
-		Object nmsItem = methodAsNMSCopy.of(null).call(item);
-		if(methodGetTag.of(nmsItem).call() == null)
-			methodSetTag.of(nmsItem).call(classNBTTagCompound.findConstructor(0).create());
-		methodSetString.of(methodGetTag.of(nmsItem).call()).call(key, value);
-		item = (ItemStack) methodAsCraftMirror.of(null).call(nmsItem);
-		return item;
-	}
-	public static ItemStack addNBTTag(ItemStack item, String key, int value){
-		Object nmsItem = methodAsNMSCopy.of(null).call(item);
-		if(methodGetTag.of(nmsItem).call() == null)
-			methodSetTag.of(nmsItem).call(classNBTTagCompound.findConstructor(0).create());
-		methodSetInt.of(methodGetTag.of(nmsItem).call()).call(key, value);
-		item = (ItemStack) methodAsCraftMirror.of(null).call(nmsItem);
-		return item;
 	}
 
 	static HashMap<String, Boolean> exists = new HashMap<String, Boolean>();

@@ -1,8 +1,7 @@
-package EvLib;
+package net.evmodder.EvLib;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -15,7 +14,7 @@ import java.util.List;
  * @author DPOH-VAR
  * @version 1.0
  */
-public class ReflectionUtils {
+public class ReflectionUtils{// version = X1.0
 	/**  prefix of bukkit classes */
 	private static String preClassB = "org.bukkit.craftbukkit";
 	/** prefix of minecraft classes */
@@ -24,8 +23,8 @@ public class ReflectionUtils {
 	private static boolean forge = false;
 
 	/** check server version and class names */
-	static {
-		if(Bukkit.getServer()!=null) {
+	static{
+		if(Bukkit.getServer()!=null){
 			if(Bukkit.getVersion().contains("MCPC") || Bukkit.getVersion().contains("Forge")) forge = true;
 			Server server = Bukkit.getServer();
 			Class<?> bukkitServerClass = server.getClass();
@@ -147,7 +146,7 @@ public class ReflectionUtils {
 		public RefConstructor getConstructor(Object... types){
 			Class<?>[] classes = new Class[types.length];
 			int i=0;
-			for(Object e: types) {
+			for(Object e: types){
 				if(e instanceof Class) classes[i] = (Class<?>)e;
 				else if (e instanceof RefClass) classes[i] = ((RefClass)e).getRealClass();
 				else classes[i] = e.getClass();
@@ -214,7 +213,7 @@ public class ReflectionUtils {
 		 * @throws RuntimeException if method not found
 		 * @return RefMethod
 		 */
-		public RefMethod findMethodByReturnType(RefClass type) {
+		public RefMethod findMethodByReturnType(RefClass type){
 			return findMethodByReturnType(type.clazz);
 		}
 
@@ -241,7 +240,7 @@ public class ReflectionUtils {
 		 * @return RefConstructor
 		 * @throws RuntimeException if constructor not found
 		 */
-		public RefConstructor findConstructor(int number) {
+		public RefConstructor findConstructor(int number){
 			List<Constructor<?>> constructors = new ArrayList<Constructor<?>>();
 			Collections.addAll(constructors, clazz.getConstructors());
 			Collections.addAll(constructors, clazz.getDeclaredConstructors());
@@ -257,7 +256,7 @@ public class ReflectionUtils {
 		 * @return RefField
 		 * @throws RuntimeException if field not found
 		 */
-		public RefField getField(String name) {
+		public RefField getField(String name){
 			try{
 				return new RefField(clazz.getField(name));
 			}
@@ -273,7 +272,7 @@ public class ReflectionUtils {
 		 * @return RefField
 		 * @throws RuntimeException if field not found
 		 */
-		public RefField findField(RefClass type) {
+		public RefField findField(RefClass type){
 			return findField(type.clazz);
 		}
 
@@ -298,7 +297,7 @@ public class ReflectionUtils {
 	/**
 	 * Method wrapper
 	 */
-	public static class RefMethod {
+	public static class RefMethod{
 		private final Method method;
 
 		/**
@@ -319,7 +318,7 @@ public class ReflectionUtils {
 		public RefClass getReturnRefClass(){
 			return new RefClass(method.getReturnType());
 		}
-		private RefMethod (Method method) {
+		private RefMethod (Method method){
 			this.method = method;
 			method.setAccessible(true);
 		}
@@ -328,7 +327,7 @@ public class ReflectionUtils {
 		 * @param e object to which the method is applied
 		 * @return RefExecutor with method call(...)
 		 */
-		public RefExecutor of(Object e) {
+		public RefExecutor of(Object e){
 			return new RefExecutor(e);
 		}
 
@@ -358,7 +357,7 @@ public class ReflectionUtils {
 			 */
 			public Object call(Object... params){
 				try{return method.invoke(e,params);}
-				catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
 					throw new RuntimeException(e);
 				}
 			}
@@ -368,7 +367,7 @@ public class ReflectionUtils {
 	/**
 	 * Constructor wrapper
 	 */
-	public static class RefConstructor {
+	public static class RefConstructor{
 		private final Constructor<?> constructor;
 
 		/**
@@ -395,7 +394,7 @@ public class ReflectionUtils {
 		 * @return new object
 		 * @throws RuntimeException if something went wrong
 		 */
-		public Object create(Object... params) {
+		public Object create(Object... params){
 			try{return constructor.newInstance(params);}
 			catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
 				throw new RuntimeException(e);
@@ -403,7 +402,7 @@ public class ReflectionUtils {
 		}
 	}
 
-	public static class RefField {
+	public static class RefField{
 		private Field field;
 
 		/**
@@ -449,7 +448,7 @@ public class ReflectionUtils {
 			 * set field value for applied object
 			 * @param param value
 			 */
-			public void set(Object param) {
+			public void set(Object param){
 				try{field.set(e,param);}
 				catch(IllegalArgumentException | IllegalAccessException e){
 					throw new RuntimeException(e);

@@ -25,12 +25,12 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import com.earth2me.essentials.User;
-import EvLib.UsefulUtils;
-import EvLib.VaultHook;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Extras.Text.TextAction;
 import net.ess3.api.IEssentials;
+import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib.VaultHook;
 
 public class Extras {
 	//used for the fancy /help
@@ -233,7 +233,7 @@ public class Extras {
 			if(ignoreNearby){
 				boolean near = false;
 				for(Player p : Bukkit.getServer().getOnlinePlayers()){
-					if(UsefulUtils.notFar(p.getLocation(), entity.getLocation())){
+					if(EvUtils.notFar(p.getLocation(), entity.getLocation())){
 						near = true;
 						break;
 					}
@@ -253,7 +253,9 @@ public class Extras {
 							le.getEquipment().getHelmetDropChance()		>= 1 ||
 							le.getEquipment().getBootsDropChance()		>= 1) continue;
 				}
-				else if(type == EntityType.HORSE || type == EntityType.VILLAGER ||
+				else if(type == EntityType.EVOKER || type == EntityType.ILLUSIONER ||
+						type == EntityType.VINDICATOR || type == EntityType.SHULKER ||
+						type == EntityType.HORSE || type == EntityType.VILLAGER ||
 						type == EntityType.GIANT || type == EntityType.ENDER_DRAGON ||
 						type == EntityType.ENDER_CRYSTAL || type == EntityType.DROPPED_ITEM ||
 						type == EntityType.FALLING_BLOCK || type == EntityType.ITEM_FRAME ||
@@ -293,7 +295,7 @@ public class Extras {
 			if(ignoreNearby){
 				boolean near = false;
 				for(Player p : Bukkit.getServer().getOnlinePlayers()){
-					if(UsefulUtils.notFar(p.getLocation(), entity.getLocation())){
+					if(EvUtils.notFar(p.getLocation(), entity.getLocation())){
 						near = true;
 						break;
 					}
@@ -313,7 +315,9 @@ public class Extras {
 							le.getEquipment().getHelmetDropChance()		>= 1 ||
 							le.getEquipment().getBootsDropChance()		>= 1) continue;
 				}
-				else if(type == EntityType.HORSE || type == EntityType.VILLAGER ||
+				else if(type == EntityType.EVOKER || type == EntityType.ILLUSIONER ||
+						type == EntityType.VINDICATOR || type == EntityType.SHULKER ||
+						type == EntityType.HORSE || type == EntityType.VILLAGER ||
 						type == EntityType.GIANT || type == EntityType.ENDER_DRAGON ||
 						type == EntityType.ENDER_CRYSTAL || type == EntityType.DROPPED_ITEM ||
 						type == EntityType.FALLING_BLOCK || type == EntityType.ITEM_FRAME ||

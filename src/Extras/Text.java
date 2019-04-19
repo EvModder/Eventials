@@ -138,6 +138,10 @@ public class Text {
 
 	public static void sendModifiedText(String preMsg, String hyperMsg, TextAction action, String value,
 			String postMsg, Player... recipients){
+		preMsg = preMsg.replace("\n", "\\n");
+		hyperMsg = hyperMsg.replace("\n", "\\n");
+		value = value.replace("\n", "\\n");
+		postMsg = postMsg.replace("\n", "\\n");
 		StringBuilder raw = new StringBuilder("[");
 		if(preMsg != null && !preMsg.isEmpty()) raw.append("{\"text\":\"").append(preMsg).append("\"},");
 		raw.append("{\"text\":\"").append(hyperMsg).append("\",\"clickEvent\":{\"action\":\"")
@@ -158,16 +162,17 @@ public class Text {
 		StringBuilder raw = new StringBuilder("[");
 		for(int i=0; i<hyperMsgs.length; ++i){
 			if(i != 0) raw.append(',');
-			raw.append("{\"text\":\"").append(preMsgs[i]).append("\"},{\"text\":\"")
-				.append(hyperMsgs[i]).append("\",\"clickEvent\":{\"action\":\"")
-				.append(actions[i].action).append("\",\"value\":\"").append(values[i]).append("\"}}");
+			raw.append(" {\"text\":\"").append(preMsgs[i]).append("\"}, {\"text\":\"")
+				.append(hyperMsgs[i]).append("\", \"clickEvent\": {\"action\": \"")
+				.append(actions[i].action).append("\", \"value\": \"").append(values[i]).append("\"}}");
 		}
-		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
+		if(postMsg != null && !postMsg.isEmpty()) raw.append(", {\"text\": \"").append(postMsg).append("\"} ");
 		raw.append(']');
 		for(Player p : recipients){
 			Eventials.getPlugin().runCommand("minecraft:tellraw "+p.getName()+' '+raw);
 			//p.sendRawMessage(raw);//TODO: Doesn't work! (last checked: 1.12.1)
 		}
+		Eventials.getPlugin().getLogger().info("Sending tellraw: "+raw);
 	}
 
 	public static final char colorSymbol = ChatColor.WHITE.toString().charAt(0);
