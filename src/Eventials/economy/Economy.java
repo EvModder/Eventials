@@ -13,12 +13,12 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import EvLib.VaultHook;
 import Eventials.Eventials;
 import Eventials.economy.commands.*;
 import Eventials.economy.listeners.*;
 import Extras.PlayerMessageInterceptor;
 import Extras.Text;
+import net.evmodder.EvLib.VaultHook;
 
 public class Economy extends ServerEconomy{
 	final boolean useCurItem, updateBalsOnPayment;

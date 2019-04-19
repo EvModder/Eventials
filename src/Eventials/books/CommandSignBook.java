@@ -11,10 +11,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.BookMeta.Generation;
 import org.bukkit.plugin.java.JavaPlugin;
-import EvLib.CommandBase2;
 import Extras.Text;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandSignBook extends CommandBase2{
+public class CommandSignBook extends CommandBase{
 	public CommandSignBook(JavaPlugin pl){super(pl);}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}

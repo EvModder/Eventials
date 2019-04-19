@@ -9,14 +9,14 @@
 3/14 -> &cToday is PI day!
 3/17 -> &2Saint Patrick&f'&2s Day&f!
 4/1 -> &c&nA&ep&2&nr&ci&9&nl&f &b&nF&fo&7o&6&nl&3'&fs &b&lD&d&na&cy&a!&2!&a&n!
-4/1/Sunday -> Easter?
 4/11 -> &7Int. Tabletop Day, why are you here??
+4/20/Sunday -> Hoppy Easter (maybe?)
 4/30 -> &7Int. Honesty Day (not kidding)
 5/13 -> &7It's &bMother's Day&a!
 5/17 -> &6&lHappy Birthday Minecraft!
 5/22 -> &aToday is Earth Day! Let's be good to our planet :)
 5/28/Monday -> US Dead Soldier Patriotism/Propaganda Day
-#6/8 -> &4&l&nThe Purge
+6/8 -> &4&l&nThe Purge
 6/20/Sunday -> &9Father's Day, go be nice to Dad!
 7/4 -> &7&l * &c&l&nH&f&l&nA&9&l&nP&c&l&nP&f&l&nY&7&l * &9&l&nB&c&l&nD&f&l&nA&9&l&nY&7&l * &c&l&nM&f&l&nU&9&l&nR&c&l&nI&f&l&nC&9&l&nA&7&l *
 6/21 -> &e&lS&6&lum&c&lm&6&lrr &2&lSols&a&ltice&6&l!

@@ -3,11 +3,11 @@ package Eventials.economy;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.bukkit.plugin.java.JavaPlugin;
-import EvLib.VaultHook;
 import Eventials.economy.commands.CommandServerBal;
+import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.VaultHook;
 import Eventials.economy.commands.CommandDonateServer;
 import Eventials.economy.commands.CommandGlobalBal;
-import EvLib.FileIO;
 
 public abstract class ServerEconomy extends BalanceTracker{
 	public final boolean infServerBal, trackGlobalBal;

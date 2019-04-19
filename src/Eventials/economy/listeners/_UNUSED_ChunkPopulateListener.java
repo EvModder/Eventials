@@ -8,9 +8,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkPopulateEvent;
-import EvLib.EvPlugin;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
+import net.evmodder.EvLib.EvPlugin;
 
 public class _UNUSED_ChunkPopulateListener implements Listener {
 	Material currency;

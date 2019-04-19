@@ -5,13 +5,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
-import EvLib.UsefulUtils;
 import Extras.Text;
 import Extras.Text.TextAction;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.EvUtils;
 
-public class CommandVote extends CommandBase2{
+public class CommandVote extends CommandBase{
 	final String[] links;
 	final String website;
 	final String[] hyper;
@@ -65,7 +65,7 @@ public class CommandVote extends CommandBase2{
 				clickResult[i] = TextAction.LINK;
 				nonHyper[i] = Text.translateAlternateColorCodes('&', " &d"+(++i)+"&7.");
 			}
-			nonHyper[0] = Text.translateAlternateColorCodes('&', "&eVoting Links:\n&d1&7.");
+			nonHyper[0] = Text.translateAlternateColorCodes('&', "&eVoting Links:\\n&d1&7.");
 		}
 	}
 
@@ -92,7 +92,7 @@ public class CommandVote extends CommandBase2{
 		if(s > 0){
 			long time = hrs48 + voteManager.getLastVoted(((Player)sender).getUniqueId()) - System.currentTimeMillis();
 			sender.sendMessage(ChatColor.GRAY+"Time until streak is lost: "
-					+UsefulUtils.formatTime(time, ChatColor.GOLD, ChatColor.GRAY));
+					+EvUtils.formatTime(time, ChatColor.GOLD, ChatColor.GRAY));
 		}
 		return true;
 	}

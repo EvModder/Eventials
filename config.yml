@@ -4,6 +4,7 @@
 # -Scheduler: Copy over automsgs & test tellraw
 # showrecentcommand, show-me-in-recent, show-me-recent-on-join
 # only do creeper explosions when regional difficulty > x
+# /showshop - explain how to create a [Trade] sign
 
 # &X - open_file        - CLICK
 # &X - change_page      - CLICK
@@ -70,7 +71,7 @@ custom-baltop: true
 #Use 'eventials.bypass.paidcommands' to bypass all commands or
 #'eventials.bypass.paidcommands.cmd' for a specific commands
 paid-commands:
-  toggledownfall: 20.0
+  weather: 20.0
   claimhorse: 5.0
   lockhorse: 5.0
   gethorse: 2.5
@@ -286,42 +287,44 @@ auto-messages:
        Events are custom-designed and come in many varieties
        Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
   - 'Warps to important locations can be found at spawn'
-#  - '&4[&c&lWarning&4]&r Unused parts of the map will be periodically reset!'
+#  - '&4[&c&lWarn&4]&r Unused terrain will be periodically reset!'
   - 'Contact staff to learn about or purchase a Market plot'
   - |
        Running low on cash?
        Sell your stone and logs in the &d@AdminShop&r!
   - 'Be careful, you can get auto-killed for PvP logging!'
   - |
-       &4[&c&lWarn&4]&r Traveling far out generates new chunks-
-       When updates come out, the new terrain and features
-       &owill not generate&r in those chunks!
+       &4[&c&lWarn&4]&r Traveling generates many new chunks
+       When Minecraft updates, the new terrain and features
+       &owill not be there&r in those chunks!
   - |
        Sick of survival?
        Use the WarpSign to the &aCreative&r world!
   - |
        Remember, server &aEvents&r are temporary, and
        eventually everything goes back to normal
-  - 'Want a private, tp-able horse? try &2/hm ?'
+  - 'Want a private, teleportable horse? try &2/hm ?'
   - 'Custom saddle, nametag, & barding recipies listed &d@Market'
   - 'Ye like? Ye vote? &2/vote&r for links!'
   - 'Remember, you can use &2/enderchest&r in the Events world!'
-  - 'Help fund the server! Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks'
   - |
-       Donation minimum is .99 USD, but may change 
-       as determined by server needs
+       Any monetary help is always greatly appreciated :)
+       Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks'
+  - |
+       Donations minimum on &bac.buycraft.net=>http://ac.buycraft.net/&r is currently .99 USD,
+       but that may change change over time
   - 'Work started on a site! Visit &baltcraft.net=>http://www.altcraft.net'
   - 'Suggestions for tweaks/plugins/etc are always welcome!'
   - 'Please check &2/rules&r periodically for updates'
   - 'Sharing server IPs is fine, but &ndon''t spam&r please!'
-  - 'Have an idea for an automsg? You could get &a$50&r for it!'
+  - 'Have an idea for an automsg? You could get &2$&a50&r for it!'
   - 'Staff are here to help, so ask away!'
   - 'Killing people is fun, so why not start a head collection? ;)'
   - 'Want to compete? Dump off your stuff and type &2/arenas&r!'
   - |
        Win the &nMarket Parkour&r for a stack of diamond blocks!
        (FYI, it is practically impossible, and no hacks allowed)
-  - 'Unwarrented griefing can result in a tempban &m  &r> ban.'
+  - 'Unwarranted griefing can result in a tempban -> ban.'
   - |
        We recommend the &6LithosCore&r texture pack-
        You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
@@ -330,8 +333,8 @@ auto-messages:
   - 'Found a bug? &2/mail Admin&r so we can fix it for you!'
   - 'See a &2/green&r command? Click it to run it!'
   - |
-       Lots of commands have shortcut aliases!
-       Examples: &2/home&r&7 &m-&7> &2/h&r, &2/back&r&7 &m-&7> &2/b&r, &2/f power&r&7 &m-&7> &2/f p
+       Many commands have shortcuts!
+       Examples: &2/home&r&7 -> &2/h&r, &2/back&r&7 -> &2/b&r, &2/f power&r&7 -> &2/f p
   - |
       Chickens &d@Adminshop&r have been reported to lay more
       than just basic eggs, go grab some golden goodies!

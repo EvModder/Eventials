@@ -10,8 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import EvLib.FileIO;
-import EvLib.VaultHook;
+import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.VaultHook;
 
 public abstract class BalanceTracker{
 	private Vector<PlayerBalance> bals;

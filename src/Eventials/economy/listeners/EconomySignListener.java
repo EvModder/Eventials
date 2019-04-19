@@ -9,11 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
-import EvLib.VaultHook;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Extras.Extras;
+import net.evmodder.EvLib.VaultHook;
 
 public class EconomySignListener implements Listener {
 	String symbol;

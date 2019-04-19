@@ -2,7 +2,7 @@ name: Eventials
 main: Eventials.Eventials
 author: EvModder/EvDoc/Evil_Witchdoctor
 version: 1.1.8 #8=tab completions
-softdepend: [Votifier, Essentials]
+softdepend: [Votifier, Essentials, Renewable]
 api-version: 1.13
 
 commands:
@@ -308,6 +308,10 @@ permissions:
    eventials.serverbal.modify:
       description: Permission to use /serverbal add/take
       default: false
+
+   eventials.serverbal.tax:
+      description: Permission to use /serverbal tax
+      default: op
 
    eventials.setadminshop:
       description: Permission to use sneak-click an adminshop sign to enable/disable it

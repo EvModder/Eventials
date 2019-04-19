@@ -14,8 +14,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import EvLib.ReflectionUtils;
-import EvLib.ReflectionUtils.RefClass;
+import net.evmodder.EvLib.ReflectionUtils;
+import net.evmodder.EvLib.ReflectionUtils.RefClass;
 /**
  * <b>ParticleEffect_BROKEN Library</b>
  * <p>

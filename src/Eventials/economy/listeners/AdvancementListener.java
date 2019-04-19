@@ -7,9 +7,9 @@ import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
-import EvLib.UsefulUtils;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
+import net.evmodder.EvLib.EvUtils;
 
 public class AdvancementListener implements Listener{
 //	Given n=34 (total achs), exp=1.1, and c=18.5, a player will get ~5000 from completing all achs
@@ -40,7 +40,7 @@ public class AdvancementListener implements Listener{
 	public void onAchievementGet(PlayerAdvancementDoneEvent evt){
 		if(!isPaidAdvancement(evt.getAdvancement())) return;
 
-		int advancements = UsefulUtils.getVanillaAdvancements(evt.getPlayer(), included).size();
+		int advancements = EvUtils.getVanillaAdvancements(evt.getPlayer(), included).size();
 		if((advancements-=MIN_ADV) <= 0) return;
 
 		long payoff = Math.round(Math.pow(BASE, advancements)*MULT);
@@ -50,7 +50,7 @@ public class AdvancementListener implements Listener{
 					+ "Consider adjusting advancement rewards in your config");
 		}
 
-		int totalAdvs = UsefulUtils.getVanillaAdvancements(included).size();
+		int totalAdvs = EvUtils.getVanillaAdvancements(included).size();
 		if(advancements == totalAdvs){
 			payoff += FINAL_PRIZE;
 			pl.getServer().broadcastMessage(new StringBuilder()

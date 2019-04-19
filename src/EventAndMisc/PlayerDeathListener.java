@@ -7,50 +7,56 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import Evil_Code_Renewable.Utils;
+import Eventials.Eventials;
+import Evil_Code_Renewable.Renewable;
+import Evil_Code_Renewable.RenewableAPI;
 
 public class PlayerDeathListener implements Listener {
 	//Keep unrenewables - for winners of the Renewable Event
+	RenewableAPI api;
+	public PlayerDeathListener(){
+		api = ((Renewable)Eventials.getPlugin().getServer().getPluginManager().getPlugin("Renewable")).getAPI();
+	}
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent evt){
 		//
 		if(isSpecial(evt.getEntity().getUniqueId()))
 		//
 		for(ItemStack item : evt.getDrops()){
-			if(Utils.isUnrenewable(item)){
+			if(api.isUnrenewable(item)){
 				evt.setKeepInventory(true);
 				ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 
 				// Regular inventory
 				for(ItemStack i : evt.getEntity().getInventory().getContents()){
-					if(i != null && i.getType() != Material.AIR && !Utils.isUnrenewable(i)){
+					if(i != null && i.getType() != Material.AIR && !api.isUnrenewable(i)){
 						drops.add(i);
 						evt.getEntity().getInventory().remove(i);
 					}
 				}
 				// Armor contents
 				ItemStack helm = evt.getEntity().getInventory().getHelmet();
-				if(helm != null && helm.getType() != Material.AIR && !Utils.isUnrenewable(helm)){
+				if(helm != null && helm.getType() != Material.AIR && !api.isUnrenewable(helm)){
 //					drops.add(helm);
 					evt.getEntity().getInventory().setHelmet(null);
 				}
 				ItemStack chst = evt.getEntity().getInventory().getChestplate();
-				if(chst != null && chst.getType() != Material.AIR && !Utils.isUnrenewable(chst)){
+				if(chst != null && chst.getType() != Material.AIR && !api.isUnrenewable(chst)){
 //					drops.add(chst);
 					evt.getEntity().getInventory().setChestplate(null);
 				}
 				ItemStack legg = evt.getEntity().getInventory().getLeggings();
-				if(legg != null && legg.getType() != Material.AIR && !Utils.isUnrenewable(legg)){
+				if(legg != null && legg.getType() != Material.AIR && !api.isUnrenewable(legg)){
 //					drops.add(legg);
 					evt.getEntity().getInventory().setLeggings(null);
 				}
 				ItemStack boot = evt.getEntity().getInventory().getBoots();
-				if(boot != null && boot.getType() != Material.AIR && !Utils.isUnrenewable(boot)){
+				if(boot != null && boot.getType() != Material.AIR && !api.isUnrenewable(boot)){
 //					drops.add(helm);
 					evt.getEntity().getInventory().setBoots(null);
 				}
 				ItemStack offh = evt.getEntity().getInventory().getItemInOffHand();
-				if(offh != null && offh.getType() != Material.AIR && !Utils.isUnrenewable(offh)){
+				if(offh != null && offh.getType() != Material.AIR && !api.isUnrenewable(offh)){
 //					drops.add(offh);
 					evt.getEntity().getInventory().setItemInOffHand(null);
 				}

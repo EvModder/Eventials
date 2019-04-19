@@ -6,11 +6,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
 import Eventials.custombows.CustomBows.BowType;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 
-public class CommandMakeBow extends CommandBase2{
+public class CommandMakeBow extends CommandBase{
 	CustomBows bowManager;
 
 	public CommandMakeBow(EvPlugin p, CustomBows bows){

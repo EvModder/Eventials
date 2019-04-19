@@ -2,9 +2,6 @@ package Eventials;
 
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
-import EvLib.EvPlugin;
-import EvLib.FileIO;
-import EvLib.VaultHook;
 import EventAndMisc.EventAndMisc;
 import Eventials.listeners.*;
 import Eventials.books.WriterTools;
@@ -16,6 +13,9 @@ import Eventials.economy.Economy;
 import Eventials.scheduler.Scheduler;
 import Eventials.voter.EvVoter;
 import Extras.Extras;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.VaultHook;
 
 /** Everything inside this class is very AltCraft-specific,
  *  and not really meant for (or useful for) public distribution.
