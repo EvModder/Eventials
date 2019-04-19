@@ -16,11 +16,11 @@ import java.util.Vector;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
 import Extras.Text;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 
-public class CommandFloatingText extends CommandBase2{
+public class CommandFloatingText extends CommandBase{
 	public static final String ICON =
 			ChatColor.translateAlternateColorCodes('&', "&c[&6F&eT&aX&2T&3]&r");
 	public static final String LOGO = 
@@ -86,9 +86,10 @@ public class CommandFloatingText extends CommandBase2{
 		as.setCustomNameVisible(true);
 		as.setCollidable(false);
 		as.setArms(false);
-		as.setBasePlate(true);
+		as.setBasePlate(false);
 		as.setCanPickupItems(false);
 		as.setSmall(true);
+		as.setSilent(true);
 		as.setHeadPose(EulerAngle.ZERO);
 		as.setBodyPose(EulerAngle.ZERO);
 		as.setLeftArmPose(EulerAngle.ZERO);

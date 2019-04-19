@@ -9,20 +9,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
-import EvLib.UsefulUtils;
-import EvLib.VaultHook;
 import Eventials.economy.Economy;
 import Extras.Text;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib.VaultHook;
 
-public class CommandWithdraw extends CommandBase2{
+public class CommandWithdraw extends CommandBase{
 	final Economy economy;
 	final String curSymbol;
 
 	public CommandWithdraw(EvPlugin pl, Economy eco, boolean enabled){
 		super(pl);
-		if(!enabled) pl.getCommand("Withdraw").setExecutor(new CommandExecutor(){
+		if(!enabled) pl.getCommand("withdraw").setExecutor(new CommandExecutor(){
 			@Override
 			public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 				sender.sendMessage(ChatColor.RED+"This command is currently unavailable");
@@ -33,16 +33,16 @@ public class CommandWithdraw extends CommandBase2{
 		curSymbol = Text.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
 	}
 
-	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
-		if(args.length == 1 && sender instanceof Player){
+	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
+		if(args.length == 1 && sender instanceof Player && label.equalsIgnoreCase(cmd.getName())){
 			int bal = (int) VaultHook.getBalance((Player)sender);
 			if(bal > 0){
 				final List<String> tabCompletes = new ArrayList<String>();
 				args[0] = args[0].toLowerCase();
-				if("64".startsWith(args[0])) tabCompletes.add("64");
+				if(bal >= 64 && "64".startsWith(args[0])) tabCompletes.add("64");
 				if((""+bal).startsWith(args[0])) tabCompletes.add(""+bal);
-				String spaceAvail = ""+UsefulUtils.maxCapacity(((Player)sender).getInventory(), economy.getCurrency());
-				if(spaceAvail.startsWith(args[0])) tabCompletes.add(spaceAvail);
+				int spaceAvail = EvUtils.maxCapacity(((Player)sender).getInventory(), economy.getCurrency());
+				if(bal >= spaceAvail && (""+spaceAvail).startsWith(args[0])) tabCompletes.add(""+spaceAvail);
 				return tabCompletes;
 			}
 		}

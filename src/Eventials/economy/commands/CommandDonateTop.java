@@ -7,10 +7,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import EvLib.CommandBase2;
 import Eventials.economy.ServerEconomy;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandDonateTop extends CommandBase2{
+public class CommandDonateTop extends CommandBase{
 	final ServerEconomy economy;
 
 	public CommandDonateTop(JavaPlugin pl, ServerEconomy eco){
@@ -23,7 +23,7 @@ public class CommandDonateTop extends CommandBase2{
 			final List<String> tabCompletes = new ArrayList<String>();
 			args[0] = args[0].toLowerCase();
 			int pages = economy.numDonatetopPages();
-			for(int i=0; i<Math.max(pages, 10); ++i) if((""+i).startsWith(args[0])) tabCompletes.add(""+i);
+			for(int i=Math.min(pages, 100); i>=0; --i) if((""+i).startsWith(args[0])) tabCompletes.add(""+i);
 			if((""+pages).startsWith(args[0])) tabCompletes.add(""+pages);
 			return tabCompletes;
 		}

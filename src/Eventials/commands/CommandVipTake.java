@@ -1,14 +1,15 @@
 package Eventials.commands;
 
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import EvLib.CommandBase2;
 import Eventials.Eventials;
+import net.evmodder.EvLib.CommandBase;
 import org.bukkit.ChatColor;
 
-public class CommandVipTake extends CommandBase2 {
+public class CommandVipTake extends CommandBase {
 	Eventials plugin;
 	final String prefix = ChatColor.DARK_AQUA+"["+ChatColor.GRAY+"AC"+ChatColor.DARK_AQUA+"]"+ChatColor.WHITE+" ";
 
@@ -16,6 +17,8 @@ public class CommandVipTake extends CommandBase2 {
 		super(pl);
 		plugin = pl;
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

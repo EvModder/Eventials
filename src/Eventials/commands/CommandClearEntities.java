@@ -6,20 +6,19 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
 import Eventials.Eventials;
 import Extras.Extras;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 import net.md_5.bungee.api.ChatColor;
 
-public class CommandClearEntities extends CommandBase2 {
+public class CommandClearEntities extends CommandBase {
 
 	public CommandClearEntities(EvPlugin p){
 		super(p);
 	}
 
-	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
+	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
 		final List<String> tabCompletes = new ArrayList<String>();
 		String arg = args[args.length-1].toLowerCase();
 		if("animals".startsWith(arg)) tabCompletes.add("animals");

@@ -168,8 +168,8 @@ public class UsefulUtils{
 	static final RefMethod methodAsCraftMirror = classCraftItemStack.getMethod("asCraftMirror", classItemStack);
 	static final RefMethod methodGetTag = classItemStack.getMethod("getTag");
 	static final RefMethod methodSetTag = classItemStack.getMethod("setTag", classNBTTagCompound);
-	static final RefMethod methodSetString = classNBTTagCompound.getMethod("setString", String.class);
-	static final RefMethod methodSetInt = classNBTTagCompound.getMethod("setInt", Integer.class);
+	static final RefMethod methodSetString = classNBTTagCompound.getMethod("setString", String.class, String.class);
+	static final RefMethod methodSetInt = classNBTTagCompound.getMethod("setInt", String.class, int.class);
 	public static ItemStack addNBTTag(ItemStack item, String key, String value){
 		Object nmsItem = methodAsNMSCopy.of(null).call(item);
 		if(methodGetTag.of(nmsItem).call() == null)

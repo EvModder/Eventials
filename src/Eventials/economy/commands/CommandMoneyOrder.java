@@ -12,14 +12,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
-import EvLib.VaultHook;
 import Eventials.economy.Economy;
 import Extras.Text;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.VaultHook;
 import org.bukkit.ChatColor;
 
-public class CommandMoneyOrder extends CommandBase2 implements Listener{
+public class CommandMoneyOrder extends CommandBase implements Listener{
 	final Economy economy;
 	final String curSymbol;
 	final int MAX_MO, MIN_MO, TAX_MO;

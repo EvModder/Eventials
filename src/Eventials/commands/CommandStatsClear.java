@@ -1,24 +1,25 @@
 package Eventials.commands;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
 import Eventials.Eventials;
 import Extras.Extras;
 import Extras.Text;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 import net.md_5.bungee.api.ChatColor;
 
-public class CommandStatsClear extends CommandBase2 {
-	
+public class CommandStatsClear extends CommandBase {
 	public CommandStatsClear(EvPlugin p){
 		super(p);
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

@@ -7,10 +7,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import EvLib.CommandBase2;
 import Eventials.economy.ServerEconomy;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandDonateServer extends CommandBase2{
+public class CommandDonateServer extends CommandBase{
 	ServerEconomy economy;
 
 	public CommandDonateServer(JavaPlugin pl, ServerEconomy eco, boolean enabled){

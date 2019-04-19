@@ -21,13 +21,15 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import EvLib.CommandBase2;
 import Eventials.Eventials;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandWeaponStats extends CommandBase2 implements Listener{
+public class CommandWeaponStats extends CommandBase implements Listener{
 	final String[] defaultStats = new String[]{"Monster Kills", "Animal Kills", "Player Kills", "Boss Kills"};
 	final Object[] defaultValues = new Object[]{0, 0, 0, 0};
 	final String[] defaultLore;// = new String[defaultStats.length+1];
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	public CommandWeaponStats(Eventials pl, boolean enabled){
 		super(pl, enabled);

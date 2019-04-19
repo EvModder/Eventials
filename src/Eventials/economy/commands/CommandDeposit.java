@@ -8,14 +8,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
-import EvLib.VaultHook;
 import Eventials.economy.Economy;
 import Extras.Text;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.VaultHook;
 
-public class CommandDeposit extends CommandBase2{
+public class CommandDeposit extends CommandBase{
 	final Economy economy;
 	final String curSymbol;
 

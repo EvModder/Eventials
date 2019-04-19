@@ -1,11 +1,15 @@
 package Eventials.commands;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import net.ess3.api.IEssentials;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.EvUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,12 +23,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import com.earth2me.essentials.User;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
-import EvLib.UsefulUtils;
 import Eventials.Eventials;
 
-public class CommandBreakPhysics extends CommandBase2 implements Listener{
+public class CommandBreakPhysics extends CommandBase implements Listener{
 	private EvPlugin pl;
 	private Set<UUID> breakPhysics;
 
@@ -34,6 +35,8 @@ public class CommandBreakPhysics extends CommandBase2 implements Listener{
 		breakPhysics = new HashSet<UUID>();
 		teleports = new PriorityQueue<UUID>();
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -61,7 +64,7 @@ public class CommandBreakPhysics extends CommandBase2 implements Listener{
 	public void onBlockPhysicsEvent(BlockPhysicsEvent evt){
 		if(!evt.isCancelled())
 		for(Player p : pl.getServer().getOnlinePlayers()){
-			if(breakPhysics.contains(p.getUniqueId()) && UsefulUtils.notFar(p.getLocation(), evt.getBlock().getLocation())){
+			if(breakPhysics.contains(p.getUniqueId()) && EvUtils.notFar(p.getLocation(), evt.getBlock().getLocation())){
 				evt.setCancelled(true);
 				return;
 			}

@@ -17,14 +17,14 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import EvLib.EvPlugin;
-import EvLib.CommandBase2;
 import Eventials.Eventials;
 import ParticleEffects.CustomParticleEffect;
 import net.ess3.api.IEssentials;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 import com.earth2me.essentials.User;
 
-public class CommandParticles extends CommandBase2 {
+public class CommandParticles extends CommandBase {
 	Map<UUID, List<CustomParticleEffect>> particlePpl = new HashMap<UUID, List<CustomParticleEffect>>();
 	private Listener teleportListener;
 	Eventials pl;
@@ -33,6 +33,8 @@ public class CommandParticles extends CommandBase2 {
 		super(p);
 		pl = Eventials.getPlugin();
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

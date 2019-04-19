@@ -5,15 +5,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import java.util.List;
 import org.bukkit.ChatColor;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
 
-public class CommandItemSuffix extends CommandBase2{
+public class CommandItemSuffix extends CommandBase{
 
 	public CommandItemSuffix(EvPlugin p) {
 		super(p);
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

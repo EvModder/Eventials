@@ -14,12 +14,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import EvLib.CommandBase2;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Extras.Text;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandAdvertise extends CommandBase2{
+public class CommandAdvertise extends CommandBase{
 	private Economy economy;
 	final int MAX_LENGTH;// Max characters in ad
 	final int COST;// Price of advertising

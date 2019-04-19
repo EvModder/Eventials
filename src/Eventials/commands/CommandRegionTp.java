@@ -4,14 +4,17 @@ import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import java.util.List;
 import org.bukkit.ChatColor;
-import EvLib.CommandBase2;
 import Eventials.Eventials;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandRegionTp extends CommandBase2 {
+public class CommandRegionTp extends CommandBase {
 	public CommandRegionTp(Eventials pl){
 		super(pl);
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

@@ -1,23 +1,25 @@
 package Eventials.commands;
 
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import Extras.GhostFactory;
-import EvLib.EvPlugin;
-import EvLib.CommandBase2;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 import Eventials.Eventials;
 
-public class CommandGhost extends CommandBase2{
+public class CommandGhost extends CommandBase{
 	GhostFactory ghostFactory;
 	
 	public CommandGhost(EvPlugin p){
 		super(p);
 		ghostFactory = new GhostFactory(p);
 	}
-	
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		Player p;

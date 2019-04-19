@@ -18,15 +18,17 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import EvLib.CommandBase2;
 import Eventials.Eventials;
 import Extras.Text;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandSigntool extends CommandBase2 implements Listener{
+public class CommandSigntool extends CommandBase implements Listener{
 	public CommandSigntool(Eventials pl, boolean enabled){
 		super(pl, enabled);
 		if(enabled) pl.getServer().getPluginManager().registerEvents(this, pl);
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

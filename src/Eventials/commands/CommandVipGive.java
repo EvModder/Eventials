@@ -1,6 +1,7 @@
 package Eventials.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -12,17 +13,19 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import EvLib.CommandBase2;
 import Eventials.Eventials;
+import net.evmodder.EvLib.CommandBase;
 import org.bukkit.ChatColor;
 
-public class CommandVipGive extends CommandBase2 {
+public class CommandVipGive extends CommandBase {
 	Eventials plugin;
 
 	public CommandVipGive(Eventials pl) {
 		super(pl);
 		plugin = pl;
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

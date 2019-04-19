@@ -5,11 +5,11 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
 import Eventials.Eventials;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 
-public class CommandEventials extends CommandBase2{
+public class CommandEventials extends CommandBase{
 
 	public CommandEventials(EvPlugin p){
 		super(p);

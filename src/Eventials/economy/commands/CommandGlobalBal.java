@@ -6,10 +6,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import EvLib.CommandBase2;
 import Eventials.economy.ServerEconomy;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandGlobalBal extends CommandBase2{
+public class CommandGlobalBal extends CommandBase{
 	ServerEconomy economy;
 
 	public CommandGlobalBal(JavaPlugin pl, ServerEconomy serverEconomy, boolean enabled){

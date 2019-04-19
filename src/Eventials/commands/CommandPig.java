@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import net.ess3.api.IEssentials;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -25,12 +27,9 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.earth2me.essentials.User;
-
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
 import Eventials.Eventials;
 
-public class CommandPig extends CommandBase2 implements Listener{
+public class CommandPig extends CommandBase implements Listener{
 	private EvPlugin pl;
 	private Set<UUID> piggyPigs;
 
@@ -41,6 +40,8 @@ public class CommandPig extends CommandBase2 implements Listener{
 		teleports = new PriorityQueue<UUID>();
 		justAte = new LinkedList<UUID>();
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

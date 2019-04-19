@@ -5,16 +5,18 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import EvLib.CommandBase2;
 import Eventials.Eventials;
+import net.evmodder.EvLib.CommandBase;
 
-public class CommandRecentJoins extends CommandBase2 {
+public class CommandRecentJoins extends CommandBase {
 	int maxRecents;
 
 	public CommandRecentJoins(Eventials pl) {
 		super(pl);
 		maxRecents = pl.getConfig().getInt("max-recent-joins", 20);
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

@@ -1,20 +1,23 @@
 package Eventials.commands;
 
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import EvLib.CommandBase2;
-import EvLib.EvPlugin;
 import Eventials.Eventials;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 
-public class CommandInsight extends CommandBase2{
+public class CommandInsight extends CommandBase{
 
 	public CommandInsight(EvPlugin p){
 		super(p);
 	}
+
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
