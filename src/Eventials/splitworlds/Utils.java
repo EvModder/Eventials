@@ -11,10 +11,10 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import EvLib.ReflectionUtils;
-import EvLib.ReflectionUtils.RefClass;
-import EvLib.ReflectionUtils.RefMethod;
 import Eventials.Eventials;
+import net.evmodder.EvLib.ReflectionUtils;
+import net.evmodder.EvLib.ReflectionUtils.RefClass;
+import net.evmodder.EvLib.ReflectionUtils.RefMethod;
 
 public class Utils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
