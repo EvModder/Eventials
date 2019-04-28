@@ -8,12 +8,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import Eventials.Eventials;
-import Evil_Code_Renewable.Renewable;
-import Evil_Code_Renewable.RenewableAPI;
+import net.evmodder.Renewable.Renewable;
+import net.evmodder.Renewable.RenewableAPI;
 
 public class PlayerDeathListener implements Listener {
 	//Keep unrenewables - for winners of the Renewable Event
-	RenewableAPI api;
+	final RenewableAPI api;
 	public PlayerDeathListener(){
 		api = ((Renewable)Eventials.getPlugin().getServer().getPluginManager().getPlugin("Renewable")).getAPI();
 	}

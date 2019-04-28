@@ -259,7 +259,7 @@ public class Extras {
 						type == EntityType.GIANT || type == EntityType.ENDER_DRAGON ||
 						type == EntityType.ENDER_CRYSTAL || type == EntityType.DROPPED_ITEM ||
 						type == EntityType.FALLING_BLOCK || type == EntityType.ITEM_FRAME ||
-						type == EntityType.LEASH_HITCH || type == EntityType.COMPLEX_PART ||
+						type == EntityType.LEASH_HITCH || type == EntityType.ARMOR_STAND ||
 						type == EntityType.PAINTING || type == EntityType.OCELOT ||
 						type == EntityType.WOLF || type == EntityType.FISHING_HOOK)
 				{
@@ -321,7 +321,7 @@ public class Extras {
 						type == EntityType.GIANT || type == EntityType.ENDER_DRAGON ||
 						type == EntityType.ENDER_CRYSTAL || type == EntityType.DROPPED_ITEM ||
 						type == EntityType.FALLING_BLOCK || type == EntityType.ITEM_FRAME ||
-						type == EntityType.LEASH_HITCH || type == EntityType.COMPLEX_PART ||
+						type == EntityType.LEASH_HITCH || type == EntityType.ARMOR_STAND ||
 						type == EntityType.PAINTING || type == EntityType.OCELOT ||
 						type == EntityType.WOLF || type == EntityType.FISHING_HOOK)
 				{

@@ -157,7 +157,7 @@ public class AlternateOld implements Listener {
 	}
 	private ItemStack makeOpEgg(){
 		ItemStack item = new ItemStack(Material.EGG);
-		
+
 		net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
 		NBTTagCompound tag = nmsItem.getTag();
 		NBTTagList atributeModifiers = new NBTTagList();//Attribute list

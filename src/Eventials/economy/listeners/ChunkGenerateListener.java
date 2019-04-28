@@ -49,7 +49,7 @@ public class ChunkGenerateListener implements Listener{
 		return x;
 	}
 
-	@SuppressWarnings("deprecation") @EventHandler
+	@EventHandler
 	public void onChunkGenerate(ChunkLoadEvent evt){
 		if(evt.isNewChunk()){
 			Player player = null;
@@ -95,7 +95,7 @@ public class ChunkGenerateListener implements Listener{
 						case NOTHING:
 							break;
 					}
-					evt.getChunk().unload(false, false);
+					evt.getChunk().unload(false);
 				}
 			}//endif must be within 200 blocks of chunk
 		}//endif must be a new chunk

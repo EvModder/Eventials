@@ -80,21 +80,22 @@ public class Economy extends ServerEconomy{
 			}
 			final CommandExecutor executor = cmd.getExecutor();
 			cmd.setExecutor(new CommandExecutor(){
+				final double cmdPrice = (double)(e.getValue() instanceof Integer ? ((int)e.getValue())*1D : e.getValue());
 				@Override public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 					if(sender instanceof Player && !sender.hasPermission("eventials.bypass.paidcommands") &&
 						!sender.hasPermission("eventials.bypass.paidcommands."+cmd.getName()))
 					{
 						plugin.getLogger().info("Priced command: "+cmd.getName());
-						if(!VaultHook.hasAtLeast((Player)sender, (double)e.getValue())){
+						if(!VaultHook.hasAtLeast((Player)sender, cmdPrice)){
 							sender.sendMessage(ChatColor.RED+"You do not have enough money to perform this command!\n"
-									+ChatColor.GRAY+"Price: "+ChatColor.YELLOW+e.getValue()+ChatColor.DARK_GREEN+'L');
+									+ChatColor.GRAY+"Price: "+ChatColor.YELLOW+cmdPrice+ChatColor.DARK_GREEN+'L');
 							return true;
 						}
 						if(args.length == 0 || (!args[args.length-1].equalsIgnoreCase("confirm")
 								&& !args[args.length-1].equalsIgnoreCase("c")))
 						{
 							String preMsg = ChatColor.GRAY+"This command costs "
-									+ChatColor.YELLOW+e.getValue()+CUR_SYMBOL+ChatColor.GRAY
+									+ChatColor.YELLOW+cmdPrice+CUR_SYMBOL+ChatColor.GRAY
 									+". To "+ChatColor.BOLD+"CONFIRM"+ChatColor.GRAY
 									+" this charge,\n"+ChatColor.GRAY+"run ";
 							String cmdValue = "/"+label;
@@ -107,8 +108,8 @@ public class Economy extends ServerEconomy{
 						else{
 							args = Arrays.copyOf(args, args.length-1);
 							if(attemptPaidCommand(executor, cmd, (Player)sender, label, args)){
-								playerToServer(((Player)sender).getUniqueId(), (double)e.getValue());
-								sender.sendMessage(ChatColor.GRAY+"You paid "+ChatColor.YELLOW+e.getValue()
+								playerToServer(((Player)sender).getUniqueId(), cmdPrice);
+								sender.sendMessage(ChatColor.GRAY+"You paid "+ChatColor.YELLOW+cmdPrice
 										+ChatColor.DARK_GREEN+'L'+ChatColor.GRAY+" to run "+ChatColor.WHITE+label);
 								if(updateBalsOnPayment) updateBalance(((Player)sender).getUniqueId(), true);
 							}

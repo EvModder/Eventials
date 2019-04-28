@@ -10,8 +10,7 @@ import Eventials.Eventials;
 
 public class EvVoteListener implements Listener{
 	public static final String prefix = ChatColor.YELLOW+"["+ChatColor.AQUA+"AC"+ChatColor.YELLOW+" "
-			+ChatColor.STRIKETHROUGH+'-'+ChatColor.YELLOW+"> "+ChatColor.RED
-			+"Me"+ChatColor.YELLOW+"]"+ChatColor.GRAY+" ";
+			+'-'+ChatColor.YELLOW+"> "+ChatColor.RED+"Me"+ChatColor.YELLOW+"]"+ChatColor.GRAY+" ";
 	public static final String prefix2= ChatColor.AQUA+"["+ChatColor.GRAY+"AC"+ChatColor.AQUA+"]"+ChatColor.WHITE+" ";
 	private Eventials plugin;
 	private EvVoter voteManager;

@@ -1,66 +1,70 @@
 package net.evmodder.EvLib;
 
+import java.util.HashMap;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
 
-public class TypeUtils{
-	public static boolean isSpawnEgg(Material mat){
-		switch(mat){
-			case BAT_SPAWN_EGG:
-			case BLAZE_SPAWN_EGG:
-			case CAVE_SPIDER_SPAWN_EGG:
-			case CHICKEN_SPAWN_EGG:
-			case COD_SPAWN_EGG:
-			case COW_SPAWN_EGG:
-			case CREEPER_SPAWN_EGG:
-			case DOLPHIN_SPAWN_EGG:
-			case DONKEY_SPAWN_EGG:
-			case DROWNED_SPAWN_EGG:
-			case ELDER_GUARDIAN_SPAWN_EGG:
-			case ENDERMAN_SPAWN_EGG:
-			case ENDERMITE_SPAWN_EGG:
-			case EVOKER_SPAWN_EGG:
-			case GHAST_SPAWN_EGG:
-			case GUARDIAN_SPAWN_EGG:
-			case HORSE_SPAWN_EGG:
-			case HUSK_SPAWN_EGG:
-			case LLAMA_SPAWN_EGG:
-			case MAGMA_CUBE_SPAWN_EGG:
-			case MOOSHROOM_SPAWN_EGG:
-			case MULE_SPAWN_EGG:
-			case OCELOT_SPAWN_EGG:
-			case PARROT_SPAWN_EGG:
-			case PHANTOM_SPAWN_EGG:
-			case PIG_SPAWN_EGG:
-			case POLAR_BEAR_SPAWN_EGG:
-			case PUFFERFISH_SPAWN_EGG:
-			case RABBIT_SPAWN_EGG:
-			case SALMON_SPAWN_EGG:
-			case SHEEP_SPAWN_EGG:
-			case SHULKER_SPAWN_EGG:
-			case SILVERFISH_SPAWN_EGG:
-			case SKELETON_HORSE_SPAWN_EGG:
-			case SKELETON_SPAWN_EGG:
-			case SLIME_SPAWN_EGG:
-			case SPIDER_SPAWN_EGG:
-			case SQUID_SPAWN_EGG:
-			case STRAY_SPAWN_EGG:
-			case TROPICAL_FISH_SPAWN_EGG:
-			case TURTLE_SPAWN_EGG:
-			case VEX_SPAWN_EGG:
-			case VILLAGER_SPAWN_EGG:
-			case VINDICATOR_SPAWN_EGG:
-			case WITCH_SPAWN_EGG:
-			case WITHER_SKELETON_SPAWN_EGG:
-			case WOLF_SPAWN_EGG:
-			case ZOMBIE_HORSE_SPAWN_EGG:
-			case ZOMBIE_PIGMAN_SPAWN_EGG:
-			case ZOMBIE_SPAWN_EGG:
-			case ZOMBIE_VILLAGER_SPAWN_EGG:
-				return true;
-			default:
-				return false;
-		}
+public class TypeUtils{EntityType s;
+	final static HashMap<Material, EntityType> eggToEntity = new HashMap<Material, EntityType>();
+	final static HashMap<EntityType, Material> entityToEgg = new HashMap<EntityType, Material>();
+	static{
+		eggToEntity.put(Material.BAT_SPAWN_EGG, EntityType.BAT);
+		eggToEntity.put(Material.BLAZE_SPAWN_EGG, EntityType.BLAZE);
+		eggToEntity.put(Material.CAVE_SPIDER_SPAWN_EGG, EntityType.CAVE_SPIDER);
+		eggToEntity.put(Material.CHICKEN_SPAWN_EGG, EntityType.CHICKEN);
+		eggToEntity.put(Material.COD_SPAWN_EGG, EntityType.COD);
+		eggToEntity.put(Material.COW_SPAWN_EGG, EntityType.COW);
+		eggToEntity.put(Material.CREEPER_SPAWN_EGG, EntityType.CREEPER);
+		eggToEntity.put(Material.DOLPHIN_SPAWN_EGG, EntityType.DOLPHIN);
+		eggToEntity.put(Material.DONKEY_SPAWN_EGG, EntityType.DONKEY);
+		eggToEntity.put(Material.DROWNED_SPAWN_EGG, EntityType.DROWNED);
+		eggToEntity.put(Material.ELDER_GUARDIAN_SPAWN_EGG, EntityType.ELDER_GUARDIAN);
+		eggToEntity.put(Material.ENDERMAN_SPAWN_EGG, EntityType.ENDERMAN);
+		eggToEntity.put(Material.ENDERMITE_SPAWN_EGG, EntityType.ENDERMITE);
+		eggToEntity.put(Material.EVOKER_SPAWN_EGG, EntityType.EVOKER);
+		eggToEntity.put(Material.GHAST_SPAWN_EGG, EntityType.GHAST);
+		eggToEntity.put(Material.GUARDIAN_SPAWN_EGG, EntityType.GUARDIAN);
+		eggToEntity.put(Material.HORSE_SPAWN_EGG, EntityType.HORSE);
+		eggToEntity.put(Material.HUSK_SPAWN_EGG, EntityType.HUSK);
+		eggToEntity.put(Material.LLAMA_SPAWN_EGG, EntityType.LLAMA);
+		eggToEntity.put(Material.MAGMA_CUBE_SPAWN_EGG, EntityType.MAGMA_CUBE);
+		eggToEntity.put(Material.MOOSHROOM_SPAWN_EGG, EntityType.MUSHROOM_COW);
+		eggToEntity.put(Material.MULE_SPAWN_EGG, EntityType.MULE);
+		eggToEntity.put(Material.OCELOT_SPAWN_EGG, EntityType.OCELOT);
+		eggToEntity.put(Material.PARROT_SPAWN_EGG, EntityType.PARROT);
+		eggToEntity.put(Material.PHANTOM_SPAWN_EGG, EntityType.PHANTOM);
+		eggToEntity.put(Material.PIG_SPAWN_EGG, EntityType.PIG);
+		eggToEntity.put(Material.POLAR_BEAR_SPAWN_EGG, EntityType.POLAR_BEAR);
+		eggToEntity.put(Material.PUFFERFISH_SPAWN_EGG, EntityType.PUFFERFISH);
+		eggToEntity.put(Material.RABBIT_SPAWN_EGG, EntityType.RABBIT);
+		eggToEntity.put(Material.SALMON_SPAWN_EGG, EntityType.SALMON);
+		eggToEntity.put(Material.SHEEP_SPAWN_EGG, EntityType.SHEEP);
+		eggToEntity.put(Material.SHULKER_SPAWN_EGG, EntityType.SHULKER);
+		eggToEntity.put(Material.SILVERFISH_SPAWN_EGG, EntityType.SILVERFISH);
+		eggToEntity.put(Material.SKELETON_HORSE_SPAWN_EGG, EntityType.SKELETON_HORSE);
+		eggToEntity.put(Material.SKELETON_SPAWN_EGG, EntityType.SKELETON);
+		eggToEntity.put(Material.SLIME_SPAWN_EGG, EntityType.SLIME);
+		eggToEntity.put(Material.SPIDER_SPAWN_EGG, EntityType.SPIDER);
+		eggToEntity.put(Material.SQUID_SPAWN_EGG, EntityType.SQUID);
+		eggToEntity.put(Material.STRAY_SPAWN_EGG, EntityType.STRAY);
+		eggToEntity.put(Material.TROPICAL_FISH_SPAWN_EGG, EntityType.TROPICAL_FISH);
+		eggToEntity.put(Material.TURTLE_SPAWN_EGG, EntityType.TURTLE);
+		eggToEntity.put(Material.VEX_SPAWN_EGG, EntityType.VEX);
+		eggToEntity.put(Material.VILLAGER_SPAWN_EGG, EntityType.VILLAGER);
+		eggToEntity.put(Material.VINDICATOR_SPAWN_EGG, EntityType.VINDICATOR);
+		eggToEntity.put(Material.WITCH_SPAWN_EGG, EntityType.WITCH);
+		eggToEntity.put(Material.WITHER_SKELETON_SPAWN_EGG, EntityType.WITHER);
+		eggToEntity.put(Material.WOLF_SPAWN_EGG, EntityType.WOLF);
+		eggToEntity.put(Material.ZOMBIE_HORSE_SPAWN_EGG, EntityType.ZOMBIE_HORSE);
+		eggToEntity.put(Material.ZOMBIE_PIGMAN_SPAWN_EGG, EntityType.PIG_ZOMBIE);
+		eggToEntity.put(Material.ZOMBIE_SPAWN_EGG, EntityType.ZOMBIE);
+		eggToEntity.put(Material.ZOMBIE_VILLAGER_SPAWN_EGG, EntityType.ZOMBIE_VILLAGER);
 	}
+
+	public static boolean isSpawnEgg(Material mat){return eggToEntity.keySet().contains(mat);}
+	public static EntityType getSpawnedMob(Material mat){return eggToEntity.get(mat);}
+	public static Material getSpawnEgg(EntityType etype){return entityToEgg.get(etype);}
 
 	public static boolean isOre(Material mat){
 		switch(mat){
@@ -339,6 +343,36 @@ public class TypeUtils{
 		}
 	}
 
+	public static boolean isSign(Material mat){
+		switch(mat){
+			case SIGN:
+			/*case ACACIA_SIGN:
+			case BIRCH_SIGN:
+			case DARK_OAK_SIGN:
+			case JUNGLE_SIGN:
+			case OAK_SIGN:
+			case SPRUCE_SIGN:*/
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	public static boolean isWallSign(Material mat){
+		switch(mat){
+			case WALL_SIGN:
+			/*case ACACIA_WALL_SIGN:
+			case BIRCH_WALL_SIGN:
+			case DARK_OAK_WALL_SIGN:
+			case JUNGLE_WALL_SIGN:
+			case OAK_WALL_SIGN:
+			case SPRUCE_WALL_SIGN:*/
+				return true;
+			default:
+				return false;
+		}
+	}
+
 	public static boolean isDoublePlant(Material mat){
 		switch(mat){
 			case SUNFLOWER:
@@ -425,8 +459,8 @@ public class TypeUtils{
 		}
 	}
 
-	// Broken by water
-	public static boolean isFragile(Material mat){
+	// Broken if the block relative to a given BlockFace is removed
+	public static BlockFace getFragileFace(Material mat, BlockFace facing){
 		switch(mat){
 //			case WATER:
 //			case STATIONARY_WATER:
@@ -446,13 +480,8 @@ public class TypeUtils{
 			case BEETROOTS:
 			case MELON_STEM:
 			case PUMPKIN_STEM:
-			case LADDER:
-			case WALL_SIGN:
-			case SIGN:
-			case LEVER:
 			case REDSTONE_TORCH:
 			case TORCH:
-			case WALL_TORCH:
 			case SNOW:
 			case CACTUS:
 			case SUGAR_CANE:
@@ -465,12 +494,19 @@ public class TypeUtils{
 			case POTATO:
 			case CHORUS_PLANT:
 			case CHORUS_FLOWER:
-				return true;
+				return BlockFace.DOWN;
+			//case VINE:
+				//TODO: BlockFace.UP, but only if nothing behind this block! :o
+			case LADDER:
+			case REDSTONE_WALL_TORCH:
+			case WALL_TORCH:
+			case LEVER:
+				return facing.getOppositeFace();
 			default:
-				if(isCarpet(mat)/* || isBanner(mat) || isPressurePlate(mat) || isDoor(mat)*/
-				|| isDoublePlant(mat) || isSapling(mat) || isButton(mat) || isFlowerPot(mat)) return true;
-				return false;
+				if(isCarpet(mat) || isBanner(mat) || isPressurePlate(mat) || isDoor(mat)
+				|| isDoublePlant(mat) || isSapling(mat) || isFlowerPot(mat) || isSign(mat)) return BlockFace.DOWN;
+				if(isButton(mat) || isWallBanner(mat) || isWallSign(mat)) return facing.getOppositeFace();
+				return null;
 		}
 	}
-
 }

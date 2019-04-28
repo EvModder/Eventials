@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.EulerAngle;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -166,6 +167,8 @@ public class CommandFloatingText extends CommandBase{
 		}*/
 		Location loc = ((Player)sender).getLocation();
 		loc.setY(loc.getY() + offset);
+		loc.setX(Math.round(loc.getX()*2D)/2D);//round to nearest 0.5
+		loc.setZ(Math.round(loc.getZ()*2D)/2D);
 
 		String txt = implodeAndFormat(args, 1, args.length);
 
@@ -297,11 +300,12 @@ public class CommandFloatingText extends CommandBase{
 		String oldTxt = as.getCustomName();
 		Location oldLoc = as.getLocation().clone();
 
-		if(!removeFloater(as)){
+		as.teleport(newLoc, TeleportCause.COMMAND);
+		/*if(!removeFloater(as)){
 			sender.sendMessage(ChatColor.RED + "ERROR: Unable to update the floating text!");
 			return true;
 		}
-		nearbyFloaters.set(choice, placeFloater(newLoc, oldTxt));
+		nearbyFloaters.set(choice, placeFloater(newLoc, oldTxt));*/
 
 		sender.sendMessage(ICON + ChatColor.GREEN + " Move of ["+ChatColor.RESET+oldTxt+ChatColor.GREEN+"] successful!");
 		sender.sendMessage(ICON + ChatColor.GOLD + " Old: " + ChatColor.GRAY + Text.locationToString(oldLoc));

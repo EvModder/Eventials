@@ -155,8 +155,8 @@ public class CommandEnderchest extends CommandBase{
 			final UUID snooper = player.getUniqueId();
 			@EventHandler public void inventoryCloseEvent(InventoryCloseEvent evt){
 				if(!evt.getPlayer().getUniqueId().equals(snooper) ||
-						evt.getInventory().getType() != InventoryType.ENDER_CHEST ||
-						!invName.equals(evt.getInventory().getTitle())) return;
+						evt.getInventory().getType() != InventoryType.ENDER_CHEST/*TODO: broke in 1.14 ||
+						!invName.equals(evt.getInventory().getTitle())*/) return;
 
 				pl.getLogger().info("Updating inventory: "+fTargetWorld+" > "+fTargetPlayer.getName());
 

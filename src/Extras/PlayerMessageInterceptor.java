@@ -436,4 +436,7 @@ public class PlayerMessageInterceptor implements Player{
 	@Override public void setPlayerListHeaderFooter(String s, String s2){player.setPlayerListHeaderFooter(s, s2);}
 	@Override public void showPlayer(Plugin pl, Player p){player.showPlayer(pl, p);}
 	@Override public void updateCommands(){player.updateCommands();}
+/*	@Override public Pose getPose(){return player.getPose();}
+	@Override public void setRotation(float f1, float f2){player.setRotation(f1, f2);}
+	@Override public PersistentDataContainer getPersistentDataContainer(){return player.getPersistentDataContainer();}*/
 }

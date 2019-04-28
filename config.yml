@@ -50,7 +50,7 @@ keep-if-op: true
 #Time is in seconds. Can by bypassed with 'eventials.bypass.waitcommands'
 #To bypass a specific command, use 'eventials.bypass.waitcommands.cmd'
 global-command-cooldowns:
-  toggledownfall: 1200
+  weather: 1200
 
 #--------------------------------------#
 #           EvEconomy config           #
@@ -76,10 +76,12 @@ paid-commands:
   lockhorse: 5.0
   gethorse: 2.5
   inspecthorse: 1.0
-  repair: 40
-  separate: 5
-  weaponstats: 10
-  unsignbook: 5
+  repair: 40.0
+  separate: 5.0
+  weaponstats: 10.0
+  unsignbook: 5.0
+  suicide: 10.0
+  home: 0.1
 
 update-balance-watch: false
 update-balance-on-paid-commands: true
@@ -99,11 +101,11 @@ ad-expires-on: 0
 
 #Currently, there are 55 vanilla advancements
 advancement-reward: true
-advancement-completion-prize: 1000
+advancement-completion-prize: 500
 advancement-exponential-base: 1.05
-advancement-constant-multiplier: 15
+advancement-constant-multiplier: 10
 advancement-min-before-reward: 5
-advancement-max-reward: 1000
+advancement-max-reward: 500
 advancements-included:
   - story
   - adventure
@@ -111,8 +113,8 @@ advancements-included:
   - end
   - husbandry
 
-login-daily-money: 10
-online-when-daily-money-bonus: 0.01
+login-daily-money: 5
+online-when-daily-money-bonus: 1
 announce-daily-money: true
 economy-signs: true
 
@@ -181,7 +183,7 @@ allow-colorcodes-in-commandblock: true #TODO
 
 #These do not require 'evspawner-enabled: true'
 disable-skeleton-traps: true
-allow-mob-armies: true
+allow-mob-armies: false
 army-size-mean: 100
 army-size-standard-deviation: 100
 army-spawn-likelyhood: .002
@@ -303,20 +305,20 @@ auto-messages:
   - |
        Remember, server &aEvents&r are temporary, and
        eventually everything goes back to normal
-  - 'Want a private, teleportable horse? try &2/hm ?'
+  - 'Want a private, teleportable horse? try &2/hm'
   - 'Custom saddle, nametag, & barding recipies listed &d@Market'
   - 'Ye like? Ye vote? &2/vote&r for links!'
   - 'Remember, you can use &2/enderchest&r in the Events world!'
   - |
        Any monetary help is always greatly appreciated :)
-       Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks'
+       Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks
   - |
        Donations minimum on &bac.buycraft.net=>http://ac.buycraft.net/&r is currently .99 USD,
        but that may change change over time
   - 'Work started on a site! Visit &baltcraft.net=>http://www.altcraft.net'
   - 'Suggestions for tweaks/plugins/etc are always welcome!'
   - 'Please check &2/rules&r periodically for updates'
-  - 'Sharing server IPs is fine, but &ndon''t spam&r please!'
+  - 'Sharing server IPs is fine, but &nno soliciting&r please!'
   - 'Have an idea for an automsg? You could get &2$&a50&r for it!'
   - 'Staff are here to help, so ask away!'
   - 'Killing people is fun, so why not start a head collection? ;)'

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
 import Extras.Text;
 import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.TypeUtils;
 
 public class CommandSigntool extends CommandBase implements Listener{
 	public CommandSigntool(Eventials pl, boolean enabled){
@@ -70,8 +70,8 @@ public class CommandSigntool extends CommandBase implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteractBlock(PlayerInteractEvent evt){
 		if(evt.getClickedBlock() != null && !evt.isCancelled() && evt.getAction() == Action.RIGHT_CLICK_BLOCK
-				&& (evt.getClickedBlock().getType() == Material.WALL_SIGN
-				|| evt.getClickedBlock().getType() == Material.SIGN)
+				&& (TypeUtils.isSign(evt.getClickedBlock().getType())
+				|| TypeUtils.isWallSign(evt.getClickedBlock().getType()))
 				&& evt.getItem() != null && evt.getItem().hasItemMeta() && evt.getItem().getItemMeta().hasLore()
 				&& evt.getItem().getItemMeta().getLore().contains(ChatColor.BLUE+"Sign Setter")
 				&& evt.getPlayer().isSneaking())

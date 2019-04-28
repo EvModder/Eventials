@@ -37,9 +37,9 @@ public class CommandUnsignBook extends CommandBase{
 			sender.sendMessage(ChatColor.RED+"Error: Non-original copies cannot be unsigned!");
 			return true;
 		}
-		if(meta.getAuthor() != sender.getName() && !p.hasPermission("eventials.books.unsign.other")){
+		if(!meta.getAuthor().equals(sender.getName()) && !p.hasPermission("eventials.books.unsign.other")){
 			sender.sendMessage(ChatColor.RED+"Error: Author mismatch\n"
-					+ChatColor.GRAY+"You man not unsign "+meta.getAuthor()+"'s book for them!");
+					+ChatColor.GRAY+"You may not unsign "+meta.getAuthor()+"'s book for them!");
 			return true;
 		}
 		ItemStack openBook = new ItemStack(Material.WRITABLE_BOOK);

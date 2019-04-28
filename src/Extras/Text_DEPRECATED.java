@@ -1,22 +1,19 @@
 package Extras;
-
+/*
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import net.minecraft.server.v1_13_R2.IChatBaseComponent;
-import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_13_R2.PacketPlayOutChat;
-
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-
+import org.apache.commons.lang.StringUtils;
 import Eventials.Eventials;
+import net.minecraft.server.v1_14_R1.IChatBaseComponent;
+import net.minecraft.server.v1_14_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_14_R1.PacketPlayOutChat;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 
-public class CopyOfText {
+public class Text_DEPRECATED {
 	enum Event{CLICK,HOVER};
 	public enum TextAction{
 		//ClickEvent
@@ -169,4 +166,4 @@ public class CopyOfText {
 		list.addAll(Arrays.asList(string.substring(1, string.lastIndexOf(']')).split(", ")));
 		return list;
 	}
-}
+}*/
