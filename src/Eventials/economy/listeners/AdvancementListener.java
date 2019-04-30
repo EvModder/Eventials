@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
-import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib2.EvUtils;
 
 public class AdvancementListener implements Listener{
 //	Given n=34 (total achs), exp=1.1, and c=18.5, a player will get ~5000 from completing all achs

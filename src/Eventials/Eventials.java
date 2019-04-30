@@ -13,9 +13,9 @@ import Eventials.economy.Economy;
 import Eventials.scheduler.Scheduler;
 import Eventials.voter.EvVoter;
 import Extras.Extras;
-import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.VaultHook;
+import net.evmodder.EvLib2.EvPlugin;
+import net.evmodder.EvLib2.FileIO;
+import net.evmodder.EvLib2.VaultHook;
 
 /** Everything inside this class is very AltCraft-specific,
  *  and not really meant for (or useful for) public distribution.

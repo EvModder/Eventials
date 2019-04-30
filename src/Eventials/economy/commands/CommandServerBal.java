@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.economy.ServerEconomy;
 import Extras.Text;
-import net.evmodder.EvLib.CommandBase;
-import net.evmodder.EvLib.VaultHook;
+import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib2.VaultHook;
 
 public class CommandServerBal extends CommandBase{
 	final ServerEconomy economy;

@@ -6,8 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import net.evmodder.EvLib.CommandBase;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib2.EvPlugin;
 
 public class CommandDebug extends CommandBase{
 

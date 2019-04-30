@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Extras.Text;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib2.CommandBase;
 
 public class CommandAdvertise extends CommandBase{
 	private Economy economy;

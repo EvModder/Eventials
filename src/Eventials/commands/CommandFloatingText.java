@@ -18,8 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import Extras.Text;
-import net.evmodder.EvLib.CommandBase;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib2.EvPlugin;
 
 public class CommandFloatingText extends CommandBase{
 	public static final String ICON =

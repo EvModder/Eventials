@@ -7,9 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import Extras.Text;
 import Extras.Text.TextAction;
-import net.evmodder.EvLib.CommandBase;
-import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib2.EvPlugin;
+import net.evmodder.EvLib2.EvUtils;
 
 public class CommandVote extends CommandBase{
 	final String[] links;

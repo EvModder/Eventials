@@ -1,7 +1,5 @@
 package Eventials.custombows;
 
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -13,6 +11,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import Eventials.Eventials;
+import net.evmodder.EvLib.RefNBTTag;
 
 public class CustomBows implements Listener{
 	private Eventials plugin;
@@ -46,9 +45,9 @@ public class CustomBows implements Listener{
 
 	public static BowType getBowType(ItemStack bow){
 		if(bow == null || bow.getType() != Material.BOW) return BowType.None;
-		NBTTagCompound bowTag = CraftItemStack.asNMSCopy(bow).getTag();
-		if(bowTag != null) for(BowType type : BowType.values()){
-			if(bowTag.hasKey(type.name())) return type;
+		RefNBTTag tag = RefNBTTag.getTag(bow);
+		if(tag != null) for(BowType type : BowType.values()){
+			if(tag.getInt(type.name()) == 1) return type;
 		}
 		return BowType.None;
 	}

@@ -19,8 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
 import Extras.Text;
-import net.evmodder.EvLib.CommandBase;
-import net.evmodder.EvLib.TypeUtils;
+import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib2.TypeUtils;
 
 public class CommandSigntool extends CommandBase implements Listener{
 	public CommandSigntool(Eventials pl, boolean enabled){

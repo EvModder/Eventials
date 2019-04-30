@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.economy.commands.CommandServerBal;
-import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.VaultHook;
+import net.evmodder.EvLib2.FileIO;
+import net.evmodder.EvLib2.VaultHook;
 import Eventials.economy.commands.CommandDonateServer;
 import Eventials.economy.commands.CommandGlobalBal;
 

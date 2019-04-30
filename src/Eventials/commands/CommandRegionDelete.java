@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib2.CommandBase;
 
 public class CommandRegionDelete extends CommandBase {
 

@@ -12,9 +12,9 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import Eventials.Eventials;
-import net.evmodder.EvLib.ReflectionUtils;
-import net.evmodder.EvLib.ReflectionUtils.RefClass;
-import net.evmodder.EvLib.ReflectionUtils.RefMethod;
+import net.evmodder.EvLib2.ReflectionUtils;
+import net.evmodder.EvLib2.ReflectionUtils.RefClass;
+import net.evmodder.EvLib2.ReflectionUtils.RefMethod;
 
 public class Utils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
@@ -53,9 +53,8 @@ public class Utils{
 		return matchGroups;
 	}
 
-
 	//Reflection
-	private static final RefClass classEntityTracker = ReflectionUtils.getRefClass("{nms}.EntityTracker");
+	private static final RefClass classEntityTracker = ReflectionUtils.getRefClass("{nms}.PlayerChunkMap.EntityTracker");
 	private static final RefClass classCraftWorld = ReflectionUtils.getRefClass("{cb}.CraftWorld");
 	private static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
 	private static final RefClass classEntity = ReflectionUtils.getRefClass("{nms}.Entity");

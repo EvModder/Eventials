@@ -6,7 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib2.CommandBase;
 import org.bukkit.ChatColor;
 
 public class CommandVipTake extends CommandBase {

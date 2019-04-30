@@ -5,8 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import net.evmodder.EvLib.ReflectionUtils;
-import net.evmodder.EvLib.ReflectionUtils.*;
+import net.evmodder.EvLib2.ReflectionUtils;
+import net.evmodder.EvLib2.ReflectionUtils.*;
 
 public class DisguiseUtils {
 

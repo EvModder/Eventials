@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import Eventials.economy.Economy;
 import Extras.Text;
-import net.evmodder.EvLib.CommandBase;
-import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.VaultHook;
+import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib2.EvPlugin;
+import net.evmodder.EvLib2.VaultHook;
 
 public class CommandDeposit extends CommandBase{
 	final Economy economy;

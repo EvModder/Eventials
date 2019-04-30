@@ -1,26 +1,19 @@
 package Eventials.custombows;
 
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
-import net.minecraft.server.v1_13_R2.NBTTagList;
-
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.evmodder.EvLib2.RefNBTTag;
+import net.evmodder.EvLib2.RefNBTTagList;
 
 public class Gandiva{
 	public static ItemStack makeBow(){
-		ItemStack item = new ItemStack(Material.BOW);
-
-		net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-		NBTTagList atributeModifiers = new NBTTagList();//Attribute list
-		if(nmsItem.getTag() == null) nmsItem.setTag(new NBTTagCompound());
-
+		RefNBTTagList attributeModifiers = new RefNBTTagList();
 		//----------------------- Attack attribute -----------------------
-		NBTTagCompound attribute = new NBTTagCompound();
+		RefNBTTag attribute = new RefNBTTag();
 		attribute.setString("Slot", "mainhand");
 		attribute.setString("AttributeName", "generic.attackDamage");
 		attribute.setString("Name", "generic.attackDamage");
@@ -28,31 +21,34 @@ public class Gandiva{
 		attribute.setInt("Operation", 0);
 		attribute.setInt("UUIDLeast", 1);
 		attribute.setInt("UUIDMost", 1);
-		atributeModifiers.add(attribute);
+		attributeModifiers.add(attribute);
 		//----------------------- Knockb attribute -----------------------
-		attribute = new NBTTagCompound();
+		attribute = new RefNBTTag();
 		attribute.setString("AttributeName", "generic.knockbackResistance");
 		attribute.setString("Name", "generic.knockbackResistance");
 		attribute.setFloat("Amount", .25F);
 		attribute.setInt("Operation", 1);
 		attribute.setInt("UUIDLeast", 1);
 		attribute.setInt("UUIDMost", 1);
-		atributeModifiers.add(attribute);
+		attributeModifiers.add(attribute);
 		//----------------------- Moving attribute -----------------------
-		attribute = new NBTTagCompound();
+		attribute = new RefNBTTag();
 		attribute.setString("AttributeName", "generic.movementSpeed");
 		attribute.setString("Name", "generic.movementSpeed");
 		attribute.setFloat("Amount", -.05F);//5% decrease
 		attribute.setInt("Operation", 1);
 		attribute.setInt("UUIDLeast", 1);
 		attribute.setInt("UUIDMost", 1);
-		atributeModifiers.add(attribute);
+		attributeModifiers.add(attribute);
 		//----------------------------------------------------------------
-		nmsItem.getTag().set("AttributeModifiers", atributeModifiers);
-		nmsItem.getTag().setInt("Unbreakable", 1);
-		nmsItem.getTag().setInt("Gandiva", 1);
-		nmsItem.getTag().setInt("Age", -32768);
-		item = CraftItemStack.asCraftMirror(nmsItem);
+		RefNBTTag tag = new RefNBTTag();
+		tag.set("AttributeModifiers", attributeModifiers);
+		tag.setInt("Unbreakable", 1);
+		tag.setInt("Gandiva", 1);
+		tag.setInt("Age", -32768);
+
+		ItemStack item = new ItemStack(Material.BOW);
+		item = RefNBTTag.setTag(item, tag);
 
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.GRAY+"Gandiva");

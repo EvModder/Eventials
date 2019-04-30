@@ -2,8 +2,8 @@ package Eventials.voter;
 
 import Eventials.Eventials;
 import Eventials.economy.Economy;
-import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.VaultHook;
+import net.evmodder.EvLib2.FileIO;
+import net.evmodder.EvLib2.VaultHook;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.UUID;

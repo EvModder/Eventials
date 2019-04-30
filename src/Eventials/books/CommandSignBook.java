@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.BookMeta.Generation;
 import org.bukkit.plugin.java.JavaPlugin;
 import Extras.Text;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib2.CommandBase;
 
 public class CommandSignBook extends CommandBase{
 	public CommandSignBook(JavaPlugin pl){super(pl);}

@@ -1,6 +1,7 @@
-package net.evmodder.EvLib;
+package net.evmodder.EvLib2;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -11,6 +12,7 @@ public class TypeUtils{EntityType s;
 	static{
 		eggToEntity.put(Material.BAT_SPAWN_EGG, EntityType.BAT);
 		eggToEntity.put(Material.BLAZE_SPAWN_EGG, EntityType.BLAZE);
+		eggToEntity.put(Material.CAT_SPAWN_EGG, EntityType.CAT);
 		eggToEntity.put(Material.CAVE_SPIDER_SPAWN_EGG, EntityType.CAVE_SPIDER);
 		eggToEntity.put(Material.CHICKEN_SPAWN_EGG, EntityType.CHICKEN);
 		eggToEntity.put(Material.COD_SPAWN_EGG, EntityType.COD);
@@ -23,6 +25,7 @@ public class TypeUtils{EntityType s;
 		eggToEntity.put(Material.ENDERMAN_SPAWN_EGG, EntityType.ENDERMAN);
 		eggToEntity.put(Material.ENDERMITE_SPAWN_EGG, EntityType.ENDERMITE);
 		eggToEntity.put(Material.EVOKER_SPAWN_EGG, EntityType.EVOKER);
+		eggToEntity.put(Material.FOX_SPAWN_EGG, EntityType.FOX);
 		eggToEntity.put(Material.GHAST_SPAWN_EGG, EntityType.GHAST);
 		eggToEntity.put(Material.GUARDIAN_SPAWN_EGG, EntityType.GUARDIAN);
 		eggToEntity.put(Material.HORSE_SPAWN_EGG, EntityType.HORSE);
@@ -32,12 +35,15 @@ public class TypeUtils{EntityType s;
 		eggToEntity.put(Material.MOOSHROOM_SPAWN_EGG, EntityType.MUSHROOM_COW);
 		eggToEntity.put(Material.MULE_SPAWN_EGG, EntityType.MULE);
 		eggToEntity.put(Material.OCELOT_SPAWN_EGG, EntityType.OCELOT);
+		eggToEntity.put(Material.PANDA_SPAWN_EGG, EntityType.PANDA);
 		eggToEntity.put(Material.PARROT_SPAWN_EGG, EntityType.PARROT);
 		eggToEntity.put(Material.PHANTOM_SPAWN_EGG, EntityType.PHANTOM);
 		eggToEntity.put(Material.PIG_SPAWN_EGG, EntityType.PIG);
+		eggToEntity.put(Material.PILLAGER_SPAWN_EGG, EntityType.PILLAGER);
 		eggToEntity.put(Material.POLAR_BEAR_SPAWN_EGG, EntityType.POLAR_BEAR);
 		eggToEntity.put(Material.PUFFERFISH_SPAWN_EGG, EntityType.PUFFERFISH);
 		eggToEntity.put(Material.RABBIT_SPAWN_EGG, EntityType.RABBIT);
+		eggToEntity.put(Material.RAVAGER_SPAWN_EGG, EntityType.RAVAGER);
 		eggToEntity.put(Material.SALMON_SPAWN_EGG, EntityType.SALMON);
 		eggToEntity.put(Material.SHEEP_SPAWN_EGG, EntityType.SHEEP);
 		eggToEntity.put(Material.SHULKER_SPAWN_EGG, EntityType.SHULKER);
@@ -50,6 +56,7 @@ public class TypeUtils{EntityType s;
 		eggToEntity.put(Material.STRAY_SPAWN_EGG, EntityType.STRAY);
 		eggToEntity.put(Material.TROPICAL_FISH_SPAWN_EGG, EntityType.TROPICAL_FISH);
 		eggToEntity.put(Material.TURTLE_SPAWN_EGG, EntityType.TURTLE);
+		eggToEntity.put(Material.TRADER_LLAMA_SPAWN_EGG, EntityType.TRADER_LLAMA);
 		eggToEntity.put(Material.VEX_SPAWN_EGG, EntityType.VEX);
 		eggToEntity.put(Material.VILLAGER_SPAWN_EGG, EntityType.VILLAGER);
 		eggToEntity.put(Material.VINDICATOR_SPAWN_EGG, EntityType.VINDICATOR);
@@ -60,6 +67,7 @@ public class TypeUtils{EntityType s;
 		eggToEntity.put(Material.ZOMBIE_PIGMAN_SPAWN_EGG, EntityType.PIG_ZOMBIE);
 		eggToEntity.put(Material.ZOMBIE_SPAWN_EGG, EntityType.ZOMBIE);
 		eggToEntity.put(Material.ZOMBIE_VILLAGER_SPAWN_EGG, EntityType.ZOMBIE_VILLAGER);
+		for(Entry<Material, EntityType> e : eggToEntity.entrySet()) entityToEgg.put(e.getValue(), e.getKey());
 	}
 
 	public static boolean isSpawnEgg(Material mat){return eggToEntity.keySet().contains(mat);}
@@ -345,13 +353,13 @@ public class TypeUtils{EntityType s;
 
 	public static boolean isSign(Material mat){
 		switch(mat){
-			case SIGN:
-			/*case ACACIA_SIGN:
+			//case SIGN:
+			case ACACIA_SIGN:
 			case BIRCH_SIGN:
 			case DARK_OAK_SIGN:
 			case JUNGLE_SIGN:
 			case OAK_SIGN:
-			case SPRUCE_SIGN:*/
+			case SPRUCE_SIGN:
 				return true;
 			default:
 				return false;
@@ -360,13 +368,13 @@ public class TypeUtils{EntityType s;
 
 	public static boolean isWallSign(Material mat){
 		switch(mat){
-			case WALL_SIGN:
-			/*case ACACIA_WALL_SIGN:
+			//case WALL_SIGN:
+			case ACACIA_WALL_SIGN:
 			case BIRCH_WALL_SIGN:
 			case DARK_OAK_WALL_SIGN:
 			case JUNGLE_WALL_SIGN:
 			case OAK_WALL_SIGN:
-			case SPRUCE_WALL_SIGN:*/
+			case SPRUCE_WALL_SIGN:
 				return true;
 			default:
 				return false;

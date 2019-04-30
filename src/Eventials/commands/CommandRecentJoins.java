@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib2.CommandBase;
 
 public class CommandRecentJoins extends CommandBase {
 	int maxRecents;

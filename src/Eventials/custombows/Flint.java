@@ -1,8 +1,7 @@
 package Eventials.custombows;
 
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
-import net.minecraft.server.v1_13_R2.NBTTagList;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import net.evmodder.EvLib2.RefNBTTag;
+import net.evmodder.EvLib2.RefNBTTagList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -18,14 +17,10 @@ public class Flint{
 	}
 
 	public static ItemStack makeBow(){
-		ItemStack item = new ItemStack(Material.BOW);
-
-		net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-		NBTTagList atributeModifiers = new NBTTagList();//Attribute list
-		if(nmsItem.getTag() == null) nmsItem.setTag(new NBTTagCompound());
-
+		RefNBTTag tag = new RefNBTTag();
+		RefNBTTagList attributeModifiers = new RefNBTTagList();
 		//----------------------- Attack attribute -----------------------
-		NBTTagCompound attribute = new NBTTagCompound();
+		RefNBTTag attribute = new RefNBTTag();
 		attribute.setString("Slot", "mainhand");
 		attribute.setString("AttributeName", "generic.attackDamage");
 		attribute.setString("Name", "generic.attackDamage");
@@ -33,22 +28,24 @@ public class Flint{
 		attribute.setInt("Operation", 0);
 		attribute.setInt("UUIDLeast", 1);
 		attribute.setInt("UUIDMost", 1);
-		atributeModifiers.add(attribute);
+		attributeModifiers.add(attribute);
 		//----------------------- Moving attribute -----------------------
-		attribute = new NBTTagCompound();
+		attribute = new RefNBTTag();
 		attribute.setString("AttributeName", "generic.movementSpeed");
 		attribute.setString("Name", "generic.movementSpeed");
 		attribute.setFloat("Amount", .05F);//5% increase
 		attribute.setInt("Operation", 1);
 		attribute.setInt("UUIDLeast", 1);
 		attribute.setInt("UUIDMost", 1);
-		atributeModifiers.add(attribute);
+		attributeModifiers.add(attribute);
 		//----------------------------------------------------------------
-		nmsItem.getTag().set("AttributeModifiers", atributeModifiers);
-		nmsItem.getTag().setInt("Unbreakable", 1);
-		nmsItem.getTag().setInt("Flint", 1);
-		nmsItem.getTag().setInt("Age", -32768);
-		item = CraftItemStack.asCraftMirror(nmsItem);
+		tag.set("AttributeModifiers", attributeModifiers);
+		tag.setInt("Unbreakable", 1);
+		tag.setInt("Flint", 1);
+		tag.setInt("Age", -32768);
+
+		ItemStack item = new ItemStack(Material.BOW);
+		item = RefNBTTag.setTag(item, tag);
 
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.DARK_GRAY+""+ChatColor.BOLD+"Flint");

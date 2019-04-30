@@ -29,8 +29,8 @@ import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Extras.Text.TextAction;
 import net.ess3.api.IEssentials;
-import net.evmodder.EvLib.EvUtils;
-import net.evmodder.EvLib.VaultHook;
+import net.evmodder.EvLib2.EvUtils;
+import net.evmodder.EvLib2.VaultHook;
 
 public class Extras {
 	//used for the fancy /help

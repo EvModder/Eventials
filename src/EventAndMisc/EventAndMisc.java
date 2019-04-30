@@ -27,7 +27,7 @@ public class EventAndMisc {
 		
 		if(worldSettings != null) for(String worldName : worldSettings.getKeys(false)){
 			World w = pl.getServer().getWorld(worldName);
-			if(w == null) pl.getLogger().warning("WORLD NOT FOUND: \""+worldName+"\" (from config)");
+			if(w == null) pl.getLogger().warning("UNKNOWN WORLD: \""+worldName+"\" (from config)");
 			else{
 				try{
 					ConfigurationSection borderData = worldSettings.getConfigurationSection(worldName);

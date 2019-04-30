@@ -22,9 +22,9 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import Extras.Text;
-import net.evmodder.EvLib.EvUtils;
-import net.evmodder.EvLib.NBTTagUtils;
-import net.evmodder.EvLib.TypeUtils;
+import net.evmodder.EvLib2.EvUtils;
+import net.evmodder.EvLib2.RefNBTTag;
+import net.evmodder.EvLib2.TypeUtils;
 
 public class EvSpawner implements Listener {
 	final Random rand;
@@ -136,7 +136,9 @@ public class EvSpawner implements Listener {
 			else{
 				meta.setBlockState(spawnerState);
 				item.setItemMeta(meta);
-				item = NBTTagUtils.addNBTTag(item, "ev_spawner_key", rand.nextInt());
+				RefNBTTag tag = new RefNBTTag();
+				tag.setInt("ev_spawner_key", rand.nextInt());
+				item = RefNBTTag.setTag(item, tag);
 			}
 
 			evt.setExpToDrop(0);

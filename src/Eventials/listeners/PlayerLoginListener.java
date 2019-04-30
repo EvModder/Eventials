@@ -19,8 +19,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Extras.Text;
-import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.VaultHook;
+import net.evmodder.EvLib2.FileIO;
+import net.evmodder.EvLib2.VaultHook;
 
 public class PlayerLoginListener implements Listener{
 	private Eventials plugin;

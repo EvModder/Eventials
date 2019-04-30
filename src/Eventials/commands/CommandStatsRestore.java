@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import Eventials.Eventials;
 import Extras.Extras;
 import Extras.Text;
-import net.evmodder.EvLib.CommandBase;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib2.EvPlugin;
 import net.md_5.bungee.api.ChatColor;
 
 public class CommandStatsRestore extends CommandBase {

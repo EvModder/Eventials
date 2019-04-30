@@ -1,4 +1,4 @@
-package net.evmodder.EvLib;
+package net.evmodder.EvLib2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,10 +21,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import net.evmodder.EvLib.ReflectionUtils;
-import net.evmodder.EvLib.ReflectionUtils.RefClass;
-import net.evmodder.EvLib.ReflectionUtils.RefField;
-import net.evmodder.EvLib.ReflectionUtils.RefMethod;
+import net.evmodder.EvLib2.ReflectionUtils;
+import net.evmodder.EvLib2.ReflectionUtils.RefClass;
+import net.evmodder.EvLib2.ReflectionUtils.RefField;
+import net.evmodder.EvLib2.ReflectionUtils.RefMethod;
 
 public class EvUtils{// version = X1.0
 	public static float getBlockStrength(Material block){

@@ -1,5 +1,5 @@
 package Extras;
-/*
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -166,4 +166,4 @@ public class Text_DEPRECATED {
 		list.addAll(Arrays.asList(string.substring(1, string.lastIndexOf(']')).split(", ")));
 		return list;
 	}
-}*/
+}

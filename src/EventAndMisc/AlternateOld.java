@@ -1,8 +1,5 @@
 package EventAndMisc;
 
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
-import net.minecraft.server.v1_13_R2.NBTTagList;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +34,8 @@ import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Evil_Code_EvKits.EvKits;
 import Extras.Extras;
+import net.evmodder.EvLib2.RefNBTTag;
+import net.evmodder.EvLib2.RefNBTTagList;
 
 public class AlternateOld implements Listener {
 	Eventials pl;
@@ -156,17 +155,10 @@ public class AlternateOld implements Listener {
 		}
 	}
 	private ItemStack makeOpEgg(){
-		ItemStack item = new ItemStack(Material.EGG);
-
-		net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-		NBTTagCompound tag = nmsItem.getTag();
-		NBTTagList atributeModifiers = new NBTTagList();//Attribute list
-		if(tag == null){
-			nmsItem.setTag(new NBTTagCompound());
-			tag = nmsItem.getTag();
-		}
+		RefNBTTag tag = new RefNBTTag();
+		RefNBTTagList attributeModifiers = new RefNBTTagList();
 		//----------------------- Attack attribute -----------------------
-		NBTTagCompound attribute = new NBTTagCompound();
+		RefNBTTag attribute = new RefNBTTag();
 //		atributeModifiers.setString("Slot", "mainhand");
 		attribute.setString("AttributeName", "generic.attackDamage");
 		attribute.setString("Name", "generic.attackDamage");
@@ -174,11 +166,11 @@ public class AlternateOld implements Listener {
 		attribute.setInt("Operation", 0);
 		attribute.setInt("UUIDLeast", 1);
 		attribute.setInt("UUIDMost", 1);
-		atributeModifiers.add(attribute);
-		tag.set("AttributeModifiers", atributeModifiers);
-		nmsItem.setTag(tag);
+		attributeModifiers.add(attribute);
+		tag.set("AttributeModifiers", attributeModifiers);
 		//----------------------------------------------------------------
-		item = CraftItemStack.asCraftMirror(nmsItem);
+		ItemStack item = new ItemStack(Material.EGG);
+		item = RefNBTTag.setTag(item, tag);
 
 		ItemMeta meta = item.getItemMeta();
 		meta.addEnchant(Enchantment.KNOCKBACK, 2, true);

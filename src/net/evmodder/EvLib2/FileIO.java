@@ -1,4 +1,4 @@
-package net.evmodder.EvLib;
+package net.evmodder.EvLib2;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,7 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.google.common.io.Files;
-import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib2.EvUtils;
 
 public class FileIO{// version = X1.0
 	static String DIR = "./plugins/EvFolder/";
