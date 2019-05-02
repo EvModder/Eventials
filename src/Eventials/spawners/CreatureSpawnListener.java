@@ -30,7 +30,7 @@ public class CreatureSpawnListener implements Listener{
 	public void onSpawn(CreatureSpawnEvent evt){
 		if(evt.isCancelled()) return;
 
-		if(evt.getSpawnReason() == SpawnReason.NATURAL && !evt.isCancelled() && evt.getEntity() instanceof Monster
+		if(evt.getSpawnReason() == SpawnReason.NATURAL && evt.getEntity() instanceof Monster
 				&& armySpawnEnabled && evt.getEntityType() != EntityType.PIG_ZOMBIE && rand.nextDouble() < CHANCE)
 		{
 			if(!RECURSIVE_SPAWNING) armySpawnEnabled = false;

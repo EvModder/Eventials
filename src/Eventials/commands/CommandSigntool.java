@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -69,7 +70,8 @@ public class CommandSigntool extends CommandBase implements Listener{
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteractBlock(PlayerInteractEvent evt){
-		if(evt.getClickedBlock() != null && !evt.isCancelled() && evt.getAction() == Action.RIGHT_CLICK_BLOCK
+		if(evt.getClickedBlock() != null && evt.useInteractedBlock() != Result.DENY
+				&& evt.getAction() == Action.RIGHT_CLICK_BLOCK
 				&& (TypeUtils.isSign(evt.getClickedBlock().getType())
 				|| TypeUtils.isWallSign(evt.getClickedBlock().getType()))
 				&& evt.getItem() != null && evt.getItem().hasItemMeta() && evt.getItem().getItemMeta().hasLore()
@@ -113,6 +115,8 @@ public class CommandSigntool extends CommandBase implements Listener{
 						Sign sign = (Sign) evt.getClickedBlock().getState();
 						for(int i=0; i<lines.length; ++i) if(!lines[i].isEmpty()) sign.setLine(i, lines[i]);
 						sign.update();
+						evt.setUseItemInHand(Result.DENY);
+						evt.setUseInteractedBlock(Result.DENY);
 					}
 				}//there is data to write to sign
 			}//allowed to edit blocks
