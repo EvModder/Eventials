@@ -15,8 +15,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
 
 public class CommandInvsee extends CommandBase{
 	private EvPlugin pl;

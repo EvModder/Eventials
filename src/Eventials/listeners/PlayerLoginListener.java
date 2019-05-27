@@ -18,9 +18,9 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
-import Extras.Text;
-import net.evmodder.EvLib2.FileIO;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.hooks.EssEcoHook;
+import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class PlayerLoginListener implements Listener{
 	private Eventials plugin;
@@ -38,7 +38,7 @@ public class PlayerLoginListener implements Listener{
 		playNote = plugin.getConfig().getBoolean("login-noteblock");
 		showRecentJoins = plugin.getConfig().getBoolean("show-recent-joins", true);
 		saveIps = plugin.getConfig().getBoolean("save-ips", true);
-		curSymbol = Text.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
+		curSymbol = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
 		trackGlobalBal = plugin.getConfig().getBoolean("track-global-balance", true);
 		announceDailyMoney = plugin.getConfig().getBoolean("online-when-daily-money-bonus", true);
 		if(plugin.getConfig().getBoolean("economy-enabled")){
@@ -54,7 +54,7 @@ public class PlayerLoginListener implements Listener{
 		if(showRecentJoins){
 			String joinsFile = FileIO.loadFile("recent-joins.txt", "");
 			if(!joinsFile.isEmpty()){
-				recentJoins = Text.toListFromString(joinsFile);
+				recentJoins = TextUtils.toListFromString(joinsFile);
 				recentJoins.remove("");
 				int maxLength = plugin.getConfig().getInt("max-recent-joins", 20);
 				while(recentJoins.size() > maxLength) recentJoins.removeFirst();
@@ -165,7 +165,7 @@ public class PlayerLoginListener implements Listener{
 		else if(startingBal > 0){//new player
 			plugin.getLogger().info("Giving starting cash: "+startingBal);
 			if(serverFundsNoobs) eco.serverToPlayer(uuid, startingBal);
-			else if(VaultHook.giveMoney(offP, startingBal) && trackGlobalBal){
+			else if(EssEcoHook.giveMoney(offP, startingBal) && trackGlobalBal){
 				eco.addGlobalBal(startingBal);
 			}
 		}

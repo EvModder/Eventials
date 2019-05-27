@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.BookMeta.Generation;
 import org.bukkit.plugin.java.JavaPlugin;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandSignBook extends CommandBase{
 	public CommandSignBook(JavaPlugin pl){super(pl);}
@@ -38,7 +38,7 @@ public class CommandSignBook extends CommandBase{
 			sender.sendMessage(ChatColor.RED+"Please provide a title");
 			return true;
 		}
-		String title = Text.translateAlternateColorCodes('&', StringUtils.join(args, ' '));
+		String title = TextUtils.translateAlternateColorCodes('&', StringUtils.join(args, ' '));
 		String author = sender.getName();
 		if(sender.hasPermission("eventials.books.sign.other")){
 			int i = title.toLowerCase().indexOf("author:");

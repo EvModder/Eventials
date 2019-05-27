@@ -1,11 +1,7 @@
 package EventAndMisc;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.UUID;
-
-import org.anjocaido.groupmanager.dataholder.WorldDataHolder;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -35,7 +31,7 @@ public class CommandVipTake implements CommandExecutor{
 		for(World world : pl.getServer().getWorlds()){
 			File groups = new File("./plugins/GroupManager/worlds/"+world.getName().toLowerCase()+"/groups.yml");
 			if(groups.exists() == false) continue;
-			File users = new File("./plugins/GroupManager/worlds/"+world.getName().toLowerCase()+"/users.yml");
+			/*File users = new File("./plugins/GroupManager/worlds/"+world.getName().toLowerCase()+"/users.yml");
 			
 			if(groups.exists() && users.exists())
 			try{
@@ -45,7 +41,7 @@ public class CommandVipTake implements CommandExecutor{
 					pl.getLogger().info("Removed Vip rank from "+p.getName()+" for world: "+world.getName());
 					continue;
 				}
-			}catch(FileNotFoundException e){}catch(IOException e){}
+			}catch(FileNotFoundException e){}catch(IOException e){}*/
 			// gets here only if there is an exception and the player's Vip is not removed.
 			pl.getServer().dispatchCommand(pl.getServer().getConsoleSender(), "manuadd "+p.getName()+" Default "+world.getName());
 		}

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import net.evmodder.EvLib.extras.CommandUtils;
+import net.evmodder.EvLib.extras.TextUtils;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.OfflinePlayer;
@@ -15,9 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import com.earth2me.essentials.Essentials;
 import Eventials.Eventials;
+import Eventials.Extras;
 import Eventials.economy.Economy;
-import Extras.Extras;
-import Extras.Text;
 
 public class PreCommandListener implements Listener {
 	final Eventials plugin;
@@ -44,7 +45,7 @@ public class PreCommandListener implements Listener {
 		balanceWatchCommands = new HashSet<String>();
 		if(watchBalances) balanceWatchCommands.addAll(plugin.getConfig().getStringList("update-balance-commands"));
 
-		curSymbol = Text.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
+		curSymbol = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
 		getCommandFromAlias = new HashMap<String, String>();
 		cooldownCommands = new HashMap<String, Integer>();
 		recentCooldownCommands = new HashMap<String, Long>();
@@ -90,6 +91,10 @@ public class PreCommandListener implements Listener {
 
 		if(watchBalances && balanceWatchCommands.contains(noSlash)){
 			Economy.getEconomy().updateBalance(evt.getPlayer().getUniqueId(), true);
+			for(String arg : message.split(" ")){
+				OfflinePlayer p = plugin.getServer().getOfflinePlayer(arg);
+				if(p != null && p.hasPlayedBefore()) Economy.getEconomy().updateBalance(p.getUniqueId(), true);
+			}
 		}
 
 		if(commandAliases){
@@ -162,7 +167,7 @@ public class PreCommandListener implements Listener {
 				Command cmd = plugin.getServer().getPluginCommand(message.substring(space+1));
 				if(cmd != null){
 					evt.setCancelled(true);
-					Extras.showCommandHelp(evt.getPlayer(), cmd);
+					CommandUtils.showCommandHelp(evt.getPlayer(), cmd);
 				}
 			}
 			if(fancyHelp){
@@ -172,7 +177,7 @@ public class PreCommandListener implements Listener {
 					catch(IllegalArgumentException ex){return;}
 				}
 				evt.setCancelled(true);
-				Extras.showFancyHelp(evt.getPlayer(), pageNum);
+				CommandUtils.showFancyHelp(evt.getPlayer(), pageNum);
 			}
 		}
 		else if(command.equals("/pl") || command.equals("/plugins") || command.equals("/?")){

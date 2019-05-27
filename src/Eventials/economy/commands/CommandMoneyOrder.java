@@ -13,10 +13,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.economy.Economy;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.hooks.EssEcoHook;
 import org.bukkit.ChatColor;
 
 public class CommandMoneyOrder extends CommandBase implements Listener{
@@ -28,7 +28,7 @@ public class CommandMoneyOrder extends CommandBase implements Listener{
 		super(pl, enabled);
 		if(enabled) pl.getServer().getPluginManager().registerEvents(this, pl);
 		economy = eco;
-		curSymbol = Text.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
+		curSymbol = TextUtils.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
 		MAX_MO = pl.getConfig().getInt("moneyorder-max");
 		MIN_MO = pl.getConfig().getInt("moneyorder-min");
 		TAX_MO = pl.getConfig().getInt("moneyorder-tax-percent");
@@ -39,7 +39,7 @@ public class CommandMoneyOrder extends CommandBase implements Listener{
 			final List<String> tabCompletes = new ArrayList<String>();
 			args[0] = args[0].toLowerCase();
 			if((""+MIN_MO).startsWith(args[0])) tabCompletes.add(""+MIN_MO);
-			int bal = (int) VaultHook.getBalance((Player)sender);
+			int bal = (int) EssEcoHook.getBalance((Player)sender);
 			if(MIN_MO < bal && bal < MAX_MO) if((""+bal).startsWith(args[0])) tabCompletes.add(""+bal);
 			if((""+MAX_MO).startsWith(args[0])) tabCompletes.add(""+MAX_MO);
 			return tabCompletes;

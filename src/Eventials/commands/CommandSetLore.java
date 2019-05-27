@@ -9,7 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
-import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandSetLore extends CommandBase {
 	public CommandSetLore(Eventials pl){
@@ -39,7 +40,7 @@ public class CommandSetLore extends CommandBase {
 			input.append(' '); input.append(args[i]);
 		}
 		
-		String loreString = Extras.Text.translateAlternateColorCodes('&', input.toString());
+		String loreString = TextUtils.translateAlternateColorCodes('&', input.toString());
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(Arrays.asList(loreString.split(">")));
 		item.setItemMeta(meta);

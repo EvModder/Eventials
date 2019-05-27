@@ -5,8 +5,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.TextUtils;
 import java.util.List;
 import org.bukkit.ChatColor;
 
@@ -43,7 +44,7 @@ public class CommandItemPrefix extends CommandBase{
 		for(int i=1; i<args.length; ++i) builder.append(' ').append(args[i]);
 		builder.append(meta.getDisplayName());
 
-		meta.setDisplayName(Extras.Text.translateAlternateColorCodes('&', builder.toString()));
+		meta.setDisplayName(TextUtils.translateAlternateColorCodes('&', builder.toString()));
 		item.setItemMeta(meta);
 		
 		player.getInventory().setItemInMainHand(item);

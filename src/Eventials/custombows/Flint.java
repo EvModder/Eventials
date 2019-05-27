@@ -1,7 +1,7 @@
 package Eventials.custombows;
 
-import net.evmodder.EvLib2.RefNBTTag;
-import net.evmodder.EvLib2.RefNBTTagList;
+import net.evmodder.EvLib.RefNBTTag;
+import net.evmodder.EvLib.RefNBTTagList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

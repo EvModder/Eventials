@@ -6,10 +6,10 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
-import net.ess3.api.IEssentials;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
-import net.evmodder.EvLib2.EvUtils;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.hooks.EssPermHook;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.EvUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,7 +22,6 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import com.earth2me.essentials.User;
 import Eventials.Eventials;
 
 public class CommandBreakPhysics extends CommandBase implements Listener{
@@ -85,9 +84,7 @@ public class CommandBreakPhysics extends CommandBase implements Listener{
 			teleports.add(evt.getPlayer().getUniqueId());
 			new BukkitRunnable(){@Override public void run() {
 				Player p = pl.getServer().getPlayer(teleports.remove());
-
-				if(p != null && new User(p, (IEssentials) pl.getServer().getPluginManager().getPlugin("Essentials"))
-						.isAuthorized("evp.evm.breakPhysics") == false) remove(p.getUniqueId());
+				if(p != null && !EssPermHook.isAuthorized(p, getCommand().getPermission())) remove(p.getUniqueId());
 			}}.runTaskLater(pl, 1);
 		}
 	}

@@ -10,12 +10,9 @@ import Eventials.custombows.CustomBows;
 import Eventials.spawners.*;
 import Eventials.splitworlds.SplitWorlds;
 import Eventials.economy.Economy;
-import Eventials.scheduler.Scheduler;
 import Eventials.voter.EvVoter;
-import Extras.Extras;
-import net.evmodder.EvLib2.EvPlugin;
-import net.evmodder.EvLib2.FileIO;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.FileIO;
 
 /** Everything inside this class is very AltCraft-specific,
  *  and not really meant for (or useful for) public distribution.
@@ -30,7 +27,6 @@ public class Eventials extends EvPlugin {
 
 	@Override public void onEvEnable(){
 		plugin = this;
-		new VaultHook(this);
 		if(config.getBoolean("book-editor-enabled", true)) new WriterTools(this);
 		if(config.getBoolean("enable-custom-bows", true)) new CustomBows(this);
 		if(config.getBoolean("economy-enabled", true)) eco = new Economy(this);
@@ -38,7 +34,6 @@ public class Eventials extends EvPlugin {
 		if(config.getBoolean("evspawner-enabled", true)) new EvSpawner(this);
 		if(config.getBoolean("evvoter-enabled", true)) voter = new EvVoter(this);
 		if(config.getBoolean("splitworlds-enabled", true)) new SplitWorlds(this);
-		if(config.getBoolean("fancy-help", true)) Extras.loadFancyHelp(this);
 
 		if(config.getBoolean("pre-command", true))
 			getServer().getPluginManager().registerEvents(new PreCommandListener(), this);

@@ -5,17 +5,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import Extras.GhostFactory;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.GhostUtils;
 import Eventials.Eventials;
 
 public class CommandGhost extends CommandBase{
-	GhostFactory ghostFactory;
+	GhostUtils ghostFactory;
 	
 	public CommandGhost(EvPlugin p){
 		super(p);
-		ghostFactory = new GhostFactory(p);
+		ghostFactory = new GhostUtils(p);
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}

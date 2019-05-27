@@ -1,16 +1,18 @@
 package Eventials.commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import Eventials.Eventials;
-import Extras.Extras;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
-import net.md_5.bungee.api.ChatColor;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.ButcherUtils;
+import net.evmodder.EvLib.extras.ButcherUtils.KillFlag;
 
 public class CommandClearEntities extends CommandBase {
 
@@ -22,10 +24,9 @@ public class CommandClearEntities extends CommandBase {
 		final List<String> tabCompletes = new ArrayList<String>();
 		String arg = args[args.length-1].toLowerCase();
 		if("animals".startsWith(arg)) tabCompletes.add("animals");
-		if("hostile".startsWith(arg)) tabCompletes.add("hostile");
-		if("monsters".startsWith(arg)) tabCompletes.add("monsters");
-		if("complex".startsWith(arg)) tabCompletes.add("complex");
-		if("enviroment".startsWith(arg)) tabCompletes.add("enviroment");
+		if("tiles".startsWith(arg)) tabCompletes.add("tiles");
+		if("unique".startsWith(arg)) tabCompletes.add("unique");
+		if("equipped".startsWith(arg)) tabCompletes.add("equipped");
 		if("named".startsWith(arg)) tabCompletes.add("named");
 		return tabCompletes;
 	}
@@ -35,32 +36,29 @@ public class CommandClearEntities extends CommandBase {
 		World world = null;
 		if(sender instanceof Player)world = ((Player) sender).getWorld();
 		boolean badWorld = false;
-		boolean hostile = false, animal = false, complex = false, nonliving = false, named = false;
-		boolean ignoreNearby = !(sender instanceof Player);//<-- Do not butcher entities that are "nearby" to players
+		HashMap<KillFlag, Boolean> flags = new HashMap<KillFlag, Boolean>();
 
 		for(String arg : args){
 			arg = arg.toLowerCase();
 
 			if((world = Eventials.getPlugin().getServer().getWorld(arg)) == null){
 				arg = arg.replace("-", "");
-
-				if(arg.equals("a") || arg.startsWith("animal")) animal = true;
-				else if(arg.equals("h") || arg.startsWith("hostile") ||
-						arg.equals("m") || arg.startsWith("monster")) hostile = true;
-				else if(arg.equals("c") || arg.startsWith("complex")) complex = true;
-				else if(arg.equals("e") || arg.startsWith("enviroment")) nonliving = true;
-				else if(arg.equals("n") || arg.startsWith("name")) named = true;
+				if(arg.equals("a") || arg.contains("animal")) flags.put(KillFlag.ANIMALS, true);
+				else if(arg.equals("t") || arg.contains("tile")) flags.put(KillFlag.TILE, true);
+				else if(arg.equals("n") || arg.contains("name")) flags.put(KillFlag.NAMED, true);
+				else if(arg.equals("c") || arg.contains("close") || arg.contains("nearby"))
+					flags.put(KillFlag.NEARBY, true);
+				else if(arg.equals("e") || arg.contains("equip")) flags.put(KillFlag.EQUIPPED, true);
+				else if(arg.equals("u") || arg.contains("unique")) flags.put(KillFlag.UNIQUE, true);
 				else if(arg.length() > 1) badWorld = true;
 			}
 		}
-		if(!animal && !complex && !nonliving) hostile = true;
-
 		if(world == null && badWorld){
 			sender.sendMessage(ChatColor.RED+"Could not find the specified world!");
 			return true;
 		}
 
-		int numKilled = Extras.clearEntitiesByWorld(world, hostile, animal, complex, nonliving, named, ignoreNearby);
+		int numKilled = ButcherUtils.clearEntitiesByWorld(world, flags);
 		if(world != null) sender.sendMessage(ChatColor.GRAY+"Brutally murdered "+numKilled
 											+" entities in world: "+world.getName());
 		else sender.sendMessage(ChatColor.GRAY+"Brutally murdered "+ChatColor.ITALIC+ChatColor.BOLD

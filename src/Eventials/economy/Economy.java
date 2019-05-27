@@ -16,9 +16,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import Eventials.economy.commands.*;
 import Eventials.economy.listeners.*;
-import Extras.PlayerMessageInterceptor;
-import Extras.Text;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.hooks.EssEcoHook;
+import net.evmodder.EvLib.extras.PlayerMessageInterceptor;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class Economy extends ServerEconomy{
 	final boolean useCurItem, updateBalsOnPayment;
@@ -30,7 +30,7 @@ public class Economy extends ServerEconomy{
 		super(pl, !pl.getConfig().getBoolean("track-server-balance", true),
 				   pl.getConfig().getBoolean("track-global-balance", true),
 				   (long) pl.getConfig().getDouble("starting-balance", 0),
-				   Text.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L")));
+				   TextUtils.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L")));
 
 		//Set defaults for ServerEconomy if applicable
 		BigDecimal serverBal = BigDecimal.valueOf(pl.getConfig().getLong("starting-server-balance", 0));
@@ -57,7 +57,7 @@ public class Economy extends ServerEconomy{
 		if(pl.getConfig().getBoolean("advancement-reward")){
 			pl.getServer().getPluginManager().registerEvents(new AdvancementListener(), plugin);
 		}
-		if(pl.getConfig().getDouble("chunk-generate-cost", 0.0) != 0){
+		if(pl.getConfig().getDouble("chunk-generate-cost", 0) != 0){
 			pl.getServer().getPluginManager().registerEvents(new ChunkGenerateListener(), plugin);
 		}
 
@@ -86,7 +86,7 @@ public class Economy extends ServerEconomy{
 						!sender.hasPermission("eventials.bypass.paidcommands."+cmd.getName()))
 					{
 						plugin.getLogger().info("Priced command: "+cmd.getName());
-						if(!VaultHook.hasAtLeast((Player)sender, cmdPrice)){
+						if(!EssEcoHook.hasAtLeast((Player)sender, cmdPrice)){
 							sender.sendMessage(ChatColor.RED+"You do not have enough money to perform this command!\n"
 									+ChatColor.GRAY+"Price: "+ChatColor.YELLOW+cmdPrice+ChatColor.DARK_GREEN+'L');
 							return true;
@@ -102,7 +102,7 @@ public class Economy extends ServerEconomy{
 							if(args.length != 0) cmdValue += " "+StringUtils.join(args, " ");
 							cmdValue += " confirm";
 							String hyperMsg = ChatColor.DARK_GREEN+cmdValue;
-							Text.sendModifiedText(preMsg, hyperMsg, Text.TextAction.RUN_CMD, cmdValue, "", (Player)sender);
+							TextUtils.sendModifiedText(preMsg, hyperMsg, TextUtils.TextAction.RUN_CMD, cmdValue, "", (Player)sender);
 							return true;
 						}
 						else{

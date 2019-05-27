@@ -21,10 +21,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
-import Extras.Text;
-import net.evmodder.EvLib2.EvUtils;
-import net.evmodder.EvLib2.RefNBTTag;
-import net.evmodder.EvLib2.TypeUtils;
+import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib.RefNBTTag;
+import net.evmodder.EvLib.TypeUtils;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class EvSpawner implements Listener {
 	final Random rand;
@@ -104,7 +104,7 @@ public class EvSpawner implements Listener {
 					if(noNBTCommandblock) return;
 					String cmd = ((CommandBlock)meta.getBlockState()).getCommand();
 					plugin.getLogger().info("Stored command: "+cmd);
-					if(colorcodeCommandblock) cmd = Text.translateAlternateColorCodes('&', cmd);
+					if(colorcodeCommandblock) cmd = TextUtils.translateAlternateColorCodes('&', cmd);
 					plugin.getLogger().info("New command: " + cmd);
 
 					CommandBlock blockState = (CommandBlock) evt.getBlockPlaced().getState();

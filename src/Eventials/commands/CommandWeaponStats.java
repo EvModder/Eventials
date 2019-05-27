@@ -22,7 +22,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
-import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib.CommandBase;
 
 public class CommandWeaponStats extends CommandBase implements Listener{
 	final String[] defaultStats = new String[]{"Monster Kills", "Animal Kills", "Player Kills", "Boss Kills"};

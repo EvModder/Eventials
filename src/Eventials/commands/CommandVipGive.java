@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
-import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib.CommandBase;
 import org.bukkit.ChatColor;
 
 public class CommandVipGive extends CommandBase {

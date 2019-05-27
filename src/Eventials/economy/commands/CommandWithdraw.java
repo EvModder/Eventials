@@ -10,11 +10,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import Eventials.economy.Economy;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
-import net.evmodder.EvLib2.EvUtils;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.hooks.EssEcoHook;
 
 public class CommandWithdraw extends CommandBase{
 	final Economy economy;
@@ -30,12 +30,12 @@ public class CommandWithdraw extends CommandBase{
 			}
 		});
 		economy = eco;
-		curSymbol = Text.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
+		curSymbol = TextUtils.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
 	}
 
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
 		if(args.length == 1 && sender instanceof Player && label.equalsIgnoreCase(cmd.getName())){
-			int bal = (int) VaultHook.getBalance((Player)sender);
+			int bal = (int) EssEcoHook.getBalance((Player)sender);
 			if(bal > 0){
 				final List<String> tabCompletes = new ArrayList<String>();
 				args[0] = args[0].toLowerCase();
@@ -72,11 +72,11 @@ public class CommandWithdraw extends CommandBase{
 		}
 
 		Player p = (Player) sender;
-		if(!VaultHook.hasAtLeast(p, withdraw)){
-			withdraw = (int) VaultHook.getBalance(p);
+		if(!EssEcoHook.hasAtLeast(p, withdraw)){
+			withdraw = (int) EssEcoHook.getBalance(p);
 		}
 
-		if(withdraw > 0 && VaultHook.chargeFee(p, withdraw)){
+		if(withdraw > 0 && EssEcoHook.chargeFee(p, withdraw)){
 			int MAX_STACK_SIZE = economy.getCurrency().getMaxStackSize();
 
 			ItemStack[] items = new ItemStack[withdraw/MAX_STACK_SIZE+1];

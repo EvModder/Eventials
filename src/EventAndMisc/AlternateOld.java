@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
@@ -29,13 +27,11 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Evil_Code_EvKits.EvKits;
-import Extras.Extras;
-import net.evmodder.EvLib2.RefNBTTag;
-import net.evmodder.EvLib2.RefNBTTagList;
+import net.evmodder.EvLib.RefNBTTag;
+import net.evmodder.EvLib.RefNBTTagList;
 
 public class AlternateOld implements Listener {
 	Eventials pl;
@@ -270,7 +266,8 @@ public class AlternateOld implements Listener {
 		cleanWorldNames.add(evt.getWorld().getName());
 		chunksToClean.add(new int[]{evt.getChunk().getX(), evt.getChunk().getZ()});
 		
-		//TODO: test if crashes
+		//TODO: fix & re-enable
+		/*
 //		evm.getLogger().info("butchering!!");
 		new BukkitRunnable(){
 			@Override public void run(){
@@ -279,13 +276,13 @@ public class AlternateOld implements Listener {
 				if(w == null) return;
 				Chunk chunk = w.getChunkAt(coords[0], coords[1]);
 				if(chunk.isLoaded() == false && chunk.load()){
-					int killed = Extras.clearEntitiesByChunk(chunk, true, false, false, false, false, true);
+					int killed = ButcherUtils.clearEntitiesByChunk(chunk);
 					if(killed > 0) pl.getLogger().info("Killed in chunk unload: "+killed);
 					chunk.unload();
 					chunksToClean.remove(0);//these remove()s must come after the .unload()
 					cleanWorldNames.remove(0);
 				}
 			}
-		}.runTaskLater(pl, 1200);//1 minute
+		}.runTaskLater(pl, 1200);//1 minute*/
 	}
 }

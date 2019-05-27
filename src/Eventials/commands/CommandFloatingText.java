@@ -17,9 +17,9 @@ import java.util.Vector;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandFloatingText extends CommandBase{
 	public static final String ICON =
@@ -116,7 +116,7 @@ public class CommandFloatingText extends CommandBase{
 
 	public static String implodeAndFormat(String[] args, int start, int end){
 		String txt = StringUtils.join(args, ' ', start, end);
-		txt = Text.translateAlternateColorCodes('&', txt);
+		txt = TextUtils.translateAlternateColorCodes('&', txt);
 		txt = txt.replaceAll("(?<=(?:^|[^\\\\]))(\\\\{2})*\\\\n", "$1\n");
 		txt = txt.replaceAll("(?<=(?:^|[^\\\\]))(\\\\{2})*>", "$1\n");
 		txt = txt.replaceAll("(?<=(?:^|[^\\\\]))(\\\\{2})*\\\\s", "$1 ");
@@ -173,7 +173,7 @@ public class CommandFloatingText extends CommandBase{
 		String txt = implodeAndFormat(args, 1, args.length);
 
 		CommandFloatingText.placeFloater(loc, txt);
-		sender.sendMessage(ICON + ChatColor.GRAY + " " + Text.locationToString(loc) + ChatColor.GREEN + ": \""
+		sender.sendMessage(ICON + ChatColor.GRAY + " " + TextUtils.locationToString(loc) + ChatColor.GREEN + ": \""
 								+ ChatColor.RESET + txt + ChatColor.GREEN + "\" placed.");
 		return true;
 	}
@@ -257,7 +257,7 @@ public class CommandFloatingText extends CommandBase{
 		}
 		nearbyFloaters.set(choice, null);
 
-		sender.sendMessage(ICON + " " + ChatColor.GRAY + Text.locationToString(loc) + ChatColor.GRAY + ": \""
+		sender.sendMessage(ICON + " " + ChatColor.GRAY + TextUtils.locationToString(loc) + ChatColor.GRAY + ": \""
 				+ ChatColor.RESET + txt + ChatColor.GRAY + "\" removed.");
 		return true;
 	}
@@ -308,8 +308,8 @@ public class CommandFloatingText extends CommandBase{
 		nearbyFloaters.set(choice, placeFloater(newLoc, oldTxt));*/
 
 		sender.sendMessage(ICON + ChatColor.GREEN + " Move of ["+ChatColor.RESET+oldTxt+ChatColor.GREEN+"] successful!");
-		sender.sendMessage(ICON + ChatColor.GOLD + " Old: " + ChatColor.GRAY + Text.locationToString(oldLoc));
-		sender.sendMessage(ICON + ChatColor.GOLD + " New: " + ChatColor.GRAY + Text.locationToString(newLoc));
+		sender.sendMessage(ICON + ChatColor.GOLD + " Old: " + ChatColor.GRAY + TextUtils.locationToString(oldLoc));
+		sender.sendMessage(ICON + ChatColor.GOLD + " New: " + ChatColor.GRAY + TextUtils.locationToString(newLoc));
 		return true;
 	}
 

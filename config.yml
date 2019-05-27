@@ -85,7 +85,17 @@ paid-commands:
 
 update-balance-watch: false
 update-balance-on-paid-commands: true
-update-balance-commands: [pay, withdraw, deposit, sell, moneyorder, advertise, repair]
+update-balance-commands:
+  - pay
+  - withdraw
+  - deposit
+  - sell
+  - moneyorder
+  - bal
+  - balance
+  - eco
+  - economy
+  - serverbal
 
 use-item-as-currency: true
 currency-item: LILY_PAD
@@ -138,8 +148,7 @@ chunk-generate-failure: TP_SPAWN
 #--------------------------------------#
 #Frequency of the clock in seconds
 scheduler-enabled: true
-clock-period: 60
-#current-cycle: 0 #Now stored in scheduler-data.txt
+clock-period: 60 #Default 60s per cycle
 
 #To disable a task, set its frequency to 0
 cycles-per-eventials-data-save: 2
@@ -148,6 +157,7 @@ cycles-per-mob-clear: 5
 cycles-per-worldsave: 5
 cycles-per-player-delete: 1440
 cycles-per-magic-day-reward: 60
+cycles-per-holiday-action: 5
 
 skip-automessage-if-other-event: true
 skip-automessage-if-no-chats: true
@@ -291,9 +301,9 @@ auto-messages:
   - 'Warps to important locations can be found at spawn'
 #  - '&4[&c&lWarn&4]&r Unused terrain will be periodically reset!'
   - 'Contact staff to learn about or purchase a Market plot'
-  - |
-       Running low on cash?
-       Sell your stone and logs in the &d@AdminShop&r!
+#  - |
+#       Running low on cash?
+#       Sell your stone and logs in the &d@AdminShop&r!
   - 'Be careful, you can get auto-killed for PvP logging!'
   - |
        &4[&c&lWarn&4]&r Traveling generates many new chunks
@@ -306,11 +316,11 @@ auto-messages:
        Remember, server &aEvents&r are temporary, and
        eventually everything goes back to normal
   - 'Want a private, teleportable horse? try &2/hm'
-  - 'Custom saddle, nametag, & barding recipies listed &d@Market'
+#  - 'Custom saddle, nametag, & barding recipies listed &d@Market'
   - 'Ye like? Ye vote? &2/vote&r for links!'
-  - 'Remember, you can use &2/enderchest&r in the Events world!'
+#  - 'Remember, you can use &2/enderchest&r in the Events world!'
   - |
-       Any monetary help is always greatly appreciated :)
+       Monetary help is not required, but is always appreciated! :)
        Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks
   - |
        Donations minimum on &bac.buycraft.net=>http://ac.buycraft.net/&r is currently .99 USD,
@@ -319,13 +329,13 @@ auto-messages:
   - 'Suggestions for tweaks/plugins/etc are always welcome!'
   - 'Please check &2/rules&r periodically for updates'
   - 'Sharing server IPs is fine, but &nno soliciting&r please!'
-  - 'Have an idea for an automsg? You could get &2$&a50&r for it!'
+  - 'Have an idea for an automsg? You could get &2L&a50&r for it!'
   - 'Staff are here to help, so ask away!'
   - 'Killing people is fun, so why not start a head collection? ;)'
   - 'Want to compete? Dump off your stuff and type &2/arenas&r!'
-  - |
-       Win the &nMarket Parkour&r for a stack of diamond blocks!
-       (FYI, it is practically impossible, and no hacks allowed)
+#  - |
+#       Win the &nMarket Parkour&r for a stack of diamond blocks!
+#       (Warning, it is practically impossible)
   - 'Unwarranted griefing can result in a tempban -> ban.'
   - |
        We recommend the &6LithosCore&r texture pack-
@@ -337,11 +347,11 @@ auto-messages:
   - |
        Many commands have shortcuts!
        Examples: &2/home&r&7 -> &2/h&r, &2/back&r&7 -> &2/b&r, &2/f power&r&7 -> &2/f p
+#  - |
+#      Chickens &d@Adminshop&r have been reported to lay more
+#      than just basic eggs, go grab some golden goodies!
   - |
-      Chickens &d@Adminshop&r have been reported to lay more
-      than just basic eggs, go grab some golden goodies!
-  - |
-      Found a base and want to raid, but unsure about rules?
+      Some ugly house in your way, but unsure about the rules?
       Ask a staff member to get the thumbs up!
   - |
        Want to see an epic 3D map of the server? Visit Dynmap!
@@ -350,14 +360,14 @@ auto-messages:
   - |
        Have something important to tell? Looking for ways
        to promote your &d@Marketplace&r shop? Try &2/advertise&r!
-  - |
-      Like the chickens at the &d@Adminshop&r?
-      Look, but don't touch&m  &r they have dark powers!
+#  - |
+#      Like the chickens at the &d@Adminshop&r?
+#      Look, but don't touch&m  &r they have dark powers!
   - |
        @ Server admins: Avoid &cClearLagg&r, it sucks!
        Both &cNoLagg&r and &cReduceLag&r are way better
-  - 'I used to be indecisive. Now I''m not sure...'
-  - '&c&lPro Tip:&r&o don''t eat the yellow snow'
+#  - 'I used to be indecisive. Now I''m not sure...'
+#  - '&c&lPro Tip:&r&o don''t eat the yellow snow'
 
 ping-messages:
   - ''

@@ -16,8 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandAdvertise extends CommandBase{
 	private Economy economy;
@@ -34,7 +34,7 @@ public class CommandAdvertise extends CommandBase{
 		MAX_LENGTH = pl.getConfig().getInt("ad-max-length", 46);
 		COST = pl.getConfig().getInt("ad-cost");
 		expiresOn = pl.getConfig().getLong("ad-expires-on");
-		curSymbol = Text.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
+		curSymbol = TextUtils.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
@@ -65,10 +65,10 @@ public class CommandAdvertise extends CommandBase{
 			//-----------------------------------------------------------
 			sender.sendMessage("\n\n\n\n\n\n\n\n\n"+ChatColor.DARK_AQUA+ChatColor.BOLD+ChatColor.STRIKETHROUGH
 							+"=======================================");
-			Text.sendModifiedText(ChatColor.GRAY+"Click to pay the "+
+			TextUtils.sendModifiedText(ChatColor.GRAY+"Click to pay the "+
 									ChatColor.GREEN+curSymbol+COST+ChatColor.GRAY+" and set the ad: [",
 									ChatColor.WHITE+">>"+ChatColor.AQUA+"Pay "+curSymbol+COST+ChatColor.WHITE+"<<",
-									Text.TextAction.RUN_CMD, "/advertise pay* "+advert, ChatColor.GRAY+"]", (Player)sender);
+									TextUtils.TextAction.RUN_CMD, "/advertise pay* "+advert, ChatColor.GRAY+"]", (Player)sender);
 			sender.sendMessage(""+ChatColor.BLUE+ChatColor.BOLD+ChatColor.STRIKETHROUGH
 					+"=======================================");
 			sender.sendMessage(ChatColor.DARK_RED+"["+ChatColor.RED+ChatColor.BOLD+"Warn"+ChatColor.DARK_RED+"] "

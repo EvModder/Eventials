@@ -10,10 +10,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import Eventials.Eventials;
+import Eventials.Extras;
 import Eventials.economy.Economy;
-import Extras.Extras;
-import net.evmodder.EvLib2.TypeUtils;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.TypeUtils;
+import net.evmodder.EvLib.hooks.EssEcoHook;
 
 public class EconomySignListener implements Listener {
 	String symbol;
@@ -43,7 +43,7 @@ public class EconomySignListener implements Listener {
 					Material item = Material.getMaterial(lines[2].toUpperCase());
 					double price = Double.parseDouble(lines[3]);
 
-					if(VaultHook.hasAtLeast(evt.getPlayer(), price)) {
+					if(EssEcoHook.hasAtLeast(evt.getPlayer(), price)) {
 						if(economy.playerToServer(evt.getPlayer().getUniqueId(), price)) {
 							for(ItemStack extra : evt.getPlayer().getInventory().addItem(new ItemStack(item, amount))
 									.values())

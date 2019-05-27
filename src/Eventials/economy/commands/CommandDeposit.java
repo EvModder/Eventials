@@ -9,10 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import Eventials.economy.Economy;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.hooks.EssEcoHook;
 
 public class CommandDeposit extends CommandBase{
 	final Economy economy;
@@ -28,7 +28,7 @@ public class CommandDeposit extends CommandBase{
 			}
 		});
 		economy = eco;
-		curSymbol = Text.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
+		curSymbol = TextUtils.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
@@ -71,7 +71,7 @@ public class CommandDeposit extends CommandBase{
 				if(deposited == deposit) break;
 			}
 		}
-		if(VaultHook.giveMoney(p, deposited)){
+		if(EssEcoHook.giveMoney(p, deposited)){
 			p.getInventory().setContents(contents);
 			p.sendMessage(new StringBuilder().append(ChatColor.GREEN).append("You deposited ")
 					.append(ChatColor.YELLOW).append(deposited).append(curSymbol).toString());

@@ -1,14 +1,14 @@
-package Eventials.scheduler;
+package Eventials;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
-import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,23 +19,25 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Eventials.economy.commands.CommandAdvertise;
-import Extras.Extras;
-import Extras.Text;
-import net.evmodder.EvLib2.FileIO;
+import Eventials.holidays.HolidayListener;
+import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.ButcherUtils;
+import net.evmodder.EvLib.extras.ButcherUtils.KillFlag;
 import com.earth2me.essentials.IEssentials;
 
 public final class Scheduler{
 	private Eventials plugin;
 	private int cycleCount, automsg_index;
 	private boolean magicDay, serverIsSilent, playerSinceButcher, playerSinceSave;
+	private HolidayListener currentHoliday;
 	final String[] autoMsgs;
 	final String msgC, msgP, escapedMsgP;
-	final int period, cAutomsg, cWorldsave, cDelete, cButcher, cMagic, cEventialsSave;
+	final int period, cAutomsg, cWorldsave, cDelete, cButcher, cMagic, cHoliday, cEventialsSave;
 	final boolean cSkipAutomsg, skipAutomsgIfSilent;
-
+	final HashMap<KillFlag, Boolean> butcherFlags;
 	private static Scheduler sch; public static Scheduler getScheduler(){return sch;}
 
 	public Scheduler(Eventials pl){
@@ -44,11 +46,11 @@ public final class Scheduler{
 
 		List<String> list = plugin.getConfig().getStringList("auto-messages");
 		autoMsgs = list.toArray(new String[list.size()]);
-		msgC = Text.translateAlternateColorCodes('&', plugin.getConfig().getString("message-color", "&e"));
-		msgP = Text.translateAlternateColorCodes('&', plugin.getConfig().getString("message-prefix", "&e"));
-		escapedMsgP = Text.escapeTextActionCodes(msgP);
+		msgC = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("message-color", "&e"));
+		msgP = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("message-prefix", "&e"));
+		escapedMsgP = TextUtils.escapeTextActionCodes(msgP);
 		for(int i = 0; i < autoMsgs.length; ++i){
-			autoMsgs[i] = Text.translateAlternateColorCodes('&', autoMsgs[i].replaceAll("&r", msgC)
+			autoMsgs[i] = TextUtils.translateAlternateColorCodes('&', autoMsgs[i].replaceAll("&r", msgC)
 					.replaceAll("\\\\n", "\\n"));
 		}
 		period = plugin.getConfig().getInt("clock-period", 60)*20;
@@ -59,9 +61,19 @@ public final class Scheduler{
 		cWorldsave = plugin.getConfig().getInt("cycles-per-worldsave", 5);
 		cDelete = plugin.getConfig().getInt("cycles-per-player-delete", 2880);
 		cMagic = plugin.getConfig().getInt("cycles-per-magic-day-reward", 60);
+		cHoliday = plugin.getConfig().getInt("cycles-per-holiday-action", 10);
 		cEventialsSave = plugin.getConfig().getInt("cycles-per-eventials-data-save", 2);
 		cSkipAutomsg = plugin.getConfig().getBoolean("skip-automessage-if-other-event", true);
 		skipAutomsgIfSilent = plugin.getConfig().getBoolean("skip-automessage-if-no-chats", true);
+
+		//TODO: load from config file
+		butcherFlags = new HashMap<KillFlag, Boolean>();
+		butcherFlags.put(KillFlag.ANIMALS, false);
+		butcherFlags.put(KillFlag.EQUIPPED, false);
+		butcherFlags.put(KillFlag.NAMED, false);
+		butcherFlags.put(KillFlag.NEARBY, false);
+		butcherFlags.put(KillFlag.TILE, false);
+		butcherFlags.put(KillFlag.UNIQUE, false);
 
 		new BukkitRunnable(){@Override public void run(){
 			runCycle();
@@ -112,9 +124,9 @@ public final class Scheduler{
 		}
 		if(cButcher != 0 && cycleCount % cButcher == 0 && playerSinceButcher){
 			event = true;
-			for(World world : plugin.getServer().getWorlds()){
-				Extras.clearEntitiesByWorld(world, true, false, false, false, false, true);
-			}
+			int numKilled = ButcherUtils.clearEntitiesByWorld(null, butcherFlags);
+			plugin.getLogger().info("Butchered "+numKilled+" mobs");
+
 			playerSinceButcher = !plugin.getServer().getOnlinePlayers().isEmpty();
 			if(!playerSinceButcher) plugin.getServer().getPluginManager().registerEvents(new Listener(){
 				@EventHandler public void onJoin(PlayerJoinEvent evt){
@@ -147,6 +159,9 @@ public final class Scheduler{
 				bookmeta.addStoredEnchant(enchant, rand.nextInt(enchant.getMaxLevel())+1, false);
 				p.getInventory().addItem(book);
 			}
+		}
+		if(cHoliday != 0 && cycleCount % cHoliday == 0){
+			if(currentHoliday != null) currentHoliday.RunHolidayEvent();
 		}
 		if(cAutomsg != 0 && cycleCount % cAutomsg == 0 && !(cSkipAutomsg && event)
 				&& autoMsgs.length != 0 && !serverIsSilent){
@@ -181,13 +196,13 @@ public final class Scheduler{
 	}
 
 	public void sendHyperMessage(String msg, Player... ppl){
-		if(Text.TextAction.countNodes(msg) == 0){
+		if(TextUtils.TextAction.countNodes(msg) == 0){
 			plugin.getServer().broadcastMessage(msgP+msg);
 		}
 		else{
 			plugin.getServer().getConsoleSender().sendMessage(msgP+msg);
 
-			String raw = Text.TextAction.parseToRaw(escapedMsgP+msg, msgC);
+			String raw = TextUtils.TextAction.parseToRaw(escapedMsgP+msg, msgC);
 
 			for(Player p : ppl){
 //				p.sendRawMessage(raw);//Doesn't work! (last checked: 1.12.1)
@@ -201,7 +216,7 @@ public final class Scheduler{
 					(plugin.getConfig().getDouble("login-daily-money", 0) +
 					plugin.getConfig().getDouble("online-when-daily-money-bonus", 0)) : 0;
 		if(dailyMoney == 0) return;
-		String curSymbol = Text.translateAlternateColorCodes('&',
+		String curSymbol = TextUtils.translateAlternateColorCodes('&',
 				plugin.getConfig().getString("currency-symbol", "&2L"));
 		boolean announce = plugin.getConfig().getBoolean("announce-daily-money");
 		for(Player p : ppl){

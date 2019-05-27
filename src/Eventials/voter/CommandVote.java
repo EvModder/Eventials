@@ -5,11 +5,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import Extras.Text;
-import Extras.Text.TextAction;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
-import net.evmodder.EvLib2.EvUtils;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.TextUtils.TextAction;
 
 public class CommandVote extends CommandBase{
 	final String[] links;
@@ -63,9 +63,9 @@ public class CommandVote extends CommandBase{
 		if(links.length != 0){
 			for(int i=0; i<links.length;){
 				clickResult[i] = TextAction.LINK;
-				nonHyper[i] = Text.translateAlternateColorCodes('&', " &d"+(++i)+"&7.");
+				nonHyper[i] = TextUtils.translateAlternateColorCodes('&', " &d"+(++i)+"&7.");
 			}
-			nonHyper[0] = Text.translateAlternateColorCodes('&', "&eVoting Links:\\n&d1&7.");
+			nonHyper[0] = TextUtils.translateAlternateColorCodes('&', "&eVoting Links:\\n&d1&7.");
 		}
 	}
 
@@ -78,13 +78,13 @@ public class CommandVote extends CommandBase{
 			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players");
 		}
 		if(website != null && !website.isEmpty())
-			Text.sendModifiedText(
+			TextUtils.sendModifiedText(
 					new String[]{ChatColor.YELLOW+"Voting"},
 					new String[]{ChatColor.AQUA+" website page"},
 					new TextAction[]{TextAction.LINK},
 					new String[]{website}, "", (Player)sender);
 		if(links.length > 0)
-			Text.sendModifiedText(nonHyper, hyper, clickResult, links, "", (Player)sender);
+			TextUtils.sendModifiedText(nonHyper, hyper, clickResult, links, "", (Player)sender);
 
 		int s = voteManager.getStreak((Player)sender);
 		ChatColor c = (s > 0 ? s > voteManager.streakMax ? ChatColor.GREEN : ChatColor.AQUA : ChatColor.YELLOW);

@@ -2,8 +2,8 @@ package Eventials.voter;
 
 import Eventials.Eventials;
 import Eventials.economy.Economy;
-import net.evmodder.EvLib2.FileIO;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.hooks.EssEcoHook;
+import net.evmodder.EvLib.FileIO;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -134,7 +134,7 @@ public class EvVoter implements Listener{
 		if(serverPays){
 			eco.serverToPlayer(p.getUniqueId(), amount);
 		}
-		else if(VaultHook.giveMoney(p, amount) && trackGlobalBal){
+		else if(EssEcoHook.giveMoney(p, amount) && trackGlobalBal){
 			eco.addGlobalBal(amount);
 		}
 	}

@@ -8,10 +8,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import Eventials.Eventials;
-import Extras.Extras;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
+import Eventials.Extras;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.TextUtils;
 import net.md_5.bungee.api.ChatColor;
 
 public class CommandStatsClear extends CommandBase {
@@ -44,9 +44,10 @@ public class CommandStatsClear extends CommandBase {
 
 		if(sender instanceof Player && (args.length == 1 || !args[1].equals("confirm"))){
 			//-----------------------------------------------------------
-			Text.sendModifiedText(""+ChatColor.RED+ChatColor.BOLD+"Warning:"+
+			TextUtils.sendModifiedText(""+ChatColor.RED+ChatColor.BOLD+"Warning:"+
 					ChatColor.GRAY+" This action cannot be undone. "+ChatColor.RED+"[",
-					ChatColor.GOLD+" Confirm ", Text.TextAction.RUN_CMD, "/clearstats "+target.getName()+" confirm",
+					ChatColor.GOLD+" Confirm ", TextUtils.TextAction.RUN_CMD,
+					"/clearstats "+target.getName()+" confirm",
 					ChatColor.RED+"]", (Player)sender);
 			//-----------------------------------------------------------
 		}

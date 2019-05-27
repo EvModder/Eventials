@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.economy.commands.CommandServerBal;
-import net.evmodder.EvLib2.FileIO;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.hooks.EssEcoHook;
+import net.evmodder.EvLib.FileIO;
 import Eventials.economy.commands.CommandDonateServer;
 import Eventials.economy.commands.CommandGlobalBal;
 
@@ -83,7 +83,7 @@ public abstract class ServerEconomy extends BalanceTracker{
 	@SuppressWarnings("deprecation")
 	public boolean playerToServer(UUID pUUID, BigDecimal amount){
 		if(amount.compareTo(BigDecimal.ZERO) < 0) return serverToPlayer(pUUID, amount.negate());//TODO: remove .doubleValue();
-		if(!VaultHook.chargeFee(plugin.getServer().getOfflinePlayer(pUUID), amount.doubleValue())) return false;
+		if(!EssEcoHook.chargeFee(plugin.getServer().getOfflinePlayer(pUUID), amount.doubleValue())) return false;
 		chargeServer(amount.negate());
 		updateBalance(pUUID, true);
 		return true;
@@ -93,7 +93,7 @@ public abstract class ServerEconomy extends BalanceTracker{
 	public boolean serverToPlayer(UUID pUUID, BigDecimal amount){
 		if(amount.compareTo(BigDecimal.ZERO) < 0) return playerToServer(pUUID, amount.negate());
 		if(!chargeServer(amount)) return false;
-		if(!VaultHook.giveMoney(plugin.getServer().getOfflinePlayer(pUUID), amount.doubleValue())){//TODO: remove .doubleValue();
+		if(!EssEcoHook.giveMoney(plugin.getServer().getOfflinePlayer(pUUID), amount.doubleValue())){//TODO: remove .doubleValue();
 			chargeServer(amount.negate());
 			return false;
 		}

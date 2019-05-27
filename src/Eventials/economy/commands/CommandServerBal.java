@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.economy.ServerEconomy;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.hooks.EssEcoHook;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandServerBal extends CommandBase{
 	final ServerEconomy economy;
@@ -24,7 +24,7 @@ public class CommandServerBal extends CommandBase{
 		super(pl, enabled);
 		plugin = pl;
 		economy = eco;
-		curSymbol = Text.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
+		curSymbol = TextUtils.translateAlternateColorCodes('&', pl.getConfig().getString("currency-symbol", "&2L"));
 	}
 
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
@@ -197,7 +197,7 @@ public class CommandServerBal extends CommandBase{
 				sender.sendMessage(ChatColor.RED+"Invalid tax rate; Please pick a number between [-1,1]");
 			}
 			if(p != null){
-				int taxAmt = (int)(VaultHook.getBalance(p)*(percent > 0 ? percent : (1D/percent)-1D));
+				int taxAmt = (int)(EssEcoHook.getBalance(p)*(percent > 0 ? percent : (1D/percent)-1D));
 				if(economy.playerToServer(p.getUniqueId(), taxAmt)){
 					sender.sendMessage(ChatColor.GRAY+"Transferred "+ChatColor.YELLOW+Math.abs(taxAmt)
 						+ChatColor.DARK_GREEN+curSymbol+ChatColor.GRAY+" from "+
@@ -212,7 +212,7 @@ public class CommandServerBal extends CommandBase{
 				int numTaxed = 0;
 				long amtTaxed = 0;
 				for(OfflinePlayer p2 : plugin.getServer().getOfflinePlayers()){
-					int taxAmt = (int)(VaultHook.getBalance(p2)*(percent > 0 ? percent : (1D/percent)-1D));
+					int taxAmt = (int)(EssEcoHook.getBalance(p2)*(percent > 0 ? percent : (1D/percent)-1D));
 					if(economy.playerToServer(p2.getUniqueId(), taxAmt)){
 						String taxMsg = new StringBuilder("").append(ChatColor.GRAY).append("Transferred ")
 								.append(ChatColor.YELLOW).append(Math.abs(taxAmt))

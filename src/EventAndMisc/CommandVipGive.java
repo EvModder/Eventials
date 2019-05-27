@@ -1,12 +1,8 @@
 package EventAndMisc;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
-
-import org.anjocaido.groupmanager.dataholder.WorldDataHolder;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -42,7 +38,7 @@ public class CommandVipGive implements CommandExecutor{
 		for(String worldName : new String[]{"VictoryHills", "Creative", "Events"}){
 			File groups = new File("./plugins/GroupManager/worlds/"+worldName.toLowerCase()+"/groups.yml");
 			if(groups.exists() == false) continue;
-			File users = new File("./plugins/GroupManager/worlds/"+worldName.toLowerCase()+"/users.yml");
+			/*File users = new File("./plugins/GroupManager/worlds/"+worldName.toLowerCase()+"/users.yml");
 			
 			if(groups.exists() && users.exists())
 			try{
@@ -51,7 +47,7 @@ public class CommandVipGive implements CommandExecutor{
 					pl.getLogger().info("Added Vip rank to "+p.getName()+" for world: "+worldName);
 					continue;
 				}
-			}catch(FileNotFoundException e){}catch(IOException e){}
+			}catch(FileNotFoundException e){}catch(IOException e){}*/
 			// gets here if there is an exception or if the player is not in he group "Default"
 			pl.getServer().dispatchCommand(pl.getServer().getConsoleSender(), "manuaddsub "+p.getName()+" Vip");
 			pl.getLogger().info("Added Vip subgroup to "+p.getName()+" to for world: "+worldName);

@@ -7,8 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.EvPlugin;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandItemName extends CommandBase{
 
@@ -39,7 +40,7 @@ public class CommandItemName extends CommandBase{
 		for(int i=1; i<args.length; ++i) builder.append(' ').append(args[i]);
 
 		ItemMeta named = item.getItemMeta();
-		named.setDisplayName(Extras.Text.translateAlternateColorCodes('&', builder.toString()));
+		named.setDisplayName(TextUtils.translateAlternateColorCodes('&', builder.toString()));
 		item.setItemMeta(named);
 		player.getInventory().setItemInMainHand(item);
 		return true;

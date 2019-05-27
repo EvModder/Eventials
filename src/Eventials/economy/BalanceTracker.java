@@ -10,8 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import net.evmodder.EvLib2.FileIO;
-import net.evmodder.EvLib2.VaultHook;
+import net.evmodder.EvLib.hooks.EssEcoHook;
+import net.evmodder.EvLib.FileIO;
 
 public abstract class BalanceTracker{
 	private Vector<PlayerBalance> bals;
@@ -127,15 +127,15 @@ public abstract class BalanceTracker{
 	public void updateBalance(final UUID pUUID, boolean isOnline){
 		OfflinePlayer p = org.bukkit.Bukkit.getServer().getOfflinePlayer(pUUID);
 		long currentBal;
-		try{currentBal = (long) VaultHook.getBalance(p);}
+		try{currentBal = (long) EssEcoHook.getBalance(p);}
 		catch(Exception e){currentBal = startingBal;}
 
+		for(PlayerBalance pb : bals) if(pUUID.equals(pb.uuid)){
+			pb.balance = currentBal;
+			pb.name = p.getName();
+			return;
+		}
 		if(isOnline || currentBal > startingBal){
-			for(PlayerBalance pb : bals) if(pUUID.equals(pb.uuid)){
-				pb.balance = currentBal;
-				pb.name = p.getName();
-				return;
-			}
 			bals.add(new PlayerBalance(p.getName(), pUUID, currentBal));
 		}
 		// If they are offline and have below the starting, remove them
@@ -156,7 +156,7 @@ public abstract class BalanceTracker{
 			OfflinePlayer p = org.bukkit.Bukkit.getServer().getOfflinePlayer(pUUID);
 			if(p != null){
 				long currentBal;
-				try{currentBal = (long) VaultHook.getBalance(p);}
+				try{currentBal = (long) EssEcoHook.getBalance(p);}
 				catch(Exception e){currentBal = startingBal;}
 				bals.add(new PlayerBalance(p.getName(), pUUID, currentBal));
 //				if(donations > 0) bals.lastElement().donated = donations;

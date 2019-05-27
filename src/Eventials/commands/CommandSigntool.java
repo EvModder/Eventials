@@ -19,9 +19,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
-import Extras.Text;
-import net.evmodder.EvLib2.CommandBase;
-import net.evmodder.EvLib2.TypeUtils;
+import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.TypeUtils;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandSigntool extends CommandBase implements Listener{
 	public CommandSigntool(Eventials pl, boolean enabled){
@@ -46,7 +46,7 @@ public class CommandSigntool extends CommandBase implements Listener{
 
 		String signText;
 		if(args.length < 1) signText = "";
-		else signText = Text.translateAlternateColorCodes('&', StringUtils.join(args, ' '));
+		else signText = TextUtils.translateAlternateColorCodes('&', StringUtils.join(args, ' '));
 
 		ItemMeta meta = item.getItemMeta();
 
