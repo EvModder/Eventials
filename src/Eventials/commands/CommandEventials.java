@@ -6,10 +6,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
-public class CommandEventials extends CommandBase{
+public class CommandEventials extends EvCommand{
 	public CommandEventials(EvPlugin p){
 		super(p);
 	}

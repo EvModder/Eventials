@@ -20,11 +20,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.particles.CustomParticleEffect;
 import net.ess3.api.IEssentials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import com.earth2me.essentials.User;
 
-public class CommandParticles extends CommandBase {
+public class CommandParticles extends EvCommand {
 	Map<UUID, List<CustomParticleEffect>> particlePpl = new HashMap<UUID, List<CustomParticleEffect>>();
 	private Listener teleportListener;
 	Eventials pl;

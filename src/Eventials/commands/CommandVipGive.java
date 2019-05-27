@@ -14,10 +14,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import org.bukkit.ChatColor;
 
-public class CommandVipGive extends CommandBase {
+public class CommandVipGive extends EvCommand {
 	Eventials plugin;
 
 	public CommandVipGive(Eventials pl) {

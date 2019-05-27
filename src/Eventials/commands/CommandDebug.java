@@ -6,10 +6,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
-public class CommandDebug extends CommandBase{
+public class CommandDebug extends EvCommand{
 	public CommandDebug(EvPlugin p){super(p);}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}

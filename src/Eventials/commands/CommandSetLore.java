@@ -9,10 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.extras.TextUtils;
 
-public class CommandSetLore extends CommandBase {
+public class CommandSetLore extends EvCommand {
 	public CommandSetLore(Eventials pl){
 		super(pl);
 	}

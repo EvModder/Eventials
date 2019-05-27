@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import Eventials.Eventials;
 import Eventials.Extras;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.md_5.bungee.api.ChatColor;
 
-public class CommandStatsClear extends CommandBase {
+public class CommandStatsClear extends EvCommand {
 	public CommandStatsClear(EvPlugin p){
 		super(p);
 	}

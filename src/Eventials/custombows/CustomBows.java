@@ -11,7 +11,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import Eventials.Eventials;
-import net.evmodder.EvLib.RefNBTTag;
+import net.evmodder.EvLib.extras.RefNBTTag;
 
 public class CustomBows implements Listener{
 	private Eventials plugin;

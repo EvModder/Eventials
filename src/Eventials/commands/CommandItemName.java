@@ -7,11 +7,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TextUtils;
 
-public class CommandItemName extends CommandBase{
+public class CommandItemName extends EvCommand{
 
 	public CommandItemName(EvPlugin p) {
 		super(p);

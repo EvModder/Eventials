@@ -1,7 +1,5 @@
 package Eventials.custombows;
 
-import net.evmodder.EvLib.RefNBTTag;
-import net.evmodder.EvLib.RefNBTTagList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -10,6 +8,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.ProjectileSource;
+import net.evmodder.EvLib.extras.RefNBTTag;
+import net.evmodder.EvLib.extras.RefNBTTagList;
 
 public class Flint{
 	static void doPower(ProjectileSource shooter, ItemStack bow, Arrow arrow){

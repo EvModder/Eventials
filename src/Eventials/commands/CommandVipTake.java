@@ -6,10 +6,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import org.bukkit.ChatColor;
 
-public class CommandVipTake extends CommandBase {
+public class CommandVipTake extends EvCommand {
 	Eventials plugin;
 	final String prefix = ChatColor.DARK_AQUA+"["+ChatColor.GRAY+"AC"+ChatColor.DARK_AQUA+"]"+ChatColor.WHITE+" ";
 

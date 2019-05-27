@@ -9,12 +9,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.ButcherUtils;
 import net.evmodder.EvLib.extras.ButcherUtils.KillFlag;
 
-public class CommandClearEntities extends CommandBase {
+public class CommandClearEntities extends EvCommand {
 
 	public CommandClearEntities(EvPlugin p){
 		super(p);

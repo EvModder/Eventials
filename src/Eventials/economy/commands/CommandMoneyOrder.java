@@ -13,13 +13,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.economy.Economy;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import org.bukkit.ChatColor;
 
-public class CommandMoneyOrder extends CommandBase implements Listener{
+public class CommandMoneyOrder extends EvCommand implements Listener{
 	final Economy economy;
 	final String curSymbol;
 	final int MAX_MO, MIN_MO, TAX_MO;

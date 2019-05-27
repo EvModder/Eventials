@@ -5,12 +5,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.GhostUtils;
 import Eventials.Eventials;
 
-public class CommandGhost extends CommandBase{
+public class CommandGhost extends EvCommand{
 	GhostUtils ghostFactory;
 	
 	public CommandGhost(EvPlugin p){

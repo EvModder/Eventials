@@ -30,8 +30,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
 import Evil_Code_EvKits.EvKits;
-import net.evmodder.EvLib.RefNBTTag;
-import net.evmodder.EvLib.RefNBTTagList;
+import net.evmodder.EvLib.extras.RefNBTTag;
+import net.evmodder.EvLib.extras.RefNBTTagList;
 
 public class AlternateOld implements Listener {
 	Eventials pl;

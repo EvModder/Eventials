@@ -7,9 +7,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.economy.ServerEconomy;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 
-public class CommandGlobalBal extends CommandBase{
+public class CommandGlobalBal extends EvCommand{
 	ServerEconomy economy;
 
 	public CommandGlobalBal(JavaPlugin pl, ServerEconomy serverEconomy, boolean enabled){

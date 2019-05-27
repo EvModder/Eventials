@@ -12,9 +12,9 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import Eventials.Eventials;
-import net.evmodder.EvLib.ReflectionUtils;
-import net.evmodder.EvLib.ReflectionUtils.RefClass;
-import net.evmodder.EvLib.ReflectionUtils.RefMethod;
+import net.evmodder.EvLib.extras.ReflectionUtils;
+import net.evmodder.EvLib.extras.ReflectionUtils.RefClass;
+import net.evmodder.EvLib.extras.ReflectionUtils.RefMethod;
 
 public class Utils{
 	// WARNING: Doesn't work with multiple '*' in the same string!

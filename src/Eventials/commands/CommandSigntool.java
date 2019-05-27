@@ -19,11 +19,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
-import net.evmodder.EvLib.TypeUtils;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.TypeUtils;
 
-public class CommandSigntool extends CommandBase implements Listener{
+public class CommandSigntool extends EvCommand implements Listener{
 	public CommandSigntool(Eventials pl, boolean enabled){
 		super(pl, enabled);
 		if(enabled) pl.getServer().getPluginManager().registerEvents(this, pl);

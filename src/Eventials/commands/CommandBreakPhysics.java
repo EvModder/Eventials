@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.hooks.EssPermHook;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.EvUtils;
@@ -24,7 +24,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 
-public class CommandBreakPhysics extends CommandBase implements Listener{
+public class CommandBreakPhysics extends EvCommand implements Listener{
 	private EvPlugin pl;
 	private Set<UUID> breakPhysics;
 

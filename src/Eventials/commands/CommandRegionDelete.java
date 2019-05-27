@@ -9,9 +9,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 
-public class CommandRegionDelete extends CommandBase {
+public class CommandRegionDelete extends EvCommand {
 
 	public CommandRegionDelete(Eventials pl) {
 		super(pl);

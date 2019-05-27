@@ -16,10 +16,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.Eventials;
 import Eventials.economy.Economy;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.extras.TextUtils;
 
-public class CommandAdvertise extends CommandBase{
+public class CommandAdvertise extends EvCommand{
 	private Economy economy;
 	final int MAX_LENGTH;// Max characters in ad
 	final int COST;// Price of advertising

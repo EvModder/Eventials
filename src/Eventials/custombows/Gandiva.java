@@ -6,8 +6,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.evmodder.EvLib.RefNBTTag;
-import net.evmodder.EvLib.RefNBTTagList;
+import net.evmodder.EvLib.extras.RefNBTTag;
+import net.evmodder.EvLib.extras.RefNBTTagList;
 
 public class Gandiva{
 	public static ItemStack makeBow(){

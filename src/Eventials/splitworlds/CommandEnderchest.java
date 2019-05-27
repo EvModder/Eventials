@@ -15,10 +15,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
-public class CommandEnderchest extends CommandBase{
+public class CommandEnderchest extends EvCommand{
 	private EvPlugin pl;
 	private SplitWorlds splitWorlds;
 

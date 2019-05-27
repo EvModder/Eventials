@@ -17,11 +17,11 @@ import java.util.Vector;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TextUtils;
 
-public class CommandFloatingText extends CommandBase{
+public class CommandFloatingText extends EvCommand{
 	public static final String ICON =
 			ChatColor.translateAlternateColorCodes('&', "&c[&6F&eT&aX&2T&3]&r");
 	public static final String LOGO = 

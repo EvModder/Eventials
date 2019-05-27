@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.economy.ServerEconomy;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 
-public class CommandDonateTop extends CommandBase{
+public class CommandDonateTop extends EvCommand{
 	final ServerEconomy economy;
 
 	public CommandDonateTop(JavaPlugin pl, ServerEconomy eco){

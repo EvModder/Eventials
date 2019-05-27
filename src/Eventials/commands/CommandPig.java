@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import net.ess3.api.IEssentials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,7 +29,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.earth2me.essentials.User;
 import Eventials.Eventials;
 
-public class CommandPig extends CommandBase implements Listener{
+public class CommandPig extends EvCommand implements Listener{
 	private EvPlugin pl;
 	private Set<UUID> piggyPigs;
 

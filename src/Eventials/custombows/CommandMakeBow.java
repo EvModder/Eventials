@@ -7,10 +7,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import Eventials.custombows.CustomBows.BowType;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
-public class CommandMakeBow extends CommandBase{
+public class CommandMakeBow extends EvCommand{
 	CustomBows bowManager;
 
 	public CommandMakeBow(EvPlugin p, CustomBows bows){

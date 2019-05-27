@@ -22,9 +22,9 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvUtils;
-import net.evmodder.EvLib.RefNBTTag;
-import net.evmodder.EvLib.TypeUtils;
+import net.evmodder.EvLib.extras.RefNBTTag;
 import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.TypeUtils;
 
 public class EvSpawner implements Listener {
 	final Random rand;

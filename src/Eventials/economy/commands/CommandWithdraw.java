@@ -10,13 +10,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import Eventials.economy.Economy;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.EvUtils;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 
-public class CommandWithdraw extends CommandBase{
+public class CommandWithdraw extends EvCommand{
 	final Economy economy;
 	final String curSymbol;
 

@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import org.bukkit.ChatColor;
 import Eventials.Eventials;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 
-public class CommandRegionPos extends CommandBase {
+public class CommandRegionPos extends EvCommand {
 
 	public CommandRegionPos(Eventials pl) {
 		super(pl);

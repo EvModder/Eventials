@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import Eventials.economy.Economy;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 
-public class CommandDeposit extends CommandBase{
+public class CommandDeposit extends EvCommand{
 	final Economy economy;
 	final String curSymbol;
 

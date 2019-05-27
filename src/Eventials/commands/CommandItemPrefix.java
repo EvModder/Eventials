@@ -5,13 +5,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.evmodder.EvLib.CommandBase;
+import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TextUtils;
 import java.util.List;
 import org.bukkit.ChatColor;
 
-public class CommandItemPrefix extends CommandBase{
+public class CommandItemPrefix extends EvCommand{
 	public CommandItemPrefix(EvPlugin p) {
 		super(p);
 	}
