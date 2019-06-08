@@ -234,7 +234,7 @@ book-editor-enabled: true
 #--------------------------------------#
 #             Split Worlds             #
 #--------------------------------------#
-splitworlds-enabled: true 
+splitworlds-enabled: true
 vaccinate-players: true
 
 # Groups of worlds that share the inventories. World inventories are separate by default
