@@ -298,45 +298,51 @@ auto-messages:
        Look out for periodic &aEvents=>&7The selling point of this server! 
        Events are custom-designed and come in many varieties
        Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
-  - 'Warps to important locations can be found at spawn'
+  - 'Runs &2/warps&r for clickable teleports to key locations!'
+#  - 'Warps to important locations can be found at spawn'
 #  - '&4[&c&lWarn&4]&r Unused terrain will be periodically reset!'
-  - 'Contact staff to learn about or purchase a Market plot'
-#  - |
-#       Running low on cash?
+#  - 'Contact staff to learn about or purchase a Market plot'
+  - |
+       Running low on cash?
+       Claim a spot at &2/market&r and build yourself a shop!
 #       Sell your stone and logs in the &d@AdminShop&r!
   - 'Be careful, you can get auto-killed for PvP logging!'
   - |
        &4[&c&lWarn&4]&r Traveling generates many new chunks
        When Minecraft updates, the new terrain and features
-       &owill not be there&r in those chunks!
+       &owill not be present&r in those chunks!
   - |
        Sick of survival?
-       Use the WarpSign to the &aCreative&r world!
+       Try out the &aCreative&r world!
   - |
        Remember, server &aEvents&r are temporary, and
-       eventually everything goes back to normal
-  - 'Want a private, teleportable horse? try &2/hm'
+       eventually everything will return to normal
+  - 'Want a private, teleportable horse? check out &2/hm'
 #  - 'Custom saddle, nametag, & barding recipies listed &d@Market'
   - 'Ye like? Ye vote? &2/vote&r for links!'
 #  - 'Remember, you can use &2/enderchest&r in the Events world!'
   - |
-       Monetary help is not required, but is always appreciated! :)
+       Monetary help isn't required, but is always appreciated! :)
        Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks
   - |
-       Donations minimum on &bac.buycraft.net=>http://ac.buycraft.net/&r is currently .99 USD,
+       Donator recognition on &bac.buycraft.net=>http://ac.buycraft.net/&r is currently .99 USD,
        but that may change change over time
-  - 'Work started on a site! Visit &baltcraft.net=>http://www.altcraft.net'
-  - 'Suggestions for tweaks/plugins/etc are always welcome!'
+  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
+  - 'Suggestions for are always welcome!'
   - 'Please check &2/rules&r periodically for updates'
   - 'Sharing server IPs is fine, but &nno soliciting&r please!'
   - 'Have an idea for an automsg? You could get &2L&a50&r for it!'
   - 'Staff are here to help, so ask away!'
+  - |
+       We have a lilypad based economy
+       You can get money by completing Advancements,
+       trading with players, or AFK fishing!
   - 'Killing people is fun, so why not start a head collection? ;)'
   - 'Want to compete? Dump off your stuff and type &2/arenas&r!'
 #  - |
 #       Win the &nMarket Parkour&r for a stack of diamond blocks!
 #       (Warning, it is practically impossible)
-  - 'Unwarranted griefing can result in a tempban -> ban.'
+  - 'Unwarranted griefing can result in jail -> tempban'
   - |
        We recommend the &6LithosCore&r texture pack-
        You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
@@ -345,27 +351,31 @@ auto-messages:
   - 'Found a bug? &2/mail Admin&r so we can fix it for you!'
   - 'See a &2/green&r command? Click it to run it!'
   - |
-       Many commands have shortcuts!
+       Many commands have aliases!
        Examples: &2/home&r&7 -> &2/h&r, &2/back&r&7 -> &2/b&r, &2/f power&r&7 -> &2/f p
 #  - |
 #      Chickens &d@Adminshop&r have been reported to lay more
 #      than just basic eggs, go grab some golden goodies!
   - |
-      Some ugly house in your way, but unsure about the rules?
-      Ask a staff member to get the thumbs up!
-  - |
-       Want to see an epic 3D map of the server? Visit Dynmap!
-       Links: &bSpawn=>http://ow.ly/4nqOnx&r, &bMarketplace=>http://ow.ly/4nqOY9
-  - 'BUT WHEN?? Event Schedule posted on our &bwebsite=>http://www.altcraft.net/events/schedule'
+      Some ugly base in your way that needs to be taken down?
+      Please ask a staff member to get the thumbs up!
+#  - |
+#       Want to see an epic 3D map of the server? Visit Dynmap!
+#       Links: &bSpawn=>http://ow.ly/4nqOnx&r, &bMarketplace=>http://ow.ly/4nqOY9
+  - 'Event schedule (irregularly) posted on our &bwebsite=>http://www.altcraft.net/events/schedule'
   - |
        Have something important to tell? Looking for ways
        to promote your &d@Marketplace&r shop? Try &2/advertise&r!
 #  - |
 #      Like the chickens at the &d@Adminshop&r?
 #      Look, but don't touch&m  &r they have dark powers!
+#  - |
+#       @ Server admins: Avoid &cClearLagg&r, it sucks!
+#       Both &cNoLagg&r and &cReduceLag&r are way better
   - |
-       @ Server admins: Avoid &cClearLagg&r, it sucks!
-       Both &cNoLagg&r and &cReduceLag&r are way better
+       We pride ourselves on transparency.
+       Check out &2/pl&r or the &bplugins page=>http://www.altcraft.net/plugins&r of the website
+       Remember, suggestions are always welcome!
 #  - 'I used to be indecisive. Now I''m not sure...'
 #  - '&c&lPro Tip:&r&o don''t eat the yellow snow'
 

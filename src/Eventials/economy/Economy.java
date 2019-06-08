@@ -17,7 +17,7 @@ import Eventials.Eventials;
 import Eventials.economy.commands.*;
 import Eventials.economy.listeners.*;
 import net.evmodder.EvLib.hooks.EssEcoHook;
-import net.evmodder.EvLib.extras.PlayerMessageInterceptor;
+import net.evmodder.EvLib.extras.MethodMocker.PlayerMessageInterceptor;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public class Economy extends ServerEconomy{
@@ -123,12 +123,18 @@ public class Economy extends ServerEconomy{
 		}
 	}
 
+	int booleanSum(boolean... bs){int s = 0; for(boolean b : bs) if(b) ++s; return s;}
 	boolean attemptPaidCommand(CommandExecutor executor, Command cmd, final Player player, String label, String[] args){
 		PlayerMessageInterceptor pmi = new PlayerMessageInterceptor(player);
-		if(executor.onCommand(pmi, cmd, label, args)){
-			for(String m : pmi.msgs)
-				if(m.startsWith(ChatColor.RED+"") || m.startsWith(ChatColor.DARK_RED+"")
-						|| m.contains("error") || m.contains("invalid") || m.contains("wrong")) return false;
+		if(executor.onCommand(pmi.getProxy(), cmd, label, args)){
+			for(String m : pmi.getMessages()){
+				String nc = ChatColor.stripColor(m);
+				int badness = booleanSum(m.startsWith(ChatColor.RED+""), m.startsWith(ChatColor.DARK_RED+""),
+						nc.contains("error"), nc.contains("invalid"), nc.contains("wrong"),
+						nc.contains("failed"), nc.contains("failure"), nc.contains("unable"),
+						nc.contains("could not"), nc.contains("try again"), nc.contains("unknown"));
+				if(badness >= 2) return false;
+			}
 			return true;
 		}
 		return false;
