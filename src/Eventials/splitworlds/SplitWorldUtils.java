@@ -16,7 +16,7 @@ import net.evmodder.EvLib.extras.ReflectionUtils;
 import net.evmodder.EvLib.extras.ReflectionUtils.RefClass;
 import net.evmodder.EvLib.extras.ReflectionUtils.RefMethod;
 
-public class Utils{
+public class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
 	public static Collection<List<String>> findMatchGroups(List<String> strs, List<String> search, boolean strict){
 		HashSet<String> validSubs = null;

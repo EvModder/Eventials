@@ -63,9 +63,9 @@ public class CommandVote extends EvCommand{
 		if(links.length != 0){
 			for(int i=0; i<links.length;){
 				clickResult[i] = TextAction.LINK;
-				nonHyper[i] = TextUtils.translateAlternateColorCodes('&', " &d"+(++i)+"&7.");
+				nonHyper[i] = TextUtils.translateAlternateColorCodes('&', "  &d"+(++i)+"&7.");
 			}
-			nonHyper[0] = TextUtils.translateAlternateColorCodes('&', "&eVoting Links:\\n&d1&7.");
+			nonHyper[0] = TextUtils.translateAlternateColorCodes('&', "&eVoting Links:  &d1&7.");
 		}
 	}
 

@@ -53,6 +53,7 @@ public class Eventials extends EvPlugin {
 
 		new CommandBreakPhysics(this);
 		new CommandClearEntities(this);
+		new CommandDiscord(this);
 		new CommandEventials(this);
 		new CommandFloatingText(this);
 		new CommandGhost(this);

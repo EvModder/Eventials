@@ -54,7 +54,7 @@ public final class SplitWorlds{
 			for(String groupName : worldSettings.getKeys(false)){
 				List<String> groupWorlds = worldSettings.getStringList(groupName);
 				primaryKeys2.add(groupWorlds.get(0));
-				ufind.insertSets(Utils.findMatchGroups(worldNames, groupWorlds, false));
+				ufind.insertSets(SplitWorldUtils.findMatchGroups(worldNames, groupWorlds, false));
 			}
 			for(List<String> group : ufind.getSets()){
 				String pKey = null;
@@ -135,7 +135,7 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace(); return false;}
 
 		handler.loadData();
-		if(removeDisease) Utils.resetPlayer(handler); // Remove disease AFTER loading data (treat infected file)
+		if(removeDisease) SplitWorldUtils.resetPlayer(handler); // Remove disease AFTER loading data (treat infected file)
 
 		// This file provides a means to figure out what sharedInv group an OfflinePlayer is in
 		File currentInv = new File(DEFAULT_PLAYERDATA + handler.getUniqueId() + ".group");
@@ -153,7 +153,7 @@ public final class SplitWorlds{
 			plugin.getLogger().warning("Unable to save profile to world: "+toWorld);
 			return false;
 		}
-		if(removeDisease) Utils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
+		if(removeDisease) SplitWorldUtils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
 		handler.saveData();
 
 		try{Files.move(currentFile, destFile);}
@@ -182,7 +182,7 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace(); return false;}
 
 		player.loadData();
-		if(removeDisease) Utils.resetPlayer(player); // Remove disease AFTER loading data (treat infected file)
+		if(removeDisease) SplitWorldUtils.resetPlayer(player); // Remove disease AFTER loading data (treat infected file)
 
 		// This file provides a means to figure out what sharedInv group an OfflinePlayer is in
 		File currentGroup = new File(DEFAULT_PLAYERDATA + player.getUniqueId() + ".group");
@@ -199,7 +199,7 @@ public final class SplitWorlds{
 			plugin.getLogger().warning("Unable to save profile to world: "+worldName);
 			return false;
 		}
-		if(removeDisease) Utils.resetPlayer(player);// Remove disease BEFORE saving data (vaccinate the file)
+		if(removeDisease) SplitWorldUtils.resetPlayer(player);// Remove disease BEFORE saving data (vaccinate the file)
 		player.saveData();
 
 		try{Files.move(currentFile, destFile);}
@@ -243,7 +243,7 @@ public final class SplitWorlds{
 		player.getInventory().clear();
 
 		// Send them (empty-handed) to the destination world
-		if(Utils.untrackedTeleport(player, to, true) == false){// Failed to teleport; reload their old inventory
+		if(SplitWorldUtils.untrackedTeleport(player, to, true) == false){// Failed to teleport; reload their old inventory
 			player.getInventory().setContents(oldInv);
 			player.getInventory().setArmorContents(oldArmor);
 			return false;
@@ -258,7 +258,7 @@ public final class SplitWorlds{
 		player.setGameMode(gm);
 
 		// Teleport (again) to destination, in case loadProfile() changed the player's location
-		Utils.untrackedTeleport(player, to, true);
+		SplitWorldUtils.untrackedTeleport(player, to, true);
 		return true;
 	}
 }

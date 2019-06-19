@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -118,30 +117,31 @@ public class PlayerLoginListener implements Listener{
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
 
 		if(showRecentJoins && offP.hasPlayedBefore()){
-			Iterator<String> iterator = recentJoins.iterator();
-
-			String pName = null;
-			while(iterator.hasNext() && !((pName=iterator.next()).equals(name)));
-			if(pName != null && pName.equals(name)) iterator.remove(); //start from this player
-			else iterator = recentJoins.iterator();//restart at beginning
-
-			if(iterator.hasNext()){//Size of at least 1
+			if(recentJoins.isEmpty()) recentJoins.add(name);
+			else if(!recentJoins.peekLast().equals(name)){
+				Iterator<String> iterator = recentJoins.descendingIterator();
 				StringBuilder builder = new StringBuilder("")
 						.append(ChatColor.BLUE).append("Players since last join: ")
 						.append(ChatColor.GRAY).append(iterator.next());
-				while(iterator.hasNext()) builder.append(ChatColor.BLUE).append(", ")
-											.append(ChatColor.GRAY).append(iterator.next());
-				builder.append(ChatColor.BLUE).append('.');
 	
-				if(pName != null){
-					final String message = builder.toString();
-					new BukkitRunnable(){@Override public void run(){
-						Player player = plugin.getServer().getPlayer(uuid);
-						if(player != null) player.sendMessage(message);
-					}}.runTaskLater(plugin, 5);//5 ticks
+				String pName = null;
+				while(iterator.hasNext() && !name.equals(pName=iterator.next())){
+					builder.append(ChatColor.BLUE).append(", ").append(ChatColor.GRAY).append(pName);
 				}
+				builder.append(ChatColor.BLUE);
+				if(name.equals(pName)){
+					iterator.remove();
+					builder.append('.');
+				}
+				else builder.append(", ").append(ChatColor.GRAY).append("...");
+	
+				final String message = builder.toString();
+				new BukkitRunnable(){@Override public void run(){
+					Player player = plugin.getServer().getPlayer(uuid);
+					if(player != null) player.sendMessage(message);
+				}}.runTaskLater(plugin, 5); //5 ticks
+				recentJoins.add(name);
 			}
-			recentJoins.add(name);
 		}
 
 		//--- Economy -------------------------------------------------

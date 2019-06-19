@@ -132,6 +132,13 @@ commands:
       permission: eventials.butcher
       permission-message: You do not have permission to do this.
 
+   discord:
+      description: Displays a link to join the discord server
+      usage: /discord
+      aliases: [discordlink,discord-link]
+      permission: eventials.discord
+      permission-message: You do not have permission to do this.
+
    eventials:
       description: Unregister and reregister the Eventials plugin
       usage: /eventials reload
@@ -433,6 +440,10 @@ permissions:
    eventials.clearstats:
       description: Permission to use /clearstats
       default: false
+
+   eventials.discord:
+      description: Permission to use /discord
+      default: true
 
    eventials.commandblockcolor:
       description: Permission to use '&' to format command blocks

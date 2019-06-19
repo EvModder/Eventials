@@ -38,6 +38,8 @@ show-recent-joins: true
 max-recent-joins: 20
 record-player-addresses: true
 
+discord-link: 'https://discord.gg/DMcxR5D'
+
 inactive-days-until-player-delete: 200
 #Advancements checker is broken
 keep-if-has-x-advancements: 100
@@ -81,7 +83,7 @@ paid-commands:
   weaponstats: 10.0
   unsignbook: 5.0
   suicide: 10.0
-  home: 0.1
+#  home: 0.1
 
 update-balance-watch: false
 update-balance-on-paid-commands: true
@@ -152,7 +154,7 @@ clock-period: 60 #Default 60s per cycle
 
 #To disable a task, set its frequency to 0
 cycles-per-eventials-data-save: 2
-cycles-per-automessage: 3
+cycles-per-automessage: 4
 cycles-per-mob-clear: 5
 cycles-per-worldsave: 5
 cycles-per-player-delete: 1440
@@ -295,10 +297,9 @@ world-borders:
 #Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
 auto-messages:
   - |
-       Look out for periodic &aEvents=>&7The selling point of this server! 
-       Events are custom-designed and come in many varieties
-       Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
-  - 'Runs &2/warps&r for clickable teleports to key locations!'
+       Periodically, custom server &aEvents=>&7The selling point of this server!&r will be held!
+#       Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
+  - 'Run &2/warps&r for clickable teleports to key locations!'
 #  - 'Warps to important locations can be found at spawn'
 #  - '&4[&c&lWarn&4]&r Unused terrain will be periodically reset!'
 #  - 'Contact staff to learn about or purchase a Market plot'
@@ -308,8 +309,8 @@ auto-messages:
 #       Sell your stone and logs in the &d@AdminShop&r!
   - 'Be careful, you can get auto-killed for PvP logging!'
   - |
-       &4[&c&lWarn&4]&r Traveling generates many new chunks
-       When Minecraft updates, the new terrain and features
+       &4[&c&lWarning&4]&r Exploring generates many new chunks
+       When Minecraft updates, new terrain and features
        &owill not be present&r in those chunks!
   - |
        Sick of survival?
@@ -325,18 +326,17 @@ auto-messages:
        Monetary help isn't required, but is always appreciated! :)
        Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks
   - |
-       Donator recognition on &bac.buycraft.net=>http://ac.buycraft.net/&r is currently .99 USD,
-       but that may change change over time
+       Donator recognition on &bac.buycraft.net=>http://ac.buycraft.net/&r is .99,
+       USD but may fluctuate change change over time
   - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
-  - 'Suggestions for are always welcome!'
+  - 'Suggestions are always welcome!'
   - 'Please check &2/rules&r periodically for updates'
   - 'Sharing server IPs is fine, but &nno soliciting&r please!'
   - 'Have an idea for an automsg? You could get &2L&a50&r for it!'
   - 'Staff are here to help, so ask away!'
   - |
-       We have a lilypad based economy
        You can get money by completing Advancements,
-       trading with players, or AFK fishing!
+       trading with players, or simply AFK fishing!
   - 'Killing people is fun, so why not start a head collection? ;)'
   - 'Want to compete? Dump off your stuff and type &2/arenas&r!'
 #  - |
@@ -373,7 +373,7 @@ auto-messages:
 #       @ Server admins: Avoid &cClearLagg&r, it sucks!
 #       Both &cNoLagg&r and &cReduceLag&r are way better
   - |
-       We pride ourselves on transparency.
+       We believe in server transparency!
        Check out &2/pl&r or the &bplugins page=>http://www.altcraft.net/plugins&r of the website
        Remember, suggestions are always welcome!
 #  - 'I used to be indecisive. Now I''m not sure...'
@@ -385,6 +385,7 @@ ping-messages:
   - ''
   - 'Press [refresh] for more ping messages!'
   - ''
+  - 'Yeet a bug'
   - 'Chicken Fried Steak'
   - 'A Minecraft Server ;)'
   - ''
@@ -396,8 +397,14 @@ ping-messages:
   - '&oMarketplace!'
   - '&oPlots world coming "soon"!'
   - ''
+  - 'Now with additional lag!'
+  - ''
   - '&oPeriodic Events!'
   - 'Suggestions welcome!'
   - '&oflat'
   - 'Press [refresh] for  more random messages!'
   - Yawn
+  - 'The mind is weak but the body is strong.'
+  - 'Live by the sword and die by the sword'
+  - 'Tries to be different'
+  - 'Always seeking dev help :)'

@@ -29,7 +29,7 @@ class RespawnListener implements Listener {
 			if(player == null || player.getWorld().getName().equals(respawnWorld) == false) return;
 
 			splitWorlds.loadProfile(player, player.getUniqueId(), respawnWorld, true);
-			Utils.untrackedTeleport(player, evt.getRespawnLocation(), true);
+			SplitWorldUtils.untrackedTeleport(player, evt.getRespawnLocation(), true);
 		}}.runTaskLater(Eventials.getPlugin(), 1);
 	}
 }
