@@ -51,8 +51,10 @@ public class CommandInvsee extends EvCommand{
 			if(w != null) targetWorld = w.getName();
 			else{
 				targetPlayer = pl.getServer().getOfflinePlayer(args[0]);
-				if(targetPlayer == null || !targetPlayer.hasPlayedBefore())
-					targetPlayer = pl.getServer().getOfflinePlayer(UUID.fromString(args[0]));
+				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){
+					try{targetPlayer = pl.getServer().getOfflinePlayer(UUID.fromString(args[0]));}
+					catch(IllegalArgumentException ex){}
+				}
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){
 					if(sender.hasPermission("eventials.invsee.others"))
 						sender.sendMessage(ChatColor.RED+"Unable to find world or player matching: "+args[0]);

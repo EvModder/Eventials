@@ -78,11 +78,19 @@ paid-commands:
   lockhorse: 5.0
   gethorse: 2.5
   inspecthorse: 1.0
-  repair: 40.0
+  repair: 30.0
   separate: 5.0
-  weaponstats: 10.0
+  weaponstats: 25.0
   unsignbook: 5.0
   suicide: 10.0
+  'f claim': 3
+  'factions claim': 3
+  'factions:f claim': 3
+  'factions:factions claim': 3
+  'f autoclaim': 15
+  'factions autoclaim': 15
+  'factions:f autoclaim': 15
+  'factions:factions autoclaim': 15
 #  home: 0.1
 
 update-balance-watch: false

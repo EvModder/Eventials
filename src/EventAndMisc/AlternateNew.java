@@ -127,8 +127,11 @@ public class AlternateNew implements Listener{
 
 	@EventHandler
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){
-		if(evt.getMessage().startsWith("/sethome") && !evt.getPlayer().hasPermission("essentials.sethome")){
-			evt.getPlayer().sendMessage(ChatColor.AQUA+"/sethome"+ChatColor.WHITE+" isn't enabled on here");
+		String command = evt.getMessage().toLowerCase();
+		command = command.substring(0, command.indexOf(' '));
+
+		if(command.contains("sethome") && !evt.getPlayer().hasPermission("essentials.sethome")){
+			evt.getPlayer().sendMessage(ChatColor.AQUA+"/sethome"+ChatColor.WHITE+" isn't enabled.");
 			evt.getPlayer().sendMessage("Instead, use a bed to set your "+ChatColor.AQUA+"/home");
 			evt.setCancelled(true);
 		}

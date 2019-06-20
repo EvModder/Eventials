@@ -73,13 +73,16 @@ public class PreCommandListener implements Listener {
 		String command = message.split(" ")[0];//.replace("-", "");
 		String noSlash = command.substring(1);
 
-		if(cooldownCommands.containsKey(noSlash) && !evt.getPlayer().hasPermission("eventials.bypass.waitcommands")){
+		if(cooldownCommands.containsKey(noSlash) &&
+				!evt.getPlayer().hasPermission("eventials.bypass.waitcommands")){
 			String cmd = getCommandFromAlias.get(noSlash);
 			long timeInSeconds = System.currentTimeMillis()/1000;
-			if(recentCooldownCommands.containsKey(cmd) && !evt.getPlayer().hasPermission("eventials.bypass.waitcommands."+cmd)){
+			if(recentCooldownCommands.containsKey(cmd) &&
+					!evt.getPlayer().hasPermission("eventials.bypass.waitcommands."+cmd)){
 				long timeSince = timeInSeconds - recentCooldownCommands.get(cmd);
 				if(timeSince < cooldownCommands.get(cmd)){
-					evt.getPlayer().sendMessage(ChatColor.RED+"Sorry, the cooldown for that command has not yet ended.");
+					evt.getPlayer().sendMessage(ChatColor.RED
+							+"Sorry, the cooldown for that command has not yet ended.");
 					evt.getPlayer().sendMessage(ChatColor.GRAY+"Please wait another "+ChatColor.GOLD
 							+(cooldownCommands.get(cmd)-timeSince)+ChatColor.GRAY+" seconds");
 					evt.setCancelled(true);
@@ -128,10 +131,9 @@ public class PreCommandListener implements Listener {
 				List<String> homes = ess == null ? null : ess.getUser(evt.getPlayer()).getHomes();
 				if(ess != null && !homes.isEmpty()){
 					if(homes.contains("home")) evt.setMessage("/home home");
-					else if(/*homes.contains("bed")TODO: detect if bed-homes are enabled && */
-							evt.getPlayer().getBedSpawnLocation() != null)
-						evt.setMessage("/home bed");
-					else evt.setMessage(homes.get(0));
+					else if(homes.size() == 1 || evt.getPlayer().getBedSpawnLocation() == null)
+						evt.setMessage("/home "+homes.get(0));
+					else evt.setMessage("/home bed");
 				}
 			}
 

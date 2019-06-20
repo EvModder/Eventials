@@ -1,7 +1,7 @@
 name: Eventials
 main: Eventials.Eventials
 author: EvModder/EvDoc/Evil_Witchdoctor
-version: 1.1.9 #9=1.14 update
+version: 1.1.10 #10=splitworld fix
 softdepend: [Votifier, Essentials, Renewable]
 api-version: 1.13
 
@@ -111,7 +111,7 @@ commands:
       permission-message: You do not have permission to do this.
 
    enderchest:
-      description: View echest contents
+      description: View enderchest contents
       usage: /echest [world] [player]
       aliases: [echest,echestspy,enderspy,endspy,enderchestsee,enderchestspy,echestsee,endersee]
       permission: eventials.echest

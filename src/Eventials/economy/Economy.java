@@ -128,11 +128,13 @@ public class Economy extends ServerEconomy{
 		PlayerMessageInterceptor pmi = new PlayerMessageInterceptor(player);
 		if(executor.onCommand(pmi.getProxy(), cmd, label, args)){
 			for(String m : pmi.getMessages()){
+				m = m.trim().toLowerCase();
 				String nc = ChatColor.stripColor(m);
 				int badness = booleanSum(m.startsWith(ChatColor.RED+""), m.startsWith(ChatColor.DARK_RED+""),
 						nc.contains("error"), nc.contains("invalid"), nc.contains("wrong"),
 						nc.contains("failed"), nc.contains("failure"), nc.contains("unable"),
-						nc.contains("could not"), nc.contains("try again"), nc.contains("unknown"));
+						nc.contains("could not"), nc.contains("try again"), nc.contains("unknown"),
+						nc.contains("you must"), nc.contains("please supply"));
 				if(badness >= 2) return false;
 			}
 			return true;

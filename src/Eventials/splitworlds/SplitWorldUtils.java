@@ -9,12 +9,12 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.ReflectionUtils;
-import net.evmodder.EvLib.extras.ReflectionUtils.RefClass;
-import net.evmodder.EvLib.extras.ReflectionUtils.RefMethod;
+import net.minecraft.server.v1_14_R1.EntityPlayer;
 
 public class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
@@ -54,16 +54,16 @@ public class SplitWorldUtils{
 	}
 
 	//Reflection
-	private static final RefClass classEntityTracker = ReflectionUtils.getRefClass("{nms}.PlayerChunkMap.EntityTracker");
-	private static final RefClass classCraftWorld = ReflectionUtils.getRefClass("{cb}.CraftWorld");
-	private static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
-	private static final RefClass classEntity = ReflectionUtils.getRefClass("{nms}.Entity");
-	private static final RefClass classWorldServer = ReflectionUtils.getRefClass("{nms}.WorldServer");
-	private static RefMethod methodGetEntityHandle = classCraftPlayer.getMethod("getHandle");
-	private static RefMethod methodGetWorldHandle = classCraftWorld.getMethod("getHandle");
-	private static RefMethod methodGetTracker = classWorldServer.getMethod("getTracker");
-	private static RefMethod methodTrack = classEntityTracker.getMethod("track", classEntity);
-	private static RefMethod methodUntrackEntity = classEntityTracker.getMethod("untrackEntity", classEntity);
+/*	static final RefClass classEntityTracker = ReflectionUtils.getRefClass("{nms}.PlayerChunkMap.EntityTracker");
+	static final RefClass classCraftWorld = ReflectionUtils.getRefClass("{cb}.CraftWorld");
+	static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
+	static final RefClass classEntity = ReflectionUtils.getRefClass("{nms}.Entity");
+	static final RefClass classWorldServer = ReflectionUtils.getRefClass("{nms}.WorldServer");
+	static RefMethod methodGetEntityHandle = classCraftPlayer.getMethod("getHandle");
+	static RefMethod methodGetWorldHandle = classCraftWorld.getMethod("getHandle");
+	static RefMethod methodGetTracker = classWorldServer.getMethod("getTracker");
+	static RefMethod methodTrack = classEntityTracker.getMethod("track", classEntity);
+	static RefMethod methodUntrackEntity = classEntityTracker.getMethod("untrackEntity", classEntity);*/
 
 	/*public static void scheduleUntrackedTeleport(final SplitWorlds sw,
 			final UUID playerUUID, final Location destination, final long delay, boolean loadInv){
@@ -81,11 +81,19 @@ public class SplitWorldUtils{
 		if(skipInvCheck){
 			player.setMetadata(SplitWorlds.SKIP_TP_INV_CHECK, new FixedMetadataValue(Eventials.getPlugin(), ""));
 		}
-		Object playerHandle = methodGetEntityHandle.of(player).call();
+		/*Object playerHandle = methodGetEntityHandle.of(player).call();
 		Object tracker = methodGetTracker.of(methodGetWorldHandle.of(destination.getWorld()).call()).call();
 		methodUntrackEntity.of(tracker).call(playerHandle);
 		boolean success = player.teleport(destination);
 		methodTrack.of(tracker).call(playerHandle);
+		return success;*/
+		EntityPlayer playerHandle = ((CraftPlayer)player).getHandle();
+		//EntityTracker tracker = ((CraftWorld)destination.getWorld()).getHandle().?
+		//tracker.clear(playerHandle);
+		((CraftWorld)destination.getWorld()).getHandle().unregisterEntity(playerHandle);
+		boolean success = player.teleport(destination);
+		((CraftWorld)destination.getWorld()).getHandle().addEntity(playerHandle);
+		//tracker.updatePlayer(playerHandle);
 		return success;
 	}
 

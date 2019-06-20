@@ -5,11 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import org.apache.logging.log4j.util.Strings;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,6 +28,7 @@ public final class SplitWorlds{
 	final String DEFAULT_PLAYERDATA;
 	final static String SKIP_TP_INV_CHECK = "skipTeleportInvCheck";
 	final boolean removeDisease;
+	SplitWorldUtils utils;
 
 	public SplitWorlds(Eventials pl){
 		plugin = pl;
@@ -41,31 +45,47 @@ public final class SplitWorlds{
 		DEFAULT_WORLD = properties.getProperty("level-name");
 		DEFAULT_PLAYERDATA = "./"+DEFAULT_WORLD+"/playerdata/";
 
+		File default_world_temp_data = new File("./"+DEFAULT_WORLD+"/playerdata_"+DEFAULT_WORLD+"/");
+		if(!default_world_temp_data.exists()) default_world_temp_data.mkdir();
+
 		sharedInvWorlds = new HashMap<String, String>();
 		ConfigurationSection worldSettings = plugin.getConfig().getConfigurationSection("shared-inv-worlds");
 		if(worldSettings != null){
 			List<String> worldNames = new ArrayList<String>();
 			plugin.getServer().getWorlds().forEach(w->worldNames.add(w.getName()));// yay lambdas!
 			final HashSet<String> primaryKeys1 = new HashSet<String>();
-			for(String w : worldNames) if(new File(getPlayerdataFolder(w, true)).exists()) primaryKeys1.add(w);
+			for(String w : worldNames){
+				File playerdataFolder = new File(getPlayerdataFolder(w, true));
+				if(playerdataFolder.exists() && playerdataFolder.list().length > 0) primaryKeys1.add(w);
+			}
 			final UnionFind<String> ufind = new UnionFind<String>();
 
 			final HashSet<String> primaryKeys2 = new HashSet<String>();
 			for(String groupName : worldSettings.getKeys(false)){
 				List<String> groupWorlds = worldSettings.getStringList(groupName);
+				plugin.getLogger().info("World group primary (in config): " + groupWorlds.get(0));
 				primaryKeys2.add(groupWorlds.get(0));
 				ufind.insertSets(SplitWorldUtils.findMatchGroups(worldNames, groupWorlds, false));
 			}
 			for(List<String> group : ufind.getSets()){
-				String pKey = null;
+				Collections.sort(group, Comparator.comparing(String::length));
+				String pKey1 = null, pKey2 = null;
 				for(String s : group){
 					if(primaryKeys1.contains(s)){
-						if(primaryKeys2.contains(pKey = s)) break;
+						if(pKey1 != null){
+							pl.getLogger().warning(
+									"SharedInvGroup contains multiple worlds that have a /playerdata/ folder");
+							if(pKey1.equals(pKey2)){
+								if(primaryKeys2.contains(s) && s.length() < pKey1.length()) pKey1 = pKey2 = s;
+							}
+							else if(primaryKeys2.contains(pKey1 = s)) pKey2 = s;
+						}
 					}
-					else if(pKey == null && primaryKeys2.contains(s)) pKey = s;
+					else if(pKey1 == null && primaryKeys2.contains(s)) pKey2 = s;
 				}
-				if(pKey == null) pKey = group.get(0);
-				for(String s : group) sharedInvWorlds.put(s, pKey);
+				String primaryWorld = pKey1 != null ? pKey1 : pKey2 != null ? pKey2 : group.get(0);
+				pl.getLogger().info("SharedInvGroup: ["+primaryWorld+"] -> ("+Strings.join(group, ',')+")");
+				for(String s : group) sharedInvWorlds.put(s, primaryWorld);
 			}
 			for(String world : worldNames){
 				if(!sharedInvWorlds.containsKey(world)) sharedInvWorlds.put(world, world);
@@ -76,6 +96,7 @@ public final class SplitWorlds{
 		plugin.getServer().getPluginManager().registerEvents(new RespawnListener(this), plugin);
 		new CommandEnderchest(plugin, this);
 		new CommandInvsee(plugin, this);
+		utils = new SplitWorldUtils();
 	}
 
 	public boolean inSharedInvGroup(String world1, String world2){
@@ -243,7 +264,8 @@ public final class SplitWorlds{
 		player.getInventory().clear();
 
 		// Send them (empty-handed) to the destination world
-		if(SplitWorldUtils.untrackedTeleport(player, to, true) == false){// Failed to teleport; reload their old inventory
+		if(SplitWorldUtils.untrackedTeleport(player, to, true) == false){
+			// Failed to teleport; reload their old inventory
 			player.getInventory().setContents(oldInv);
 			player.getInventory().setArmorContents(oldArmor);
 			return false;
