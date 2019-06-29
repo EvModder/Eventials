@@ -4,10 +4,10 @@ import Eventials.Eventials;
 import Eventials.economy.Economy;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.FileIO;
-import java.io.IOException;
-import java.util.GregorianCalendar;
 import java.util.UUID;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,10 +21,10 @@ public class EvVoter implements Listener{
 	private Eventials plugin;
 //	private List<UUID> fireworkWaits = new ArrayList<UUID>();
 	private YamlConfiguration voters;
-	final int streakOp, streakAmount, streakMax, graceHours;
+	final int streakOp, streakAmount, streakMax;
 	final double playerCash, serverCash;
 	final boolean serverPays, trackGlobalBal;
-	final long hrsInMillis = 3600000;
+	final long hrInMillis = 3600000, dayInMillis = 24*hrInMillis, graceInMillis;
 
 	public EvVoter(Eventials pl){
 		voter = this;
@@ -46,7 +46,7 @@ public class EvVoter implements Listener{
 		streakOp = plugin.getConfig().getInt("vote-streak-op", 0);
 		streakAmount = plugin.getConfig().getInt("vote-streak-amount", 0);
 		streakMax = plugin.getConfig().getInt("vote-streak-max-days", 0);
-		graceHours = plugin.getConfig().getInt("vote-streak-grace-hours", 24);
+		graceInMillis = plugin.getConfig().getInt("vote-streak-grace-hours", 24)*hrInMillis;
 		playerCash = plugin.getConfig().getDouble("player-cash-reward", 0);
 		serverCash = plugin.getConfig().getDouble("server-cash-reward", 0);
 		serverPays = plugin.getConfig().getBoolean("server-pays-player-cash-reward", true);
@@ -54,23 +54,20 @@ public class EvVoter implements Listener{
 	}
 
 	public void onDisable(){
-		try{voters.save("./plugins/EvFolder/voters.yml");}
-		catch(IOException e){e.printStackTrace();}
+		FileIO.saveYaml("voters.yml", voters);
 	}
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent evt){
 		String uuid = evt.getPlayer().getUniqueId().toString();
-		if(voters.contains(uuid)){
-			long now = new GregorianCalendar().getTimeInMillis();
-			long lastVote = voters.getLong(uuid+".last", 0);
-			int offlineDays = (int)((now - lastVote)/(24*hrsInMillis));
-			int streak = voters.getInt(uuid+".streak");
-			int offlineVotes = voters.getInt(uuid+".offline");
-			voters.set(uuid+".offline", 0);
-			for(int i=0; i<offlineDays && i<offlineVotes; ++i) rewardPlayer(evt.getPlayer(), streak-i);
-			for(int i=offlineDays; i<offlineVotes; ++i) rewardPlayer(evt.getPlayer(), 0);
+		ConfigurationSection offlineVotes = voters.getConfigurationSection(uuid+".offline");
+		if(offlineVotes == null) return;
+		for(String streakVote : offlineVotes.getKeys(false)){
+			if(!StringUtils.isNumeric(streakVote)) continue;
+			int streak = Integer.parseInt(streakVote), votes = offlineVotes.getInt(streakVote);
+			for(int i=0; i<votes; ++i) rewardPlayer(evt.getPlayer(), streak);
 		}
+		voters.set(uuid+".offline", null);
 	}
 
 /*	@EventHandler
@@ -84,36 +81,48 @@ public class EvVoter implements Listener{
 		String uuid = voter.getUniqueId().toString();
 		if(!voters.isConfigurationSection(uuid)) return 0;
 
-		// Gone for X+ hours, streak is 0
-		long timeSinceVote = new GregorianCalendar().getTimeInMillis() - voters.getLong(uuid+".last", 0);
-		if(timeSinceVote > graceHours*hrsInMillis) voters.set(uuid+".streak", 0);
+		// Hasn't voted in >X hours, streak is 0
+		long timeSinceVote = System.currentTimeMillis() - voters.getLong(uuid+".streak-last", 0);
+		if(timeSinceVote > dayInMillis + graceInMillis) voters.set(uuid+".streak", 0);
 		return voters.getInt(uuid+".streak", 0);
 	}
 
-	int addVoteAndGetStreak(OfflinePlayer voter){
+	void applyVote(OfflinePlayer voter){
 		String uuid = voter.getUniqueId().toString();
 		if(!voters.isConfigurationSection(uuid)) voters.createSection(uuid);
 		voters.set(uuid+".name", voter.getName());
-		if(!voter.isOnline()){
-			voters.set(uuid+".offline", voters.getInt(voter.getUniqueId()+".offline", 0) + 1);
-		}
 		voters.set(uuid+".total", voters.getInt(uuid+".total", 0) + 1);
 
-		long now = new GregorianCalendar().getTimeInMillis();
+		long now = System.currentTimeMillis();
 		long lastVote = voters.getLong(uuid+".last", 0);
-		// Gone for X hours, reset streak
-		if(now - lastVote > graceHours*hrsInMillis) voters.set(uuid+".streak", 1);
-		// Voted within last X hours, don't apply streak (or update lastVote)
-		else if(now - lastVote < 24*hrsInMillis) return 0;
-		//Voted within last X hours but not last 24 hours. Increment streak
-		else voters.set(uuid+".streak", (voters.getInt(uuid+".streak", 0) + 1));
+		long lastVoteOfStreak = voters.getLong(uuid+".last-streak", 0);
+		int streak = voters.getInt(uuid+".streak", 0);
 		voters.set(uuid+".last", now);
 
-		return voters.getInt(uuid+".streak", 0);
+		// Hasn't voted in >X hours, reset streak
+		if(now - lastVote > dayInMillis + graceInMillis){
+			voters.set(uuid+".streak", streak=1);
+			voters.set(uuid+".streak-last", now);
+		}
+		// Only increment streak if >24 hours since last streak vote
+		else if(now - lastVoteOfStreak > dayInMillis){
+			voters.set(uuid+".streak", ++streak);
+			voters.set(uuid+".streak-last", now);
+		}
+		// Can only get streak bonus once per day.
+		else streak = 0;
+		if(voter.isOnline()) rewardPlayer(voter.getPlayer(), streak);
+		else{
+			if(!voters.isConfigurationSection(uuid+".offline")) voters.createSection(uuid+".offline");
+			voters.set(uuid+".offline."+streak, voters.getInt(uuid+".offline."+streak, 0) + 1);
+		}
 	}
 
-	public long getLastVoted(UUID uuid){
+	public long lastVote(UUID uuid){
 		return voters.getLong(uuid.toString()+".last", 0);
+	}
+	public long lastStreakVote(UUID uuid){
+		return voters.getLong(uuid.toString()+".streak-last", 0);
 	}
 
 	@SuppressWarnings("deprecation")

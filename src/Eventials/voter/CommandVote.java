@@ -18,7 +18,6 @@ public class CommandVote extends EvCommand{
 	final String[] nonHyper;
 	final TextAction[] clickResult;
 	final EvVoter voteManager;
-	long hrs48 = 172800000;//TODO: move this constant into the config
 
 	public CommandVote(EvPlugin pl, EvVoter v){this(pl, v, true);}
 	public CommandVote(EvPlugin pl, EvVoter v, boolean enabled){
@@ -69,7 +68,8 @@ public class CommandVote extends EvCommand{
 		}
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override
+	public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -77,22 +77,34 @@ public class CommandVote extends EvCommand{
 		if(sender instanceof Player == false){
 			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players");
 		}
+		Player player = (Player)sender;
 		if(website != null && !website.isEmpty())
 			TextUtils.sendModifiedText(
 					new String[]{ChatColor.YELLOW+"Voting"},
 					new String[]{ChatColor.AQUA+" website page"},
 					new TextAction[]{TextAction.LINK},
-					new String[]{website}, "", (Player)sender);
+					new String[]{website}, "", player);
 		if(links.length > 0)
-			TextUtils.sendModifiedText(nonHyper, hyper, clickResult, links, "", (Player)sender);
+			TextUtils.sendModifiedText(nonHyper, hyper, clickResult, links, "", player);
 
-		int s = voteManager.getStreak((Player)sender);
-		ChatColor c = (s > 0 ? s > voteManager.streakMax ? ChatColor.GREEN : ChatColor.AQUA : ChatColor.YELLOW);
-		sender.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+s);
+		int s = voteManager.getStreak(player);
+		ChatColor c = (s > 0 ? s > voteManager.streakMax ?
+				ChatColor.GREEN : ChatColor.AQUA : ChatColor.YELLOW);
+		player.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+s);
 		if(s > 0){
-			long time = hrs48 + voteManager.getLastVoted(((Player)sender).getUniqueId()) - System.currentTimeMillis();
-			sender.sendMessage(ChatColor.GRAY+"Time until streak is lost: "
-					+EvUtils.formatTime(time, ChatColor.GOLD, ChatColor.GRAY));
+			long now = System.currentTimeMillis();
+			long lastVote = voteManager.lastVote(player.getUniqueId());
+			long timeSinceVote = now - lastVote;
+			long timeLeft = (voteManager.dayInMillis + voteManager.graceInMillis) - timeSinceVote;
+			player.sendMessage(ChatColor.GRAY+"Time until streak is lost: "
+					+EvUtils.formatTime(timeLeft, ChatColor.GOLD, ChatColor.GRAY));
+
+			if(timeSinceVote < voteManager.dayInMillis){
+				long lastStreakVote = voteManager.lastStreakVote(player.getUniqueId());
+				long timeUntilIncr = voteManager.dayInMillis - (now - lastStreakVote);
+				player.sendMessage(ChatColor.GRAY+"Time until streak can be increased: "
+						+EvUtils.formatTime(timeUntilIncr, ChatColor.GOLD, ChatColor.GRAY));;
+			}
 		}
 		return true;
 	}

@@ -40,12 +40,10 @@ public class EvVoteListener implements Listener{
 
 		plugin.getLogger().fine("Player "+voter.getName()+" voted for the server on "+voteSite);
 
-		int streak = voteManager.addVoteAndGetStreak(voter);
+		voteManager.applyVote(voter);
 
 		if(voter.isOnline()){
-			voteManager.rewardPlayer(voter.getPlayer(), streak);
 			voter.getPlayer().sendMessage(prefix+"Thanks for voting for us on "+voteSite+'!');
-
 			for(Player p : plugin.getServer().getOnlinePlayers()){
 				if(!voter.getName().equals(p.getName())) {
 					p.sendMessage(prefix2+evt.getVote().getUsername()+" voted for us on "+voteSite+'.');
