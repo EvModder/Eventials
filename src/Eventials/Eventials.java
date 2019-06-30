@@ -27,6 +27,8 @@ public class Eventials extends EvPlugin {
 
 	@Override public void onEvEnable(){
 		plugin = this;
+		new EventAndMisc(this);//TODO: Temporary?
+
 		if(config.getBoolean("book-editor-enabled", true)) new WriterTools(this);
 		if(config.getBoolean("enable-custom-bows", true)) new CustomBows(this);
 		if(config.getBoolean("economy-enabled", true)) eco = new Economy(this);
@@ -74,8 +76,6 @@ public class Eventials extends EvPlugin {
 		new CommandVipGive(this);
 		new CommandVipTake(this);
 		new CommandWeaponStats(this, config.getBoolean("enable-weaponstats", true));
-
-		new EventAndMisc(this);//TODO: Temporary?
 
 		if(config.getBoolean("prevent-multicraft-list-console-spam")){
 			getServer().getLogger().setFilter(new Filter(){@Override public boolean isLoggable(LogRecord record){

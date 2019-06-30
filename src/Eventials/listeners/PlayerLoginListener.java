@@ -33,6 +33,7 @@ public class PlayerLoginListener implements Listener{
 
 	public PlayerLoginListener(){
 		plugin = Eventials.getPlugin();
+		boolean ecoEnabled = plugin.getConfig().getBoolean("economy-enabled", true);
 		eco = Economy.getEconomy();
 		playNote = plugin.getConfig().getBoolean("login-noteblock");
 		showRecentJoins = plugin.getConfig().getBoolean("show-recent-joins", true);
@@ -40,7 +41,7 @@ public class PlayerLoginListener implements Listener{
 		curSymbol = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
 		trackGlobalBal = plugin.getConfig().getBoolean("track-global-balance", true);
 		announceDailyMoney = plugin.getConfig().getBoolean("online-when-daily-money-bonus", true);
-		if(plugin.getConfig().getBoolean("economy-enabled")){
+		if(ecoEnabled){
 			dailyMoney = plugin.getConfig().getInt("login-daily-money");
 			startingBal = plugin.getConfig().getInt("starting-balance");
 			serverFundsNoobs = plugin.getConfig().getBoolean("server-pays-starting-balance", true);

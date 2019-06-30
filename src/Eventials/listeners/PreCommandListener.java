@@ -22,7 +22,7 @@ import Eventials.economy.Economy;
 
 public class PreCommandListener implements Listener {
 	final Eventials plugin;
-	final boolean fancyHelp, cmdHelp, fancyPl, commandAliases,
+	final boolean fancyHelp, cmdHelp, commandAliases,
 					customBaltop, watchBalances, hyperWarps;
 	final HashSet<String> balanceWatchCommands, quickWarps;
 	final HashMap<String, Integer> cooldownCommands;
@@ -35,7 +35,6 @@ public class PreCommandListener implements Listener {
 
 		fancyHelp = plugin.getConfig().getBoolean("fancy-help", true);
 		cmdHelp = plugin.getConfig().getBoolean("detailed-command-help", true);
-		fancyPl = plugin.getConfig().getBoolean("fancy-pl", true);
 		commandAliases = plugin.getConfig().getBoolean("command-aliases", true);
 		quickWarps = new HashSet<String>();
 		quickWarps.addAll(plugin.getConfig().getStringList("quick-warps"));
@@ -180,12 +179,6 @@ public class PreCommandListener implements Listener {
 				}
 				evt.setCancelled(true);
 				CommandUtils.showFancyHelp(evt.getPlayer(), pageNum);
-			}
-		}
-		else if(command.equals("/pl") || command.equals("/plugins") || command.equals("/?")){
-			if(evt.getPlayer().hasPermission("bukkit.command.plugins")){
-				evt.setCancelled(true);
-				Extras.showFancyPlugins(evt.getPlayer());
 			}
 		}
 		else if(customBaltop && ((message=message.replaceFirst(" top", "top")).startsWith("/baltop") ||

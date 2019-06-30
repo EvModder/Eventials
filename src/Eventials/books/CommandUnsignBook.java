@@ -32,6 +32,17 @@ public class CommandUnsignBook extends EvCommand{
 			sender.sendMessage(ChatColor.RED+"You must be holding a signed book to do this!");
 			return true;
 		}
+		if(bookItem.getItemMeta() == null || !((BookMeta)bookItem.getItemMeta()).hasPages()){
+			//sender.sendMessage(ChatColor.RED+"Empty books cannot be unsigned");
+			ItemStack openBook = new ItemStack(Material.WRITABLE_BOOK);
+			p.getInventory().setItemInMainHand(openBook);
+			if(bookItem.getAmount() > 1){
+				for(int i=1; i<bookItem.getAmount(); ++i)
+					if(!p.getInventory().addItem(openBook).isEmpty())
+						p.getWorld().dropItem(p.getLocation(), openBook);
+			}
+			return true;
+		}
 		BookMeta meta = (BookMeta)bookItem.getItemMeta();
 		if(meta.getGeneration() != Generation.ORIGINAL && !p.hasPermission("eventials.books.unsign.copy")){
 			sender.sendMessage(ChatColor.RED+"Error: Non-original copies cannot be unsigned!");
@@ -43,14 +54,11 @@ public class CommandUnsignBook extends EvCommand{
 			return true;
 		}
 		ItemStack openBook = new ItemStack(Material.WRITABLE_BOOK);
-		openBook.setItemMeta(meta);
-		if(bookItem.getAmount() == 1) p.getInventory().setItemInMainHand(openBook);
-		else{
-			bookItem.setAmount(bookItem.getAmount()-1);
-			p.getInventory().setItemInMainHand(bookItem);
-			if(p.getInventory().addItem(openBook).isEmpty() == false){
-				p.getWorld().dropItemNaturally(p.getLocation(), openBook);
-			}
+		p.getInventory().setItemInMainHand(openBook);
+		if(bookItem.getAmount() > 1){
+			for(int i=1; i<bookItem.getAmount(); ++i)
+				if(!p.getInventory().addItem(openBook).isEmpty())
+					p.getWorld().dropItem(p.getLocation(), openBook);
 		}
 		sender.sendMessage(ChatColor.GOLD+"Book successfully unsigned");
 		return true;

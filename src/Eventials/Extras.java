@@ -9,7 +9,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import Eventials.economy.Economy;
 import net.ess3.api.IEssentials;
 import net.evmodder.EvLib.hooks.EssEcoHook;
@@ -209,39 +208,6 @@ public class Extras{
 			actions[i] = TextAction.RUN_CMD;
 		}
 		TextUtils.sendModifiedText(preMsgs, hyperMsgs, actions, cmdMsgs, null, player);
-	}
-
-	public static ChatColor redGreenTest(String pluginName){
-		Plugin plugin = Eventials.getPlugin().getServer().getPluginManager().getPlugin(pluginName);
-		return (plugin != null && plugin.isEnabled()) ? ChatColor.GREEN : ChatColor.RED;
-	}
-
-	public static void showFancyPlugins(Player player){//TODO: Move to EventAndMisc.AlternateNew
-		String raw = TextUtils.TextAction.parseToRaw(
-				"Plugins: §a\\" +
-				redGreenTest("OpenTerrainGenerator")+"OTG=>Open Terrain Generator (custom terrain)§r, §a\\" +
-				redGreenTest("Renewable")+"Renewable=>Prevents unrenewable items from being destroyed§r, §a\\" +
-				redGreenTest("Essentials")+"Essentials=>Collection of useful commands§r, §a\\" +
-				redGreenTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, §a\\" +
-				redGreenTest("Eventials")+"Eventials=>Package of custom-built tools, features, and tweaks§r, \\\\n§a\\" +
-				redGreenTest("Factions")+"Factions=>Protect your land and build communities§r, §a\\" +
-				redGreenTest("HorseOwners")+"HorseOwners=>Claim, name, teleport, and view stats for horses§r, §a\\" +
-				redGreenTest("ChatManager")+"ChatManager=>Keeps chat clean + Color/Format for chat & signs§r, §a\\" +
-				redGreenTest("EnchantBook")+"EnchantBook=>Color with anvils, looting on axes, etc!§r, §a\\" +
-				"More=>\\"+
-				redGreenTest("WorldEdit")+"WorldEdit\\§f, \\" +
-				redGreenTest("WorldGuard")+"WorldGuard\\§f, \\" +
-				redGreenTest("PluginLoader")+"PluginLoader\\§f, \\" +
-				redGreenTest("EssentialsSpawn")+"EssentialsSpawn\\§f, \\" +
-				redGreenTest("Votifier")+"Votifier\\§f, \\" +
-				redGreenTest("EssentialsChat")+"EssentialsChat\\§f, \\" +
-				redGreenTest("BungeeTabListPlus")+"BungeeTabListPlus\\§f, \\" +
-				redGreenTest("PermissionsBukkit")+"PermissionsBukkit§r.\\\\n" +
-				"\\§7\\§oHover over a plugin to see more details!",
-				"§r"
-		);
-		Eventials.getPlugin().runCommand("tellraw "+player.getName()+' '+raw);
-//		Eventials.getPlugin().getLogger().info("Raw="+raw);
 	}
 
 	public static boolean isAdminShop(Block block){

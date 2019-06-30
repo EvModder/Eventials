@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,9 +20,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.util.Pair;
 import net.evmodder.Renewable.Renewable;
 import net.evmodder.Renewable.RenewableAPI;
@@ -32,10 +35,12 @@ public class AC_New implements Listener{
 	private final HashSet<Pair<Integer,Integer>> modChunks = new HashSet<Pair<Integer, Integer>>();
 	private final Eventials pl;
 	private final RenewableAPI renewableAPI;
+	final boolean fancyPl;
 
 	public AC_New(){
 		pl = Eventials.getPlugin();
 		renewableAPI = ((Renewable)pl.getServer().getPluginManager().getPlugin("Renewable")).getAPI();
+		fancyPl = pl.getConfig().getBoolean("fancy-pl", true);
 		pl.getServer().getPluginManager().registerEvents(this, pl);
 		loadModChunks();
 	}
@@ -125,6 +130,36 @@ public class AC_New implements Listener{
 		}
 	}
 
+	ChatColor enableTest(String pluginName){
+		Plugin plugin = Eventials.getPlugin().getServer().getPluginManager().getPlugin(pluginName);
+		return (plugin != null && plugin.isEnabled()) ? ChatColor.GREEN : ChatColor.RED;
+	}
+	void showFancyPlugins(Player player){
+		String raw = TextUtils.TextAction.parseToRaw(
+			"Plugins: §a\\" +
+			enableTest("OpenTerrainGenerator")+"OTG=>Open Terrain Generator (custom terrain)§r, §a\\" +
+			enableTest("Renewable")+"Renewable=>Prevents unrenewable items from being destroyed§r, §a\\" +
+			enableTest("Essentials")+"Essentials=>Collection of useful commands§r, §a\\" +
+			enableTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, §a\\" +
+			enableTest("Eventials")+"Eventials=>Package of custom-built tools, features, and tweaks§r, \\\\n§a\\" +
+			enableTest("Factions")+"Factions=>Protect your land and build communities§r, §a\\" +
+			enableTest("HorseOwners")+"HorseOwners=>Claim, name, teleport, and view stats for horses§r, §a\\" +
+			enableTest("ChatManager")+"ChatManager=>Keeps chat clean + Color/Format for chat & signs§r, §a\\" +
+			enableTest("EnchantBook")+"EnchantBook=>Color with anvils, looting on axes, etc!§r, §a\\" +
+			"More=>\\"+
+			enableTest("WorldEdit")+"WorldEdit\\§f, \\" +
+			enableTest("WorldGuard")+"WorldGuard\\§f, \\" +
+			enableTest("PluginLoader")+"PluginLoader\\§f, \\" +
+			enableTest("EssentialsSpawn")+"EssentialsSpawn\\§f, \\" +
+			enableTest("Votifier")+"Votifier\\§f, \\" +
+			"§aEvAntiCheat\\§f, \\" +
+			enableTest("BungeeTabListPlus")+"BungeeTabListPlus\\§f, \\" +
+			enableTest("PermissionsBukkit")+"PermissionsBukkit§r.\\\\n" +
+			"\\§7\\§oHover over a plugin to see more details!",
+			"§r"
+		);
+		Eventials.getPlugin().runCommand("tellraw "+player.getName()+' '+raw);
+	}
 	@EventHandler
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){
 		String command = evt.getMessage().toLowerCase();
@@ -135,6 +170,12 @@ public class AC_New implements Listener{
 			evt.getPlayer().sendMessage(ChatColor.AQUA+"/sethome"+ChatColor.WHITE+" isn't enabled.");
 			evt.getPlayer().sendMessage("Instead, use a bed to set your "+ChatColor.AQUA+"/home");
 			evt.setCancelled(true);
+		}
+		else if(command.equals("/pl") || command.equals("/plugins") || command.equals("/?")){
+			if(fancyPl && evt.getPlayer().hasPermission("bukkit.command.plugins")){
+				evt.setCancelled(true);
+				showFancyPlugins(evt.getPlayer());
+			}
 		}
 	}
 

@@ -1,38 +1,21 @@
-# Eventials TODO:
-# -Maps (load images, organize/optimize map saving and new map creation)
-# -Bungee version: data_specific_ping_msgs, admin sneak join, trans-server teleport aliases, login to where you logout from.
-# -Scheduler: Copy over automsgs & test tellraw
-# showrecentcommand, show-me-in-recent, show-me-recent-on-join
-# only do creeper explosions when regional difficulty > x
-# /showshop - explain how to create a [Trade] sign
-# More customize /pl per-server
-
-# &X - open_file        - CLICK
-# &X - change_page      - CLICK
-# &X - show_text        - HOVER
-# &X - show_achievement - HOVER
-# &X - show_item        - HOVER
-# &X - show_entity      - HOVER
-
 #--------------------------------------#
 #           Eventials config           #
 #--------------------------------------#
-#Horse armor, Saddles, Nametags, CrackedBricks, DoubleSlabs, PackedIce
-add-recipes: false #False because unrenewables
-pre-command: true #Required for a lot of features/functionality
+add-recipes: false
+pre-command: true #Disabling kills lots of features/functionality
 fancy-help: true
 detailed-command-help: true
 fancy-pl: true
 command-aliases: true
 use-hyperwarps: true
-quick-warps: [adminshop, market]
+quick-warps: []
 tell-death-coords: true
 log-death-coords: true
 enable-signtools: true
 enable-weaponstats: true
 
 enable-custom-bows: false
-prevent-arrow-invulnerability: true
+prevent-arrow-invulnerability: false
 
 login-noteblock: true
 show-recent-joins: true
@@ -60,7 +43,7 @@ global-command-cooldowns:
 #--------------------------------------#
 #           EvEconomy config           #
 #--------------------------------------#
-economy-enabled: true
+economy-enabled: false
 
 #Set track-server-balance to false for an infinite server balance
 track-server-balance: true
@@ -77,24 +60,6 @@ custom-baltop: true
 #'eventials.bypass.paidcommands.cmd' for a specific commands
 paid-commands:
   weather: 20.0
-  claimhorse: 5.0
-  lockhorse: 5.0
-  gethorse: 2.5
-  inspecthorse: 1.0
-  repair: 30.0
-  separate: 5.0
-  weaponstats: 25.0
-  unsignbook: 5.0
-  suicide: 10.0
-  'f claim': 3
-  'factions claim': 3
-  'factions:f claim': 3
-  'factions:factions claim': 3
-  'f autoclaim': 15
-  'factions autoclaim': 15
-  'factions:f autoclaim': 15
-  'factions:factions autoclaim': 15
-#  home: 0.1
 
 update-balance-watch: false
 update-balance-on-paid-commands: true
@@ -165,8 +130,8 @@ clock-period: 60 #Default 60s per cycle
 
 #To disable a task, set its frequency to 0
 cycles-per-eventials-data-save: 2
-cycles-per-automessage: 4
-cycles-per-mob-clear: 5
+cycles-per-automessage: 5
+cycles-per-mob-clear: 0
 cycles-per-worldsave: 5
 cycles-per-player-delete: 1440
 cycles-per-magic-day-reward: 60
@@ -180,7 +145,7 @@ save-ips: true
 max-saved-ips: 200
 
 message-color: '&e'
-message-prefix: '&3[&7AC&3]&e '
+message-prefix: '&3[&7ACHC&3]&e '
 #Auto-messages were moved to bottom of the file
 #(because there are a lot of them)
 
@@ -191,7 +156,7 @@ ping-prefix: '&9&l&m  &7 ' # '  &9&l&m -&7 '
 blacklisted-ips:
   - ''
 
-prevent-multicraft-list-console-spam: true
+prevent-multicraft-list-console-spam: false
 
 #--------------------------------------#
 #           EvSpawner config           #
@@ -202,7 +167,7 @@ stackable-spawners: true
 drop-monsteregg-blocks: true
 allow-nbt-container-placement: true
 allow-nbt-commandblock-placement: true
-allow-colorcodes-in-commandblock: true #TODO
+allow-colorcodes-in-commandblock: true
 
 #These do not require 'evspawner-enabled: true'
 disable-skeleton-traps: false
@@ -221,12 +186,12 @@ evvoter-enabled: true
 #To disable voting streaks, set 'op' and 'amount' to 0
 #op 0=add, 1=multiply, 2=
 vote-streak-op: 0
-vote-streak-amount: 1
+vote-streak-amount: 0
 vote-streak-max-days: 10
 #How much time before a vote streak is lost?
 vote-streak-grace-hours: 48
 
-player-cash-reward: 2
+player-cash-reward: 0
 server-cash-reward: 0
 server-pays-player-cash-reward: true
 
@@ -259,66 +224,27 @@ shared-inv-worlds:
     - '*'
     - '*_nether'
     - '*_the_end'
-  old_worlds:
-    - 'VictoryHills'
-    - 'Events'
-    - 'world'
-  creative_group:
-    - 'Creative'
-    - 'TC Creative'
 
 #--------------------------------------#
 #              More Stuff              #
 #--------------------------------------#
 world-borders:
-  VictoryHills:
-    center-x: 0.5
-    center-z: 0
-    radius: 10001.1
-  VictoryHills_nether:
-    center-x: 0.5
-    center-z: 0.5
-    radius: 5000
-  VictoryHills_the_end:
-    center-x: 0.5
-    center-z: 0.5
-    radius: 5000
-  MysteryPeaks:
-    center-x: 0.5
-    center-z: 0.5
-    radius: 3000
-  MysteryPeaks_nether:
-    center-x: 0.5
-    center-z: 0.5
-    radius: 3000
-  MysteryPeaks_the_end:
-    center-x: 0.5
-    center-z: 0.5
-    radius: 3000
-  Events:
-    center-x: 0
-    center-z: 0
-    radius: 8000
-  Creative:
-    center-x: 45750
-    center-z: 45750
-    radius: 55751
 
 #Legend: &e = text, &b = link/download, &d = @Location, &2 = command, &a = $money/event/world, 
 #Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
 auto-messages:
   - |
-       Periodically, custom server &aEvents=>&7The selling point of this server!&r will be held!
-#       Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
-  - 'Run &2/warps&r for clickable teleports to key locations!'
-#  - 'Warps to important locations can be found at spawn'
-#  - '&4[&c&lWarn&4]&r Unused terrain will be periodically reset!'
-#  - 'Contact staff to learn about or purchase a Market plot'
+       Hardcore world is still in BETA!
+       There may still be adjustments to mechanics in order to better
+       accommodate the player base or handle multiplayer challenges
+  - 'Players are encouraged to collaborate, but be careful!'
+  - 'Remember, anyone can join, so practice caution around others!'
+  - 'Beware public locations such as x=0,z=0 and The End!'
+  - 'Death-trapping End/Nether portals is a bannable offense'
   - |
-       Running low on cash?
-       Claim a spot at &2/market&r and build yourself a shop!
-#       Sell your stone and logs in the &d@AdminShop&r!
-  - 'Be careful, you can get auto-killed for PvP logging!'
+       Periodically, custom server &aEvents=>&7What got AlternateCraft started!&r will be held!
+       Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
+  - '&4[&c&lWarning&4]&r Unused terrain may be periodically reset!'
   - 'Griefing is generally discouraged'
   - |
        &4[&c&lWarning&4]&r Exploring generates many new chunks
@@ -331,65 +257,43 @@ auto-messages:
        Remember, server &aEvents&r are temporary, and
        eventually everything returns to normal
   - 'Want to privatize your horse? check out &2/hm'
-#  - 'Custom saddle, nametag, & barding recipies listed &d@Market'
   - 'Ye like? Ye vote? &2/vote&r for links!'
-#  - 'Remember, you can use &2/enderchest&r in the Events world!'
-  - |
-       Monetary help isn't required, but is always appreciated! :)
-       Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks
+  - 'Monetary help isn''t required, but is always appreciated! :)'
   - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
-  - 'Suggestions are always welcome!'
+  - 'Suggestions always welcome!'
   - 'Please check &2/rules&r periodically for updates'
-  - 'Sharing server IPs is fine, but &nno soliciting&r please!'
-  - 'Have an idea for an automsg? You could get &2L&a50&r for it!'
+  - 'Sharing server IPs is fine, but &nno soliciting&r please'
   - 'Staff are here to help, so ask away!'
-  - |
-       You can get money by completing Advancements,
-       trading with players, or simply AFK fishing!
-  - 'Killing people is fun, so why not start a head collection? ;)'
-  - 'Want to compete? Drop off your stuff and head to &2/arenas&r!'
+  - 'Slaughtering is fun, so why not start a head collection? ;)'
+#  - 'Want to compete? Drop off your stuff and head to &2/arenas&r!'
 #  - |
 #       Win the &nMarket Parkour&r for a stack of diamond blocks!
 #       (Warning, it is practically impossible)
-  - 'Unwarranted griefing can result in jail -> tempban'
-  - |
-       We recommend the &6LithosCore&r texture pack-
-       You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
+#  - 'Unwarranted griefing can result in jail -> tempban'
+#  - |
+#       We recommend the &6LithosCore&r texture pack-
+#       You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
   - 'YouTuber? Promote your channel, ask for the prefix!'
-  - 'Rare items can be found in the &d@AdminShop&r or &d@Market&r.'
-  - 'Found a bug? &2/mail Admin&r so we can get it fixed!'
+  - 'Found a bug? &2/mail Admin&r so we can fix it!'
   - 'See a &2/green&r command? Click it to run it!'
   - |
-       Many commands have aliases!
-       Examples: &2/home&r&7 -> &2/h&r, &2/back&r&7 -> &2/b&r, &2/f power&r&7 -> &2/f p
-  - |
-       Donator recognition on &bac.buycraft.net=>http://ac.buycraft.net/&r is .99,
-       USD but may fluctuate change change over time
+#       Many commands have aliases!
+#       Examples: &2/home&r&7 -> &2/h&r, &2/back&r&7 -> &2/b&r, &2/f power&r&7 -> &2/f p
 #  - |
-#      Chickens &d@Adminshop&r have been reported to lay more
-#      than just basic eggs, go grab some golden goodies!
-  - |
-      Some ugly base in your way that needs to be taken down?
-      Please ask a staff member to get the thumbs up!
-#  - |
-#       Want to see an epic 3D map of the server? Visit Dynmap!
-#       Links: &bSpawn=>http://ow.ly/4nqOnx&r, &bMarketplace=>http://ow.ly/4nqOY9
+#      Some ugly base in your way that needs to be taken down?
+#      Please ask a staff member to get the thumbs up!
+  - '(disabled) Want to see an epic world map? Visit Dynmap!'
   - 'Event schedule (irregularly) posted on our &bwebsite=>http://www.altcraft.net/events/schedule'
-  - |
-       Have something important to tell? Looking for ways
-       to promote your &d@Marketplace&r shop? Try &2/advertise&r!
 #  - |
-#      Like the chickens at the &d@Adminshop&r?
-#      Look, but don't touch&m  &r they have dark powers!
-#  - |
-#       @ Server admins: Avoid &cClearLagg&r, it sucks!
-#       Both &cNoLagg&r and &cReduceLag&r are way better
+#       Have something important to tell? Looking for ways
+#       to promote your &d@Marketplace&r shop? Try &2/advertise&r!
+  - '@ Server admins: Avoid &cClearLagg&r, it sucks!'
   - |
        We believe in server transparency!
        Check out &2/pl&r or the &bplugins page=>http://www.altcraft.net/plugins&r of the website
        Remember, suggestions are always welcome!
-#  - 'I used to be indecisive. Now I''m not sure...'
-#  - '&c&lPro Tip:&r&o don''t eat the yellow snow'
+  - 'I used to be indecisive. Now I''m not sure...'
+  - '&c&lPro Tip:&r&o don''t eat the yellow snow'
 
 ping-messages:
   - ''
@@ -414,7 +318,7 @@ ping-messages:
   - 'Suggestions welcome!'
   - ''
   - 'Press [refresh] for more random messages!'
-  - '&7&oflat&f | &7&ohard | &7&ocreative | &7&ocustom'
+  - '&ohard'
   - Yawn
   - ''
   - 'The mind is weak but the body is strong.'
