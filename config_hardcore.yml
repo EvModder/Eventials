@@ -235,12 +235,13 @@ world-borders:
 auto-messages:
   - |
        Hardcore world is still in BETA!
-       There may still be adjustments to mechanics in order to better
-       accommodate the player base or handle multiplayer challenges
+       There may still be adjustments to mechanics in order to
+       better accommodate the player base
+       and handle multiplayer challenges
   - 'Players are encouraged to collaborate, but be careful!'
   - 'Remember, anyone can join, so practice caution around others!'
   - 'Beware public locations such as x=0,z=0 and The End!'
-  - 'Death-trapping End/Nether portals is a bannable offense'
+  - 'Death-trapping End/Nether portals is bannable'
   - |
        Periodically, custom server &aEvents=>&7What got AlternateCraft started!&r will be held!
        Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
@@ -258,7 +259,7 @@ auto-messages:
        eventually everything returns to normal
   - 'Want to privatize your horse? check out &2/hm'
   - 'Ye like? Ye vote? &2/vote&r for links!'
-  - 'Monetary help isn''t required, but is always appreciated! :)'
+  - 'Monetary help isn''t required, but is always appreciated :)'
   - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
   - 'Suggestions always welcome!'
   - 'Please check &2/rules&r periodically for updates'

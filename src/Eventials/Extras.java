@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.Vector;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -208,6 +209,14 @@ public class Extras{
 			actions[i] = TextAction.RUN_CMD;
 		}
 		TextUtils.sendModifiedText(preMsgs, hyperMsgs, actions, cmdMsgs, null, player);
+	}
+
+	public static String locationToString(Location loc, ChatColor coordColor, ChatColor commaColor){
+		return new StringBuilder("")
+				.append(ChatColor.GRAY).append(loc.getBlockX()).append(ChatColor.DARK_GRAY).append(",")
+				.append(ChatColor.GRAY).append(loc.getBlockY()).append(ChatColor.DARK_GRAY).append(",")
+				.append(ChatColor.GRAY).append(loc.getBlockZ()).append(ChatColor.DARK_GRAY).append(",")
+				.toString();
 	}
 
 	public static boolean isAdminShop(Block block){

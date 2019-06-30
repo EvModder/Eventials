@@ -17,9 +17,6 @@ public class EventAndMisc {
 
 	public EventAndMisc(final Eventials pl){
 		this.pl = pl;
-		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();
-		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
-
 		if(pl.getServer().getWorld("VictoryHills") != null){
 			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
 			new AC_Old();
@@ -27,6 +24,8 @@ public class EventAndMisc {
 		else if(pl.getServer().getWorld("Reliquist") != null){
 			InputStream rssHC = getClass().getResourceAsStream("/config_hardcore.yml");
 			YamlConfiguration hardConf = FileIO.loadConfig(pl, "config_hardcore.yml", rssHC);
+			FileIO.deleteFile("config_hardcore.yml");
+			for(String key : pl.getConfig().getKeys(false)) pl.getConfig().set(key, null);
 			pl.getConfig().setDefaults(hardConf);//TODO: This, or line below?
 			for(String key : hardConf.getKeys(false)) pl.getConfig().set(key, hardConf.get(key));
 			new AC_Hardcore();
@@ -35,6 +34,9 @@ public class EventAndMisc {
 			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
 			new AC_New();
 		}
+
+		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();
+		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
 	}
 
 	void loadWorldBorders(){

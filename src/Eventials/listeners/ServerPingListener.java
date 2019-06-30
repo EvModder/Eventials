@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -116,8 +117,12 @@ public class ServerPingListener implements Listener{
 
 					if(motd.contains("%name%")){
 						UUID uuid = PlayerLoginListener.addressMap.get(evt.getAddress().toString());
-						String name = (uuid == null ? "dude" : plugin.getServer().getOfflinePlayer(uuid).getName());
-						motd = motd.replace("%name%", name);
+						if(uuid != null){
+							OfflinePlayer offlineP = plugin.getServer().getOfflinePlayer(uuid);
+							String name = (offlineP == null ? "dude" : offlineP.getName());
+							motd = motd.replace("%name%", name);
+						}
+						motd = motd.replace("%name%", "dude");
 					}
 				}
 				++pingI; if(pingI == pingMsgs.length) pingI = 0;
