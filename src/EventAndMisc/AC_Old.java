@@ -21,6 +21,7 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -33,7 +34,7 @@ import Evil_Code_EvKits.EvKits;
 import net.evmodder.EvLib.extras.RefNBTTag;
 import net.evmodder.EvLib.extras.RefNBTTagList;
 
-public class AlternateOld implements Listener {
+public class AC_Old implements Listener {
 	Eventials pl;
 	Random rand;
 
@@ -56,7 +57,7 @@ public class AlternateOld implements Listener {
 			"/freebuild,/fb"
 	};
 
-	public AlternateOld(){
+	public AC_Old(){
 		rand = new Random();
 		pl = Eventials.getPlugin();
 		pl.getServer().getPluginManager().registerEvents(this, pl);
@@ -175,6 +176,8 @@ public class AlternateOld implements Listener {
 		item.setItemMeta(meta);
 		return item;
 	}
+
+	@EventHandler public void onPlayerQuit(PlayerQuitEvent evt){evt.setQuitMessage("");}
 
 	@EventHandler
 	public void entityPortalEvent(EntityPortalEvent evt){

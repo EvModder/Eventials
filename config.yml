@@ -40,6 +40,8 @@ record-player-addresses: true
 
 discord-link: 'https://discord.gg/DMcxR5D'
 
+default-nophysics-radius: 32
+
 inactive-days-until-player-delete: 200
 #Advancements checker is broken
 keep-if-has-x-advancements: 100

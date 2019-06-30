@@ -9,7 +9,6 @@ import java.util.UUID;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.hooks.EssPermHook;
 import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.EvUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,15 +26,19 @@ import Eventials.Eventials;
 public class CommandBreakPhysics extends EvCommand implements Listener{
 	private EvPlugin pl;
 	private Set<UUID> breakPhysics;
+	final int RADIUS, RADIUS_SQ;
 
 	public CommandBreakPhysics(EvPlugin p) {
 		super(p);
 		pl = p;
 		breakPhysics = new HashSet<UUID>();
 		teleports = new PriorityQueue<UUID>();
+		RADIUS = pl.getConfig().getInt("default-nophysics-radius", 32);
+		RADIUS_SQ = RADIUS*RADIUS;
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override
+	public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -63,7 +66,8 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 	public void onBlockPhysicsEvent(BlockPhysicsEvent evt){
 		if(!evt.isCancelled())
 		for(Player p : pl.getServer().getOnlinePlayers()){
-			if(breakPhysics.contains(p.getUniqueId()) && EvUtils.notFar(p.getLocation(), evt.getBlock().getLocation())){
+			if(breakPhysics.contains(p.getUniqueId()) &&
+					evt.getBlock().getLocation().distanceSquared(p.getLocation()) < RADIUS_SQ){
 				evt.setCancelled(true);
 				return;
 			}
@@ -84,8 +88,9 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 			teleports.add(evt.getPlayer().getUniqueId());
 			new BukkitRunnable(){@Override public void run() {
 				Player p = pl.getServer().getPlayer(teleports.remove());
-				if(p != null && !EssPermHook.isAuthorized(p, getCommand().getPermission())) remove(p.getUniqueId());
-			}}.runTaskLater(pl, 1);
+				if(p != null && !EssPermHook.isAuthorized(p, getCommand().getPermission()))
+					remove(p.getUniqueId());
+			}}.runTaskLater(pl, 5);
 		}
 	}
 

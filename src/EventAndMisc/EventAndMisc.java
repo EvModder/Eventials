@@ -30,12 +30,12 @@ public class EventAndMisc {
 
 	public EventAndMisc(final Eventials pl){
 		this.pl = pl;
-		pl.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), pl);
 		loadWorldBorders();
 		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
 
-		if(pl.getServer().getWorld("VictoryHills") != null) new AlternateOld();
-		else new AlternateNew();
+		if(pl.getServer().getWorld("VictoryHills") != null) new AC_Old();
+		else if(pl.getServer().getWorld("Reliquist") != null) new AC_Hardcore();
+		else/*if(pl.getServer().getWorld("MysteryPeaks") != null)*/ new AC_New();
 
 		pl.getServer().getPluginManager().registerEvents(new Listener(){
 			public boolean isProtected(EntityType entity){

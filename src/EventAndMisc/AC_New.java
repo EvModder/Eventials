@@ -1,6 +1,8 @@
 package EventAndMisc;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -11,34 +13,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.util.Pair;
+import net.evmodder.Renewable.Renewable;
+import net.evmodder.Renewable.RenewableAPI;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 
-public class AlternateNew implements Listener{
-	class Pair<T, R>{
-		T a; R b;
-		Pair(T t, R r){a=t; b=r;}
-		@Override public boolean equals(Object p){
-			return p != null && p instanceof Pair && a.equals(((Pair<?, ?>)p).a) && b.equals(((Pair<?, ?>)p).b);
-		}
-		@Override public int hashCode(){
-			return a.hashCode() + b.hashCode();
-		}
-	};
+public class AC_New implements Listener{
 	private final HashSet<Pair<Integer,Integer>> modChunks = new HashSet<Pair<Integer, Integer>>();
 	private final Eventials pl;
+	private final RenewableAPI renewableAPI;
 
-	public AlternateNew(){
+	public AC_New(){
 		pl = Eventials.getPlugin();
+		renewableAPI = ((Renewable)pl.getServer().getPluginManager().getPlugin("Renewable")).getAPI();
 		pl.getServer().getPluginManager().registerEvents(this, pl);
-		pl.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), pl);
-		pl.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), pl);
 		loadModChunks();
 	}
 
@@ -75,6 +73,8 @@ public class AlternateNew implements Listener{
 			}
 		}
 	}
+
+	@EventHandler public void onPlayerQuit(PlayerQuitEvent evt){evt.setQuitMessage("");}
 
 	@EventHandler
 	public void onLeafDecay(LeavesDecayEvent evt){
@@ -135,6 +135,70 @@ public class AlternateNew implements Listener{
 			evt.getPlayer().sendMessage(ChatColor.AQUA+"/sethome"+ChatColor.WHITE+" isn't enabled.");
 			evt.getPlayer().sendMessage("Instead, use a bed to set your "+ChatColor.AQUA+"/home");
 			evt.setCancelled(true);
+		}
+	}
+
+	public boolean isSpecial(UUID uuid){
+		String str = uuid.toString();
+		//EvDoc, Kapurai
+		//Kamekichi9, Kai_Be
+		//Setteal, Enteal
+		//Foofy, De_taco
+		return str.equals("34471e8d-d0c5-47b9-b8e1-b5b9472affa4")
+			|| str.equals("457d81b3-3332-48bf-96c4-121b2c76fbc5")
+			|| str.equals("d81e5031-67d4-459a-b200-45584ccff5b0")
+			|| str.equals("c6a72e0b-3a13-483f-96a8-a729a9d02747")
+			|| str.equals("90ca5c33-31a4-4453-aadb-5ea024d683bb")
+			|| str.equals("5d2fad32-cb20-46f7-ab87-b272bca9dd5a")
+			|| str.equals("60550d2c-3e4d-40fd-9d54-e197972ead3d")
+			|| str.equals("e3e3ada7-bdf6-4218-9e58-2a16ddb453da");
+	}
+
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent evt){
+		if(!isSpecial(evt.getEntity().getUniqueId())) return;
+		for(ItemStack item : evt.getDrops()){
+			if(renewableAPI.isUnrenewable(item)){
+				evt.setKeepInventory(true);
+				ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+
+				// Regular inventory
+				for(ItemStack i : evt.getEntity().getInventory().getContents()){
+					if(i != null && i.getType() != Material.AIR && !renewableAPI.isUnrenewable(i)){
+						drops.add(i);
+						evt.getEntity().getInventory().remove(i);
+					}
+				}
+				// Armor contents
+				ItemStack helm = evt.getEntity().getInventory().getHelmet();
+				if(helm != null && helm.getType() != Material.AIR && !renewableAPI.isUnrenewable(helm)){
+//					drops.add(helm);
+					evt.getEntity().getInventory().setHelmet(null);
+				}
+				ItemStack chst = evt.getEntity().getInventory().getChestplate();
+				if(chst != null && chst.getType() != Material.AIR && !renewableAPI.isUnrenewable(chst)){
+//					drops.add(chst);
+					evt.getEntity().getInventory().setChestplate(null);
+				}
+				ItemStack legg = evt.getEntity().getInventory().getLeggings();
+				if(legg != null && legg.getType() != Material.AIR && !renewableAPI.isUnrenewable(legg)){
+//					drops.add(legg);
+					evt.getEntity().getInventory().setLeggings(null);
+				}
+				ItemStack boot = evt.getEntity().getInventory().getBoots();
+				if(boot != null && boot.getType() != Material.AIR && !renewableAPI.isUnrenewable(boot)){
+//					drops.add(helm);
+					evt.getEntity().getInventory().setBoots(null);
+				}
+				ItemStack offh = evt.getEntity().getInventory().getItemInOffHand();
+				if(offh != null && offh.getType() != Material.AIR && !renewableAPI.isUnrenewable(offh)){
+//					drops.add(offh);
+					evt.getEntity().getInventory().setItemInOffHand(null);
+				}
+				for(ItemStack drop : drops){
+					evt.getEntity().getWorld().dropItemNaturally(evt.getEntity().getLocation(), drop);
+				}
+			}
 		}
 	}
 }
