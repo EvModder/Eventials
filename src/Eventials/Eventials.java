@@ -48,6 +48,10 @@ public class Eventials extends EvPlugin {
 			getServer().getPluginManager().registerEvents(new TrapSpawnListener(), this);
 		if(config.getBoolean("allow-mob-armies", true))
 			getServer().getPluginManager().registerEvents(new CreatureSpawnListener(), this);
+		if(config.getDouble("skip-night-sleep-percent-required", 1) < 1 
+		|| config.getDouble("skip-storm-sleep-percent-required", 1) < 1
+		|| config.getDouble("skip-thunder-sleep-percent-required", 1) < 1)
+			getServer().getPluginManager().registerEvents(new PlayerSleepListener(), this);
 //		if(config.getBoolean("allow-colorcodes-in-commandblock")) 
 //			getServer().getPluginManager().registerEvents(new InventoryCloseListener(), this);
 		getServer().getPluginManager().registerEvents(loginListener = new PlayerLoginListener(), this);

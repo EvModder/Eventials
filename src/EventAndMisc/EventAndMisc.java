@@ -6,13 +6,16 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
 
-public class EventAndMisc {
+public class EventAndMisc{
 	final Eventials pl;
 
 	public EventAndMisc(final Eventials pl){
@@ -37,6 +40,9 @@ public class EventAndMisc {
 
 		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();
 		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
+		pl.getServer().getPluginManager().registerEvents(new Listener(){
+			@EventHandler public void onPlayerQuit(PlayerQuitEvent evt){evt.setQuitMessage("");}
+		}, pl);
 	}
 
 	void loadWorldBorders(){

@@ -19,6 +19,7 @@
 #--------------------------------------#
 #Horse armor, Saddles, Nametags, CrackedBricks, DoubleSlabs, PackedIce
 add-recipes: false #False because unrenewables
+
 pre-command: true #Required for a lot of features/functionality
 fancy-help: true
 detailed-command-help: true
@@ -31,6 +32,8 @@ log-death-coords: true
 enable-signtools: true
 enable-weaponstats: true
 
+discord-link: 'https://discord.gg/DMcxR5D'
+
 enable-custom-bows: false
 prevent-arrow-invulnerability: true
 
@@ -39,12 +42,15 @@ show-recent-joins: true
 max-recent-joins: 20
 record-player-addresses: true
 
-discord-link: 'https://discord.gg/DMcxR5D'
-
 default-nophysics-radius: 32
 
+# range (0-1], set to 1 (for 100%) to disable
+skip-night-sleep-percent-required: 0.5
+skip-storm-sleep-percent-required: 0.5
+skip-thunder-sleep-percent-required: 0.5
+
 inactive-days-until-player-delete: 200
-#Advancements checker is broken
+#TODO: Advancements checker is broken
 keep-if-has-x-advancements: 100
 keep-if-time-played-outweighs-time-inactive: true
 keep-if-above-starting-balance: true

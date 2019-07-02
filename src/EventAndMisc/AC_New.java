@@ -17,7 +17,6 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -78,8 +77,6 @@ public class AC_New implements Listener{
 			}
 		}
 	}
-
-	@EventHandler public void onPlayerQuit(PlayerQuitEvent evt){evt.setQuitMessage("");}
 
 	@EventHandler
 	public void onLeafDecay(LeavesDecayEvent evt){

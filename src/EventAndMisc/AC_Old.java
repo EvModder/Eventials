@@ -21,7 +21,6 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -176,8 +175,6 @@ public class AC_Old implements Listener {
 		item.setItemMeta(meta);
 		return item;
 	}
-
-	@EventHandler public void onPlayerQuit(PlayerQuitEvent evt){evt.setQuitMessage("");}
 
 	@EventHandler
 	public void entityPortalEvent(EntityPortalEvent evt){

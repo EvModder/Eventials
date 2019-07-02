@@ -14,6 +14,8 @@ log-death-coords: true
 enable-signtools: true
 enable-weaponstats: true
 
+discord-link: 'https://discord.gg/DMcxR5D'
+
 enable-custom-bows: false
 prevent-arrow-invulnerability: false
 
@@ -22,9 +24,12 @@ show-recent-joins: true
 max-recent-joins: 20
 record-player-addresses: true
 
-discord-link: 'https://discord.gg/DMcxR5D'
-
 default-nophysics-radius: 32
+
+# range (0-1], set to 1 (for 100%) to disable
+skip-night-sleep-percent-required: 0.5
+skip-storm-sleep-percent-required: 0.5
+skip-thunder-sleep-percent-required: 0.5
 
 inactive-days-until-player-delete: 200
 #Advancements checker is broken
@@ -234,14 +239,23 @@ world-borders:
 #Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
 auto-messages:
   - |
-       Hardcore world is still in BETA!
-       There may still be adjustments to mechanics in order to
-       better accommodate the player base
-       and handle multiplayer challenges
+       Hardcore is still in &bBETA&r.
+       There may still be many adjustments to mechanics
+  - |
+       As part of &bBETA&r, be prepared for tweaks, fixes,
+       and possibly map resets during this time.
   - 'Players are encouraged to collaborate, but be careful!'
-  - 'Remember, anyone can join, so practice caution around others!'
+  - 'Remember, anyone can join- be cautious around others!'
+  - |
+       For the opening of Hardcore, we're running an Event!
+       Top players in each of 3 statistics at the end of
+       July will receive an exclusive event prize!
   - 'Beware public locations such as x=0,z=0 and The End!'
+  - |
+       The three statistics used to determine the prize-
+       winners are shown in TAB, sidebar, and under names
   - 'Death-trapping End/Nether portals is bannable'
+  - 'You get ONE /tpa, /tpahere, and /tpaccept. Use wisely!'
   - |
        Periodically, custom server &aEvents=>&7What got AlternateCraft started!&r will be held!
        Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
@@ -299,6 +313,7 @@ auto-messages:
 ping-messages:
   - ''
   - 'Wazzup %name%?'
+  - 'Event ongoing, prizes to be awarded at end of July!'
   - ''
   - 'Press [refresh] for more random ping messages!'
   - 'Yeet a bug'
