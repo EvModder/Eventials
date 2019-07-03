@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -90,20 +91,35 @@ public class SpectatorListener implements Listener{
 		player.setFlySpeed(0.1f);
 		runSpecatorLoop();
 	}
-	public void removeSpectator(UUID uuid){
-		if(spectators.remove(uuid))
+	public boolean removeSpectator(UUID uuid){
+		if(spectators.remove(uuid)){
 			pl.getLogger().info("Removed spectator: "+uuid);
+			return true;
+		}
+		return false;
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent evt){
-		removeSpectator(evt.getPlayer().getUniqueId());
+		if(removeSpectator(evt.getPlayer().getUniqueId())){
+			int ticksSinceDeath = evt.getPlayer().getStatistic(Statistic.TIME_SINCE_DEATH);
+			int hrsSinceDeath = ticksSinceDeath/(20*60*60);
+			pl.getLogger().info("Ticks since death: "+ticksSinceDeath);
+			pl.getLogger().info("Hours since death: "+(((double)ticksSinceDeath)/(20*60*60)));
+			if(hrsSinceDeath >= 24){
+				//Reset playerdata & stats so next time they log in they will respawn :)
+				final UUID uuid = evt.getPlayer().getUniqueId();
+				new BukkitRunnable(){@Override public void run(){
+					AC_Hardcore.deletePlayerdata(uuid);
+				}}.runTaskLater(pl, 5);
+			}
+		}
 	}
 	@EventHandler
 	public void onJoin(PlayerJoinEvent evt){
-		if(evt.getPlayer().getGameMode() == GameMode.SPECTATOR
-				&& !evt.getPlayer().isOp())
+		if(evt.getPlayer().getGameMode() == GameMode.SPECTATOR && !evt.getPlayer().isOp()){
 			addSpectator(evt.getPlayer());
+		}
 	}
 
 	@EventHandler

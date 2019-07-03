@@ -27,7 +27,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -43,11 +42,10 @@ import net.evmodder.EvLib.extras.TextUtils;
 public class AC_Hardcore implements Listener{
 	private final Eventials pl;
 	final boolean fancyPl;
-	final String WORLD_NAME = "Reliquist";
+	final static String WORLD_NAME = "Reliquist";
 	final ItemStack starterBook;
 	final int numPreGenSpawns = 5;
 	final ArrayDeque<Location> spawnLocs;
-	final HashSet<UUID> newJoins, unconfirmed;
 	final HashSet<String> tpaAliases, tpahereAliases, tpacceptAliases;
 
 	public AC_Hardcore(){
@@ -58,11 +56,11 @@ public class AC_Hardcore implements Listener{
 		World hardcoreWorld = pl.getServer().getWorld(WORLD_NAME);
 		hardcoreWorld.setSpawnLocation(0, 1, 0);
 		Block chestBlock = hardcoreWorld.getBlockAt(0, 1, 0);
-		if(chestBlock.getState() instanceof BlockInventoryHolder){
+		if(chestBlock.getState() instanceof BlockInventoryHolder) {
 			Container chest = (Container)chestBlock.getState();
 			ItemStack book = null;
 			for(ItemStack item : chest.getInventory().getContents()){
-				if(item != null && item.getType() == Material.WRITTEN_BOOK){
+				if(item != null && item.getType() == Material.WRITTEN_BOOK) {
 					book = item;
 					break;
 				}
@@ -77,16 +75,15 @@ public class AC_Hardcore implements Listener{
 			Location loc = EvUtils.getLocationFromString(hardcoreWorld, str);
 			if(loc != null) spawnLocs.add(loc);
 		}
-		if(spawnLocs.size() < numPreGenSpawns){
-			pl.getLogger().info("Pre-Generating "+(numPreGenSpawns - spawnLocs.size())+" spawnpoints...");
+		if(spawnLocs.size() < numPreGenSpawns) {
+			pl.getLogger().info("Pre-Generating " + (numPreGenSpawns - spawnLocs.size()) + " spawnpoints...");
 			while(spawnLocs.size() < numPreGenSpawns){
 				spawnLocs.add(getRandomSpawnLoc());
 			}
 			saveSpawnLocs();
 		}
-		newJoins = new HashSet<UUID>();
-		unconfirmed = new HashSet<UUID>();
 		new SpectatorListener();
+		new HC_AdvancementListener();
 
 		PluginCommand cmdTpa = pl.getServer().getPluginCommand("tpa");
 		PluginCommand cmdTpahere = pl.getServer().getPluginCommand("tpahere");
@@ -95,14 +92,23 @@ public class AC_Hardcore implements Listener{
 		if(cmdTpahere == null) pl.getLogger().warning("Could not find command: /tpahere");
 		if(cmdTpaccept == null) pl.getLogger().warning("Could not find command: /tpaccept");
 		tpaAliases = new HashSet<String>();
-		tpaAliases.addAll(cmdTpa.getAliases()); tpaAliases.add(cmdTpa.getLabel());
+		tpaAliases.addAll(cmdTpa.getAliases());
+		tpaAliases.add(cmdTpa.getLabel());
 		tpahereAliases = new HashSet<String>();
-		tpahereAliases.addAll(cmdTpahere.getAliases()); tpahereAliases.add(cmdTpahere.getLabel());
+		tpahereAliases.addAll(cmdTpahere.getAliases());
+		tpahereAliases.add(cmdTpahere.getLabel());
 		tpacceptAliases = new HashSet<String>();
-		tpacceptAliases.addAll(cmdTpaccept.getAliases()); tpacceptAliases.add(cmdTpaccept.getLabel());
-		pl.getLogger().fine("Tpa aliases: "+tpaAliases.toString());
-		pl.getLogger().fine("Tpahere aliases: "+tpahereAliases.toString());
-		pl.getLogger().fine("Tpaccept aliases: "+tpacceptAliases.toString());
+		tpacceptAliases.addAll(cmdTpaccept.getAliases());
+		tpacceptAliases.add(cmdTpaccept.getLabel());
+		pl.getLogger().fine("Tpa aliases: " + tpaAliases.toString());
+		pl.getLogger().fine("Tpahere aliases: " + tpahereAliases.toString());
+		pl.getLogger().fine("Tpaccept aliases: " + tpacceptAliases.toString());
+	}
+
+	static boolean deletePlayerdata(UUID uuid){
+		return new File("./" + WORLD_NAME + "/playerdata/" + uuid + ".dat").delete()
+			&& new File("./" + WORLD_NAME + "/stats/" + uuid + ".json").delete()
+			&& new File("./" + WORLD_NAME + "/advancements/" + uuid + ".json").delete();
 	}
 
 	void saveSpawnLocs(){
@@ -142,7 +148,6 @@ public class AC_Hardcore implements Listener{
 		while(loc.getY() > 5 & (loc.getBlock() == null || loc.getBlock().isEmpty()
 				|| loc.getBlock().isPassable())) loc.setY(loc.getY() - 1);
 		loc.setY(loc.getY() + 2);
-		pl.getLogger().info("Candidate X,Y,Z: "+loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ());
 		return loc;
 	}
 
@@ -157,12 +162,25 @@ public class AC_Hardcore implements Listener{
 		return false;
 	}
 	Location getRandomSpawnLoc(){
-		Location spawnLoc = getRandomLocation();
-		while(spawnLoc == null || spawnLoc.getY() < pl.getServer().getWorld(WORLD_NAME).getSeaLevel()
-				|| spawnLoc.getBlock().getRelative(BlockFace.DOWN).isLiquid()
-				|| isOnChunkBoundary(spawnLoc) || hasNearbyLava(spawnLoc))
-			spawnLoc = getRandomLocation();
-		return spawnLoc;
+		Location loc;
+		while(true){
+			loc = getRandomLocation();
+			if(loc == null){pl.getLogger().warning("spawnLoc == null"); continue;}
+			String debugStr = "Candidate X,Y,Z: "+loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ();
+			if(loc.getY() < pl.getServer().getWorld(WORLD_NAME).getSeaLevel())
+				pl.getLogger().info(debugStr+" >> Below sea level");
+			else if(loc.getBlock().getRelative(BlockFace.DOWN).isLiquid())
+				pl.getLogger().info(debugStr+" >> Over liquid");
+			else if(isOnChunkBoundary(loc))
+				pl.getLogger().info(debugStr+" >> On chunk boundary");
+			else if(hasNearbyLava(loc))
+				pl.getLogger().info(debugStr+" >> Near to lava");
+			else{
+				pl.getLogger().info(debugStr+" >> SUCCESS");
+				break;
+			}
+		}
+		return loc;
 	}
 
 	void removeNearbyBedrock(Location loc){
@@ -190,8 +208,7 @@ public class AC_Hardcore implements Listener{
 	void spawnNewPlayer(Player player){
 		pl.getLogger().warning("New player: "+player.getName());
 		final UUID uuid = player.getUniqueId();
-		unconfirmed.add(uuid);
-		player.addScoreboardTag("joined");
+		player.addScoreboardTag("unconfirmed");
 		player.addScoreboardTag("has_tpahere");
 		player.addScoreboardTag("has_tpa");
 		player.addScoreboardTag("has_tpaccept");
@@ -220,26 +237,20 @@ public class AC_Hardcore implements Listener{
 		player.getInventory().setItemInMainHand(starterBook);
 		player.setWalkSpeed(0f);
 
-		File deathDir = new File("./plugins/EvFolder/deaths/"+uuid);
+		File deathDir = new File("./plugins/EvFolder/deaths/"+player.getName());
 		if(deathDir.exists()){
 			int numDeaths = deathDir.listFiles().length;
 			player.setStatistic(Statistic.DEATHS, numDeaths);
 		}
+
+		//TODO: new permissions plugin. This is garbage.
+		pl.runCommand("perms player addgroup "+player.getName()+" default");
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerLogin(PlayerLoginEvent evt){
-		if(!evt.getPlayer().hasPlayedBefore() && evt.getPlayer().getLastPlayed() == 0 &&
-				evt.getPlayer().getScoreboardTags().isEmpty()){
-			newJoins.add(evt.getPlayer().getUniqueId());
-		}
-	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent evt){
 		Player player = evt.getPlayer();
-		if(newJoins.remove(player.getUniqueId()) && player.getScoreboardTags().isEmpty()){
-			spawnNewPlayer(player);
-		}
+		if(player.getScoreboardTags().isEmpty()) spawnNewPlayer(player);
 		if(!player.isOp()){
 			setPermission(player, "essentials.tpa", player.getScoreboardTags().contains("has_tpa"));
 			setPermission(player, "essentials.tpahere", player.getScoreboardTags().contains("has_tpahere"));
@@ -316,7 +327,7 @@ public class AC_Hardcore implements Listener{
 				showFancyPlugins(evt.getPlayer());
 			}
 		}
-		else if(command.equals("accept-terms") && unconfirmed.remove(evt.getPlayer().getUniqueId())){
+		else if(command.equals("accept-terms") && evt.getPlayer().removeScoreboardTag("unconfirmed")){
 			evt.setCancelled(true);
 			evt.getPlayer().setWalkSpeed(0.2f);
 			removeNearbyBedrock(evt.getPlayer().getLocation());
@@ -330,6 +341,34 @@ public class AC_Hardcore implements Listener{
 			evt.getPlayer().setSaturation(20);
 			evt.getPlayer().setHealth(evt.getPlayer().getAttribute(
 					Attribute.GENERIC_MAX_HEALTH).getValue());
+			evt.getPlayer().addScoreboardTag("joined");
+		}
+		else if(command.equals("color")){
+			evt.setCancelled(true);
+			if(space < 0){
+				evt.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
+						"&00 &11 &22 &33 &44 &55 &66 &77 &88 &99 &aa &bb &cc &dd &ee &ff"));
+				evt.getPlayer().sendMessage(ChatColor.GRAY+"/color #");
+			}
+			else{
+				String colorCh = evt.getMessage().substring(space+1).replaceAll("&", "");
+				if(colorCh.length() > 1){
+					evt.getPlayer().sendMessage(ChatColor.GRAY+"Please provide just a single character");
+				}
+				else{
+					ChatColor color = ChatColor.getByChar(colorCh.charAt(0));
+					if(color == null){
+						evt.getPlayer().sendMessage(ChatColor.GRAY+"Unknown color '"+colorCh+"'");
+					}
+					else{
+						String name = evt.getPlayer().getName();
+						pl.runCommand("nick "+name+" &"+colorCh+name);
+						//evt.getPlayer().setDisplayName(color+evt.getPlayer().getName());
+						//evt.getPlayer().setCustomName(color+evt.getPlayer().getName());
+						evt.getPlayer().sendMessage(color+"Color set!");
+					}
+				}
+			}
 		}
 		else if(evt.getPlayer().isOp()){
 			return;// Everything below here modifies permissions
@@ -350,7 +389,7 @@ public class AC_Hardcore implements Listener{
 				new BukkitRunnable(){@Override public void run(){
 					if(!setPermission(evt.getPlayer(), "essentials.tpa", false))
 						pl.getLogger().warning("Failed to set permission");
-				}}.runTaskLater(pl, 2);
+				}}.runTaskLater(pl, 20 * 300);
 			}
 		}
 		else if(tpahereAliases.contains(command)){
@@ -368,7 +407,7 @@ public class AC_Hardcore implements Listener{
 				pl.getLogger().info(evt.getPlayer().getName()+" used their /tpahere");
 				new BukkitRunnable(){@Override public void run(){
 					setPermission(evt.getPlayer(), "essentials.tpahere", false);
-				}}.runTaskLater(pl, 2);
+				}}.runTaskLater(pl, 20 * 300);
 			}
 		}
 		else if(tpacceptAliases.contains(command)){
@@ -386,7 +425,7 @@ public class AC_Hardcore implements Listener{
 				pl.getLogger().info(evt.getPlayer().getName()+" used their /tpaccept");
 				new BukkitRunnable(){@Override public void run(){
 					setPermission(evt.getPlayer(), "essentials.tpaccept", false);
-				}}.runTaskLater(pl, 2);
+				}}.runTaskLater(pl, 20 * 10);
 			}
 		}
 	}
@@ -399,7 +438,7 @@ public class AC_Hardcore implements Listener{
 		evt.getEntity().loadData();
 		//evt.getEntity().kickPlayer("" + ChatColor.RED + ChatColor.BOLD + "You died");
 		new BukkitRunnable(){@Override public void run(){
-			pl.runCommand("tempban " + name + " 1d1s " + ChatColor.GOLD + "Died in hardcore beta");
+			pl.runCommand("tempban " + name + " 1m1s " + ChatColor.GOLD + "Died in hardcore beta");
 		}}.runTaskLater(pl, 5);
 		new BukkitRunnable(){
 			@Override public void run(){
@@ -424,15 +463,17 @@ public class AC_Hardcore implements Listener{
 				if(!new File("./" + WORLD_NAME + "/playerdata/" + uuid + ".dat")
 						.renameTo(new File(deathDir + "/playerdata_" + uuid + ".dat"))) {
 					pl.getLogger().warning("Failed to reset playerdata");
+					new File("./" + WORLD_NAME + "/playerdata/" + uuid + ".dat").delete();
 				}
-				if(!new File("./" + WORLD_NAME + "/stats/" + uuid + ".dat")
+				if(!new File("./" + WORLD_NAME + "/stats/" + uuid + ".json")
 						.renameTo(new File(deathDir + "/stats_" + uuid + ".json"))) {
 					pl.getLogger().warning("Failed to reset stats");
+					new File("./" + WORLD_NAME + "/stats/" + uuid + ".json").delete();
 				}
-				if(!new File("./" + WORLD_NAME + "/advancements/" + uuid + ".dat")
+				if(!new File("./" + WORLD_NAME + "/advancements/" + uuid + ".json")
 						.renameTo(new File(deathDir + "/advancements_" + uuid + ".json"))) {
 					pl.getLogger().warning("Failed to reset advancements");
-					new File("./" + WORLD_NAME + "/advancements/" + uuid + ".dat").delete();
+					new File("./" + WORLD_NAME + "/advancements/" + uuid + ".json").delete();
 				}
 			}
 		}.runTaskLater(pl, 20 * 10);
