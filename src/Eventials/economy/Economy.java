@@ -17,7 +17,7 @@ import Eventials.Eventials;
 import Eventials.economy.commands.*;
 import Eventials.economy.listeners.*;
 import net.evmodder.EvLib.hooks.EssEcoHook;
-import net.evmodder.EvLib.extras.MethodMocker.PlayerMessageInterceptor;
+import net.evmodder.EvLib.extras.MethodMocker.MessageInterceptor;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public class Economy extends ServerEconomy{
@@ -125,7 +125,7 @@ public class Economy extends ServerEconomy{
 
 	int booleanSum(boolean... bs){int s = 0; for(boolean b : bs) if(b) ++s; return s;}
 	boolean attemptPaidCommand(CommandExecutor executor, Command cmd, final Player player, String label, String[] args){
-		PlayerMessageInterceptor pmi = new PlayerMessageInterceptor(player);
+		MessageInterceptor pmi = new MessageInterceptor(player, false);
 		if(executor.onCommand(pmi.getProxy(), cmd, label, args)){
 			for(String m : pmi.getMessages()){
 				m = m.trim().toLowerCase();

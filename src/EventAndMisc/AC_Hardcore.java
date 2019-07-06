@@ -1,9 +1,12 @@
 package EventAndMisc;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.UUID;
@@ -22,7 +25,6 @@ import org.bukkit.block.Container;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -47,6 +49,7 @@ public class AC_Hardcore implements Listener{
 	final int numPreGenSpawns = 5;
 	final ArrayDeque<Location> spawnLocs;
 	final HashSet<String> tpaAliases, tpahereAliases, tpacceptAliases;
+	final HashMap<UUID, UUID> pendingTpas, pendingTpaheres;//from -> to
 
 	public AC_Hardcore(){
 		pl = Eventials.getPlugin();
@@ -103,6 +106,8 @@ public class AC_Hardcore implements Listener{
 		pl.getLogger().fine("Tpa aliases: " + tpaAliases.toString());
 		pl.getLogger().fine("Tpahere aliases: " + tpahereAliases.toString());
 		pl.getLogger().fine("Tpaccept aliases: " + tpacceptAliases.toString());
+		pendingTpas = new HashMap<UUID, UUID>();
+		pendingTpaheres = new HashMap<UUID, UUID>();
 	}
 
 	static boolean deletePlayerdata(UUID uuid){
@@ -110,45 +115,24 @@ public class AC_Hardcore implements Listener{
 			&& new File("./" + WORLD_NAME + "/stats/" + uuid + ".json").delete()
 			&& new File("./" + WORLD_NAME + "/advancements/" + uuid + ".json").delete();
 	}
+	static boolean copyPlayerdata(UUID uuid, String dir){
+		try{
+			Files.copy(new File("./" + WORLD_NAME + "/playerdata/" + uuid + ".dat").toPath(),
+						new File(dir+"/playerdata_" + uuid + ".dat").toPath());
+			Files.copy(new File("./" + WORLD_NAME + "/stats/" + uuid + ".json").toPath(),
+						new File(dir+"/stats_" + uuid + ".json").toPath());
+			Files.copy(new File("./" + WORLD_NAME + "/advancements/" + uuid + ".json").toPath(),
+						new File(dir+"/advancements_" + uuid + ".json").toPath());
+			return true;
+		}
+		catch(IOException e){return false;}
+	}
 
 	void saveSpawnLocs(){
 		FileIO.saveFile("pre-gen-spawns.txt", StringUtils.join(
 				spawnLocs.stream()
 				.map(loc -> loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ())
 				.iterator(), '\n'));
-	}
-
-	// Warning: Very laggy!  Call asynchronously when possible
-	Location getRandomLocation(){
-		World world = pl.getServer().getWorld(WORLD_NAME);
-		WorldBorder border = world.getWorldBorder();
-		double maxOffset = border.getSize()/2;
-//		String minMaxStrX = " (min: "+Math.floor(border.getCenter().getX()-maxOffset)+
-//							", max: "+Math.floor(border.getCenter().getX()+maxOffset)+")";
-//		String minMaxStrZ = " (min: "+Math.floor(border.getCenter().getZ()-maxOffset)+
-//							", max: "+Math.floor(border.getCenter().getZ()+maxOffset)+")";
-		Random rand = new Random();
-		double x = rand.nextDouble() * maxOffset;
-		if(rand.nextBoolean()) x = -x;
-		double z = rand.nextDouble() * maxOffset;
-		if(rand.nextBoolean()) z = -z;
-
-		Location loc = border.getCenter();
-		loc.setX(Math.floor(loc.getX() + x) + 0.5d);
-		loc.setZ(Math.floor(loc.getZ() + z) + 0.5d);
-//		pl.getLogger().info("Random X: "+loc.getBlockX()+minMaxStrX);
-//		pl.getLogger().info("Random Z: "+loc.getBlockZ()+minMaxStrZ);
-		loc.setY(250);
-
-		if(!loc.getChunk().load(true)){
-			pl.getLogger().severe("Failed to generate spawnLoc chunk!");
-			return null;
-		}
-
-		while(loc.getY() > 5 & (loc.getBlock() == null || loc.getBlock().isEmpty()
-				|| loc.getBlock().isPassable())) loc.setY(loc.getY() - 1);
-		loc.setY(loc.getY() + 2);
-		return loc;
 	}
 
 	boolean isOnChunkBoundary(Location loc){
@@ -161,18 +145,44 @@ public class AC_Hardcore implements Listener{
 		}
 		return false;
 	}
+	// Warning: Very laggy!  Call asynchronously when possible
 	Location getRandomSpawnLoc(){
+		World world = pl.getServer().getWorld(WORLD_NAME);
+		int seaLevel = pl.getServer().getWorld(WORLD_NAME).getSeaLevel();
+		WorldBorder border = world.getWorldBorder();
+		double maxOffset = border.getSize()/2;
+		double stdDev = maxOffset/4;
+		Random rand = new Random();
 		Location loc;
 		while(true){
-			loc = getRandomLocation();
-			if(loc == null){pl.getLogger().warning("spawnLoc == null"); continue;}
-			String debugStr = "Candidate X,Y,Z: "+loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ();
-			if(loc.getY() < pl.getServer().getWorld(WORLD_NAME).getSeaLevel())
+			double x = (rand.nextGaussian() * rand.nextGaussian()) * stdDev;
+			double z = (rand.nextGaussian() * rand.nextGaussian()) * stdDev;
+			while(Math.abs(x) > maxOffset) x = rand.nextGaussian() * stdDev;
+			while(Math.abs(z) > maxOffset) z = rand.nextGaussian() * stdDev;
+
+			loc = border.getCenter();
+			loc.setX(Math.floor(loc.getX() + x) + 0.5d);
+			loc.setZ(Math.floor(loc.getZ() + z) + 0.5d);
+			loc.setY(250);
+			String debugStr = "Candidate X,Y,Z: "+loc.getBlockX()+" _ "+loc.getBlockZ();
+			if(isOnChunkBoundary(loc)){
+				pl.getLogger().info(debugStr+" >> On chunk boundary");
+				continue;
+			}
+
+			if(!loc.getChunk().load(true)){
+				pl.getLogger().severe("Failed to generate spawnLoc chunk!");
+				return null;
+			}
+
+			while(loc.getBlockY() > seaLevel & (loc.getBlock() == null || loc.getBlock().isEmpty() 
+					|| loc.getBlock().isPassable())) loc.setY(loc.getY() - 1);
+			loc.setY(loc.getY() + 2);
+			debugStr = "Candidate X,Y,Z: "+loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ();
+			if(loc.getY() < seaLevel + 3)
 				pl.getLogger().info(debugStr+" >> Below sea level");
 			else if(loc.getBlock().getRelative(BlockFace.DOWN).isLiquid())
 				pl.getLogger().info(debugStr+" >> Over liquid");
-			else if(isOnChunkBoundary(loc))
-				pl.getLogger().info(debugStr+" >> On chunk boundary");
 			else if(hasNearbyLava(loc))
 				pl.getLogger().info(debugStr+" >> Near to lava");
 			else{
@@ -247,7 +257,7 @@ public class AC_Hardcore implements Listener{
 		pl.runCommand("perms player addgroup "+player.getName()+" default");
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent evt){
 		Player player = evt.getPlayer();
 		if(player.getScoreboardTags().isEmpty()) spawnNewPlayer(player);
@@ -258,9 +268,10 @@ public class AC_Hardcore implements Listener{
 		}
 	}
 
-	public boolean setPermission(Player player, String permission, boolean value){
+	static boolean setPermission(Player player, String permission, boolean value){
 		if(player.hasPermission(permission) == value) return false;
-		pl.runCommand("perms player setperm "+player.getName()+" "+permission+" "+(""+value).toLowerCase());
+		Eventials.getPlugin().runCommand(
+				"perms player setperm "+player.getName()+" "+permission+" "+(""+value).toLowerCase());
 		/*final PermissionsPlugin permsPlugin = (PermissionsPlugin)
 				pl.getServer().getPluginManager().getPlugin("PermissionsBukkit");
 		if(permsPlugin == null) return false;
@@ -296,17 +307,18 @@ public class AC_Hardcore implements Listener{
 			"Plugins: §a\\" +
 //			enableTest("Renewable")+"Renewable=>Prevents unrenewable items from being destroyed§r, §a\\" +
 			enableTest("Essentials")+"Essentials=>Collection of useful tools and commands§r, §a\\" +
-			enableTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, §a\\" +
-			enableTest("HorseOwners")+"HorseOwners=>Claim, name, and view stats for horses§r, \\\\n§a\\" +
 			enableTest("Eventials")+"Eventials=>Package of custom-built features and tweaks§r, §a\\" +
+			enableTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, \\\\n§a\\" +
+			enableTest("HorseOwners")+"HorseOwners=>Claim, name, and view stats for horses§r, §a\\" +
 			enableTest("ChatManager")+"ChatManager=>Keeps chat pg13 + Color/Format for chat & signs§r, §a\\" +
-			enableTest("EnchantBook")+"EnchantBook=>Color item names in anvils, looting on axes, etc!§r, §a\\" +
+//			enableTest("EnchantBook")+"EnchantBook=>Color item names in anvils, looting on axes, etc!§r, §a\\" +
 			"More=>\\"+
 //			enableTest("WorldEdit")+"WorldEdit\\§f, \\" +
 //			enableTest("WorldGuard")+"WorldGuard\\§f, \\" +
-			enableTest("PluginLoader")+"PluginLoader\\§f, \\" +
+//			enableTest("PluginLoader")+"PluginLoader\\§f, \\" +
+			ChatColor.GREEN+"EvAntiCheat\\§f, \\" +
 			enableTest("PermissionsBukkit")+"PermissionsBukkit\\§f, \\" +
-			enableTest("BungeeTabListPlus")+"BungeeTabListPlus\\§f, \\" +
+			enableTest("BungeeTabList")+"BungeeTabListPlus\\§f, \\" +
 			enableTest("Votifier")+"Votifier§r" +
 			".\\\\n\\§7\\§oHover over a plugin to see more details!",
 			"§r"
@@ -320,112 +332,153 @@ public class AC_Hardcore implements Listener{
 		String command = evt.getMessage().toLowerCase();
 		int space = command.indexOf(' ');
 		command = (space > 0 ? command.substring(1, space) : command.substring(1));
+		Player player = evt.getPlayer();
 
 		if(command.equals("pl") || command.equals("plugins") || command.equals("?")){
-			if(fancyPl && evt.getPlayer().hasPermission("bukkit.command.plugins")){
+			if(fancyPl && player.hasPermission("bukkit.command.plugins")){
 				evt.setCancelled(true);
-				showFancyPlugins(evt.getPlayer());
+				showFancyPlugins(player);
 			}
 		}
-		else if(command.equals("accept-terms") && evt.getPlayer().removeScoreboardTag("unconfirmed")){
+		else if(command.equals("accept-terms") && player.removeScoreboardTag("unconfirmed")){
 			evt.setCancelled(true);
-			evt.getPlayer().setWalkSpeed(0.2f);
-			removeNearbyBedrock(evt.getPlayer().getLocation());
-			evt.getPlayer().addPotionEffect(
-					new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 3), true);
-			evt.getPlayer().addPotionEffect(
-					new PotionEffect(PotionEffectType.REGENERATION, 10, 3), true);
-			evt.getPlayer().addPotionEffect(
-					new PotionEffect(PotionEffectType.JUMP, 2, 0), true);
-			evt.getPlayer().setInvulnerable(false);
-			evt.getPlayer().setSaturation(20);
-			evt.getPlayer().setHealth(evt.getPlayer().getAttribute(
-					Attribute.GENERIC_MAX_HEALTH).getValue());
-			evt.getPlayer().addScoreboardTag("joined");
+			player.setWalkSpeed(0.2f);
+			removeNearbyBedrock(player.getLocation());
+			player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 3), true);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 10, 3), true);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 2, 0), true);
+			player.setInvulnerable(false);
+			player.setSaturation(20);
+			player.setHealth(evt.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+			player.addScoreboardTag("joined");
 		}
 		else if(command.equals("color")){
 			evt.setCancelled(true);
 			if(space < 0){
-				evt.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&',
 						"&00 &11 &22 &33 &44 &55 &66 &77 &88 &99 &aa &bb &cc &dd &ee &ff"));
-				evt.getPlayer().sendMessage(ChatColor.GRAY+"/color #");
+				player.sendMessage(ChatColor.GRAY+"/color #");
 			}
 			else{
 				String colorCh = evt.getMessage().substring(space+1).replaceAll("&", "");
 				if(colorCh.length() > 1){
-					evt.getPlayer().sendMessage(ChatColor.GRAY+"Please provide just a single character");
+					player.sendMessage(ChatColor.GRAY+"Please provide just a single character");
 				}
 				else{
 					ChatColor color = ChatColor.getByChar(colorCh.charAt(0));
 					if(color == null){
-						evt.getPlayer().sendMessage(ChatColor.GRAY+"Unknown color '"+colorCh+"'");
+						player.sendMessage(ChatColor.GRAY+"Unknown color '"+colorCh+"'");
 					}
 					else{
-						String name = evt.getPlayer().getName();
+						String name = player.getName();
 						pl.runCommand("nick "+name+" &"+colorCh+name);
 						//evt.getPlayer().setDisplayName(color+evt.getPlayer().getName());
 						//evt.getPlayer().setCustomName(color+evt.getPlayer().getName());
-						evt.getPlayer().sendMessage(color+"Color set!");
+						player.sendMessage(color+"Color set!");
 					}
 				}
 			}
 		}
-		else if(evt.getPlayer().isOp()){
+		else if(player.isOp()){
 			return;// Everything below here modifies permissions
 		}
-		else if(tpaAliases.contains(command)){
-			if(!evt.getPlayer().removeScoreboardTag("has_tpa")){
-				evt.getPlayer().sendMessage(ChatColor.RED+"You have already used your one /tpa");
+		else if(command.equals("tp")) {
+			if(SpectatorListener.isSpectator(player)){
 				evt.setCancelled(true);
+				Player target = null;
+				if(space < 0 || (target=pl.getServer().getPlayer(evt.getMessage().substring(space + 1))) == null){
+					player.sendMessage(ChatColor.RED+"Please specify who you wish to tp to (exact username)");
+					player.sendMessage("Note: you can also use vanilla spectator menu (press 1)");
+				}
+				else{
+					player.teleport(target);
+					player.setSpectatorTarget(target);
+				}
 			}
-			if(space < 0 || pl.getServer().getPlayer(evt.getMessage().substring(space+1)) == null){
-				evt.getPlayer().sendMessage(ChatColor.RED+
-						"Pleast specify who you want to tpa to "+ChatColor.UNDERLINE+"exactly");
-				evt.getPlayer().addScoreboardTag("has_tpa");
+		}
+		else if(tpaAliases.contains(command)){
+			
+			if(!player.hasPermission("essentials.tpa") || !player.removeScoreboardTag("has_tpa")){
+				player.sendMessage(ChatColor.RED+"You have already used your one /tpa");
 				evt.setCancelled(true);
 			}
 			else{
-				pl.getLogger().info(evt.getPlayer().getName()+" used their /tpa");
-				new BukkitRunnable(){@Override public void run(){
-					if(!setPermission(evt.getPlayer(), "essentials.tpa", false))
-						pl.getLogger().warning("Failed to set permission");
-				}}.runTaskLater(pl, 20 * 300);
+				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
+				if(space < 0 || target == null){
+					player.sendMessage(ChatColor.RED+"Please specify who to tpa to "+ChatColor.UNDERLINE+"exactly");
+					player.addScoreboardTag("has_tpa");
+					evt.setCancelled(true);
+				}
+				else if(player.getScoreboardTags().contains("tp_"+target.getUniqueId()) ||
+						target.getScoreboardTags().contains("tp_"+player.getUniqueId())){
+					player.sendMessage(ChatColor.RED+"You cannot tp "+target.getName()+" twice in the same life");
+					player.addScoreboardTag("has_tpa");
+					evt.setCancelled(true);
+				}
+				else{
+					pendingTpas.put(player.getUniqueId(), target.getUniqueId());
+					pendingTpaheres.remove(player.getUniqueId());
+				}
 			}
 		}
 		else if(tpahereAliases.contains(command)){
-			if(!evt.getPlayer().removeScoreboardTag("has_tpahere")){
-				evt.getPlayer().sendMessage(ChatColor.RED+"You have already used your one /tpahere");
-				evt.setCancelled(true);
-			}
-			if(space < 0 || pl.getServer().getPlayer(evt.getMessage().substring(space+1)) == null){
-				evt.getPlayer().sendMessage(ChatColor.RED+
-						"Pleast specify who you want to tpa here "+ChatColor.UNDERLINE+"exactly");
-				evt.getPlayer().addScoreboardTag("has_tpahere");
+			if(!player.hasPermission("essentials.tpahere") || !player.removeScoreboardTag("has_tpahere")){
+				player.sendMessage(ChatColor.RED+"You have already used your one /tpahere");
 				evt.setCancelled(true);
 			}
 			else{
-				pl.getLogger().info(evt.getPlayer().getName()+" used their /tpahere");
-				new BukkitRunnable(){@Override public void run(){
-					setPermission(evt.getPlayer(), "essentials.tpahere", false);
-				}}.runTaskLater(pl, 20 * 300);
+				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
+				if(space < 0 || target == null){
+					player.sendMessage(ChatColor.RED+"Please specify who to tpahere "+ChatColor.UNDERLINE+"exactly");
+					player.addScoreboardTag("has_tpahere");
+					evt.setCancelled(true);
+				}
+				else if(player.getScoreboardTags().contains("tp_"+target.getUniqueId()) ||
+						target.getScoreboardTags().contains("tp_"+player.getUniqueId())){
+					player.sendMessage(ChatColor.RED+"You cannot tp "+target.getName()+" twice in the same life");
+					player.addScoreboardTag("has_tpa");
+					evt.setCancelled(true);
+				}
+				else{
+					pendingTpaheres.put(player.getUniqueId(), target.getUniqueId());
+					pendingTpas.remove(player.getUniqueId());
+				}
 			}
 		}
 		else if(tpacceptAliases.contains(command)){
-			if(!evt.getPlayer().removeScoreboardTag("has_tpaccept")){
-				evt.getPlayer().sendMessage(ChatColor.RED+"You have already used your one /tpaccept");
-				evt.setCancelled(true);
-			}
-			if(space < 0 || pl.getServer().getPlayer(evt.getMessage().substring(space+1)) == null){
-				evt.getPlayer().sendMessage(ChatColor.RED+
-						"Pleast specify the exact player whose request you are tpaccepting");
-				evt.getPlayer().addScoreboardTag("has_tpaccept");
+			if(!player.hasPermission("essentials.tpaccept") || !player.removeScoreboardTag("has_tpaccept")){
+				player.sendMessage(ChatColor.RED+"You have already used your one /tpaccept");
 				evt.setCancelled(true);
 			}
 			else{
-				pl.getLogger().info(evt.getPlayer().getName()+" used their /tpaccept");
+				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
+				if(space < 0 || target == null){
+					player.sendMessage(ChatColor.RED+"Please specify the player whose request you are accepting");
+					player.addScoreboardTag("has_tpaccept");
+					evt.setCancelled(true);
+				}
+				else if(pendingTpas.containsKey(target.getUniqueId())
+						&& pendingTpas.get(target.getUniqueId()).equals(player.getUniqueId())){
+					player.sendMessage(ChatColor.GOLD+"Accepted "+target.getName()+"'s tpa");
+					pendingTpas.remove(target.getUniqueId());
+				}
+				else if(pendingTpaheres.containsKey(target.getUniqueId())
+						&& pendingTpaheres.get(target.getUniqueId()).equals(player.getUniqueId())){
+					player.sendMessage(ChatColor.GOLD+"Accepted "+target.getName()+"'s tpahere");
+					pendingTpaheres.remove(target.getUniqueId());
+				}
+				else{
+					player.sendMessage(ChatColor.RED+"You do not have a pending tpa from "+target.getName());
+					player.addScoreboardTag("has_tpaccept");
+					evt.setCancelled(true);
+					return;
+				}
 				new BukkitRunnable(){@Override public void run(){
-					setPermission(evt.getPlayer(), "essentials.tpaccept", false);
-				}}.runTaskLater(pl, 20 * 10);
+					setPermission(player, "essentials.tpaccept", false);
+					setPermission(target, "essentials.tpa", false);
+				}}.runTaskLater(pl, 20*5);
+				player.addScoreboardTag("tp_"+target.getUniqueId());
+				target.addScoreboardTag("tp_"+player.getUniqueId());
 			}
 		}
 	}
@@ -436,46 +489,26 @@ public class AC_Hardcore implements Listener{
 		final String name = evt.getEntity().getName();
 		evt.getEntity().saveData();
 		evt.getEntity().loadData();
+		pl.runCommand("scoreboard players reset "+name);
 		//evt.getEntity().kickPlayer("" + ChatColor.RED + ChatColor.BOLD + "You died");
 		new BukkitRunnable(){@Override public void run(){
 			pl.runCommand("tempban " + name + " 1m1s " + ChatColor.GOLD + "Died in hardcore beta");
 		}}.runTaskLater(pl, 5);
-		new BukkitRunnable(){
-			@Override public void run(){
-				String dateStr = new SimpleDateFormat("yyy-MM-dd").format(new Date());
-				String deathDir = "./plugins/EvFolder/deaths";
-				if(!new File(deathDir).exists()) new File(deathDir).mkdir();
-				deathDir += "/"+/*uuid*/name;
-				if(!new File(deathDir).exists()) new File(deathDir).mkdir();
-				deathDir += "/"+dateStr;
-				if(new File(deathDir).exists()){
-					int i = 1;
-					while(new File(deathDir+"."+i).exists()) ++i;
-					deathDir += "."+i;
-				}
-				new File(deathDir).mkdir();
-
-				pl.getLogger().info("Clearing playerdata for " + uuid + "...");
-				if(!new File("./" + WORLD_NAME + "/playerdata/" + uuid + ".dat").exists()) {
-					pl.getLogger().severe("Playerdata not found!");
-					pl.getLogger().severe("Target: ./" + WORLD_NAME + "/playerdata/" + uuid + ".dat");
-				}
-				if(!new File("./" + WORLD_NAME + "/playerdata/" + uuid + ".dat")
-						.renameTo(new File(deathDir + "/playerdata_" + uuid + ".dat"))) {
-					pl.getLogger().warning("Failed to reset playerdata");
-					new File("./" + WORLD_NAME + "/playerdata/" + uuid + ".dat").delete();
-				}
-				if(!new File("./" + WORLD_NAME + "/stats/" + uuid + ".json")
-						.renameTo(new File(deathDir + "/stats_" + uuid + ".json"))) {
-					pl.getLogger().warning("Failed to reset stats");
-					new File("./" + WORLD_NAME + "/stats/" + uuid + ".json").delete();
-				}
-				if(!new File("./" + WORLD_NAME + "/advancements/" + uuid + ".json")
-						.renameTo(new File(deathDir + "/advancements_" + uuid + ".json"))) {
-					pl.getLogger().warning("Failed to reset advancements");
-					new File("./" + WORLD_NAME + "/advancements/" + uuid + ".json").delete();
-				}
+		new BukkitRunnable(){@Override public void run(){
+			String dateStr = new SimpleDateFormat("yyy-MM-dd").format(new Date());
+			String deathDir = "./plugins/EvFolder/deaths";
+			if(!new File(deathDir).exists()) new File(deathDir).mkdir();
+			deathDir += "/"+/*uuid*/name;
+			if(!new File(deathDir).exists()) new File(deathDir).mkdir();
+			deathDir += "/"+dateStr;
+			if(new File(deathDir).exists()){
+				int i = 1;
+				while(new File(deathDir+"."+i).exists()) ++i;
+				deathDir += "."+i;
 			}
-		}.runTaskLater(pl, 20 * 10);
+			new File(deathDir).mkdir();
+			pl.getLogger().warning("Copying playerdata for "+name+"...");
+			if(!copyPlayerdata(uuid, deathDir)) pl.getLogger().severe("Copy faied");
+		}}.runTaskLater(pl, 20 * 10);
 	}
 }

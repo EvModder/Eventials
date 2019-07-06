@@ -100,4 +100,9 @@ public class Eventials extends EvPlugin {
 	public void runCommand(String command){
 		getServer().dispatchCommand(getServer().getConsoleSender(), command);
 	}
+	// Doesn't work without "spigot.yml >> commands.log: false" :(
+	/*public void runCommandSilently(String command){
+		MessageInterceptor pmi = new MessageInterceptor(getServer().getConsoleSender(), true);
+		getServer().dispatchCommand(pmi.getProxy(), command);
+	}*/
 }

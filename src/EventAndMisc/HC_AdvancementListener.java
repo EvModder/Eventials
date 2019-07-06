@@ -17,6 +17,7 @@ public class HC_AdvancementListener implements Listener{
 		pl = Eventials.getPlugin();
 		included = new HashSet<String>();
 		included.addAll(pl.getConfig().getStringList("advancements-included"));
+		pl.getServer().getPluginManager().registerEvents(this, pl);
 	}
 
 	public boolean isPaidAdvancement(Advancement adv){

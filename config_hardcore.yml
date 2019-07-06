@@ -150,7 +150,7 @@ save-ips: true
 max-saved-ips: 200
 
 message-color: '&e'
-message-prefix: '&3[&7ACHC&3]&e '
+message-prefix: '&3[&7HC&3]&e '
 #Auto-messages were moved to bottom of the file
 #(because there are a lot of them)
 
@@ -244,7 +244,7 @@ auto-messages:
   - |
        As part of &bBETA&r, be prepared for tweaks, fixes,
        and possibly map resets during this time.
-  - 'Players are encouraged to collaborate, but be careful!'
+  - 'Collaboration is encouraged, but always be cautious!'
   - 'Remember, anyone can join- be cautious around others!'
   - |
        For the opening of Hardcore, we're running an Event!
@@ -274,7 +274,7 @@ auto-messages:
   - 'Want to privatize your horse? check out &2/hm'
   - 'Ye like? Ye vote? &2/vote&r for links!'
   - 'Funding help isn''t required, but is always appreciated :)'
-  - 'FunWanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
+  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
   - 'Suggestions always welcome!'
   - 'Please check &2/rules&r periodically for updates'
   - 'Sharing server IPs is fine, but &nno soliciting&r please'
@@ -314,6 +314,7 @@ ping-messages:
   - ''
   - 'Wazzup %name%?'
   - 'Event ongoing, prizes to be awarded at end of July!'
+  - 'Omae Wa Mou Shindeiru'
   - ''
   - 'Press [refresh] for more random ping messages!'
   - 'Yeet a bug'
