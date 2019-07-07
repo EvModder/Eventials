@@ -27,10 +27,10 @@ public class EventAndMisc{
 		else if(pl.getServer().getWorld("Reliquist") != null){
 			InputStream rssHC = getClass().getResourceAsStream("/config_hardcore.yml");
 			YamlConfiguration hardConf = FileIO.loadConfig(pl, "config_hardcore.yml", rssHC);
+			FileIO.deleteFile("config_hardcore.yml");
 			InputStream rssDefault = getClass().getResourceAsStream("/config.yml");
 			YamlConfiguration defaultConf = FileIO.loadConfig(pl, "config-Eventials.yml", rssDefault);
-			FileIO.deleteFile("config_hardcore.yml");
-			if(pl.getConfig().equals(defaultConf)){
+			if(pl.getConfig().toString().equals(defaultConf.toString())){
 				for(String key : pl.getConfig().getKeys(false)) pl.getConfig().set(key, null);
 				pl.getConfig().setDefaults(hardConf);//TODO: This, or line below?
 				for(String key : hardConf.getKeys(false)) pl.getConfig().set(key, hardConf.get(key));

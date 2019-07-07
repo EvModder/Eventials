@@ -1,6 +1,6 @@
 # Eventials TODO:
 # -Maps (load images, organize/optimize map saving and new map creation)
-# -Bungee version: data_specific_ping_msgs, admin sneak join, trans-server teleport aliases, login to where you logout from.
+# -Bungee version: data_specific_ping_msgs, admin sneak join, trans-server teleport aliases, login where you logout.
 # -Scheduler: Copy over automsgs & test tellraw
 # showrecentcommand, show-me-in-recent, show-me-recent-on-join
 # only do creeper explosions when regional difficulty > x
@@ -48,6 +48,7 @@ default-nophysics-radius: 32
 skip-night-sleep-percent-required: 0.5
 skip-storm-sleep-percent-required: 0.5
 skip-thunder-sleep-percent-required: 0.5
+count-spectators-in-sleep-required: false
 
 inactive-days-until-player-delete: 200
 #TODO: Advancements checker is broken
@@ -292,7 +293,7 @@ world-borders:
   MysteryPeaks:
     center-x: 0.5
     center-z: 0.5
-    radius: 3000
+    radius: 5000
   MysteryPeaks_nether:
     center-x: 0.5
     center-z: 0.5

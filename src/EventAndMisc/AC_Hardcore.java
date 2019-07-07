@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -35,6 +36,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 import Eventials.Eventials;
 import Eventials.Extras;
 import net.evmodder.EvLib.EvUtils;
@@ -85,7 +87,7 @@ public class AC_Hardcore implements Listener{
 			}
 			saveSpawnLocs();
 		}
-		new SpectatorListener();
+		new HC_SpectatorListener();
 		new HC_AdvancementListener();
 
 		PluginCommand cmdTpa = pl.getServer().getPluginCommand("tpa");
@@ -108,6 +110,10 @@ public class AC_Hardcore implements Listener{
 		pl.getLogger().fine("Tpaccept aliases: " + tpacceptAliases.toString());
 		pendingTpas = new HashMap<UUID, UUID>();
 		pendingTpaheres = new HashMap<UUID, UUID>();
+		if(pl.getServer().getScoreboardManager().getMainScoreboard().getTeam("Spectators") == null){
+			pl.getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("Spectators");
+		}
+		hardcoreWorld.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, true);
 	}
 
 	static boolean deletePlayerdata(UUID uuid){
@@ -216,12 +222,16 @@ public class AC_Hardcore implements Listener{
 	}
 
 	void spawnNewPlayer(Player player){
-		pl.getLogger().warning("New player: "+player.getName());
+		pl.getLogger().warning("Spawning new player: "+player.getName());
 		final UUID uuid = player.getUniqueId();
 		player.addScoreboardTag("unconfirmed");
 		player.addScoreboardTag("has_tpahere");
 		player.addScoreboardTag("has_tpa");
 		player.addScoreboardTag("has_tpaccept");
+		String Adv0TeamName = HC_AdvancementListener.getAdvancementTeamName(0);
+		Team newTeam = player.getScoreboard().getTeam(Adv0TeamName);
+		if(newTeam == null) newTeam = player.getScoreboard().registerNewTeam(Adv0TeamName);
+		newTeam.addEntry(player.getName());
 
 		player.setInvulnerable(true);
 
@@ -308,17 +318,17 @@ public class AC_Hardcore implements Listener{
 //			enableTest("Renewable")+"Renewable=>Prevents unrenewable items from being destroyed§r, §a\\" +
 			enableTest("Essentials")+"Essentials=>Collection of useful tools and commands§r, §a\\" +
 			enableTest("Eventials")+"Eventials=>Package of custom-built features and tweaks§r, §a\\" +
-			enableTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, \\\\n§a\\" +
+			enableTest("ChatManager")+"Chat++=>Keeps chat pg13 + Color/Format for chat & signs§r, \\\\n§a\\" +
+			enableTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, §a\\" +
 			enableTest("HorseOwners")+"HorseOwners=>Claim, name, and view stats for horses§r, §a\\" +
-			enableTest("ChatManager")+"ChatManager=>Keeps chat pg13 + Color/Format for chat & signs§r, §a\\" +
 //			enableTest("EnchantBook")+"EnchantBook=>Color item names in anvils, looting on axes, etc!§r, §a\\" +
 			"More=>\\"+
 //			enableTest("WorldEdit")+"WorldEdit\\§f, \\" +
 //			enableTest("WorldGuard")+"WorldGuard\\§f, \\" +
 //			enableTest("PluginLoader")+"PluginLoader\\§f, \\" +
-			ChatColor.GREEN+"EvAntiCheat\\§f, \\" +
+			ChatColor.GREEN+"EvNoCheat\\§f, \\" +
 			enableTest("PermissionsBukkit")+"PermissionsBukkit\\§f, \\" +
-			enableTest("BungeeTabList")+"BungeeTabListPlus\\§f, \\" +
+			enableTest("BungeeTabListPlus")+"BungeeTabList\\§f, \\" +
 			enableTest("Votifier")+"Votifier§r" +
 			".\\\\n\\§7\\§oHover over a plugin to see more details!",
 			"§r"
@@ -383,7 +393,7 @@ public class AC_Hardcore implements Listener{
 			return;// Everything below here modifies permissions
 		}
 		else if(command.equals("tp")) {
-			if(SpectatorListener.isSpectator(player)){
+			if(HC_SpectatorListener.isSpectator(player)){
 				evt.setCancelled(true);
 				Player target = null;
 				if(space < 0 || (target=pl.getServer().getPlayer(evt.getMessage().substring(space + 1))) == null){
@@ -489,7 +499,8 @@ public class AC_Hardcore implements Listener{
 		final String name = evt.getEntity().getName();
 		evt.getEntity().saveData();
 		evt.getEntity().loadData();
-		pl.runCommand("scoreboard players reset "+name);
+		evt.getEntity().getScoreboard().resetScores(name);
+		evt.getEntity().addScoreboardTag("dead");
 		//evt.getEntity().kickPlayer("" + ChatColor.RED + ChatColor.BOLD + "You died");
 		new BukkitRunnable(){@Override public void run(){
 			pl.runCommand("tempban " + name + " 1m1s " + ChatColor.GOLD + "Died in hardcore beta");

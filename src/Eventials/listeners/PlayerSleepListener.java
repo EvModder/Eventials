@@ -1,6 +1,7 @@
 package Eventials.listeners;
 
 import java.util.UUID;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +12,7 @@ import Eventials.Eventials;
 
 public class PlayerSleepListener implements Listener{
 	final double SKIP_NIGHT_PERCENT, SKIP_STORM_PERCENT, SKIP_THUNDER_PERCENT;
+	final boolean INCLUDE_GM3;
 	final Eventials pl;
 
 	public PlayerSleepListener(){
@@ -18,6 +20,7 @@ public class PlayerSleepListener implements Listener{
 		SKIP_NIGHT_PERCENT = pl.getConfig().getDouble("skip-night-sleep-percent-required", 0.5);
 		SKIP_STORM_PERCENT = pl.getConfig().getDouble("skip-storm-sleep-percent-required", 0.5);
 		SKIP_THUNDER_PERCENT = pl.getConfig().getDouble("skip-thunder-sleep-percent-required", 0.5);
+		INCLUDE_GM3 = pl.getConfig().getBoolean("count-spectators-in-sleep-required", false);
 	}
 
 	@EventHandler
@@ -26,6 +29,7 @@ public class PlayerSleepListener implements Listener{
 		int numSleeping = 1;
 		for(Player player : evt.getPlayer().getWorld().getPlayers()){
 			if(player.isSleeping() && !player.getName().equals(evt.getPlayer().getName())) ++numSleeping;
+			if(!INCLUDE_GM3 && player.getGameMode() == GameMode.SPECTATOR) --numInWorld;
 		}
 		final UUID worldId = evt.getPlayer().getWorld().getUID();
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT)){

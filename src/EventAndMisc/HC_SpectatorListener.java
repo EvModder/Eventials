@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -20,14 +21,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.ActionBarUtils;
 
-public class SpectatorListener implements Listener{
+public class HC_SpectatorListener implements Listener{
 	final Eventials pl;
 	final HashSet<UUID> spectators;
+	final int MAX_DIST_SQ = 32*32;
+	final float FLY_SPEED = 0.1f;
 
-	public SpectatorListener(){
+	public HC_SpectatorListener(){
 		pl = Eventials.getPlugin();
 		spectators = new HashSet<UUID>();
 		pl.getServer().getPluginManager().registerEvents(this, pl);
+		runSpecatorLoop();
 	}
 
 	static boolean isSpectator(Player player){
@@ -57,11 +61,12 @@ public class SpectatorListener implements Listener{
 		new BukkitRunnable(){@Override public void run(){
 			HashSet<Location> nonSpecLocs = new HashSet<Location>();
 			for(Player p : pl.getServer().getOnlinePlayers()){
-				if(isSpectator(p)) spectators.add(p.getUniqueId());
+				if(isSpectator(p)) addSpectator(p);
 				else if(p.getGameMode() == GameMode.SURVIVAL) nonSpecLocs.add(p.getLocation());
 			}
 			if(nonSpecLocs.isEmpty()){
 				for(UUID uuid : spectators){
+					removeSpectator(uuid, false);
 					OfflinePlayer p = pl.getServer().getPlayer(uuid);
 					if(p != null && p.isOnline()) p.getPlayer().kickPlayer(
 							ChatColor.RED+"There is nobody online to spectate right now");
@@ -86,7 +91,7 @@ public class SpectatorListener implements Listener{
 				for(UUID uuid : spectators){
 					Player specP = pl.getServer().getPlayer(uuid).getPlayer();
 					Location aliveP = getClosest(specP.getLocation(), nonSpecLocs);
-					if(specP.getLocation().distanceSquared(aliveP) > 32*32){
+					if(specP.getLocation().distanceSquared(aliveP) > MAX_DIST_SQ){
 						specP.teleport(aliveP);
 					}
 					int SECONDS_UNTIL_RESPAWN = 60*60*24; //1 day
@@ -125,13 +130,26 @@ public class SpectatorListener implements Listener{
 	}
 
 	public void addSpectator(Player player){
-		if(spectators.add(player.getUniqueId()))
+		if(spectators.add(player.getUniqueId())){
 			pl.getLogger().info("Added spectator: "+player.getName());
-		player.setFlySpeed(0.1f);
-		runSpecatorLoop();
+			player.setFlySpeed(FLY_SPEED);
+			player.getScoreboard().getTeam("Spectators").addEntry(player.getName());
+			AC_Hardcore.setPermission(player, "essentials.tpa", false);
+			AC_Hardcore.setPermission(player, "essentials.tpahere", false);
+			AC_Hardcore.setPermission(player, "essentials.tpaccept", false);
+			player.getScoreboard().resetScores(player.getName());
+			player.getScoreboard().getTeam("Spectators").addEntry(player.getName());
+			runSpecatorLoop();
+		}
 	}
-	public boolean removeSpectator(UUID uuid){
-		if(spectators.remove(uuid)){
+	public boolean removeSpectator(UUID uuid, boolean removeFromSet){
+		OfflinePlayer player = pl.getServer().getOfflinePlayer(uuid);
+		if(player != null){
+			pl.getServer().getScoreboardManager().getMainScoreboard()
+					.getTeam("Spectators").removeEntry(player.getName());
+			player.getPlayer().setFlySpeed(0.2f);
+		}
+		if(removeFromSet && spectators.remove(uuid)){
 			pl.getLogger().info("Removed spectator: "+uuid);
 			return true;
 		}
@@ -140,8 +158,9 @@ public class SpectatorListener implements Listener{
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent evt){
-		if(removeSpectator(evt.getPlayer().getUniqueId())){
-			pl.runCommand("scoreboard players reset "+evt.getPlayer().getName());
+		if(removeSpectator(evt.getPlayer().getUniqueId(), true)
+				&& evt.getPlayer().getScoreboardTags().contains("dead")){
+			evt.getPlayer().getScoreboard().resetScores(evt.getPlayer().getName());
 			int ticksSinceDeath = evt.getPlayer().getStatistic(Statistic.TIME_SINCE_DEATH);
 			int hrsSinceDeath = ticksSinceDeath/(20*60*60);
 			pl.getLogger().info("Ticks since death: "+ticksSinceDeath);
@@ -166,6 +185,7 @@ public class SpectatorListener implements Listener{
 			new BukkitRunnable(){@Override public void run(){
 				Player p = pl.getServer().getPlayer(uuid);
 				if(p != null && isSpectator(p)){
+					addSpectator(evt.getPlayer());
 					final double inHrs = ((double)ticksSinceLastLogin)/(20*60*60);
 					pl.getLogger().info("Adding: "+inHrs+"h to SinceLastDeath (ticks="+ticksSinceLastLogin+")");
 					p.incrementStatistic(Statistic.TIME_SINCE_DEATH, ticksSinceLastLogin);
@@ -175,13 +195,16 @@ public class SpectatorListener implements Listener{
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onJoin(PlayerJoinEvent evt){
-		if(isSpectator(evt.getPlayer())){
-			addSpectator(evt.getPlayer());
-			AC_Hardcore.setPermission(evt.getPlayer(), "essentials.tpa", false);
-			AC_Hardcore.setPermission(evt.getPlayer(), "essentials.tpahere", false);
-			AC_Hardcore.setPermission(evt.getPlayer(), "essentials.tpaccept", false);
-			pl.runCommand("scoreboard players reset "+evt.getPlayer().getName());
+		if(isSpectator(evt.getPlayer())) addSpectator(evt.getPlayer());
+	}
+
+	@EventHandler
+	public void onGameModeChange(PlayerGameModeChangeEvent evt){
+		if(evt.getNewGameMode() == GameMode.SPECTATOR){
+			if(isSpectator(evt.getPlayer())) addSpectator(evt.getPlayer());
+			evt.getPlayer().getScoreboard().getTeam("Spectators").addEntry(evt.getPlayer().getName());
 		}
+		else removeSpectator(evt.getPlayer().getUniqueId(), true);
 	}
 
 	@EventHandler
@@ -190,6 +213,6 @@ public class SpectatorListener implements Listener{
 		new BukkitRunnable(){@Override public void run(){
 			Player p = pl.getServer().getPlayer(uuid);
 			if(p != null) addSpectator(p);
-		}}.runTaskLater(pl, 40);
+		}}.runTaskLater(pl, 20*5);
 	}
 }

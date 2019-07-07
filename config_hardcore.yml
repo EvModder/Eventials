@@ -30,6 +30,7 @@ default-nophysics-radius: 32
 skip-night-sleep-percent-required: 0.5
 skip-storm-sleep-percent-required: 0.5
 skip-thunder-sleep-percent-required: 0.5
+count-spectators-in-sleep-required: false
 
 inactive-days-until-player-delete: 200
 #Advancements checker is broken
@@ -242,14 +243,17 @@ auto-messages:
        Hardcore is still in &bBETA&r.
        There may still be many adjustments to mechanics
   - |
+       We have an ongoing stats challenge!
+       Top players at end of July will receive a prize!
+  - |
        As part of &bBETA&r, be prepared for tweaks, fixes,
        and possibly map resets during this time.
-  - 'Collaboration is encouraged, but always be cautious!'
+  - 'Teaming is encouraged, but always be cautious!'
   - 'Remember, anyone can join- be cautious around others!'
   - |
-       For the opening of Hardcore, we're running an Event!
-       Top players in each of 3 statistics at the end of
-       July will receive an exclusive event prize!
+       For the opening of Hardcore, we're hosting an Event!
+       Top players in each of the 3 objectives at the end of
+       July will receive an exclusive prize!
   - 'Beware public locations such as x=0,z=0 and The End!'
   - |
        The three statistics used to determine the prize-
@@ -262,7 +266,7 @@ auto-messages:
   - '&4[&c&lWarning&4]&r Unused terrain may be periodically reset!'
   - 'Griefing is generally discouraged'
   - |
-       &4[&c&lWarning&4]&r Exploring generates many new chunks
+       Exploring generates new chunks.
        When Minecraft updates, new terrain and features
        &owill not be present&r in those chunks!
   - |
@@ -271,7 +275,7 @@ auto-messages:
   - |
        Remember, server &aEvents&r are temporary, and
        eventually everything returns to normal
-  - 'Want to privatize your horse? check out &2/hm'
+  - 'Curious about your horse? check out &2/hm'
   - 'Ye like? Ye vote? &2/vote&r for links!'
   - 'Funding help isn''t required, but is always appreciated :)'
   - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
@@ -290,8 +294,8 @@ auto-messages:
 #       You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
   - 'YouTuber? Promote your channel, ask for the prefix!'
   - 'Found a bug? &2/mail Admin&r so we can fix it!'
-  - 'See a &2/green&r command? Click it to run it!'
-  - |
+#  - 'See a &2/green&r command? Click it to run it!'
+#  - |
 #       Many commands have aliases!
 #       Examples: &2/home&r&7 -> &2/h&r, &2/back&r&7 -> &2/b&r, &2/f power&r&7 -> &2/f p
 #  - |
