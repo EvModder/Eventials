@@ -49,6 +49,7 @@ public class AC_Hardcore implements Listener{
 	final static String WORLD_NAME = "Reliquist";
 	final ItemStack starterBook;
 	final int numPreGenSpawns = 5;
+	final double EULERS_CONSTANT = 0.57721566490153286060651209d;
 	final ArrayDeque<Location> spawnLocs;
 	final HashSet<String> tpaAliases, tpahereAliases, tpacceptAliases;
 	final HashMap<UUID, UUID> pendingTpas, pendingTpaheres;//from -> to
@@ -158,11 +159,14 @@ public class AC_Hardcore implements Listener{
 		WorldBorder border = world.getWorldBorder();
 		double maxOffset = border.getSize()/2;
 		double stdDev = maxOffset/4;
+		double borderHn = Math.log(maxOffset + 0.5) + EULERS_CONSTANT;
 		Random rand = new Random();
 		Location loc;
 		while(true){
-			double x = (rand.nextGaussian() * rand.nextGaussian()) * stdDev;
-			double z = (rand.nextGaussian() * rand.nextGaussian()) * stdDev;
+			//double x = (rand.nextGaussian() * rand.nextGaussian()) * stdDev;
+			//double z = (rand.nextGaussian() * rand.nextGaussian()) * stdDev;
+			double x = Math.exp(rand.nextDouble()*borderHn - EULERS_CONSTANT) - 0.5;
+			double z = Math.exp(rand.nextDouble()*borderHn - EULERS_CONSTANT) - 0.5;
 			while(Math.abs(x) > maxOffset) x = rand.nextGaussian() * stdDev;
 			while(Math.abs(z) > maxOffset) z = rand.nextGaussian() * stdDev;
 
@@ -471,11 +475,19 @@ public class AC_Hardcore implements Listener{
 						&& pendingTpas.get(target.getUniqueId()).equals(player.getUniqueId())){
 					player.sendMessage(ChatColor.GOLD+"Accepted "+target.getName()+"'s tpa");
 					pendingTpas.remove(target.getUniqueId());
+					new BukkitRunnable(){@Override public void run(){
+						setPermission(player, "essentials.tpaccept", false);
+						setPermission(target, "essentials.tpa", false);
+					}}.runTaskLater(pl, 20*5);
 				}
 				else if(pendingTpaheres.containsKey(target.getUniqueId())
 						&& pendingTpaheres.get(target.getUniqueId()).equals(player.getUniqueId())){
 					player.sendMessage(ChatColor.GOLD+"Accepted "+target.getName()+"'s tpahere");
 					pendingTpaheres.remove(target.getUniqueId());
+					new BukkitRunnable(){@Override public void run(){
+						setPermission(player, "essentials.tpaccept", false);
+						setPermission(target, "essentials.tpahere", false);
+					}}.runTaskLater(pl, 20*5);
 				}
 				else{
 					player.sendMessage(ChatColor.RED+"You do not have a pending tpa from "+target.getName());
@@ -483,10 +495,6 @@ public class AC_Hardcore implements Listener{
 					evt.setCancelled(true);
 					return;
 				}
-				new BukkitRunnable(){@Override public void run(){
-					setPermission(player, "essentials.tpaccept", false);
-					setPermission(target, "essentials.tpa", false);
-				}}.runTaskLater(pl, 20*5);
 				player.addScoreboardTag("tp_"+target.getUniqueId());
 				target.addScoreboardTag("tp_"+player.getUniqueId());
 			}

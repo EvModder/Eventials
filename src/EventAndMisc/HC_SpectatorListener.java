@@ -147,7 +147,7 @@ public class HC_SpectatorListener implements Listener{
 		if(player != null){
 			pl.getServer().getScoreboardManager().getMainScoreboard()
 					.getTeam("Spectators").removeEntry(player.getName());
-			player.getPlayer().setFlySpeed(0.2f);
+			//player.getPlayer().setFlySpeed(0.2f);
 		}
 		if(removeFromSet && spectators.remove(uuid)){
 			pl.getLogger().info("Removed spectator: "+uuid);
