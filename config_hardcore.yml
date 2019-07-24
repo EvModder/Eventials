@@ -30,7 +30,9 @@ default-nophysics-radius: 32
 skip-night-sleep-percent-required: 0.5
 skip-storm-sleep-percent-required: 0.5
 skip-thunder-sleep-percent-required: 0.5
-count-spectators-in-sleep-required: false
+count-gm3-in-sleep-required: false
+count-gm1-in-sleep-required: false
+only-skip-if-nighttime: true
 
 inactive-days-until-player-delete: 200
 #Advancements checker is broken
@@ -241,24 +243,28 @@ world-borders:
 auto-messages:
   - |
        Hardcore is still in &bBETA&r.
-       There may still be many adjustments to mechanics
+       There may still be adjustments to mechanics
   - |
        We have an ongoing stats challenge!
-       Top players at end of July will receive a prize!
+       Top players (on Aug 25th) will receive a &aprize=>&7Choice of 20USD or a unique in-game reward!&r!
   - |
        As part of &bBETA&r, be prepared for tweaks, fixes,
-       and possibly map resets during this time.
+       and possibly even map restarts during this time.
   - 'Teaming is encouraged, but always be cautious!'
-  - 'Remember, anyone can join- be cautious around others!'
+  - 'Remember, anyone can join- be careful around others!'
   - |
        For the opening of Hardcore, we're hosting an Event!
-       Top players in each of the 3 objectives at the end of
-       July will receive an exclusive prize!
+       Top players in each of 3 objectives win a prize!
   - 'Beware public locations such as x=0,z=0 and The End!'
+  - 'Feeling plain? Try &2/color&r!'
   - |
-       The three statistics used to determine the prize-
-       winners are shown in TAB, sidebar, and under names
-  - 'Death-trapping End/Nether portals is bannable'
+       The statistics that determine the prize-winners
+       are shown in TAB, sidebar, and under player names
+  - |
+       The 3 stats for which you can win prizes are:
+       (&71&r) Number of Advancements, (&72&r) XP Levels,
+       and (&73&r) # of Player Kills :o
+  - 'Death-trapping End portals is bannable'
   - 'You get ONE /tpa, /tpahere, and /tpaccept. Use wisely!'
   - |
        Periodically, custom server &aEvents=>&7What got AlternateCraft started!&r will be held!
@@ -272,11 +278,8 @@ auto-messages:
   - |
        Sick of survival?
        Try out the &aCreative&r world!
-  - |
-       Remember, server &aEvents&r are temporary, and
-       eventually everything returns to normal
-  - 'Curious about your horse? check out &2/hm'
-  - 'Ye like? Ye vote? &2/vote&r for links!'
+  - 'Curious about your horse? Check out &2/hm'
+  - 'Ye like? Ye support? &2/vote&r for links!'
   - 'Funding help isn''t required, but is always appreciated :)'
   - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
   - 'Suggestions always welcome!'
@@ -313,37 +316,47 @@ auto-messages:
        Remember, suggestions are always welcome!
   - 'I used to be indecisive. Now I''m not sure...'
   - '&c&lPro Tip:&r&o don''t eat the yellow snow'
+  - 'Check out other worlds and gamemodes with &2/server'
 
 ping-messages:
   - ''
   - 'Wazzup %name%?'
-  - 'Event ongoing, prizes to be awarded at end of July!'
+  - 'Event ongoing, prizes to be awarded August 1st!'
   - 'Omae Wa Mou Shindeiru'
+  - 'Event ongoing til August 25th'
   - ''
   - 'Press [refresh] for more random ping messages!'
   - 'Yeet a bug'
+  - 'Win up to $60 cash by August 25th!'
   - ''
   - 'Chicken Fried Steak'
   - 'A Minecraft Server'
+  - 'Challenge 1/3: Most experience levels'
   - ''
   - '&oFreebuild creative!'
-  - '&oDefault and Flatlands survival worlds!'
+  - '&oCustom, Flat, and Vanilla worlds!'
+  - 'Challenge 2/3: Most advancements completed'
   - ''
   - 'Hey %name%, wanna drop by today? :D'
   - '&oMarketplace!'
+  - 'Challenge 3/3: Most players killed! :o'
   - ''
   - '&oPlots world coming "soon"!'
   - 'Now with additional lag!'
+  - 'Dying also resets your progress towards challenges!'
   - ''
   - '&oPeriodic Events!'
   - 'Suggestions welcome!'
+  - 'Goal 3/3 may get replaced, final decision by Aug 1'
   - ''
   - 'Press [refresh] for more random messages!'
   - '&ohard'
   - Yawn
+  - 'Teaming is encouraged!'
   - ''
   - 'The mind is weak but the body is strong.'
   - 'Live by the sword and die by the sword!'
   - ''
-  - 'Tries to be different'
-  - 'Game is broke; we can always use dev help :)'
+  - 'Tries to be unique'
+  - 'OMAE WA MOU SHINDEIRU'
+  - '&oYOLO'

@@ -50,7 +50,8 @@ public class CommandInvsee extends EvCommand{
 			World w = pl.getServer().getWorld(args[0]);
 			if(w != null) targetWorld = w.getName();
 			else{
-				targetPlayer = pl.getServer().getOfflinePlayer(args[0]);
+				targetPlayer = pl.getServer().getPlayer(args[0]);
+				if(targetPlayer == null) targetPlayer = pl.getServer().getOfflinePlayer(args[0]);
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){
 					try{targetPlayer = pl.getServer().getOfflinePlayer(UUID.fromString(args[0]));}
 					catch(IllegalArgumentException ex){}
@@ -72,7 +73,8 @@ public class CommandInvsee extends EvCommand{
 			World w = pl.getServer().getWorld(args[0]);
 			if(w != null){
 				targetWorld = w.getName();
-				targetPlayer = pl.getServer().getOfflinePlayer(args[1]);
+				targetPlayer = pl.getServer().getPlayer(args[1]);
+				if(targetPlayer == null) targetPlayer = pl.getServer().getOfflinePlayer(args[1]);
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore())
 					targetPlayer = pl.getServer().getOfflinePlayer(UUID.fromString(args[1]));
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){

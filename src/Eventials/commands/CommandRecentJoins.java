@@ -13,7 +13,7 @@ public class CommandRecentJoins extends EvCommand {
 
 	public CommandRecentJoins(Eventials pl) {
 		super(pl);
-		maxRecents = pl.getConfig().getInt("max-recent-joins", 20);
+		maxRecents = pl.getConfig().getInt("max-recent-joins-stored", 50);
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
@@ -23,7 +23,7 @@ public class CommandRecentJoins extends EvCommand {
 		int num = maxRecents;
 		if(args.length == 1){
 			try{ num = Integer.parseInt(args[0]); }
-			catch(NumberFormatException ex) {}
+			catch(NumberFormatException ex){}
 		}
 		List<String> names = Eventials.getPlugin().loginListener.getRecentJoins(num);
 		if(names.size() < num) num = names.size();

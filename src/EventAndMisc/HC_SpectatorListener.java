@@ -1,5 +1,6 @@
 package EventAndMisc;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.UUID;
@@ -45,6 +46,7 @@ public class HC_SpectatorListener implements Listener{
 		Location closest = null;
 		double cDist = Double.MAX_VALUE;
 		for(Location point : points){
+			if(!point.getWorld().getUID().equals(loc.getWorld().getUID())) continue;
 			double pDist = loc.distanceSquared(point);
 			if(pDist < cDist){
 				closest = point;
@@ -58,18 +60,20 @@ public class HC_SpectatorListener implements Listener{
 	void runSpecatorLoop(){
 		if(loopActive) return;
 		loopActive = true;
-		new BukkitRunnable(){@Override public void run(){
+		new BukkitRunnable(){@SuppressWarnings("unchecked") @Override public void run(){
 			HashSet<Location> nonSpecLocs = new HashSet<Location>();
 			for(Player p : pl.getServer().getOnlinePlayers()){
 				if(isSpectator(p)) addSpectator(p);
 				else if(p.getGameMode() == GameMode.SURVIVAL) nonSpecLocs.add(p.getLocation());
 			}
 			if(nonSpecLocs.isEmpty()){
-				for(UUID uuid : spectators){
-					removeSpectator(uuid, false);
+				for(UUID uuid : (Collection<UUID>)spectators.clone()){
 					OfflinePlayer p = pl.getServer().getPlayer(uuid);
-					if(p != null && p.isOnline()) p.getPlayer().kickPlayer(
-							ChatColor.RED+"There is nobody online to spectate right now");
+					if(p != null && p.isOnline()){
+						p.getPlayer().kickPlayer(ChatColor.RED+"There is nobody online to spectate right now");
+						p.getPlayer().setFlySpeed(0.2f);
+						p.getPlayer().getScoreboard().getTeam("Spectators").removeEntry(p.getName());
+					}
 				}
 				spectators.clear();
 			}
@@ -100,6 +104,12 @@ public class HC_SpectatorListener implements Listener{
 					if(secondsLeft <= 0){
 						specP.kickPlayer(ChatColor.GREEN+"You may now respawn!");
 						secondsLeft = 0;
+						new BukkitRunnable(){@Override public void run(){
+							//Make sure they're offline
+							Player p = pl.getServer().getPlayer(uuid);
+							if(p == null) AC_Hardcore.deletePlayerdata(uuid);
+						}}.runTaskLater(pl, 20);
+						continue;
 					}
 					int minutesLeft = secondsLeft / 60, hoursLeft = minutesLeft / 60, daysLeft = hoursLeft / 60;
 					secondsLeft %= 60; minutesLeft %= 60; hoursLeft %= 24;
@@ -142,15 +152,12 @@ public class HC_SpectatorListener implements Listener{
 			runSpecatorLoop();
 		}
 	}
-	public boolean removeSpectator(UUID uuid, boolean removeFromSet){
-		OfflinePlayer player = pl.getServer().getOfflinePlayer(uuid);
-		if(player != null){
-			pl.getServer().getScoreboardManager().getMainScoreboard()
+	public boolean removeSpectator(Player player){
+		pl.getServer().getScoreboardManager().getMainScoreboard()
 					.getTeam("Spectators").removeEntry(player.getName());
-			//player.getPlayer().setFlySpeed(0.2f);
-		}
-		if(removeFromSet && spectators.remove(uuid)){
-			pl.getLogger().info("Removed spectator: "+uuid);
+		//player.getPlayer().setFlySpeed(0.2f);
+		if(spectators.remove(player.getUniqueId())){
+			pl.getLogger().info("Removed spectator: "+player.getName());
 			return true;
 		}
 		return false;
@@ -158,7 +165,7 @@ public class HC_SpectatorListener implements Listener{
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent evt){
-		if(removeSpectator(evt.getPlayer().getUniqueId(), true)
+		if(removeSpectator(evt.getPlayer())
 				&& evt.getPlayer().getScoreboardTags().contains("dead")){
 			evt.getPlayer().getScoreboard().resetScores(evt.getPlayer().getName());
 			int ticksSinceDeath = evt.getPlayer().getStatistic(Statistic.TIME_SINCE_DEATH);
@@ -169,7 +176,9 @@ public class HC_SpectatorListener implements Listener{
 				//Reset playerdata & stats so next time they log in they will respawn :)
 				final UUID uuid = evt.getPlayer().getUniqueId();
 				new BukkitRunnable(){@Override public void run(){
-					AC_Hardcore.deletePlayerdata(uuid);
+					//Make sure they're offline
+					Player p = pl.getServer().getPlayer(uuid);
+					if(p == null) AC_Hardcore.deletePlayerdata(uuid);
 				}}.runTaskLater(pl, 5);
 			}
 		}
@@ -204,7 +213,7 @@ public class HC_SpectatorListener implements Listener{
 			if(isSpectator(evt.getPlayer())) addSpectator(evt.getPlayer());
 			evt.getPlayer().getScoreboard().getTeam("Spectators").addEntry(evt.getPlayer().getName());
 		}
-		else removeSpectator(evt.getPlayer().getUniqueId(), true);
+		else removeSpectator(evt.getPlayer());
 	}
 
 	@EventHandler

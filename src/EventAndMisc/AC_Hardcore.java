@@ -5,17 +5,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.logging.Level;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
@@ -26,10 +30,14 @@ import org.bukkit.block.Container;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -42,6 +50,7 @@ import Eventials.Extras;
 import net.evmodder.EvLib.EvUtils;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.HorseOwners.HorseManager;
 
 public class AC_Hardcore implements Listener{
 	private final Eventials pl;
@@ -89,7 +98,7 @@ public class AC_Hardcore implements Listener{
 			saveSpawnLocs();
 		}
 		new HC_SpectatorListener();
-		new HC_AdvancementListener();
+		new HC_ScoreboardUpdater();
 
 		PluginCommand cmdTpa = pl.getServer().getPluginCommand("tpa");
 		PluginCommand cmdTpahere = pl.getServer().getPluginCommand("tpahere");
@@ -118,6 +127,14 @@ public class AC_Hardcore implements Listener{
 	}
 
 	static boolean deletePlayerdata(UUID uuid){
+		HorseManager horsePl = (HorseManager) Eventials.getPlugin()
+				.getServer().getPluginManager().getPlugin("HorseOwners");
+		if(horsePl != null){
+			ArrayList<String> horses = new ArrayList<String>();
+			if(horsePl.getHorseOwners().containsKey(uuid)) horses.addAll(horsePl.getHorseOwners().get(uuid));
+			for(String horseName : horses) horsePl.removeHorse(uuid, horseName, false);
+		}
+		Eventials.getPlugin().getLogger().info("Deleting playerdata for: "+uuid);
 		return new File("./" + WORLD_NAME + "/playerdata/" + uuid + ".dat").delete()
 			&& new File("./" + WORLD_NAME + "/stats/" + uuid + ".json").delete()
 			&& new File("./" + WORLD_NAME + "/advancements/" + uuid + ".json").delete();
@@ -133,6 +150,100 @@ public class AC_Hardcore implements Listener{
 			return true;
 		}
 		catch(IOException e){return false;}
+	}
+
+	static boolean setPermission(Player player, String permission, boolean value){
+		if(player.hasPermission(permission) == value) return false;
+		Eventials.getPlugin().runCommand(
+				"perms player setperm "+player.getName()+" "+permission+" "+(""+value).toLowerCase());
+		/*final PermissionsPlugin permsPlugin = (PermissionsPlugin)
+				pl.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+		if(permsPlugin == null) return false;
+		PermissionInfo playerInfo = permsPlugin.getPlayerInfo(player.getUniqueId());
+		String uuid = player.getUniqueId().toString();
+		if(playerInfo == null){
+			permsPlugin.getConfig().set("users."+uuid, new YamlConfiguration());
+			permsPlugin.getConfig().set("users."+uuid+".name", player.getName());
+			permsPlugin.getConfig().set("users."+uuid+".permissions", new YamlConfiguration());
+		}
+		permsPlugin.getConfig().set("users."+uuid+".permissions."+permission, value);
+		java.lang.reflect.Method methodRegisterPlayer;
+		try{methodRegisterPlayer = permsPlugin.getClass().getDeclaredMethod("registerPlayer", Player.class);}
+		catch(SecurityException | NoSuchMethodException ex){
+			pl.getLogger().warning("Failed to access registerPlayer(): " + ex.getMessage());
+			return false;
+		}
+		methodRegisterPlayer.setAccessible(true);
+		try{methodRegisterPlayer.invoke(permsPlugin, player);}
+		catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException ex){
+			pl.getLogger().warning("Failed to invoke registerPlayer(): " + ex.getMessage());
+			return false;
+		}*/
+		return true;
+	}
+
+	static int getNumDeaths(String name){
+		File deathDir = new File("./plugins/EvFolder/deaths/"+name);
+		return deathDir.exists() ? deathDir.listFiles().length : 0;
+	}
+	static String getLastDeath(String name){
+		File deathDir = new File("./plugins/EvFolder/deaths/"+name);
+		if(!deathDir.exists()) return "N/A";
+		File[] files = deathDir.listFiles();
+		if(files.length == 0) return "N/A";
+		String lastDeath = files[0].getName();
+		for(File file : files) if(file.getName().compareTo(lastDeath) > 0) lastDeath = file.getName();
+		return lastDeath;
+	}
+	static void add_tp_tags(Player p1, Player p2){
+		p1.sendMessage(ChatColor.GRAY+"You will no longer be able to tp to "+
+				ChatColor.WHITE+p2.getName()+ChatColor.GRAY+" (in this life).");
+		p2.sendMessage(ChatColor.GRAY+"You will no longer be able to tp to "+
+				ChatColor.WHITE+p1.getName()+ChatColor.GRAY+" (in this life).");
+
+		TreeSet<String> p1tps = new TreeSet<String>(), p2tps = new TreeSet<String>();
+		for(String tag : p1.getScoreboardTags())
+			if(tag.startsWith("tp_") && !p2.getScoreboardTags().contains(tag)) p1tps.add(tag);
+		for(String tag : p2.getScoreboardTags())
+			if(tag.startsWith("tp_") && !p1.getScoreboardTags().contains(tag)) p2tps.add(tag);
+		if(!p1tps.isEmpty()){
+			p2.sendMessage(ChatColor.GRAY+"Due to "+
+					ChatColor.WHITE+p1.getName()+ChatColor.GRAY+"'s past teleports, you can no longer tp:");
+			StringBuilder noTps = new StringBuilder("");
+			for(String tag : p1tps){
+				try{
+					UUID uuid = UUID.fromString(tag.substring(3));
+					OfflinePlayer player = org.bukkit.Bukkit.getOfflinePlayer(uuid);
+					if(player != null) noTps.append(ChatColor.WHITE).append(player.getName())
+						.append(ChatColor.GRAY).append(", ");
+				}
+				catch(IllegalArgumentException ex){continue;}
+				p2.addScoreboardTag(tag);
+			}
+			p2.sendMessage(noTps.toString().substring(0, noTps.length()-2)+".");
+		}
+		if(!p2tps.isEmpty()){
+			p1.sendMessage(ChatColor.GRAY+"Due to "+
+					ChatColor.WHITE+p2.getName()+ChatColor.GRAY+"'s past teleports, you can no longer tp:");
+			StringBuilder noTps = new StringBuilder("");
+			for(String tag : p2tps){
+				try{
+					UUID uuid = UUID.fromString(tag.substring(3));
+					OfflinePlayer player = org.bukkit.Bukkit.getOfflinePlayer(uuid);
+					if(player != null) noTps.append(ChatColor.WHITE).append(player.getName())
+						.append(ChatColor.GRAY).append(", ");
+				}
+				catch(IllegalArgumentException ex){continue;}
+				p1.addScoreboardTag(tag);
+			}
+			p1.sendMessage(noTps.toString().substring(0, noTps.length()-2)+".");
+		}
+		p1.addScoreboardTag("tp_"+p2.getUniqueId());
+		p2.addScoreboardTag("tp_"+p1.getUniqueId());
+	}
+	static boolean check_tp_tags(Player p1, Player p2){
+		return p1.getScoreboardTags().contains("tp_"+p2.getUniqueId()) ||
+				p2.getScoreboardTags().contains("tp_"+p1.getUniqueId());
 	}
 
 	void saveSpawnLocs(){
@@ -152,23 +263,37 @@ public class AC_Hardcore implements Listener{
 		}
 		return false;
 	}
+	double getRandomCoord(double maxCoord, double scale, double randDouble){
+		//Into wolfram: (e^(p*11.58 - 0.57721566490) - 0.5)*500
+		pl.getLogger().info("Generating random coord, scale="+scale);
+		double maxHn = Math.log(maxCoord/scale + 0.5) + EULERS_CONSTANT;
+		double coord = (Math.exp(randDouble*maxHn - EULERS_CONSTANT) - 0.5)*scale;
+		pl.getLogger().info("Max N="+Math.round(maxCoord)
+				+", Max Hn="+(Math.round(maxHn*100d)/100d)
+				+", Rand="+(Math.round(randDouble*100d)/100d)
+				+", Hn="+(Math.round(randDouble*maxHn*100d)/100d)
+				+", N="+Math.round(coord));
+		return coord;
+	}
 	// Warning: Very laggy!  Call asynchronously when possible
 	Location getRandomSpawnLoc(){
 		World world = pl.getServer().getWorld(WORLD_NAME);
-		int seaLevel = pl.getServer().getWorld(WORLD_NAME).getSeaLevel();
+		int seaLevel = world.getSeaLevel();
 		WorldBorder border = world.getWorldBorder();
 		double maxOffset = border.getSize()/2;
 		double stdDev = maxOffset/4;
-		double borderHn = Math.log(maxOffset + 0.5) + EULERS_CONSTANT;
+		//double borderHn = Math.log(maxOffset + 0.5) + EULERS_CONSTANT;
 		Random rand = new Random();
 		Location loc;
 		while(true){
 			//double x = (rand.nextGaussian() * rand.nextGaussian()) * stdDev;
 			//double z = (rand.nextGaussian() * rand.nextGaussian()) * stdDev;
-			double x = Math.exp(rand.nextDouble()*borderHn - EULERS_CONSTANT) - 0.5;
-			double z = Math.exp(rand.nextDouble()*borderHn - EULERS_CONSTANT) - 0.5;
+			double x = getRandomCoord(maxOffset, 500, rand.nextDouble());
+			double z = getRandomCoord(maxOffset, 500, rand.nextDouble());
 			while(Math.abs(x) > maxOffset) x = rand.nextGaussian() * stdDev;
 			while(Math.abs(z) > maxOffset) z = rand.nextGaussian() * stdDev;
+			if(rand.nextBoolean()) x = -x;
+			if(rand.nextBoolean()) z = -z;
 
 			loc = border.getCenter();
 			loc.setX(Math.floor(loc.getX() + x) + 0.5d);
@@ -229,10 +354,7 @@ public class AC_Hardcore implements Listener{
 		pl.getLogger().warning("Spawning new player: "+player.getName());
 		final UUID uuid = player.getUniqueId();
 		player.addScoreboardTag("unconfirmed");
-		player.addScoreboardTag("has_tpahere");
-		player.addScoreboardTag("has_tpa");
-		player.addScoreboardTag("has_tpaccept");
-		String Adv0TeamName = HC_AdvancementListener.getAdvancementTeamName(0);
+		String Adv0TeamName = HC_ScoreboardUpdater.getAdvancementTeamName(0);
 		Team newTeam = player.getScoreboard().getTeam(Adv0TeamName);
 		if(newTeam == null) newTeam = player.getScoreboard().registerNewTeam(Adv0TeamName);
 		newTeam.addEntry(player.getName());
@@ -280,36 +402,15 @@ public class AC_Hardcore implements Listener{
 			setPermission(player, "essentials.tpahere", player.getScoreboardTags().contains("has_tpahere"));
 			setPermission(player, "essentials.tpaccept", player.getScoreboardTags().contains("has_tpaccept"));
 		}
+		if(player.getScoreboardTags().contains("unconfirmed")){
+			player.sendMessage(ChatColor.GREEN+">> "+ChatColor.GOLD+ChatColor.BOLD+"Read the book to get started");
+		}
 	}
 
-	static boolean setPermission(Player player, String permission, boolean value){
-		if(player.hasPermission(permission) == value) return false;
-		Eventials.getPlugin().runCommand(
-				"perms player setperm "+player.getName()+" "+permission+" "+(""+value).toLowerCase());
-		/*final PermissionsPlugin permsPlugin = (PermissionsPlugin)
-				pl.getServer().getPluginManager().getPlugin("PermissionsBukkit");
-		if(permsPlugin == null) return false;
-		PermissionInfo playerInfo = permsPlugin.getPlayerInfo(player.getUniqueId());
-		String uuid = player.getUniqueId().toString();
-		if(playerInfo == null){
-			permsPlugin.getConfig().set("users."+uuid, new YamlConfiguration());
-			permsPlugin.getConfig().set("users."+uuid+".name", player.getName());
-			permsPlugin.getConfig().set("users."+uuid+".permissions", new YamlConfiguration());
-		}
-		permsPlugin.getConfig().set("users."+uuid+".permissions."+permission, value);
-		java.lang.reflect.Method methodRegisterPlayer;
-		try{methodRegisterPlayer = permsPlugin.getClass().getDeclaredMethod("registerPlayer", Player.class);}
-		catch(SecurityException | NoSuchMethodException ex){
-			pl.getLogger().warning("Failed to access registerPlayer(): " + ex.getMessage());
-			return false;
-		}
-		methodRegisterPlayer.setAccessible(true);
-		try{methodRegisterPlayer.invoke(permsPlugin, player);}
-		catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException ex){
-			pl.getLogger().warning("Failed to invoke registerPlayer(): " + ex.getMessage());
-			return false;
-		}*/
-		return true;
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent evt){
+		pendingTpas.remove(evt.getPlayer().getUniqueId());
+		pendingTpaheres.remove(evt.getPlayer().getUniqueId());
 	}
 
 	ChatColor enableTest(String pluginName){
@@ -331,7 +432,7 @@ public class AC_Hardcore implements Listener{
 //			enableTest("WorldGuard")+"WorldGuard\\§f, \\" +
 //			enableTest("PluginLoader")+"PluginLoader\\§f, \\" +
 			ChatColor.GREEN+"EvNoCheat\\§f, \\" +
-			enableTest("PermissionsBukkit")+"PermissionsBukkit\\§f, \\" +
+//			enableTest("PermissionsBukkit")+"PermissionsBukkit\\§f, \\" +
 			enableTest("BungeeTabListPlus")+"BungeeTabList\\§f, \\" +
 			enableTest("Votifier")+"Votifier§r" +
 			".\\\\n\\§7\\§oHover over a plugin to see more details!",
@@ -365,6 +466,12 @@ public class AC_Hardcore implements Listener{
 			player.setSaturation(20);
 			player.setHealth(evt.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.addScoreboardTag("joined");
+			player.addScoreboardTag("has_tpahere");
+			player.addScoreboardTag("has_tpa");
+			player.addScoreboardTag("has_tpaccept");
+			setPermission(player, "essentials.tpa", true);
+			setPermission(player, "essentials.tpahere", true);
+			setPermission(player, "essentials.tpaccept", true);
 		}
 		else if(command.equals("color")){
 			evt.setCancelled(true);
@@ -393,8 +500,19 @@ public class AC_Hardcore implements Listener{
 				}
 			}
 		}
-		else if(player.isOp()){
-			return;// Everything below here modifies permissions
+		else if(command.equals("seen")){
+			if(player.hasPermission("essentials.seen") && space > 0){
+				OfflinePlayer target = pl.getServer().getOfflinePlayer(evt.getMessage().substring(space + 1));
+				if(target != null && target.hasPlayedBefore()){
+					final String lastDeath = getLastDeath(target.getName());
+					final UUID uuid = player.getUniqueId();
+					new BukkitRunnable(){@Override public void run(){
+						Player player = pl.getServer().getPlayer(uuid);
+						if(player != null) player.sendMessage(ChatColor.GOLD+" - Last Death: "+
+										ChatColor.RED+lastDeath);
+					}}.runTaskLater(pl, 2);
+				}
+			}
 		}
 		else if(command.equals("tp")) {
 			if(HC_SpectatorListener.isSpectator(player)){
@@ -411,8 +529,8 @@ public class AC_Hardcore implements Listener{
 			}
 		}
 		else if(tpaAliases.contains(command)){
-			
-			if(!player.hasPermission("essentials.tpa") || !player.removeScoreboardTag("has_tpa")){
+			if((!player.hasPermission("essentials.tpa") || !player.getScoreboardTags().contains("has_tpa"))
+					&& !player.isOp()){
 				player.sendMessage(ChatColor.RED+"You have already used your one /tpa");
 				evt.setCancelled(true);
 			}
@@ -420,23 +538,21 @@ public class AC_Hardcore implements Listener{
 				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
 				if(space < 0 || target == null){
 					player.sendMessage(ChatColor.RED+"Please specify who to tpa to "+ChatColor.UNDERLINE+"exactly");
-					player.addScoreboardTag("has_tpa");
 					evt.setCancelled(true);
 				}
-				else if(player.getScoreboardTags().contains("tp_"+target.getUniqueId()) ||
-						target.getScoreboardTags().contains("tp_"+player.getUniqueId())){
-					player.sendMessage(ChatColor.RED+"You cannot tp "+target.getName()+" twice in the same life");
-					player.addScoreboardTag("has_tpa");
+				else if(check_tp_tags(player, target)){
+					player.sendMessage(ChatColor.RED+"You have already used a tp that is connected to "+target.getName());
 					evt.setCancelled(true);
 				}
 				else{
+					player.sendMessage(ChatColor.LIGHT_PURPLE+"Sent a tpa to "+target.getName());
 					pendingTpas.put(player.getUniqueId(), target.getUniqueId());
-					pendingTpaheres.remove(player.getUniqueId());
 				}
 			}
 		}
 		else if(tpahereAliases.contains(command)){
-			if(!player.hasPermission("essentials.tpahere") || !player.removeScoreboardTag("has_tpahere")){
+			if((!player.hasPermission("essentials.tpahere") || !player.getScoreboardTags().contains("has_tpahere"))
+					&& !player.isOp()){
 				player.sendMessage(ChatColor.RED+"You have already used your one /tpahere");
 				evt.setCancelled(true);
 			}
@@ -444,23 +560,20 @@ public class AC_Hardcore implements Listener{
 				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
 				if(space < 0 || target == null){
 					player.sendMessage(ChatColor.RED+"Please specify who to tpahere "+ChatColor.UNDERLINE+"exactly");
-					player.addScoreboardTag("has_tpahere");
 					evt.setCancelled(true);
 				}
-				else if(player.getScoreboardTags().contains("tp_"+target.getUniqueId()) ||
-						target.getScoreboardTags().contains("tp_"+player.getUniqueId())){
-					player.sendMessage(ChatColor.RED+"You cannot tp "+target.getName()+" twice in the same life");
-					player.addScoreboardTag("has_tpa");
+				else if(check_tp_tags(player, target)){
+					player.sendMessage(ChatColor.RED+"You have already used a tp that is connected to "+target.getName());
 					evt.setCancelled(true);
 				}
 				else{
+					player.sendMessage(ChatColor.LIGHT_PURPLE+"Sent a tpahere to "+target.getName());
 					pendingTpaheres.put(player.getUniqueId(), target.getUniqueId());
-					pendingTpas.remove(player.getUniqueId());
 				}
 			}
 		}
 		else if(tpacceptAliases.contains(command)){
-			if(!player.hasPermission("essentials.tpaccept") || !player.removeScoreboardTag("has_tpaccept")){
+			if(!player.hasPermission("essentials.tpaccept") || !player.getScoreboardTags().contains("has_tpaccept")){
 				player.sendMessage(ChatColor.RED+"You have already used your one /tpaccept");
 				evt.setCancelled(true);
 			}
@@ -468,35 +581,11 @@ public class AC_Hardcore implements Listener{
 				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
 				if(space < 0 || target == null){
 					player.sendMessage(ChatColor.RED+"Please specify the player whose request you are accepting");
-					player.addScoreboardTag("has_tpaccept");
 					evt.setCancelled(true);
-				}
-				else if(pendingTpas.containsKey(target.getUniqueId())
-						&& pendingTpas.get(target.getUniqueId()).equals(player.getUniqueId())){
-					player.sendMessage(ChatColor.GOLD+"Accepted "+target.getName()+"'s tpa");
-					pendingTpas.remove(target.getUniqueId());
-					new BukkitRunnable(){@Override public void run(){
-						setPermission(player, "essentials.tpaccept", false);
-						setPermission(target, "essentials.tpa", false);
-					}}.runTaskLater(pl, 20*5);
-				}
-				else if(pendingTpaheres.containsKey(target.getUniqueId())
-						&& pendingTpaheres.get(target.getUniqueId()).equals(player.getUniqueId())){
-					player.sendMessage(ChatColor.GOLD+"Accepted "+target.getName()+"'s tpahere");
-					pendingTpaheres.remove(target.getUniqueId());
-					new BukkitRunnable(){@Override public void run(){
-						setPermission(player, "essentials.tpaccept", false);
-						setPermission(target, "essentials.tpahere", false);
-					}}.runTaskLater(pl, 20*5);
 				}
 				else{
-					player.sendMessage(ChatColor.RED+"You do not have a pending tpa from "+target.getName());
-					player.addScoreboardTag("has_tpaccept");
-					evt.setCancelled(true);
-					return;
+					player.sendMessage(ChatColor.LIGHT_PURPLE+"Accepted "+target.getName()+"'s tp request");
 				}
-				player.addScoreboardTag("tp_"+target.getUniqueId());
-				target.addScoreboardTag("tp_"+player.getUniqueId());
 			}
 		}
 	}
@@ -509,6 +598,8 @@ public class AC_Hardcore implements Listener{
 		evt.getEntity().loadData();
 		evt.getEntity().getScoreboard().resetScores(name);
 		evt.getEntity().addScoreboardTag("dead");
+		pl.getLogger().warning("Death of "+name+": "+evt.getDeathMessage());
+
 		//evt.getEntity().kickPlayer("" + ChatColor.RED + ChatColor.BOLD + "You died");
 		new BukkitRunnable(){@Override public void run(){
 			pl.runCommand("tempban " + name + " 1m1s " + ChatColor.GOLD + "Died in hardcore beta");
@@ -529,5 +620,52 @@ public class AC_Hardcore implements Listener{
 			pl.getLogger().warning("Copying playerdata for "+name+"...");
 			if(!copyPlayerdata(uuid, deathDir)) pl.getLogger().severe("Copy faied");
 		}}.runTaskLater(pl, 20 * 10);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onTeleport(PlayerTeleportEvent evt){
+		if(evt.getCause() != TeleportCause.COMMAND || evt.isCancelled()) return;
+		Player teleporter = evt.getPlayer();
+		Player receiver = null;
+		double closestDist = 100;
+		for(Player player : pl.getServer().getOnlinePlayers()){
+			if(player.getLocation().distance(evt.getTo()) < closestDist){
+				receiver = player;
+				closestDist = player.getLocation().distance(evt.getTo());
+			}
+		}
+		if(receiver == null){
+			if(teleporter.getGameMode() != GameMode.SURVIVAL || teleporter.isOp()) return;
+			teleporter.sendMessage(ChatColor.RED+"Could not locate destination player");
+			evt.setCancelled(true);
+		}
+		else if(pendingTpas.containsKey(teleporter.getUniqueId())
+				&& pendingTpas.get(teleporter.getUniqueId()).equals(receiver.getUniqueId())){
+			pendingTpas.remove(teleporter.getUniqueId());
+			teleporter.sendMessage(ChatColor.GREEN+receiver.getName()+" accepted your tpa");
+			receiver.sendMessage(ChatColor.GREEN+"Accepted "+teleporter.getName()+"'s tpa");
+			if(!teleporter.isOp()) setPermission(teleporter, "essentials.tpa", false);
+			if(!receiver.isOp()) setPermission(receiver, "essentials.tpaccept", false);
+			add_tp_tags(teleporter, receiver);
+			teleporter.removeScoreboardTag("has_tpa");
+			receiver.removeScoreboardTag("has_tpaccept");
+		}
+		else if(pendingTpaheres.containsKey(receiver.getUniqueId())
+				&& pendingTpaheres.get(receiver.getUniqueId()).equals(teleporter.getUniqueId())){
+			pendingTpaheres.remove(receiver.getUniqueId());
+			receiver.sendMessage(ChatColor.GREEN+teleporter.getName()+" accepted your tpa");
+			teleporter.sendMessage(ChatColor.GREEN+"Accepted "+receiver.getName()+"'s tpa");
+			if(!receiver.isOp()) setPermission(receiver, "essentials.tpahere", false);
+			if(!teleporter.isOp()) setPermission(teleporter, "essentials.tpaccept", false);
+			add_tp_tags(receiver, teleporter);
+			receiver.removeScoreboardTag("has_tpahere");
+			teleporter.removeScoreboardTag("has_tpaccept");
+		}
+		else{
+			if(teleporter.getGameMode() != GameMode.SURVIVAL || teleporter.isOp()) return;
+			//teleporter.sendMessage(ChatColor.RED+"Error: Could not find a pending tp with "+receiver.getName());
+			//evt.setCancelled(true);
+			return;
+		}
 	}
 }

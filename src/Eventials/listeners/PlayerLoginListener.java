@@ -27,7 +27,7 @@ public class PlayerLoginListener implements Listener{
 	public static HashMap<String, UUID> addressMap;
 	private LinkedList<String> recentJoins;
 	final boolean playNote, showRecentJoins, saveIps, serverFundsNoobs, trackGlobalBal, announceDailyMoney;
-	final int dailyMoney;
+	final int DAILY_LOGIN_MONEY, MAX_RECENT_JOINS_SHOWN;
 	final double startingBal;
 	final String curSymbol;
 
@@ -36,18 +36,19 @@ public class PlayerLoginListener implements Listener{
 		boolean ecoEnabled = plugin.getConfig().getBoolean("economy-enabled", true);
 		eco = Economy.getEconomy();
 		playNote = plugin.getConfig().getBoolean("login-noteblock");
-		showRecentJoins = plugin.getConfig().getBoolean("show-recent-joins", true);
+		showRecentJoins = plugin.getConfig().getBoolean("login-show-recent-joins", true);
+		MAX_RECENT_JOINS_SHOWN = plugin.getConfig().getInt("max-recent-joins-shown", 25);
 		saveIps = plugin.getConfig().getBoolean("save-ips", true);
 		curSymbol = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
 		trackGlobalBal = plugin.getConfig().getBoolean("track-global-balance", true);
 		announceDailyMoney = plugin.getConfig().getBoolean("online-when-daily-money-bonus", true);
 		if(ecoEnabled){
-			dailyMoney = plugin.getConfig().getInt("login-daily-money");
+			DAILY_LOGIN_MONEY = plugin.getConfig().getInt("login-daily-money");
 			startingBal = plugin.getConfig().getInt("starting-balance");
 			serverFundsNoobs = plugin.getConfig().getBoolean("server-pays-starting-balance", true);
 		}
 		else{
-			dailyMoney = 0;
+			DAILY_LOGIN_MONEY = 0;
 			startingBal = 0;
 			serverFundsNoobs = false;
 		}
@@ -56,7 +57,7 @@ public class PlayerLoginListener implements Listener{
 			if(!joinsFile.isEmpty()){
 				recentJoins = TextUtils.toListFromString(joinsFile);
 				recentJoins.remove("");
-				int maxLength = plugin.getConfig().getInt("max-recent-joins", 20);
+				int maxLength = plugin.getConfig().getInt("max-recent-joins-stored", 50);
 				while(recentJoins.size() > maxLength) recentJoins.removeFirst();
 			}
 			else recentJoins = new LinkedList<String>();
@@ -117,17 +118,20 @@ public class PlayerLoginListener implements Listener{
 		else if(playNote) for(Player p : plugin.getServer().getOnlinePlayers())
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
 
-		if(showRecentJoins && offP.hasPlayedBefore()){
-			if(recentJoins.isEmpty()) recentJoins.add(name);
+		if(showRecentJoins){
+			if(recentJoins.isEmpty() || !offP.hasPlayedBefore()) recentJoins.add(name);
 			else if(!recentJoins.peekLast().equals(name)){
 				Iterator<String> iterator = recentJoins.descendingIterator();
 				StringBuilder builder = new StringBuilder("")
 						.append(ChatColor.BLUE).append("Players since last join: ")
 						.append(ChatColor.GRAY).append(iterator.next());
 	
+				int numShown = 1;
 				String pName = null;
 				while(iterator.hasNext() && !name.equals(pName=iterator.next())){
+					if(numShown == MAX_RECENT_JOINS_SHOWN) break;
 					builder.append(ChatColor.BLUE).append(", ").append(ChatColor.GRAY).append(pName);
+					++numShown;
 				}
 				builder.append(ChatColor.BLUE);
 				if(name.equals(pName)){
@@ -147,17 +151,17 @@ public class PlayerLoginListener implements Listener{
 
 		//--- Economy -------------------------------------------------
 		if(offP.hasPlayedBefore()){
-			if(dailyMoney != 0){
+			if(DAILY_LOGIN_MONEY != 0){
 				long lastLogin = offP.getLastPlayed() / 86400000;
 				long lastMidnight = new GregorianCalendar().getTimeInMillis() / 86400000;
 
-				if(lastLogin < lastMidnight && eco.serverToPlayer(uuid, dailyMoney)){
+				if(lastLogin < lastMidnight && eco.serverToPlayer(uuid, DAILY_LOGIN_MONEY)){
 					//tell them about giving money
 					new BukkitRunnable(){@Override public void run(){
 						OfflinePlayer p = plugin.getServer().getPlayer(uuid);
 						if(announceDailyMoney) plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + 
 								(p.isOnline() ? p.getPlayer().getDisplayName() : p.getName())
-								+ ChatColor.GREEN + " received " + ChatColor.YELLOW + dailyMoney+curSymbol
+								+ ChatColor.GREEN + " received " + ChatColor.YELLOW + DAILY_LOGIN_MONEY+curSymbol
 								+ ChatColor.GREEN + " for logging on today!");
 					}}.runTaskLater(plugin, 10);//.5s
 				}
