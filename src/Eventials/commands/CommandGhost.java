@@ -20,7 +20,7 @@ public class CommandGhost extends EvCommand{
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
-	@SuppressWarnings("deprecation") @Override
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		Player p;
 		if(args.length > 0) p = Eventials.getPlugin().getServer().getPlayer(args[0]);

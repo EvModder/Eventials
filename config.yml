@@ -408,7 +408,7 @@ ping-messages:
   - ''
   - 'Wazzup %name%?'
   - ''
-  - 'Press [refresh] for more random ping messages!'
+  - 'Press &fRefresh&r for more random ping messages!'
   - 'Yeet a bug'
   - ''
   - 'Chicken Fried Steak'

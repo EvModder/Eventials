@@ -146,6 +146,9 @@ public class PlayerLoginListener implements Listener{
 					if(player != null) player.sendMessage(message);
 				}}.runTaskLater(plugin, 5); //5 ticks
 				recentJoins.add(name);
+
+				// Remove lingering duplicates
+				while(iterator.hasNext()) if(iterator.next().equals(pName)) iterator.remove();
 			}
 		}
 

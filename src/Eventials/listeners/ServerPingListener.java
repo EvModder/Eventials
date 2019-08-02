@@ -19,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 
 import Eventials.Eventials;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class ServerPingListener implements Listener{
 	private Eventials plugin;
@@ -40,7 +41,8 @@ public class ServerPingListener implements Listener{
 		List<String> msgs = plugin.getConfig().getStringList("ping-messages");
 		pingMsgs = new String[msgs.size()];
 		int i=-1;
-		for(String msg : msgs) pingMsgs[++i] = ChatColor.translateAlternateColorCodes('&', msg);
+		String pingMsgColor = TextUtils.getCurrentColorAndFormat(pingPrefix);
+		for(String msg : msgs) pingMsgs[++i] = TextUtils.translateAlternateColorCodes('&', msg, pingMsgColor);
 
 		blacklistIPs = new HashSet<String>(); blacklistIPs.addAll(plugin.getConfig().getStringList("blacklisted-ips"));
 
