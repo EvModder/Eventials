@@ -31,7 +31,7 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 
 public class AC_New implements Listener{
-	private final HashSet<Pair<Integer,Integer>> modChunks = new HashSet<Pair<Integer, Integer>>();
+	private final HashSet<Pair<Integer,Integer>> modChunks;
 	private final Eventials pl;
 	private final RenewableAPI renewableAPI;
 	final boolean fancyPl;
@@ -41,10 +41,12 @@ public class AC_New implements Listener{
 		renewableAPI = ((Renewable)pl.getServer().getPluginManager().getPlugin("Renewable")).getAPI();
 		fancyPl = pl.getConfig().getBoolean("fancy-pl", true);
 		pl.getServer().getPluginManager().registerEvents(this, pl);
+		modChunks = new HashSet<Pair<Integer, Integer>>();
 		loadModChunks();
 	}
 
 	void loadModChunks(){
+		modChunks.clear();
 		for(String chunk : FileIO.loadFile("leafdecaychunks.txt", "").split(" ")){
 			int i = chunk.indexOf(',');
 			if(i != -1){

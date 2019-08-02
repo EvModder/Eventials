@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 
@@ -27,21 +28,7 @@ public class PlayerSleepListener implements Listener{
 		ONLY_SKIP_IF_NIGHT = pl.getConfig().getBoolean("only-skip-if-nighttime", true);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerSleep(PlayerBedEnterEvent evt){
-		if(evt.isCancelled()) return;
-		if(ONLY_SKIP_IF_NIGHT){
-			long time = evt.getPlayer().getWorld().getTime();
-			if(time < BED_ENTER_START_TICK || time > BED_ENTER_END_TICK) return;
-		}
-		int numInWorld =  evt.getPlayer().getWorld().getPlayers().size();
-		int numSleeping = 1;
-		for(Player player : evt.getPlayer().getWorld().getPlayers()){
-			if(player.isSleeping() && !player.getName().equals(evt.getPlayer().getName())) ++numSleeping;
-			if(!INCLUDE_GM3 && player.getGameMode() == GameMode.SPECTATOR) --numInWorld;
-			else if(!INCLUDE_GM1 && player.getGameMode() == GameMode.CREATIVE) --numInWorld;
-		}
-		final UUID worldId = evt.getPlayer().getWorld().getUID();
+	void attemptSkips(UUID worldId, int numSleeping, int numInWorld){
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT)){
 			new BukkitRunnable(){@Override public void run(){
 				World world = pl.getServer().getWorld(worldId);
@@ -61,5 +48,40 @@ public class PlayerSleepListener implements Listener{
 				if(world.isThundering()) world.setThundering(false);
 			}}.runTaskLater(Eventials.getPlugin(), 200);
 		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerSleep(PlayerBedEnterEvent evt){
+		if(evt.isCancelled()) return;
+		if(ONLY_SKIP_IF_NIGHT){
+			long time = evt.getPlayer().getWorld().getTime();
+			if(time < BED_ENTER_START_TICK || time > BED_ENTER_END_TICK) return;
+		}
+		int numInWorld = evt.getPlayer().getWorld().getPlayers().size();
+		int numSleeping = 1;
+		for(Player player : evt.getPlayer().getWorld().getPlayers()){
+			if(player.getName().equals(evt.getPlayer().getName())) continue;
+			if(player.isSleeping()) ++numSleeping;
+			if(!INCLUDE_GM3 && player.getGameMode() == GameMode.SPECTATOR) --numInWorld;
+			else if(!INCLUDE_GM1 && player.getGameMode() == GameMode.CREATIVE) --numInWorld;
+		}
+		attemptSkips(evt.getPlayer().getWorld().getUID(), numSleeping, numInWorld);
+	}
+
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent evt){
+		if(ONLY_SKIP_IF_NIGHT){
+			long time = evt.getPlayer().getWorld().getTime();
+			if(time < BED_ENTER_START_TICK || time > BED_ENTER_END_TICK) return;
+		}
+		int numInWorld = 0;
+		int numSleeping = 0;
+		for(Player player : evt.getPlayer().getWorld().getPlayers()){
+			if(player.getName().equals(evt.getPlayer().getName())) continue;
+			if(player.isSleeping()) ++numSleeping;
+			if((INCLUDE_GM3 || player.getGameMode() != GameMode.SPECTATOR) && 
+				(INCLUDE_GM1 || player.getGameMode() != GameMode.CREATIVE)) ++numInWorld;
+		}
+		attemptSkips(evt.getPlayer().getWorld().getUID(), numSleeping, numInWorld);
 	}
 }
