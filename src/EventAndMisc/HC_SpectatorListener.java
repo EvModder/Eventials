@@ -23,10 +23,10 @@ import Eventials.Eventials;
 import net.evmodder.EvLib.extras.ActionBarUtils;
 
 public class HC_SpectatorListener implements Listener{
-	final Eventials pl;
-	final HashSet<UUID> spectators;
-	final int MAX_DIST_SQ = 32*32;
-	final float FLY_SPEED = 0.1f;
+	static Eventials pl;
+	static HashSet<UUID> spectators;
+	final static int MAX_DIST_SQ = 32*32;
+	final static float FLY_SPEED = 0.1f;
 
 	public HC_SpectatorListener(){
 		pl = Eventials.getPlugin();
@@ -56,8 +56,8 @@ public class HC_SpectatorListener implements Listener{
 		return closest != null ? closest : (points.isEmpty() ? null : points.iterator().next());
 	}
 
-	boolean loopActive = false;
-	void runSpecatorLoop(){
+	static boolean loopActive = false;
+	static void runSpecatorLoop(){
 		if(loopActive) return;
 		loopActive = true;
 		new BukkitRunnable(){@SuppressWarnings("unchecked") @Override public void run(){
@@ -139,7 +139,7 @@ public class HC_SpectatorListener implements Listener{
 		}}.runTaskTimer(pl, 20, 20);
 	}
 
-	public void addSpectator(Player player){
+	public static void addSpectator(Player player){
 		if(spectators.add(player.getUniqueId())){
 			pl.getLogger().info("Added spectator: "+player.getName());
 			player.setFlySpeed(FLY_SPEED);

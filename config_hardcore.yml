@@ -262,7 +262,7 @@ auto-messages:
        are shown in TAB, sidebar, and under player names
   - |
        The 3 stats for which you can win prizes are:
-       (&71&r) Number of Advancements, (&72&r) XP Levels,
+       (&71&r) Number of &bAdvancements=>https://minecraft.gamepedia.com/Tutorials/Advancement_guide&r, (&72&r) XP Levels,
        and (&73&r) # of Player Kills :o
   - 'Death-trapping End portals is bannable'
   - 'You get ONE /tpa, /tpahere, and /tpaccept. Use wisely!'
@@ -321,11 +321,11 @@ auto-messages:
 ping-messages:
   - ''
   - 'Wazzup %name%?'
-  - 'Event ongoing, prizes to be awarded August 1st!'
+  - 'Event ongoing, prizes to be awarded August 30th!'
   - 'Omae Wa Mou Shindeiru'
   - 'Event ongoing til August 25th'
   - ''
-  - 'Press [refresh] for more random ping messages!'
+  - 'Press &fRefresh&r for more random ping messages!'
   - 'Yeet a bug'
   - 'Win up to $60 cash by August 25th!'
   - ''

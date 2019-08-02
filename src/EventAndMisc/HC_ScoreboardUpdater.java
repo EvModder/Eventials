@@ -1,31 +1,26 @@
 package EventAndMisc;
 
 import java.util.HashSet;
-import java.util.UUID;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLevelChangeEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvUtils;
 
 public class HC_ScoreboardUpdater implements Listener{
 	final HashSet<String> included;
-	final Scoreboard emptyBoard;
+	//final Scoreboard emptyBoard;
 	final Eventials pl;
 
 	public HC_ScoreboardUpdater(){
 		pl = Eventials.getPlugin();
 		included = new HashSet<String>();
 		included.addAll(pl.getConfig().getStringList("advancements-included"));
-		emptyBoard = pl.getServer().getScoreboardManager().getNewScoreboard();
+		//emptyBoard = pl.getServer().getScoreboardManager().getNewScoreboard();
 		pl.getServer().getPluginManager().registerEvents(this, pl);
 	}
 
@@ -46,7 +41,8 @@ public class HC_ScoreboardUpdater implements Listener{
 	}
 
 	void addObjectiveAndTeam(Player player, int numAdvancements){
-		player.getScoreboard().getObjective("advancements").getScore(player.getName()).setScore(numAdvancements);
+		pl.getServer().getScoreboardManager().getMainScoreboard().getObjective("advancements")
+			.getScore(player.getName()).setScore(numAdvancements);
 
 		String oldTeamName = getAdvancementTeamName(numAdvancements-1);
 		Team oldTeam = player.getScoreboard().getTeam(oldTeamName);
@@ -65,7 +61,7 @@ public class HC_ScoreboardUpdater implements Listener{
 		addObjectiveAndTeam(evt.getPlayer(), advancements);
 	}
 
-	@EventHandler
+/*	@EventHandler
 	public void onLevelUp(PlayerLevelChangeEvent evt){
 		Scoreboard board = pl.getServer().getScoreboardManager().getMainScoreboard();
 		evt.getPlayer().setScoreboard(board);
@@ -84,5 +80,5 @@ public class HC_ScoreboardUpdater implements Listener{
 			Player player = pl.getServer().getPlayer(uuid);
 			if(player != null) player.setScoreboard(emptyBoard);
 		}}.runTaskLater(pl, 20*10);
-	}
+	}*/
 }

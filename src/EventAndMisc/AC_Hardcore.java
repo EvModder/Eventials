@@ -190,7 +190,7 @@ public class AC_Hardcore implements Listener{
 		File deathDir = new File("./plugins/EvFolder/deaths/"+name);
 		if(!deathDir.exists()) return "N/A";
 		File[] files = deathDir.listFiles();
-		if(files.length == 0) return "N/A";
+		if(files.length == 0) return "Unknown";
 		String lastDeath = files[0].getName();
 		for(File file : files) if(file.getName().compareTo(lastDeath) > 0) lastDeath = file.getName();
 		return lastDeath;
@@ -444,10 +444,11 @@ public class AC_Hardcore implements Listener{
 	@EventHandler @SuppressWarnings("deprecation")
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){
 		if(evt.getMessage().charAt(0) != '/') return;
-		String command = evt.getMessage().toLowerCase();
+		String command = evt.getMessage().toLowerCase().trim();
 		int space = command.indexOf(' ');
 		command = (space > 0 ? command.substring(1, space) : command.substring(1));
 		Player player = evt.getPlayer();
+		evt.setMessage(evt.getMessage().trim());
 
 		if(command.equals("pl") || command.equals("plugins") || command.equals("?")){
 			if(fancyPl && player.hasPermission("bukkit.command.plugins")){
@@ -481,7 +482,7 @@ public class AC_Hardcore implements Listener{
 				player.sendMessage(ChatColor.GRAY+"/color #");
 			}
 			else{
-				String colorCh = evt.getMessage().substring(space+1).replaceAll("&", "");
+				String colorCh = evt.getMessage().substring(space+1).trim().replaceAll("&", "");
 				if(colorCh.length() > 1){
 					player.sendMessage(ChatColor.GRAY+"Please provide just a single character");
 				}
@@ -502,8 +503,10 @@ public class AC_Hardcore implements Listener{
 		}
 		else if(command.equals("seen")){
 			if(player.hasPermission("essentials.seen") && space > 0){
-				OfflinePlayer target = pl.getServer().getOfflinePlayer(evt.getMessage().substring(space + 1));
-				if(target != null && target.hasPlayedBefore()){
+				String name = evt.getMessage().substring(space + 1);
+				OfflinePlayer target = pl.getServer().getOfflinePlayer(name);
+				if(target != null){
+					pl.getLogger().info("Target player: "+target.getName());
 					final String lastDeath = getLastDeath(target.getName());
 					final UUID uuid = player.getUniqueId();
 					new BukkitRunnable(){@Override public void run(){
@@ -512,6 +515,7 @@ public class AC_Hardcore implements Listener{
 										ChatColor.RED+lastDeath);
 					}}.runTaskLater(pl, 2);
 				}
+				else pl.getLogger().info("Unknown player: '"+name+"'");
 			}
 		}
 		else if(command.equals("tp")) {
@@ -535,7 +539,7 @@ public class AC_Hardcore implements Listener{
 				evt.setCancelled(true);
 			}
 			else{
-				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
+				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1).trim());
 				if(space < 0 || target == null){
 					player.sendMessage(ChatColor.RED+"Please specify who to tpa to "+ChatColor.UNDERLINE+"exactly");
 					evt.setCancelled(true);
@@ -557,7 +561,7 @@ public class AC_Hardcore implements Listener{
 				evt.setCancelled(true);
 			}
 			else{
-				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
+				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1).trim());
 				if(space < 0 || target == null){
 					player.sendMessage(ChatColor.RED+"Please specify who to tpahere "+ChatColor.UNDERLINE+"exactly");
 					evt.setCancelled(true);
@@ -578,7 +582,7 @@ public class AC_Hardcore implements Listener{
 				evt.setCancelled(true);
 			}
 			else{
-				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1));
+				Player target = pl.getServer().getPlayer(evt.getMessage().substring(space+1).trim());
 				if(space < 0 || target == null){
 					player.sendMessage(ChatColor.RED+"Please specify the player whose request you are accepting");
 					evt.setCancelled(true);
@@ -600,10 +604,6 @@ public class AC_Hardcore implements Listener{
 		evt.getEntity().addScoreboardTag("dead");
 		pl.getLogger().warning("Death of "+name+": "+evt.getDeathMessage());
 
-		//evt.getEntity().kickPlayer("" + ChatColor.RED + ChatColor.BOLD + "You died");
-		new BukkitRunnable(){@Override public void run(){
-			pl.runCommand("tempban " + name + " 1m1s " + ChatColor.GOLD + "Died in hardcore beta");
-		}}.runTaskLater(pl, 5);
 		new BukkitRunnable(){@Override public void run(){
 			String dateStr = new SimpleDateFormat("yyy-MM-dd").format(new Date());
 			String deathDir = "./plugins/EvFolder/deaths";
@@ -619,7 +619,13 @@ public class AC_Hardcore implements Listener{
 			new File(deathDir).mkdir();
 			pl.getLogger().warning("Copying playerdata for "+name+"...");
 			if(!copyPlayerdata(uuid, deathDir)) pl.getLogger().severe("Copy faied");
-		}}.runTaskLater(pl, 20 * 10);
+		}}.runTaskLater(pl, 20 * 2);
+
+		// Kick after 2 minutes (to prevent item despawn) if they still haven't respawned
+		new BukkitRunnable(){@Override public void run(){
+			evt.getEntity().kickPlayer(ChatColor.RED + "Died in hardcore:"
+									+ChatColor.RESET+"\n"+evt.getDeathMessage());
+		}}.runTaskLater(pl, 20 * 120);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -629,7 +635,8 @@ public class AC_Hardcore implements Listener{
 		Player receiver = null;
 		double closestDist = 100;
 		for(Player player : pl.getServer().getOnlinePlayers()){
-			if(player.getLocation().distance(evt.getTo()) < closestDist){
+			if(player.getWorld().getName().equals(evt.getTo().getWorld().getName())
+					&& player.getLocation().distance(evt.getTo()) < closestDist){
 				receiver = player;
 				closestDist = player.getLocation().distance(evt.getTo());
 			}
