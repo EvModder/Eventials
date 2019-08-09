@@ -16,6 +16,7 @@ public class AC_Hardcore implements Listener{
 	public AC_Hardcore(){
 		pl = Eventials.getPlugin();
 		fancyPl = pl.getConfig().getBoolean("fancy-pl", true);
+		pl.getServer().getPluginManager().registerEvents(this, pl);
 	}
 
 	ChatColor enableTest(String pluginName){
@@ -55,7 +56,7 @@ public class AC_Hardcore implements Listener{
 		command = (space > 0 ? command.substring(1, space) : command.substring(1));
 		Player player = evt.getPlayer();
 
-		if(command.equals("pl") || command.equals("plugins") || command.equals("?")){
+		if(command.equals("pl") || command.equals("plugins")){
 			if(fancyPl && player.hasPermission("bukkit.command.plugins")){
 				evt.setCancelled(true);
 				showFancyPlugins(player);

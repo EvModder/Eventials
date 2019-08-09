@@ -246,43 +246,45 @@ auto-messages:
        There may still be adjustments to mechanics
   - |
        We have an ongoing stats challenge!
-       Top players (on Aug 25th) will receive a &aprize=>&7Choice of 20USD or a unique in-game reward!&r!
-  - |
-       As part of &bBETA&r, be prepared for tweaks, fixes,
-       and possibly even map restarts during this time.
+       Top players (on Aug 25th) will receive a &aprize=>&750USD and a unique in-game reward!&r!
+  - 'As part of &bBETA&r, expect periodic tweaks'
   - 'Teaming is encouraged, but always be cautious!'
   - 'Remember, anyone can join- be careful around others!'
   - |
        For the opening of Hardcore, we're hosting an Event!
-       Top players in each of 3 objectives win a prize!
+       Top players in each of 3 objectives win a &aprize=>&750USD and a unique in-game reward!&r!
   - 'Beware public locations such as x=0,z=0 and The End!'
   - 'Feeling plain? Try &2/color&r!'
+  - 'Check the horse leaderboard at &2/hm top&r!'
   - |
-       The statistics that determine the prize-winners
-       are shown in TAB, sidebar, and under player names
-  - |
-       The 3 stats for which you can win prizes are:
-       (&71&r) Number of &bAdvancements=>https://minecraft.gamepedia.com/Tutorials/Advancement_guide&r, (&72&r) XP Levels,
-       and (&73&r) # of Player Kills :o
-  - 'Death-trapping End portals is bannable'
-  - 'You get ONE /tpa, /tpahere, and /tpaccept. Use wisely!'
+       There are 3 ongoing contests:
+       (&71&r) Number of &bAdvancements=>https://minecraft.gamepedia.com/Tutorials/Advancement_guide&r,
+       (&72&r) XP Levels, and (&73&r) Quality of base
+  - 'Death-trapping End portals is against the rules'
+  - 'You can only teleport each person once per life!'
   - |
        Periodically, custom server &aEvents=>&7What got AlternateCraft started!&r will be held!
        Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
-  - '&4[&c&lWarning&4]&r Unused terrain may be periodically reset!'
-  - 'Griefing is generally discouraged'
-  - |
-       Exploring generates new chunks.
-       When Minecraft updates, new terrain and features
-       &owill not be present&r in those chunks!
+  - '&4[&c&lWarning&4]&r Unused chunks may be periodically reset!'
+#  - 'Griefing is generally discouraged'
+#  - |
+#       Exploring generates new chunks.
+#       When Minecraft updates, new terrain and features
+#       &owill not be present&r in those chunks!
+#  - |
+#       The Nether Roof is an excellent way to travel!
+#       See &bthis tutorial=>xxx&r for how to get there!
+#  - |
+#       Heard of EnderPorters? Store enderpearls in a water-
+#       column for vanilla teleportation! &bTutorial link=>xxx&r
   - |
        Sick of survival?
        Try out the &aCreative&r world!
   - 'Curious about your horse? Check out &2/hm'
-  - 'Ye like? Ye support? &2/vote&r for links!'
+  - 'Ye like? &2/vote&r for links!'
   - 'Funding help isn''t required, but is always appreciated :)'
-  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
-  - 'Suggestions always welcome!'
+#  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
+  - 'Suggestions are always welcome!'
   - 'Please check &2/rules&r periodically for updates'
   - 'Sharing server IPs is fine, but &nno soliciting&r please'
   - 'Staff are here to help, so ask away!'
@@ -296,7 +298,7 @@ auto-messages:
 #       We recommend the &6LithosCore&r texture pack-
 #       You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
   - 'YouTuber? Promote your channel, ask for the prefix!'
-  - 'Found a bug? &2/mail Admin&r so we can fix it!'
+  - 'Found a bug? Let us know so it can be fixed :)'
 #  - 'See a &2/green&r command? Click it to run it!'
 #  - |
 #       Many commands have aliases!
@@ -305,29 +307,28 @@ auto-messages:
 #      Some ugly base in your way that needs to be taken down?
 #      Please ask a staff member to get the thumbs up!
   - '(disabled) Want to see an epic world map? Visit Dynmap!'
-  - 'Event schedule (irregularly) posted on our &bwebsite=>http://www.altcraft.net/events/schedule'
+  - 'Event schedule (irregularly) posted on the &bwebsite=>http://www.altcraft.net/events/schedule'
 #  - |
 #       Have something important to tell? Looking for ways
 #       to promote your &d@Marketplace&r shop? Try &2/advertise&r!
   - '@ Server admins: Avoid &cClearLagg&r, it sucks!'
   - |
        We believe in server transparency!
-       Check out &2/pl&r or the &bplugins page=>http://www.altcraft.net/plugins&r of the website
-       Remember, suggestions are always welcome!
-  - 'I used to be indecisive. Now I''m not sure...'
-  - '&c&lPro Tip:&r&o don''t eat the yellow snow'
+       Check out &2/pl&r or the &bplugins page=>http://www.altcraft.net/plugins&r on the website
+#  - 'I used to be indecisive. Now I''m not sure...'
+#  - '&c&lPro Tip:&r&o don''t eat the yellow snow'
   - 'Check out other worlds and gamemodes with &2/server'
 
 ping-messages:
   - ''
   - 'Wazzup %name%?'
-  - 'Event ongoing, prizes to be awarded August 30th!'
+  - 'Event ongoing, prizes to be awarded August 25th!'
   - 'Omae Wa Mou Shindeiru'
   - 'Event ongoing til August 25th'
   - ''
   - 'Press &fRefresh&r for more random ping messages!'
   - 'Yeet a bug'
-  - 'Win up to $60 cash by August 25th!'
+  - 'Win up to $150 cash by August 25th!'
   - ''
   - 'Chicken Fried Steak'
   - 'A Minecraft Server'
@@ -339,7 +340,7 @@ ping-messages:
   - ''
   - 'Hey %name%, wanna drop by today? :D'
   - '&oMarketplace!'
-  - 'Challenge 3/3: Most players killed! :o'
+  - 'Challenge 3/3: Highest quality base'
   - ''
   - '&oPlots world coming "soon"!'
   - 'Now with additional lag!'
@@ -347,7 +348,6 @@ ping-messages:
   - ''
   - '&oPeriodic Events!'
   - 'Suggestions welcome!'
-  - 'Goal 3/3 may get replaced, final decision by Aug 1'
   - ''
   - 'Press [refresh] for more random messages!'
   - '&ohard'

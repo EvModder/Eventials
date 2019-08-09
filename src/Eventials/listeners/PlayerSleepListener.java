@@ -1,5 +1,6 @@
 package Eventials.listeners;
 
+import java.util.HashSet;
 import java.util.UUID;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -11,11 +12,13 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class PlayerSleepListener implements Listener{
 	final double SKIP_NIGHT_PERCENT, SKIP_STORM_PERCENT, SKIP_THUNDER_PERCENT;
 	final long BED_ENTER_START_TICK = 12540, BED_ENTER_END_TICK = 23460;
 	final boolean INCLUDE_GM3, INCLUDE_GM1, ONLY_SKIP_IF_NIGHT;
+	final HashSet<UUID> skipNightWorlds, skipStormWorlds, skipThunderWorlds;
 	final Eventials pl;
 
 	public PlayerSleepListener(){
@@ -26,26 +29,35 @@ public class PlayerSleepListener implements Listener{
 		INCLUDE_GM3 = pl.getConfig().getBoolean("count-gm3-in-sleep-required", false);
 		INCLUDE_GM1 = pl.getConfig().getBoolean("count-gm1-in-sleep-required", false);
 		ONLY_SKIP_IF_NIGHT = pl.getConfig().getBoolean("only-skip-if-nighttime", true);
+		skipNightWorlds = new HashSet<UUID>();
+		skipStormWorlds = new HashSet<UUID>();
+		skipThunderWorlds = new HashSet<UUID>();
 	}
 
 	void attemptSkips(UUID worldId, int numSleeping, int numInWorld){
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT)){
+			if(skipNightWorlds.add(worldId))
 			new BukkitRunnable(){@Override public void run(){
 				World world = pl.getServer().getWorld(worldId);
 				long Relative_Time = 24000 - world.getTime();
 				world.setFullTime(world.getFullTime() + Relative_Time);
+				skipNightWorlds.remove(worldId);
 			}}.runTaskLater(Eventials.getPlugin(), 200);
 		}
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_STORM_PERCENT)){
+			if(skipStormWorlds.add(worldId))
 			new BukkitRunnable(){@Override public void run(){
 				World world = pl.getServer().getWorld(worldId);
 				if(world.hasStorm()) world.setStorm(false);
+				skipStormWorlds.remove(worldId);
 			}}.runTaskLater(Eventials.getPlugin(), 200);
 		}
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_THUNDER_PERCENT)){
+			if(skipThunderWorlds.add(worldId))
 			new BukkitRunnable(){@Override public void run(){
 				World world = pl.getServer().getWorld(worldId);
 				if(world.isThundering()) world.setThundering(false);
+				skipThunderWorlds.remove(worldId);
 			}}.runTaskLater(Eventials.getPlugin(), 200);
 		}
 	}
@@ -65,6 +77,9 @@ public class PlayerSleepListener implements Listener{
 			if(!INCLUDE_GM3 && player.getGameMode() == GameMode.SPECTATOR) --numInWorld;
 			else if(!INCLUDE_GM1 && player.getGameMode() == GameMode.CREATIVE) --numInWorld;
 		}
+		int numToSkipNight = (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT);
+		evt.getPlayer().sendMessage(TextUtils.translateAlternateColorCodes('&',
+				"&b"+numSleeping+" &8/&6 "+numToSkipNight+" &8/&7 "+numInWorld));
 		attemptSkips(evt.getPlayer().getWorld().getUID(), numSleeping, numInWorld);
 	}
 

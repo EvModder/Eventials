@@ -92,7 +92,7 @@ public class PlayerLoginListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerLoginEvent login){
 		final UUID uuid = login.getPlayer().getUniqueId();
-		String name = login.getPlayer().getName();
+		final String name = login.getPlayer().getName();
 		OfflinePlayer offP = plugin.getServer().getOfflinePlayer(uuid);
 
 		//--- Messenger -----------------------------------------------
@@ -145,10 +145,14 @@ public class PlayerLoginListener implements Listener{
 					Player player = plugin.getServer().getPlayer(uuid);
 					if(player != null) player.sendMessage(message);
 				}}.runTaskLater(plugin, 5); //5 ticks
-				recentJoins.add(name);
 
 				// Remove lingering duplicates
-				while(iterator.hasNext()) if(iterator.next().equals(pName)) iterator.remove();
+				while(iterator.hasNext()){
+					pName = iterator.next();
+					if(name.equals(pName)) iterator.remove();
+				}
+				// Add to very end
+				recentJoins.addLast(name);
 			}
 		}
 

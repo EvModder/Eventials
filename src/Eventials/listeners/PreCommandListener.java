@@ -162,7 +162,7 @@ public class PreCommandListener implements Listener {
 		else if(command.equals("/butcher2")){
 			evt.setMessage(message.replace(command, "/butcher"));
 		}
-		else if(command.equals("/help")){
+		else if(command.equals("/help") || command.equals("/?")){
 			int space = message.indexOf(' ');
 			if(space != -1 && cmdHelp){
 				Command cmd = plugin.getServer().getPluginCommand(message.substring(space+1));

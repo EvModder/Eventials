@@ -170,7 +170,7 @@ public class AC_New implements Listener{
 			evt.getPlayer().sendMessage("Instead, use a bed to set your "+ChatColor.AQUA+"/home");
 			evt.setCancelled(true);
 		}
-		else if(command.equals("/pl") || command.equals("/plugins") || command.equals("/?")){
+		else if(command.equals("/pl") || command.equals("/plugins")){
 			if(fancyPl && evt.getPlayer().hasPermission("bukkit.command.plugins")){
 				evt.setCancelled(true);
 				showFancyPlugins(evt.getPlayer());
