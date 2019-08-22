@@ -55,7 +55,7 @@ only-skip-if-nighttime: true
 
 inactive-days-until-player-delete: 200
 #TODO: Advancements checker is broken
-keep-if-has-x-advancements: 100
+keep-if-has-x-advancements: 20
 keep-if-time-played-outweighs-time-inactive: true
 keep-if-above-starting-balance: true
 keep-if-whitelisted: true

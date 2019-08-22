@@ -44,7 +44,8 @@ public class ServerPingListener implements Listener{
 		String pingMsgColor = TextUtils.getCurrentColorAndFormat(pingPrefix);
 		for(String msg : msgs) pingMsgs[++i] = TextUtils.translateAlternateColorCodes('&', msg, pingMsgColor);
 
-		blacklistIPs = new HashSet<String>(); blacklistIPs.addAll(plugin.getConfig().getStringList("blacklisted-ips"));
+		blacklistIPs = new HashSet<String>();
+		blacklistIPs.addAll(plugin.getConfig().getStringList("blacklisted-ips"));
 
 		try{
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -67,7 +68,7 @@ public class ServerPingListener implements Listener{
 	}
 
 	public String getDateSpecificPing(){
-		if(holidays.isEmpty()) return "";
+		if(holidays.isEmpty()) return null;
 
 		GregorianCalendar date = new GregorianCalendar();
 		if(today == date.get(Calendar.DAY_OF_MONTH)) return todaysMsg;
@@ -94,7 +95,7 @@ public class ServerPingListener implements Listener{
 			}
 			else if(month == holiday.month && today == holiday.day) return (todaysMsg = holidays.get(holiday));
 		}
-		return todaysMsg = "";
+		return todaysMsg = null;
 	}
 
 	@EventHandler
@@ -110,7 +111,7 @@ public class ServerPingListener implements Listener{
 		// If no custom MOTD is set, then use the one in server.properties
 		if(motd == null || motd.isEmpty()){
 			String todaysMotd = getDateSpecificPing();
-			if(!todaysMotd.isEmpty()) motd = todaysMotd;
+			if(todaysMotd != null) motd = todaysMotd;
 			else{
 				short pingI = ping_idxs.containsKey(playerIP) ? ping_idxs.get(playerIP) : 0;
 

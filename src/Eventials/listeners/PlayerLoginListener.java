@@ -119,7 +119,9 @@ public class PlayerLoginListener implements Listener{
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
 
 		if(showRecentJoins){
-			if(recentJoins.isEmpty() || !offP.hasPlayedBefore()) recentJoins.add(name);
+			if(recentJoins.isEmpty() || !offP.hasPlayedBefore()){
+				if(!recentJoins.contains(name)) recentJoins.add(name);
+			}
 			else if(!recentJoins.peekLast().equals(name)){
 				Iterator<String> iterator = recentJoins.descendingIterator();
 				StringBuilder builder = new StringBuilder("")
