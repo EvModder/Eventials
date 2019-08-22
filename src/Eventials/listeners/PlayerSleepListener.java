@@ -79,7 +79,7 @@ public class PlayerSleepListener implements Listener{
 		}
 		int numToSkipNight = (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT);
 		evt.getPlayer().sendMessage(TextUtils.translateAlternateColorCodes('&',
-				"&b"+numSleeping+" &8/&6 "+numToSkipNight+" &8/&7 "+numInWorld));
+				"&b"+numSleeping+" &7of&6 "+numToSkipNight+" &8|&7 "+numInWorld));
 		attemptSkips(evt.getPlayer().getWorld().getUID(), numSleeping, numInWorld);
 	}
 
