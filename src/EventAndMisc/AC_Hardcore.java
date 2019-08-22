@@ -39,7 +39,7 @@ public class AC_Hardcore implements Listener{
 //			enableTest("PluginLoader")+"PluginLoader\\§f, \\" +
 			ChatColor.GREEN+"EvNoCheat\\§f, \\" +
 //			enableTest("PermissionsBukkit")+"PermissionsBukkit\\§f, \\" +
-			enableTest("BungeeTabListPlus")+"BungeeTabList\\§f, \\" +
+			enableTest("BungeeTabListPlus")+"TabList+\\§f, \\" +
 			enableTest("Votifier")+"Votifier§r" +
 			".\\\\n\\§7\\§oHover over a plugin to see more details!",
 			"§r"

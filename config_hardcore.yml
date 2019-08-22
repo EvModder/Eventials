@@ -137,15 +137,15 @@ scheduler-enabled: true
 clock-period: 60 #Default 60s per cycle
 
 #To disable a task, set its frequency to 0
-cycles-per-eventials-data-save: 2
-cycles-per-automessage: 5
+cycles-per-eventials-data-save: 12
+cycles-per-automessage: 3
 cycles-per-mob-clear: 0
 cycles-per-worldsave: 5
-cycles-per-player-delete: 1440
-cycles-per-magic-day-reward: 60
+cycles-per-player-delete: 0
+cycles-per-magic-day-reward: 0
 cycles-per-holiday-action: 5
 
-skip-automessage-if-other-event: true
+skip-automessage-if-other-event: false
 skip-automessage-if-no-chats: true
 
 #Remember usernames for personalized automsgs
@@ -169,7 +169,7 @@ prevent-multicraft-list-console-spam: false
 #--------------------------------------#
 #           EvSpawner config           #
 #--------------------------------------#
-evspawner-enabled: true
+evspawner-enabled: false
 require-silktouch: true
 stackable-spawners: true
 drop-monsteregg-blocks: true
@@ -251,6 +251,9 @@ auto-messages:
   - 'Teaming is encouraged, but always be cautious!'
   - 'Remember, anyone can join- be careful around others!'
   - |
+        Are you okay with everyone being able to spectate you?
+        If not, try out &2/spectate blacklist [name]
+  - |
        For the opening of Hardcore, we're hosting an Event!
        Top players in each of 3 objectives win a &aprize=>&750USD and a unique in-game reward!&r!
   - 'Beware public locations such as x=0,z=0 and The End!'
@@ -277,6 +280,8 @@ auto-messages:
 #  - |
 #       Heard of EnderPorters? Store enderpearls in a water-
 #       column for vanilla teleportation! &bTutorial link=>xxx&r
+  - 'Wanna see who''s died recently? &2/deathlog'
+  - 'To skip night, 50%+ of alive, overworld players must sleep'
   - |
        Sick of survival?
        Try out the &aCreative&r world!
@@ -289,6 +294,9 @@ auto-messages:
   - 'Sharing server IPs is fine, but &nno soliciting&r please'
   - 'Staff are here to help, so ask away!'
   - 'Slaughter is fun, so why not start a head collection? ;)'
+  - |
+        Want to make sure nobody can spectate you unless you give
+        them explicit permission to? &2/spectate mode whitelist
 #  - 'Want to compete? Drop off your stuff and head to &2/arenas&r!'
 #  - |
 #       Win the &nMarket Parkour&r for a stack of diamond blocks!
@@ -322,7 +330,7 @@ auto-messages:
 ping-messages:
   - ''
   - 'Wazzup %name%?'
-  - 'Event ongoing, prizes to be awarded August 25th!'
+  - 'Event prizes will be awarded end of August!'
   - 'Omae Wa Mou Shindeiru'
   - 'Event ongoing til August 25th'
   - ''
@@ -339,7 +347,6 @@ ping-messages:
   - 'Challenge 2/3: Most advancements completed'
   - ''
   - 'Hey %name%, wanna drop by today? :D'
-  - '&oMarketplace!'
   - 'Challenge 3/3: Highest quality base'
   - ''
   - '&oPlots world coming "soon"!'
