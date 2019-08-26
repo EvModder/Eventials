@@ -286,6 +286,9 @@ auto-messages:
        Sick of survival?
        Try out the &aCreative&r world!
   - 'Curious about your horse? Check out &2/hm'
+  - |
+       When you teleport someone, neither you nor they will be
+       able to teleport the other unless you both reset (die).
   - 'Ye like? &2/vote&r for links!'
   - 'Funding help isn''t required, but is always appreciated :)'
 #  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
@@ -295,7 +298,7 @@ auto-messages:
   - 'Staff are here to help, so ask away!'
   - 'Slaughter is fun, so why not start a head collection? ;)'
   - |
-        Want to make sure nobody can spectate you unless you give
+        Want to ensure nobody can spectate you unless you give
         them explicit permission to? &2/spectate mode whitelist
 #  - 'Want to compete? Drop off your stuff and head to &2/arenas&r!'
 #  - |

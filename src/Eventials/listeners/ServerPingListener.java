@@ -128,6 +128,25 @@ public class ServerPingListener implements Listener{
 						motd = motd.replace("%name%", "dude");
 					}
 				}
+				else{
+					//*
+					//=============================== TEMPORARY (Event Countdown) ===============================
+					long endMilli = 1566802800000L;
+					long millisLeft = endMilli - System.currentTimeMillis();
+					if(millisLeft < 0) millisLeft = 0;
+					long secondsLeft = millisLeft / 1000;
+					long minutesLeft = secondsLeft / 60;
+					long hoursLeft = minutesLeft / 60;
+					secondsLeft %= 60;
+					minutesLeft %= 60;
+					//hoursLeft %= 24;
+					String timeLeft = new StringBuilder("").append(ChatColor.DARK_GRAY).append('[')
+							.append(ChatColor.RED).append(hoursLeft).append(ChatColor.GRAY).append("h ")
+							.append(ChatColor.RED).append(minutesLeft).append(ChatColor.GRAY).append("m ")
+							.append(ChatColor.RED).append(secondsLeft).append(ChatColor.GRAY).append('s')
+							.append(ChatColor.DARK_GRAY).append(']').toString();
+					motd = "§7Time left until contest ends: "+(millisLeft > 0 ? timeLeft : "§cENDED");
+				}
 				++pingI; if(pingI == pingMsgs.length) pingI = 0;
 				ping_idxs.put(playerIP, pingI);
 			}
@@ -150,8 +169,8 @@ public class ServerPingListener implements Listener{
 		if(minute > 0)hour--;
 		if(second > 0)minute--;
 
-		String timeLeft = "�8[�7�c"+hour+"�7h �c"+minute+"�7m �c"+second+"�7s�8]";
-		if(hour < 0 || (hour == 0 && (minute < 0 || second < 0))) timeLeft = "�8[�c0�7s�8]";
+		String timeLeft = "§8[§7§c"+hour+"§7h §c"+minute+"§7m §c"+second+"§7s§8]";
+		if(hour < 0 || (hour == 0 && (minute < 0 || second < 0))) timeLeft = "§8[§c0§7s§8]";
 		String spaces = "                                ";
 		// 1 letter length = 2 spaces length
 		// the extra '-1' is just for extra space reasons and should generally be removed
@@ -160,7 +179,7 @@ public class ServerPingListener implements Listener{
 
 		evt.setMotd(title + spaces + timeLeft +
 		// Event Description here, comment it out to use normal MOTD set in server.properties
-				"\n �7�m�l-�a Mafia Event when timer hits 0!");
+				"\n §7§m§l-§a Mafia Event when timer hits 0!");
 */		//=====================================================================================================
 	}
 
