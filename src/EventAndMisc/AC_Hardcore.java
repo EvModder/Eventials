@@ -1,11 +1,17 @@
 package EventAndMisc;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.TextUtils;
 
@@ -48,6 +54,20 @@ public class AC_Hardcore implements Listener{
 	}
 
 	@EventHandler
+	public void onPreLogin(PlayerLoginEvent evt){
+		final UUID uuid = evt.getPlayer().getUniqueId();
+		OfflinePlayer offP = pl.getServer().getOfflinePlayer(uuid);
+		if(offP.getLastPlayed() <= 1566802800000L){
+			new BukkitRunnable(){@Override public void run(){
+				Player player = pl.getServer().getPlayer(uuid);
+				player.addScoreboardTag("event_participant");
+			}}.runTaskLater(pl, 20);
+			try{new File("./plugins/EvFolder/aug_evt/"+uuid+".txt").createNewFile();}
+			catch(IOException e){e.printStackTrace();}
+		}
+	}
+
+	@EventHandler
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){
 		if(evt.getMessage().charAt(0) != '/') return;
 		String message = evt.getMessage().trim();
@@ -61,6 +81,14 @@ public class AC_Hardcore implements Listener{
 				evt.setCancelled(true);
 				showFancyPlugins(player);
 			}
+		}
+		if(command.contains("add_participant") && evt.getPlayer().getName().equals("EvDoc")){
+			String name = message.split(" ")[1];
+			@SuppressWarnings("deprecation")
+			OfflinePlayer p = pl.getServer().getOfflinePlayer(name);
+			try{new File("./plugins/EvFolder/aug_evt/"+p.getUniqueId()+".txt").createNewFile();}
+			catch(IOException e){e.printStackTrace();}
+			evt.getPlayer().sendMessage("Added: "+p.getName()+" ("+p.getUniqueId()+")");
 		}
 	}
 }

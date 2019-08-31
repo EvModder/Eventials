@@ -244,25 +244,25 @@ auto-messages:
   - |
        Hardcore is still in &bBETA&r.
        There may still be adjustments to mechanics
-  - |
-       We have an ongoing stats challenge!
-       Top players (on Aug 25th) will receive a &aprize=>&750USD and a unique in-game reward!&r!
+#  - |
+#       We have an ongoing stats challenge!
+#       Top players (on Aug 25th) will receive a &aprize=>&750USD and a unique in-game reward!&r!
   - 'As part of &bBETA&r, expect periodic tweaks'
   - 'Teaming is encouraged, but always be cautious!'
   - 'Remember, anyone can join- be careful around others!'
   - |
         Are you okay with everyone being able to spectate you?
         If not, try out &2/spectate blacklist [name]
-  - |
-       For the opening of Hardcore, we're hosting an Event!
-       Top players in each of 3 objectives win a &aprize=>&750USD and a unique in-game reward!&r!
+#  - |
+#       For the opening of Hardcore, we're hosting an Event!
+#       Top players in each of 3 objectives win a &aprize=>&750USD and a unique in-game reward!&r!
   - 'Beware public locations such as x=0,z=0 and The End!'
   - 'Feeling plain? Try &2/color&r!'
   - 'Check the horse leaderboard at &2/hm top&r!'
-  - |
-       There are 3 ongoing contests:
-       (&71&r) Number of &bAdvancements=>https://minecraft.gamepedia.com/Tutorials/Advancement_guide&r,
-       (&72&r) XP Levels, and (&73&r) Quality of base
+#  - |
+#       There are 3 ongoing contests:
+#       (&71&r) Number of &bAdvancements=>https://minecraft.gamepedia.com/Tutorials/Advancement_guide&r,
+#       (&72&r) XP Levels, and (&73&r) Quality of base
   - 'Death-trapping End portals is against the rules'
   - 'You can only teleport each person once per life!'
   - |
@@ -333,28 +333,28 @@ auto-messages:
 ping-messages:
   - ''
   - 'Wazzup %name%?'
-  - 'Event prizes will be awarded end of August!'
+#  - 'Event prizes will be awarded end of August!'
   - 'Omae Wa Mou Shindeiru'
-  - 'Event ongoing til August 25th'
+#  - 'Event ongoing til August 25th'
   - ''
   - 'Press &fRefresh&r for more random ping messages!'
   - 'Yeet a bug'
-  - 'Win up to $150 cash by August 25th!'
+#  - 'Win up to $150 cash by August 25th!'
   - ''
   - 'Chicken Fried Steak'
   - 'A Minecraft Server'
-  - 'Challenge 1/3: Most experience levels'
+#  - 'Challenge 1/3: Most experience levels'
   - ''
   - '&oFreebuild creative!'
   - '&oCustom, Flat, and Vanilla worlds!'
-  - 'Challenge 2/3: Most advancements completed'
+#  - 'Challenge 2/3: Most advancements completed'
   - ''
   - 'Hey %name%, wanna drop by today? :D'
-  - 'Challenge 3/3: Highest quality base'
+#  - 'Challenge 3/3: Highest quality base'
   - ''
   - '&oPlots world coming "soon"!'
   - 'Now with additional lag!'
-  - 'Dying also resets your progress towards challenges!'
+#  - 'Dying also resets your progress towards challenges!'
   - ''
   - '&oPeriodic Events!'
   - 'Suggestions welcome!'

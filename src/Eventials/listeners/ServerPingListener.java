@@ -129,7 +129,7 @@ public class ServerPingListener implements Listener{
 					}
 				}
 				else{
-					//*
+					/*
 					//=============================== TEMPORARY (Event Countdown) ===============================
 					long endMilli = 1566802800000L;
 					long millisLeft = endMilli - System.currentTimeMillis();
@@ -145,7 +145,7 @@ public class ServerPingListener implements Listener{
 							.append(ChatColor.RED).append(minutesLeft).append(ChatColor.GRAY).append("m ")
 							.append(ChatColor.RED).append(secondsLeft).append(ChatColor.GRAY).append('s')
 							.append(ChatColor.DARK_GRAY).append(']').toString();
-					motd = "§7Time left until contest ends: "+(millisLeft > 0 ? timeLeft : "§cENDED");
+					motd = "§7Time left until contest ends: "+(millisLeft > 0 ? timeLeft : "§cENDED");//*/
 				}
 				++pingI; if(pingI == pingMsgs.length) pingI = 0;
 				ping_idxs.put(playerIP, pingI);
