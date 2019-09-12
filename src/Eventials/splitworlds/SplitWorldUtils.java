@@ -16,7 +16,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import Eventials.Eventials;
 import net.minecraft.server.v1_14_R1.EntityPlayer;
 
-public class SplitWorldUtils{
+public final class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
 	public static Collection<List<String>> findMatchGroups(List<String> strs, List<String> search, boolean strict){
 		HashSet<String> validSubs = null;
@@ -79,7 +79,7 @@ public class SplitWorldUtils{
 
 	public static boolean untrackedTeleport(final Player player, final Location destination, boolean skipInvCheck){
 		if(skipInvCheck){
-			player.setMetadata(SplitWorlds.SKIP_TP_INV_CHECK, new FixedMetadataValue(Eventials.getPlugin(), ""));
+			player.setMetadata(SplitWorlds.SKIP_TP_INV_CHECK_TAG, new FixedMetadataValue(Eventials.getPlugin(), ""));
 		}
 		/*Object playerHandle = methodGetEntityHandle.of(player).call();
 		Object tracker = methodGetTracker.of(methodGetWorldHandle.of(destination.getWorld()).call()).call();

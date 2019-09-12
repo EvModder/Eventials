@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,50 +13,43 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.logging.Logger;
 import org.apache.logging.log4j.util.Strings;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import Eventials.Eventials;
+import net.evmodder.EvLib.EvPlugin;
 import com.google.common.io.Files;
 
 public final class SplitWorlds{
-	final private Eventials plugin;
-	final private HashMap<String, String> sharedInvWorlds;
-	final String DEFAULT_WORLD;
-	final String DEFAULT_PLAYERDATA;
-	final static String SKIP_TP_INV_CHECK = "skipTeleportInvCheck";
-	final boolean removeDisease;
-	SplitWorldUtils utils;
+	final private EvPlugin plugin;
+	private static HashMap<String, String> sharedInvWorlds;
+	private static String DEFAULT_WORLD, DEFAULT_PLAYERDATA;
+	private static boolean TREAT_DISEASE;
+	final static String SKIP_TP_INV_CHECK_TAG = "skipTeleportInvCheck";
 
-	public SplitWorlds(Eventials pl){
-		plugin = pl;
-		removeDisease = pl.getConfig().getBoolean("vaccinate-players", true);
-
+	static String loadDefaultWorldName(Logger logger){
 		Properties properties = new Properties();
 		try{
 			final FileInputStream in = new FileInputStream("./server.properties");
 			properties.load(in); in.close();
 		}
 		catch(IOException ex){
-			plugin.getLogger().severe("Unable to read server.properties file!");
+			logger.severe("Unable to read server.properties file!");
 		}
-		DEFAULT_WORLD = properties.getProperty("level-name");
-		DEFAULT_PLAYERDATA = "./"+DEFAULT_WORLD+"/playerdata/";
-
-		File default_world_temp_data = new File("./"+DEFAULT_WORLD+"/playerdata_"+DEFAULT_WORLD+"/");
-		if(!default_world_temp_data.exists()) default_world_temp_data.mkdir();
-
+		return properties.getProperty("level-name");
+	}
+	public static void loadSharedInvMap(ConfigurationSection worldSettings, Logger logger){
 		sharedInvWorlds = new HashMap<String, String>();
-		ConfigurationSection worldSettings = plugin.getConfig().getConfigurationSection("shared-inv-worlds");
 		if(worldSettings != null){
 			List<String> worldNames = new ArrayList<String>();
-			plugin.getServer().getWorlds().forEach(w->worldNames.add(w.getName()));// yay lambdas!
+			org.bukkit.Bukkit.getWorlds().forEach(w -> worldNames.add(w.getName()));// yay lambdas!
 			final HashSet<String> primaryKeys1 = new HashSet<String>();
 			for(String w : worldNames){
-				File playerdataFolder = new File(getPlayerdataFolder(w, true));
+				File playerdataFolder = new File("./"+w+"/playerdata/");
 				if(playerdataFolder.exists() && playerdataFolder.list().length > 0) primaryKeys1.add(w);
 			}
 			final UnionFind<String> ufind = new UnionFind<String>();
@@ -63,7 +57,7 @@ public final class SplitWorlds{
 			final HashSet<String> primaryKeys2 = new HashSet<String>();
 			for(String groupName : worldSettings.getKeys(false)){
 				List<String> groupWorlds = worldSettings.getStringList(groupName);
-				plugin.getLogger().info("World group primary (in config): " + groupWorlds.get(0));
+				logger.info("World group primary (in config): " + groupWorlds.get(0));
 				primaryKeys2.add(groupWorlds.get(0));
 				ufind.insertSets(SplitWorldUtils.findMatchGroups(worldNames, groupWorlds, false));
 			}
@@ -73,8 +67,7 @@ public final class SplitWorlds{
 				for(String s : group){
 					if(primaryKeys1.contains(s)){
 						if(pKey1 != null){
-							pl.getLogger().warning(
-									"SharedInvGroup contains multiple worlds that have a /playerdata/ folder");
+							logger.warning("SharedInvGroup contains multiple worlds that have a /playerdata/ folder");
 							if(pKey1.equals(pKey2)){
 								if(primaryKeys2.contains(s) && s.length() < pKey1.length()) pKey1 = pKey2 = s;
 							}
@@ -84,69 +77,77 @@ public final class SplitWorlds{
 					else if(pKey1 == null && primaryKeys2.contains(s)) pKey2 = s;
 				}
 				String primaryWorld = pKey1 != null ? pKey1 : pKey2 != null ? pKey2 : group.get(0);
-				pl.getLogger().info("SharedInvGroup: ["+primaryWorld+"] -> ("+Strings.join(group, ',')+")");
+				logger.info("SharedInvGroup: ["+primaryWorld+"] -> ("+Strings.join(group, ',')+")");
 				for(String s : group) sharedInvWorlds.put(s, primaryWorld);
 			}
 			for(String world : worldNames){
 				if(!sharedInvWorlds.containsKey(world)) sharedInvWorlds.put(world, world);
 			}
 		}
+	}
+
+	public static void minimal_init(EvPlugin pl){
+		TREAT_DISEASE = pl.getConfig().getBoolean("vaccinate-players", true);
+
+		DEFAULT_WORLD = loadDefaultWorldName(pl.getLogger());
+		DEFAULT_PLAYERDATA = "./"+DEFAULT_WORLD+"/playerdata/";
+		File default_world_temp_data = new File("./"+DEFAULT_WORLD+"/playerdata_"+DEFAULT_WORLD+"/");
+		if(!default_world_temp_data.exists()) default_world_temp_data.mkdir();
+
+		if(pl.getConfig().isConfigurationSection("shared-inv-worlds")){
+			loadSharedInvMap(pl.getConfig().getConfigurationSection("shared-inv-worlds"), pl.getLogger());
+		}
+		else {
+			ConfigurationSection defaultGroups = new YamlConfiguration();
+			defaultGroups.set("default_group", Arrays.asList("*", "*_nether", "*_the_end"));
+			loadSharedInvMap(defaultGroups, pl.getLogger());
+		}
+	}
+	public SplitWorlds(EvPlugin pl){
+		plugin = pl;
+		minimal_init(pl);
 
 		plugin.getServer().getPluginManager().registerEvents(new TeleportListener(this), plugin);
 		plugin.getServer().getPluginManager().registerEvents(new RespawnListener(this), plugin);
 		new CommandEnderchest(plugin, this);
 		new CommandInvsee(plugin, this);
-		utils = new SplitWorldUtils();
 	}
 
-	public boolean inSharedInvGroup(String world1, String world2){
-		return sharedInvWorlds.containsKey(world1) &&
-				sharedInvWorlds.get(world1).equals(sharedInvWorlds.get(world2));
+	public static String getInvGroup(String worldName){
+		String mainWorldName = sharedInvWorlds.get(worldName);
+		return mainWorldName != null ? mainWorldName : worldName;
+	}
+	public static boolean inSharedInvGroup(String world1, String world2){
+		return getInvGroup(world1).equals(getInvGroup(world2));
+	}
+	public static String getCurrentInvGroup(UUID playerUUID){
+		File currentGroup = new File(DEFAULT_PLAYERDATA + playerUUID + ".group");
+		if(currentGroup == null || !currentGroup.exists()) return DEFAULT_WORLD;
+		try{return sharedInvWorlds.get(Files.readFirstLine(currentGroup, Charset.defaultCharset()));}
+		catch(IOException e){e.printStackTrace(); return null;}
 	}
 
-	public String getInvGroup(String worldName){
-		return sharedInvWorlds.containsKey(worldName) ? sharedInvWorlds.get(worldName) : worldName;
-	}
-
-	public String getPlayerdataFolder(String worldName, boolean ignoreShared){
-		String mainWorld = sharedInvWorlds.get(worldName);
-		if(ignoreShared || mainWorld == null || mainWorld.equals(worldName)){
-			return "./"+worldName+"/playerdata/";
-		}
-		return "./"+mainWorld+"/playerdata/";
-	}
-
-	public File getPlayerdata(UUID playerUUID, String worldName, boolean ignoreShared, boolean staticSource){
-		String useWorld = ignoreShared ? worldName : sharedInvWorlds.get(worldName);
-		if(useWorld == null) useWorld = worldName;
-
-		return (!staticSource && inSharedInvGroup(useWorld, getCurrentInvGroup(playerUUID))) ?
-				getMainPlayerdata(playerUUID)
-				: new File("./" + useWorld +
-						(useWorld.equals(DEFAULT_WORLD) ? "/playerdata_"+DEFAULT_WORLD+"/" : "/playerdata/")
-						+ playerUUID + ".dat");
-/*		// Logically equivalent
-		String subfolder = useWorld.equals(DEFAULT_WORLD) ? "/playerdata_"+DEFAULT_WORLD+"/" : "/playerdata/";
-		if(staticSource){
-			return new File("./" + useWorld + subfolder + playerUUID + ".dat");
-		}
-		else{
-			if(inSharedInvGroup(useWorld, getCurrentInvGroup(playerUUID))) return getMainPlayerdata(playerUUID);
-			else return new File("./" + useWorld + subfolder + playerUUID + ".dat");
-		}*/
-	}
-
-	public File getMainPlayerdata(UUID playerUUID){
+	public static File getCurrentPlayerdata(UUID playerUUID){
 		File dataFile = new File(DEFAULT_PLAYERDATA + playerUUID + ".dat");
 		return dataFile;
 	}
+	public static File getPlayerdata(UUID playerUUID, String worldName, boolean useShared, boolean useCurrent){
+		String useWorld = useShared ? sharedInvWorlds.get(worldName) : worldName;
+		if(useWorld == null) useWorld = worldName;
 
-	boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld, boolean flexible){
-		if(flexible && handler.getUniqueId().equals(fromPlayer) &&
-				inSharedInvGroup(handler.getWorld().getName(), fromWorld)) return true;
+		return (useCurrent && inSharedInvGroup(useWorld, getCurrentInvGroup(playerUUID)))
+				? getCurrentPlayerdata(playerUUID)
+				: new File("./" + useWorld +
+						(useWorld.equals(DEFAULT_WORLD) ? "/playerdata_"+DEFAULT_WORLD+"/" : "/playerdata/")
+						+ playerUUID + ".dat");
+	}
 
-		File currentFile = getMainPlayerdata(handler.getUniqueId());
-		File sourceFile = getPlayerdata(fromPlayer, fromWorld, false, !flexible);
+	boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld, boolean useShared, boolean skipIfCurrent){
+		if(skipIfCurrent && handler.getUniqueId().equals(fromPlayer) && inSharedInvGroup(handler.getWorld().getName(), fromWorld)) {
+			return false;
+		}
+		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
+		File sourceFile = getPlayerdata(fromPlayer, fromWorld, useShared, false);
 		if(sourceFile == null || !sourceFile.exists() || currentFile == null){
 			plugin.getLogger().warning("Unable to load profile from world: "+fromWorld);
 			return false;
@@ -156,7 +157,7 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace(); return false;}
 
 		handler.loadData();
-		if(removeDisease) SplitWorldUtils.resetPlayer(handler); // Remove disease AFTER loading data (treat infected file)
+		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler); // Remove disease AFTER loading data (treat infected file)
 
 		// This file provides a means to figure out what sharedInv group an OfflinePlayer is in
 		File currentInv = new File(DEFAULT_PLAYERDATA + handler.getUniqueId() + ".group");
@@ -164,82 +165,54 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace();}
 		return true;
 	}
-
-	boolean saveProfile(Player handler, UUID toPlayer, String toWorld, boolean flexible){
-		if(flexible && handler.getUniqueId().equals(toPlayer) &&
-				!inSharedInvGroup(handler.getWorld().getName(), toWorld)) return false;
-		File currentFile = getMainPlayerdata(handler.getUniqueId());
-		File destFile = getPlayerdata(toPlayer, toWorld, false, !flexible);
+	boolean saveProfile(Player handler, UUID toPlayer, String toWorld, boolean useShared, boolean skipIfCurrent){
+		if(skipIfCurrent && handler.getUniqueId().equals(toPlayer) && !inSharedInvGroup(handler.getWorld().getName(), toWorld)){
+			return false;
+		}
+		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
+		File destFile = getPlayerdata(toPlayer, toWorld, useShared, false);
 		if(currentFile == null || !currentFile.exists() || destFile == null){
 			plugin.getLogger().warning("Unable to save profile to world: "+toWorld);
 			return false;
 		}
-		if(removeDisease) SplitWorldUtils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
+		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
 		handler.saveData();
 
-		try{Files.move(currentFile, destFile);}
+		try{Files.copy(currentFile, destFile);}
 		catch(IOException e){e.printStackTrace(); return false;}
 		return true;
 	}
-
-	boolean forceSaveProfile(Player player){
-		return saveProfile(player, player.getUniqueId(), player.getWorld().getName(), false);
-	}
-	boolean forceLoadProfile(Player player){
-		return loadProfile(player, player.getUniqueId(), player.getWorld().getName(), false);
-	}
-
-	@SuppressWarnings("unused") private boolean loadProfile0(Player player, String worldName){
-		if(inSharedInvGroup(player.getWorld().getName(), worldName)) return false; // Already loaded
-
-		File currentFile = getMainPlayerdata(player.getUniqueId());
-		File sourceFile = getPlayerdata(player.getUniqueId(), worldName, false, true);
-		if(sourceFile == null || !sourceFile.exists() || currentFile == null){
-			plugin.getLogger().warning("Unable to load profile from world: "+worldName);
+	boolean loadProfile(Player handler, File fromFile){
+		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
+		if(fromFile == null || !fromFile.exists() || currentFile == null){
+			plugin.getLogger().warning("Unable to load profile from file: "+fromFile.getAbsolutePath());
 			return false;
 		}
 
-		try{Files.copy(sourceFile, currentFile);}
+		try{Files.copy(fromFile, currentFile);}
 		catch(IOException e){e.printStackTrace(); return false;}
 
-		player.loadData();
-		if(removeDisease) SplitWorldUtils.resetPlayer(player); // Remove disease AFTER loading data (treat infected file)
+		handler.loadData();
+		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler); // Remove disease AFTER loading data (treat infected file)
 
 		// This file provides a means to figure out what sharedInv group an OfflinePlayer is in
-		File currentGroup = new File(DEFAULT_PLAYERDATA + player.getUniqueId() + ".group");
-		try{Files.write(sharedInvWorlds.get(worldName), currentGroup, Charset.defaultCharset());}
+		File currentInv = new File(DEFAULT_PLAYERDATA + handler.getUniqueId() + ".group");
+		try{Files.write("CUSTOM_FILE "+fromFile.getPath(), currentInv, Charset.defaultCharset());}
 		catch(IOException e){e.printStackTrace();}
 		return true;
 	}
-
-	@SuppressWarnings("unused") private boolean saveProfile0(Player player, String worldName){
-		if(!inSharedInvGroup(player.getWorld().getName(), worldName)) return false; // Wrong world!
-		File currentFile = getMainPlayerdata(player.getUniqueId());
-		File destFile = getPlayerdata(player.getUniqueId(), worldName, false, true);
-		if(currentFile == null || !currentFile.exists() || destFile == null){
-			plugin.getLogger().warning("Unable to save profile to world: "+worldName);
-			return false;
-		}
-		if(removeDisease) SplitWorldUtils.resetPlayer(player);// Remove disease BEFORE saving data (vaccinate the file)
-		player.saveData();
-
-		try{Files.move(currentFile, destFile);}
-		catch(IOException e){e.printStackTrace(); return false;}
-		return true;
+	boolean loadCurrentProfile(Player player){
+		return loadProfile(player, player.getUniqueId(), player.getWorld().getName(), true, false);
 	}
-
-	public String getCurrentInvGroup(UUID playerUUID){
-		File currentGroup = new File(DEFAULT_PLAYERDATA + playerUUID + ".group");
-		if(currentGroup == null || !currentGroup.exists()) return DEFAULT_WORLD;
-		try{return sharedInvWorlds.get(Files.readFirstLine(currentGroup, Charset.defaultCharset()));}
-		catch(IOException e){e.printStackTrace(); return null;}
+	boolean saveCurrentProfile(Player player){
+		return saveProfile(player, player.getUniqueId(), player.getWorld().getName(), true, false);
 	}
 
 	@Deprecated boolean switchToInv(Player player, String worldFrom, String worldTo){
 		if(inSharedInvGroup(worldFrom, worldTo)) return true;
 
-		if(saveProfile(player, player.getUniqueId(), worldFrom, true)){
-			if(loadProfile(player, player.getUniqueId(), worldTo, true)){
+		if(saveProfile(player, player.getUniqueId(), worldFrom, true, false)){
+			if(loadProfile(player, player.getUniqueId(), worldTo, true, false)){
 				//TODO: test if this is actually a thing
 				GameMode gm = player.getGameMode();// fix gamemode glitch
 				player.setGameMode(GameMode.SPECTATOR);
@@ -256,7 +229,7 @@ public final class SplitWorlds{
 		if(inSharedInvGroup(worldFrom, worldTo)) return true;
 
 		// Save inventory from current world
-		if(saveProfile(player, player.getUniqueId(), worldFrom, true) == false) return false;
+		if(!saveProfile(player, player.getUniqueId(), worldFrom, true, false)) return false;
 
 		// Sterilize player's inventory while their new file data is being loaded
 		ItemStack[] oldInv = player.getInventory().getContents();
@@ -272,7 +245,7 @@ public final class SplitWorlds{
 		}
 
 		// Load the new world inventory
-		if(loadProfile(player, player.getUniqueId(), worldTo, true) == false) return false;
+		if(!loadProfile(player, player.getUniqueId(), worldTo, true, false)) return false;
 
 		//TODO: test if this is actually a thing
 		GameMode gm = player.getGameMode();// fix gamemode glitch

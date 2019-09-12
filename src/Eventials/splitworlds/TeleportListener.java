@@ -13,15 +13,15 @@ class TeleportListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onTp(PlayerTeleportEvent evt){
-		if(evt.getPlayer().hasMetadata(SplitWorlds.SKIP_TP_INV_CHECK)){
-			evt.getPlayer().removeMetadata(SplitWorlds.SKIP_TP_INV_CHECK, pl);
+		if(evt.getPlayer().hasMetadata(SplitWorlds.SKIP_TP_INV_CHECK_TAG)){
+			evt.getPlayer().removeMetadata(SplitWorlds.SKIP_TP_INV_CHECK_TAG, pl);
 			return;
 		}
 		if(evt.isCancelled() || evt.getPlayer().hasPermission("eventials.inventory.universal")) return;
 
 		String toWorldName = evt.getTo().getWorld().getName();
 		String fromWorldName = evt.getFrom().getWorld().getName();
-		if(splitWorlds.inSharedInvGroup(toWorldName, fromWorldName)) return;
+		if(SplitWorlds.inSharedInvGroup(toWorldName, fromWorldName)) return;
 
 		//otherwise, update to the new world's inventory
 		evt.setCancelled(true);

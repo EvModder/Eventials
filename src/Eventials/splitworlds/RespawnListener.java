@@ -18,7 +18,7 @@ class RespawnListener implements Listener {
 	public void onRespawn(final PlayerRespawnEvent evt){
 		String deathWorld = evt.getPlayer().getWorld().getName();
 		String respawnWorld = evt.getRespawnLocation().getWorld().getName();
-		if(splitWorlds.inSharedInvGroup(deathWorld, respawnWorld)) return;
+		if(SplitWorlds.inSharedInvGroup(deathWorld, respawnWorld)) return;
 
 		// No need to vaccinate or clear inventory since player is currently dead.
 		// Loading the respawnWorld's inventory will override the player's location, so we need need to
@@ -28,7 +28,7 @@ class RespawnListener implements Listener {
 			Player player = plugin.getServer().getPlayer(playerUUID);
 			if(player == null || player.getWorld().getName().equals(respawnWorld) == false) return;
 
-			splitWorlds.loadProfile(player, player.getUniqueId(), respawnWorld, true);
+			splitWorlds.loadProfile(player, player.getUniqueId(), respawnWorld, true, false);
 			SplitWorldUtils.untrackedTeleport(player, evt.getRespawnLocation(), true);
 		}}.runTaskLater(Eventials.getPlugin(), 1);
 	}

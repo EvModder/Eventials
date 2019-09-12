@@ -3,6 +3,7 @@ package Eventials.splitworlds;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -30,7 +31,7 @@ public class CommandEnderchest extends EvCommand{
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
-	@Override @SuppressWarnings("deprecation")
+	@Override @SuppressWarnings({ "deprecation", "static-access" })
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/echest [world] [player]
 		//----- Argument Parsing ---------------------------------------------------------------------------//
@@ -130,20 +131,22 @@ public class CommandEnderchest extends EvCommand{
 		}
 
 		// Save my current profile
-		if(!splitWorlds.forceSaveProfile(player)){
+		if(!splitWorlds.saveCurrentProfile(player)){
 			sender.sendMessage(ChatColor.RED+"Encounter error while saving your current inventory!");
 			return true;
 		}
+		GameMode gm = player.getGameMode();
 
 		// Load the target's profile data
-		if(!splitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true)){
+		if(!splitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, false)){
 			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
 			return true;
 		}
 		ItemStack[] contents = player.getEnderChest().getContents();
 
 		// Reload my profile
-		splitWorlds.forceLoadProfile(player);
+		splitWorlds.loadCurrentProfile(player);
+		player.setGameMode(gm); // In case I'm in creative and they're not and I don't want to fall out of the sky
 
 		// Create and display an inventory using the enderchest ItemStack[]
 		final String invName = "> "+targetPlayer.getName()+" - "+splitWorlds.getInvGroup(targetWorld);
@@ -164,11 +167,11 @@ public class CommandEnderchest extends EvCommand{
 
 				pl.getLogger().info("Updating inventory: "+fTargetWorld+" > "+fTargetPlayer.getName());
 
-				splitWorlds.forceSaveProfile(player);// Any changes I made in my own inv
-				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true);
+				splitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
+				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, false);
 				player.getEnderChest().setContents(evt.getInventory().getContents());
-				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true);
-				splitWorlds.forceLoadProfile(player);
+				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, false);
+				splitWorlds.loadCurrentProfile(player);
 
 				HandlerList.unregisterAll(this);
 			}
