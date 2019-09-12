@@ -9,8 +9,8 @@
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Votifier.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/FactionsOne.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Renewable.jar" sourcepath="/RenewablePlugin"/>
-	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/spigot_server-1.14.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/HorseOwners.jar"/>
-	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/bukkit-1.14.4.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/bukkit1.13+.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/spigot_server.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

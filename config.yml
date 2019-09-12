@@ -208,7 +208,7 @@ prevent-multicraft-list-console-spam: true
 #--------------------------------------#
 evspawner-enabled: true
 require-silktouch: true
-stackable-spawners: true
+stackable-spawners: false
 drop-monsteregg-blocks: true
 allow-nbt-container-placement: true
 allow-nbt-commandblock-placement: true
@@ -276,6 +276,14 @@ shared-inv-worlds:
   creative_group:
     - 'Creative'
     - 'TC Creative'
+
+#--------------------------------------#
+#             Mail Service             #
+#--------------------------------------#
+mailbox-enabled: true
+mailbox-host: 'hardcore.tk'
+mailbox-port: 9565
+mailbox-max-connections: 100
 
 #--------------------------------------#
 #              More Stuff              #

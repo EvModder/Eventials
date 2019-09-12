@@ -4,6 +4,7 @@ import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 import EventAndMisc.EventAndMisc;
 import Eventials.listeners.*;
+import Eventials.mailbox.ShippingService;
 import Eventials.books.WriterTools;
 import Eventials.commands.*;
 import Eventials.custombows.CustomBows;
@@ -24,6 +25,7 @@ public class Eventials extends EvPlugin {
 //	private Scheduler scheduler;
 	private EvVoter voter;
 	private Economy eco;
+	private ShippingService mailbox;
 
 	@Override public void onEvEnable(){
 		plugin = this;
@@ -36,6 +38,7 @@ public class Eventials extends EvPlugin {
 		if(config.getBoolean("evspawner-enabled", true)) new EvSpawner(this);
 		if(config.getBoolean("evvoter-enabled", true)) voter = new EvVoter(this);
 		if(config.getBoolean("splitworlds-enabled", true)) new SplitWorlds(this);
+		if(config.getBoolean("mailbox-enabled", true)) mailbox = new ShippingService(this);
 
 		if(config.getBoolean("pre-command", true))
 			getServer().getPluginManager().registerEvents(new PreCommandListener(), this);
@@ -92,6 +95,7 @@ public class Eventials extends EvPlugin {
 		if(eco != null) eco.onDisable();
 		if(loginListener != null) loginListener.onDisable();
 		if(voter != null) voter.onDisable();
+		if(mailbox != null) mailbox.onDisable();
 //		saveConfig();
 		if(config.getBoolean("scheduler-enabled", true))
 			FileIO.saveFile("scheduler-data.txt", "current-cylce: "+config.getInt("current-cylce", 0));
