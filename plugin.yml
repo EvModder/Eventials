@@ -117,6 +117,21 @@ commands:
       permission: eventials.echest
       permission-message: You do not have permission to do this.
 
+#======== Mailbox
+   mailbox:
+      description: Open the global mailbox
+      usage: /mailbox [player] 
+      aliases: [ups,packages,dropbox]
+      permission: eventials.mailbox
+      permission-message: You do not have permission to do this.
+
+   enderchest:
+      description: View enderchest contents
+      usage: /echest [world] [player]
+      aliases: [echest,echestspy,enderspy,endspy,enderchestsee,enderchestspy,echestsee,endersee]
+      permission: eventials.echest
+      permission-message: You do not have permission to do this.
+
 #======== Extras (Admin Tools & Game Modifying)
    breakphysics:
       description: Prevent all nearby block physics updates
@@ -352,7 +367,7 @@ permissions:
       description: Permission to use /signbook
       default: true
 
-   eventials.books.sign.other:
+   eventials.books.sign.others:
       description: Permission to use /signbook with a different author
       default: op
 
@@ -360,7 +375,7 @@ permissions:
       description: Permission to use /unsignbook
       default: true
 
-   eventials.books.unsign.other:
+   eventials.books.unsign.others:
       description: Permission to use /unsignbook for a different author
       default: op
 
@@ -377,9 +392,9 @@ permissions:
       default: false
       children:
          eventials.books.sign: true
-         eventials.books.sign.other: true
+         eventials.books.sign.others: true
          eventials.books.unsign: true
-         eventials.books.unsign.other: true
+         eventials.books.unsign.others: true
          eventials.books.fix: true
 
 #======== SplitWorlds
@@ -419,7 +434,7 @@ permissions:
       default: op
 #CHILDREN: eventials.echest.edit.WORLD_NAME
 
-   eventials.echest.other:
+   eventials.echest.others:
       description: Permission to use /echest [world] [player]
       default: op
 
@@ -427,6 +442,15 @@ permissions:
       description: Permission to edit contents of /echest [world] [player]
       default: op
 #CHILDREN: eventials.echest.others.edit.WORLD_NAME
+
+#======== Mailbox
+   eventials.mailbox:
+      description: Permission to use /mailbox
+      default: op
+
+   eventials.mailbox.others:
+      description: Permission to use /mailbox [player]
+      default: op
 
 #======== Extras (Admin Tools & Game Modifying)
    eventials.breakphysics:
