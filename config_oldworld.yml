@@ -1,0 +1,400 @@
+#--------------------------------------#
+#           Eventials config           #
+#--------------------------------------#
+#Horse armor, Saddles, Nametags, CrackedBricks, DoubleSlabs, PackedIce
+add-recipes: true #False because unrenewables
+
+pre-command: true #Required for a lot of features/functionality
+fancy-help: true
+detailed-command-help: true
+fancy-pl: true
+command-aliases: true
+use-hyperwarps: true
+quick-warps: [adminshop, market, downtown, parkour, suggestions, freebuild, creative, racetrack]
+tell-death-coords: true
+log-death-coords: true
+enable-signtools: true
+enable-weaponstats: true
+
+discord-link: 'https://discord.gg/DMcxR5D'
+
+enable-custom-bows: true
+prevent-arrow-invulnerability: true
+
+login-noteblock: true
+login-show-recent-joins: true
+max-recent-joins-shown: 25
+max-recent-joins-stored: 50
+record-player-addresses: true
+
+default-nophysics-radius: 32
+
+# range (0-1], set to 1 (for 100%) to disable
+skip-night-sleep-percent-required: 0.5
+skip-storm-sleep-percent-required: 0.5
+skip-thunder-sleep-percent-required: 0.5
+count-gm3-in-sleep-required: false
+count-gm1-in-sleep-required: false
+only-skip-if-nighttime: true
+
+inactive-days-until-player-delete: 200
+#TODO: Advancements checker is broken
+keep-if-has-x-advancements: 20
+keep-if-time-played-outweighs-time-inactive: true
+keep-if-above-starting-balance: true
+keep-if-whitelisted: true
+keep-if-op: true
+
+#A list of global cooldowns between when players can run commands
+#Time is in seconds. Can by bypassed with 'eventials.bypass.waitcommands'
+#To bypass a specific command, use 'eventials.bypass.waitcommands.cmd'
+global-command-cooldowns:
+  weather: 1200
+
+#--------------------------------------#
+#           EvEconomy config           #
+#--------------------------------------#
+economy-enabled: true
+
+#Set track-server-balance to false for an infinite server balance
+track-server-balance: false
+starting-server-balance: 0
+track-global-balance: false
+starting-global-balance: 0
+starting-balance: 100
+server-pays-starting-balance: false
+custom-baltop: true
+
+#A list of commands with prices attached to them
+#Not guaranteed to work with all plugins!
+#Use 'eventials.bypass.paidcommands' to bypass all commands or
+#'eventials.bypass.paidcommands.cmd' for a specific commands
+update-balance-on-paid-commands: false
+paid-commands:
+  weather: 20.0
+  claimhorse: 5.0
+  lockhorse: 5.0
+  gethorse: 2.5
+  inspecthorse: 1.0
+  repair: 30.0
+  separate: 5.0
+  weaponstats: 25.0
+  unsignbook: 5.0
+  suicide: 10.0
+  'f claim': 3
+  'factions claim': 3
+  'factions:f claim': 3
+  'factions:factions claim': 3
+  'f autoclaim': 15
+  'factions autoclaim': 15
+  'factions:f autoclaim': 15
+  'factions:factions autoclaim': 15
+#  home: 0.1
+
+update-balance-watch: false
+update-balance-commands:
+  - pay
+  - withdraw
+  - deposit
+  - sell
+  - moneyorder
+  - bal
+  - balance
+  - eco
+  - economy
+  - serverbal
+
+use-item-as-currency: false
+currency-item: LILY_PAD
+currency-symbol: '&a$'
+
+ad-cost: 100
+ad-default: '&7Your advertisement here, for only &a$100'
+ad-max-length: 43
+#Duration in days
+ad-duration: 14
+#The date in milliseconds of the current ad's expiration
+ad-expires-on: 0
+
+#Currently, there are 55 vanilla advancements
+advancement-reward: false
+advancement-completion-prize: 500
+advancement-exponential-base: 1.05
+advancement-constant-multiplier: 10
+advancement-min-before-reward: 5
+advancement-max-reward: 500
+advancements-included:
+  - story
+  - adventure
+  - nether
+  - end
+  - husbandry
+
+login-daily-money: 5
+online-when-daily-money-bonus: 1
+announce-daily-money: true
+economy-signs: true
+
+enable-moneyorders: true
+moneyorder-min: 10
+moneyorder-max: 1000
+moneyorder-tax-percent: 25
+
+#Adjust chunk generation cost per-world
+default-chunk-generate-cost: 0
+chunk-generate-cost:
+  MysteryPeaks: 0.1
+  MysteryPeaks_nether: 0.07
+  MysteryPeaks_the_end: 0.05
+# What happens when a player can't afford the chunk-generate-cost
+# Possible values are: TP_SPAWN, NOTHING
+chunk-generate-failure: TP_SPAWN
+
+#--------------------------------------#
+#           Messenger config           #
+#--------------------------------------#
+#Frequency of the clock in seconds
+scheduler-enabled: true
+clock-period: 60 #Default 60s per cycle
+
+#To disable a task, set its frequency to 0
+cycles-per-eventials-data-save: 2
+cycles-per-automessage: 4
+cycles-per-mob-clear: 5
+cycles-per-worldsave: 5
+cycles-per-player-delete: 0
+cycles-per-magic-day-reward: 60
+cycles-per-holiday-action: 5
+
+skip-automessage-if-other-event: true
+skip-automessage-if-no-chats: true
+
+#Remember usernames for personalized automsgs
+save-ips: true
+max-saved-ips: 200
+
+message-color: '&e'
+message-prefix: '&3[&7AC&3]&e '
+#Auto-messages were moved to bottom of the file
+#(because there are a lot of them)
+
+custom-ping: true
+ping-prefix: '&9&l&m  &7 ' # '  &9&l&m -&7 '
+#Ping messages are at the bottom of this file
+
+blacklisted-ips:
+  - ''
+
+prevent-multicraft-list-console-spam: false
+
+#--------------------------------------#
+#           EvSpawner config           #
+#--------------------------------------#
+evspawner-enabled: true
+require-silktouch: true
+stackable-spawners: true
+drop-monsteregg-blocks: true
+allow-nbt-container-placement: true
+allow-nbt-commandblock-placement: true
+allow-colorcodes-in-commandblock: true #TODO
+
+#These do not require 'evspawner-enabled: true'
+disable-skeleton-traps: true
+allow-mob-armies: true
+army-size-mean: 100
+army-size-standard-deviation: 100
+army-spawn-likelyhood: .002
+army-enable-recursive-spawning: true
+feed-slimes: true
+
+#--------------------------------------#
+#            EvVoter config            #
+#--------------------------------------#
+evvoter-enabled: true
+
+#To disable voting streaks, set 'op' and 'amount' to 0
+#op 0=add, 1=multiply, 2=
+vote-streak-op: 0
+vote-streak-amount: 1
+vote-streak-max-days: 10
+#How much time before a vote streak is lost?
+vote-streak-grace-hours: 48
+
+player-cash-reward: 2
+server-cash-reward: 0
+server-pays-player-cash-reward: true
+
+vote-site-page: 'http://www.altcraft.net/voting'
+vote-links:
+  - 'PMC, https://www.planetminecraft.com/server/alternatecraft-2724346/vote/'
+  - 'MMP, http://minecraft-mp.com/server/109051/vote/'
+  - 'MC Servers, http://minecraftservers.org/vote/280048'
+  - 'MCSL, http://minecraft-server-list.com/server/254265/vote/'
+  - 'MC biz, https://minecraftservers.biz/servers/2600/vote/'
+# - 'MC Index, https://www.minecraft-index.com/31471-alternatecraft/vote'
+
+#--------------------------------------#
+#          BookEditor config           #
+#--------------------------------------#
+book-editor-enabled: true
+
+#--------------------------------------#
+#             Split Worlds             #
+#--------------------------------------#
+splitworlds-enabled: true
+vaccinate-players: true
+
+# Groups of worlds that share the inventories. World inventories are separate by default
+# Groups can be named whatever you like, but be precise with world names. * is wild.
+# WARNING: Decide how to group worlds before they are opened; when two or more worlds are
+# joined, only one of them will retain it's playerdata information
+shared-inv-worlds:
+  default_group:
+    - '*'
+    - '*_nether'
+    - '*_the_end'
+  old_worlds:
+    - 'VictoryHills'
+    - 'Events'
+    - 'world'
+  creative_group:
+    - 'Creative'
+    - 'TC Creative'
+
+#--------------------------------------#
+#              More Stuff              #
+#--------------------------------------#
+world-borders:
+  VictoryHills:
+    center-x: 0.5
+    center-z: 0
+    radius: 10001.1
+  VictoryHills_nether:
+    center-x: 0.5
+    center-z: 0.5
+    radius: 5000
+  VictoryHills_the_end:
+    center-x: 0.5
+    center-z: 0.5
+    radius: 5000
+  Events:
+    center-x: 0
+    center-z: 0
+    radius: 8000
+  Creative:
+    center-x: 45750
+    center-z: 45750
+    radius: 55751
+
+#Legend: &e = text, &b = link/download, &d = @Location, &2 = command, &a = $money/event/world, 
+#Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
+auto-messages:
+  - |
+       Looking for a challenge?
+       Try out &2/server Hardcore&r!
+  - |
+       Periodically, custom server &aEvents=>&7The selling point of this server!&r will be held!
+#       Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
+  - 'Run &2/warps&r for clickable teleports to key locations!'
+  - 'Warps to important locations can be found at spawn'
+  - '&4[&c&lWarn&4]&r Unused terrain will be periodically reset!'
+  - 'Contact staff to learn about or purchase a Market plot'
+  - |
+       Running low on cash?
+       Claim a spot at &2/market&r and build yourself a shop!
+       Sell your stone and logs in the &d@AdminShop&r!
+  - 'Be careful, you can get auto-killed for PvP logging!'
+  - 'Griefing is generally discouraged'
+  - |
+       Sick of survival?
+       Try out the &aCreative&r world!
+  - |
+       Remember, server &aEvents&r are temporary, and
+       eventually everything returns to normal
+  - 'Want to privatize your horse? check out &2/hm'
+  - 'Custom saddle, nametag, & barding recipies listed &d@Market'
+  - 'Ye like? Ye vote? &2/vote&r for links!'
+  - 'Remember, you can use &2/enderchest&r in the Events world!'
+  - |
+       Monetary help isn't required, but is always appreciated! :)
+       Visit &bac.buycraft.net=>http://ac.buycraft.net/&r to view perks
+  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
+  - 'Suggestions are always welcome!'
+  - 'Please check &2/rules&r periodically for updates'
+  - 'Sharing server IPs is fine, but &nno soliciting&r please!'
+  - 'Staff are here to help, so ask away!'
+  - 'Killing people is fun, so why not start a head collection? ;)'
+  - 'Want to compete? Drop off your stuff and head to &2/arenas&r!'
+  - |
+       Win the &nMarket Parkour&r for a stack of diamond blocks!
+       (Warning, it is practically impossible)
+  - 'Unwarranted griefing can result in jail -> tempban'
+  - |
+       We recommend the &6LithosCore&r texture pack-
+       You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
+  - 'YouTuber? Promote your channel, ask for the prefix!'
+  - 'Rare items can be found in the &d@AdminShop&r or &d@Market&r.'
+  - 'Found a bug? &2/mail Admin&r so we can get it fixed!'
+  - 'See a &2/green&r command? Click it to run it!'
+  - |
+       Many commands have aliases!
+       Examples: &2/home&r&7 -> &2/h&r, &2/back&r&7 -> &2/b&r, &2/f power&r&7 -> &2/f p
+  - |
+       Donator recognition on &bac.buycraft.net=>http://ac.buycraft.net/&r is .99,
+       USD but may fluctuate change change over time
+  - |
+      Chickens &d@Adminshop&r have been reported to lay more
+      than just basic eggs, go grab some golden goodies!
+  - |
+      Some ugly base in your way that needs to be taken down?
+      Please ask a staff member to get the thumbs up!
+#  - |
+#       Want to see an epic 3D map of the server? Visit Dynmap!
+#       Links: &bSpawn=>http://ow.ly/4nqOnx&r, &bMarketplace=>http://ow.ly/4nqOY9
+  - 'Event schedule (irregularly) posted on our &bwebsite=>http://www.altcraft.net/events/schedule'
+  - |
+       Have something important to tell? Looking for ways
+       to promote your &d@Marketplace&r shop? Try &2/advertise&r!
+  - |
+      Like the chickens at the &d@Adminshop&r?
+      Look, but don't touch&m  &r they have dark powers!
+  - |
+       @ Server admins: Avoid &cClearLagg&r, it sucks!
+       Both &cNoLagg&r and &cReduceLag&r are way better
+  - |
+       We believe in server transparency!
+       Check out &2/pl&r or the &bplugins page=>http://www.altcraft.net/plugins&r on the website
+  - 'I used to be indecisive. Now I''m not sure...'
+#  - '&c&lPro Tip:&r&o don''t eat the yellow snow'
+
+ping-messages:
+  - ''
+  - 'Wazzup %name%?'
+  - ''
+  - 'Press &fRefresh&r for more random ping messages!'
+  - 'Yeet a bug'
+  - ''
+  - 'Chicken Fried Steak'
+  - 'A Minecraft Server'
+  - ''
+  - '&oFreebuild creative!'
+  - '&oDefault and Flatlands survival worlds!'
+  - ''
+  - 'Hey %name%, wanna drop by today? :D'
+  - '&oMarketplace!'
+  - ''
+  - '&oPlots world coming "soon"!'
+  - 'Now with additional lag!'
+  - ''
+  - '&oPeriodic Events!'
+  - 'Suggestions welcome!'
+  - ''
+  - 'Press [refresh] for more random messages!'
+  - '&7&oflat&f | &7&ohard | &7&ocreative | &7&ocustom'
+  - Yawn
+  - ''
+  - 'The mind is weak but the body is strong.'
+  - 'Live by the sword and die by the sword!'
+  - ''
+  - 'Tries to be different'
+  - 'Game is broke; we can always use dev help :)'

@@ -21,10 +21,22 @@ public class EventAndMisc{
 	public EventAndMisc(final Eventials pl){
 		this.pl = pl;
 		if(pl.getServer().getWorld("VictoryHills") != null){
-			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
+			pl.getLogger().info("Loading AC_Alternate(Old) config");
+			InputStream rssAC = getClass().getResourceAsStream("/config_oldworld.yml");
+			YamlConfiguration hardConf = FileIO.loadConfig(pl, "config_oldworld.yml", rssAC);
+			FileIO.deleteFile("config_oldworld.yml");
+			InputStream rssDefault = getClass().getResourceAsStream("/config.yml");
+			YamlConfiguration defaultConf = FileIO.loadConfig(pl, "config-Eventials.yml", rssDefault);
+			if(pl.getConfig().toString().equals(defaultConf.toString())){
+				for(String key : pl.getConfig().getKeys(false)) pl.getConfig().set(key, null);
+				pl.getConfig().setDefaults(hardConf);//TODO: This, or line below?
+				for(String key : hardConf.getKeys(false)) pl.getConfig().set(key, hardConf.get(key));
+			}
 			new AC_Old();
+			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
 		}
 		else if(pl.getServer().getWorld("Reliquist") != null){
+			pl.getLogger().info("Loading Hardcore config");
 			InputStream rssHC = getClass().getResourceAsStream("/config_hardcore.yml");
 			YamlConfiguration hardConf = FileIO.loadConfig(pl, "config_hardcore.yml", rssHC);
 			FileIO.deleteFile("config_hardcore.yml");
@@ -38,8 +50,8 @@ public class EventAndMisc{
 			new AC_Hardcore();
 		}
 		else/*if(pl.getServer().getWorld("MysteryPeaks") != null)*/{
-			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
 			new AC_New();
+			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
 		}
 
 		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();

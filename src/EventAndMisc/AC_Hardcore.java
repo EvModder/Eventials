@@ -57,7 +57,7 @@ public class AC_Hardcore implements Listener{
 	public void onPreLogin(PlayerLoginEvent evt){
 		final UUID uuid = evt.getPlayer().getUniqueId();
 		OfflinePlayer offP = pl.getServer().getOfflinePlayer(uuid);
-		if(offP.getLastPlayed() <= 1566802800000L){
+		if(offP.hasPlayedBefore() && offP.getLastPlayed() <= 1566802800000L){
 			new BukkitRunnable(){@Override public void run(){
 				Player player = pl.getServer().getPlayer(uuid);
 				player.addScoreboardTag("event_participant");

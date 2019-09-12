@@ -36,7 +36,7 @@ public class CommandParticles extends EvCommand {
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
-	@Override
+	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		Player p = sender instanceof Player ? (Player)sender : null;
 		if(args.length != 0 && sender.hasPermission("eventials.particles.others")){
