@@ -21,7 +21,6 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.economy.Economy;
 import Eventials.economy.commands.CommandAdvertise;
-import Eventials.holidays.HolidayListener;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.ButcherUtils;

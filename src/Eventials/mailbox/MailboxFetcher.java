@@ -3,7 +3,7 @@ package Eventials.mailbox;
 import java.io.File;
 import java.util.UUID;
 
-public abstract class MailboxFetcher{
+public interface MailboxFetcher{
 	public interface MailListener{
 		public abstract void playerMailboxLoaded(UUID playerUUID, File mailbox, String message);
 		public abstract void playerMailboxSaved(UUID playerUUID, String message);

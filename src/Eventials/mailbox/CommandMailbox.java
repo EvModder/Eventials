@@ -1,6 +1,7 @@
 package Eventials.mailbox;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.ChatColor;
@@ -14,26 +15,33 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.mailbox.MailboxFetcher.MailListener;
+import Eventials.splitworlds.SplitWorlds;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
 public class CommandMailbox extends EvCommand implements MailListener{
 	final EvPlugin plugin;
 	final MailboxFetcher mailFetcher;
+	final HashMap<UUID, UUID> mailReaders;
+	final HashMap<UUID, ItemStack[]> currentlyOpen;
 
 	public CommandMailbox(EvPlugin pl, MailboxFetcher mailboxHook){
 		super(pl, true);
 		plugin = pl;
 		mailFetcher = mailboxHook;
+		mailReaders = new HashMap<UUID, UUID>();
+		currentlyOpen = new HashMap<UUID, ItemStack[]>();
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
-	@Override @SuppressWarnings({ "deprecation", "static-access" })
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/mailbox [player]
 		if(sender instanceof Player == false){
@@ -60,62 +68,132 @@ public class CommandMailbox extends EvCommand implements MailListener{
 		}
 
 		sender.sendMessage(ChatColor.GOLD+"Please wait, loading mailbox...");
+		mailReaders.put(targetPlayer.getUniqueId(), player.getUniqueId());
 		mailFetcher.loadMailbox(targetPlayer.getUniqueId(), this, true);
+		return true;
 	}
 
-	@Override public void playerMailboxLoaded(UUID playerUUID, File mailbox, String message){
-		// TODO Auto-generated method stub
+	private void openMailbox(UUID targetUUID, File mailboxFile, String message){
+		UUID viewerUUID = mailReaders.get(targetUUID);
+		Player player = plugin.getServer().getPlayer(viewerUUID);
+		if(player == null){
+			mailFetcher.saveMailbox(targetUUID, mailboxFile, CommandMailbox.this, true);
+			plugin.getLogger().info("Mailbox fetched, but player is not longer online: "+viewerUUID);
+			OfflinePlayer offP = plugin.getServer().getOfflinePlayer(viewerUUID);
+			if(offP == null || !offP.hasPlayedBefore()) plugin.getLogger().severe("Unknown player in mailbox load: "+offP);
+			return;
+		}
+
+		String metadata;
+		int idx = message.indexOf('|');
+		if(idx != -1){metadata = message.substring(0, idx); message = message.substring(idx+1);}
+		else metadata = message;
+		boolean failed = metadata.startsWith("failed");
+		if(failed) metadata = metadata.substring(6);
+		boolean locked = metadata.startsWith("locked");
+		if(locked) metadata = metadata.substring(6);
+
+
+		if(locked){
+			player.sendMessage(ChatColor.RED+"Unable to fetch mailbox - It might be currently open elsewhere");
+			return;
+		}
+		if(mailboxFile == null || failed){
+			player.sendMessage(ChatColor.RED+"Failure when attempting to fetch mailbox");
+			return;
+		}
+
 		// Save my current profile
-		if(!splitWorlds.saveCurrentProfile(player)){
-			sender.sendMessage(ChatColor.RED+"Encounter error while saving your current inventory!");
-			return true;
+		plugin.getLogger().info("[DEBUG] Saving current profile for "+player.getName());
+		if(!SplitWorlds.saveCurrentProfile(player)){
+			player.sendMessage(ChatColor.RED+"Encounter error while saving your current inventory!");
+			mailFetcher.saveMailbox(targetUUID, mailboxFile, this, true);
+			return;
 		}
 		GameMode gm = player.getGameMode();
 
 		// Load the target's profile data
-		if(!splitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, false)){
-			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
-			return true;
+		if(!SplitWorlds.loadProfile(player, mailboxFile)){
+			player.sendMessage("An error occurred reading the mailbox file");
+			mailFetcher.saveMailbox(targetUUID, mailboxFile, this, true);
+			return;
 		}
-		ItemStack[] contents = player.getInventory().getContents();
+		ItemStack[] contents = player.getEnderChest().getContents();
+		currentlyOpen.put(viewerUUID, contents);
 
 		// Reload my profile
-		splitWorlds.loadCurrentProfile(player);
-		player.setGameMode(gm); // In case I'm in creative and they're not and I don't want to fall out of the sky
+		SplitWorlds.loadCurrentProfile(player);
+		player.setGameMode(gm);
 
 		// Create and display an inventory using the ItemStack[]
-		final String invName = "> "+targetPlayer.getName()+" - "+splitWorlds.getInvGroup(targetWorld);
-		Inventory targetInv = pl.getServer().createInventory(player, InventoryType.PLAYER, invName);
+		final String invName = "> Global Mailbox Service";
+		Inventory targetInv = plugin.getServer().createInventory(player, InventoryType.ENDER_CHEST, invName);
 		targetInv.setContents(contents);
 		player.openInventory(targetInv);
-		pl.getLogger().info(player.getName()+" viewing inventory of: "+targetPlayer.getName());
+		plugin.getLogger().info(player.getName()+" has opened their mailbox");
+
+		//TODO: Look to write back (save mailbox) every few seconds
 
 		// Listener to write back to disk the inventory being viewed once it is closed
-		final String fTargetWorld = targetWorld;
-		final OfflinePlayer fTargetPlayer = targetPlayer;
-		pl.getServer().getPluginManager().registerEvents(new Listener(){
-			final UUID snooper = player.getUniqueId();
+		plugin.getServer().getPluginManager().registerEvents(new Listener(){
 			@EventHandler public void inventoryCloseEvent(InventoryCloseEvent evt){
-				if(!evt.getPlayer().getUniqueId().equals(snooper) ||
-						evt.getInventory().getType() != InventoryType.PLAYER /*||
-						broke in 1.14: !invName.equals(evt.getInventory().getTitle())*/) return;
+				if(!evt.getPlayer().getUniqueId().equals(viewerUUID) ||
+						evt.getInventory().getType() != InventoryType.ENDER_CHEST) return;
 
-				pl.getLogger().info("Updating inventory: "+fTargetWorld+" > "+fTargetPlayer.getName());
+				currentlyOpen.put(viewerUUID, evt.getInventory().getContents());
+				plugin.getLogger().info("Updating mailbox: "+targetUUID);
 
-				splitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
-				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, false);
-				player.getInventory().setContents(evt.getInventory().getContents());
-				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, false);
-				splitWorlds.loadCurrentProfile(player);
+				SplitWorlds.saveCurrentProfile(player); // Update changes in my inv
+				SplitWorlds.loadProfile(player, mailboxFile);
+				player.getEnderChest().setContents(evt.getInventory().getContents());
+				SplitWorlds.saveProfile(player, mailboxFile); // Update changes in mailbox inv
+				SplitWorlds.loadCurrentProfile(player);
 
+				mailFetcher.saveMailbox(targetUUID, mailboxFile, CommandMailbox.this, true);
 				HandlerList.unregisterAll(this);
 			}
-		}, pl);
-		return true;
+			@EventHandler public void inventoryClickEvent(InventoryInteractEvent evt){
+				if(!evt.getWhoClicked().getUniqueId().equals(viewerUUID) ||
+						evt.getInventory().getType() != InventoryType.ENDER_CHEST) return;
+				currentlyOpen.put(viewerUUID, evt.getInventory().getContents());
+			}
+		}, plugin);
 	}
 
-	@Override public void playerMailboxSaved(UUID playerUUID, String message){
-		// TODO Auto-generated method stub
+	@Override public void playerMailboxLoaded(UUID targetUUID, File mailboxFile, String message){
+		new BukkitRunnable(){@Override public void run(){
+			openMailbox(targetUUID, mailboxFile, message);
+		}}.runTask(plugin);
+	}
+
+	@Override public void playerMailboxSaved(UUID targetUUID, String message){
+		UUID viewerUUID = mailReaders.remove(targetUUID);
+		if(viewerUUID == null) plugin.getLogger().severe("Unknown viewer: "+viewerUUID);
+
+		if(message.startsWith("failed")){
+			plugin.getLogger().warning("Failed to save mailbox: "+targetUUID);
+			ItemStack[] contents = currentlyOpen.remove(viewerUUID);
+			if(contents == null) plugin.getLogger().severe("Unable to locate mailbox items");
+			Player player = plugin.getServer().getPlayer(viewerUUID);
+			if(player != null) for(ItemStack overflowItem : player.getInventory().addItem(contents).values()){
+				player.getWorld().dropItem(player.getLocation(), overflowItem);
+			}
+			else{
+				plugin.getLogger().severe("Dropping mailbox items at world spawnpoint");
+				World world = plugin.getServer().getWorld(SplitWorlds.getDefaultWorld());
+				if(world == null) {
+					plugin.getLogger().severe("Can't find a default world :l");
+					world = plugin.getServer().getWorlds().get(0);
+				}
+				for(ItemStack item : contents) world.dropItem(world.getSpawnLocation(), item);
+			}
+		}
+		else{
+			plugin.getLogger().info("[DEBUG] Mailbox saved successfully: "+targetUUID);
+		}
+	}
+
+	public void closeAllMailboxes(){
 		
 	}
 }

@@ -23,11 +23,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import net.evmodder.EvLib.EvPlugin;
 import com.google.common.io.Files;
+import Eventials.Eventials;
 
 public final class SplitWorlds{
 	final private EvPlugin plugin;
 	private static HashMap<String, String> sharedInvWorlds;
 	private static String DEFAULT_WORLD, DEFAULT_PLAYERDATA;
+	public static String getDefaultWorld(){return DEFAULT_WORLD;}
 	private static boolean TREAT_DISEASE;
 	final static String SKIP_TP_INV_CHECK_TAG = "skipTeleportInvCheck";
 
@@ -108,7 +110,7 @@ public final class SplitWorlds{
 		minimal_init(pl);
 
 		plugin.getServer().getPluginManager().registerEvents(new TeleportListener(this), plugin);
-		plugin.getServer().getPluginManager().registerEvents(new RespawnListener(this), plugin);
+		plugin.getServer().getPluginManager().registerEvents(new RespawnListener(), plugin);
 		new CommandEnderchest(plugin, this);
 		new CommandInvsee(plugin, this);
 	}
@@ -142,14 +144,14 @@ public final class SplitWorlds{
 						+ playerUUID + ".dat");
 	}
 
-	boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld, boolean useShared, boolean skipIfCurrent){
+	static boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld, boolean useShared, boolean skipIfCurrent){
 		if(skipIfCurrent && handler.getUniqueId().equals(fromPlayer) && inSharedInvGroup(handler.getWorld().getName(), fromWorld)) {
 			return false;
 		}
 		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
 		File sourceFile = getPlayerdata(fromPlayer, fromWorld, useShared, false);
 		if(sourceFile == null || !sourceFile.exists() || currentFile == null){
-			plugin.getLogger().warning("Unable to load profile from world: "+fromWorld);
+			Eventials.getPlugin().getLogger().warning("Unable to load profile from world: "+fromWorld);
 			return false;
 		}
 
@@ -165,14 +167,14 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace();}
 		return true;
 	}
-	boolean saveProfile(Player handler, UUID toPlayer, String toWorld, boolean useShared, boolean skipIfCurrent){
+	static public boolean saveProfile(Player handler, UUID toPlayer, String toWorld, boolean useShared, boolean skipIfCurrent){
 		if(skipIfCurrent && handler.getUniqueId().equals(toPlayer) && !inSharedInvGroup(handler.getWorld().getName(), toWorld)){
 			return false;
 		}
 		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
 		File destFile = getPlayerdata(toPlayer, toWorld, useShared, false);
 		if(currentFile == null || !currentFile.exists() || destFile == null){
-			plugin.getLogger().warning("Unable to save profile to world: "+toWorld);
+			Eventials.getPlugin().getLogger().warning("Unable to save profile to world: "+toWorld);
 			return false;
 		}
 		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
@@ -182,10 +184,10 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace(); return false;}
 		return true;
 	}
-	boolean loadProfile(Player handler, File fromFile){
+	static public boolean loadProfile(Player handler, File fromFile){
 		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
 		if(fromFile == null || !fromFile.exists() || currentFile == null){
-			plugin.getLogger().warning("Unable to load profile from file: "+fromFile.getAbsolutePath());
+			Eventials.getPlugin().getLogger().warning("Unable to load profile from file: "+fromFile.getAbsolutePath());
 			return false;
 		}
 
@@ -201,10 +203,23 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace();}
 		return true;
 	}
-	boolean loadCurrentProfile(Player player){
+	static public boolean saveProfile(Player handler, File toFile){
+		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
+		if(currentFile == null || !currentFile.exists() || toFile == null){
+			Eventials.getPlugin().getLogger().warning("Unable to save profile to file: "+toFile.getAbsolutePath());
+			return false;
+		}
+		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
+		handler.saveData();
+
+		try{Files.copy(currentFile, toFile);}
+		catch(IOException e){e.printStackTrace(); return false;}
+		return true;
+	}
+	static public boolean loadCurrentProfile(Player player){
 		return loadProfile(player, player.getUniqueId(), player.getWorld().getName(), true, false);
 	}
-	boolean saveCurrentProfile(Player player){
+	static public boolean saveCurrentProfile(Player player){
 		return saveProfile(player, player.getUniqueId(), player.getWorld().getName(), true, false);
 	}
 

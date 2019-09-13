@@ -10,15 +10,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 
 class RespawnListener implements Listener {
-	final private SplitWorlds splitWorlds;
 	final private Eventials plugin;
-	RespawnListener(SplitWorlds sp){splitWorlds = sp; plugin = Eventials.getPlugin();}
+	RespawnListener(){plugin = Eventials.getPlugin();}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onRespawn(final PlayerRespawnEvent evt){
 		String deathWorld = evt.getPlayer().getWorld().getName();
 		String respawnWorld = evt.getRespawnLocation().getWorld().getName();
 		if(SplitWorlds.inSharedInvGroup(deathWorld, respawnWorld)) return;
+		plugin.getLogger().info("Died in: "+deathWorld+", Respawning in: "+respawnWorld);
 
 		// No need to vaccinate or clear inventory since player is currently dead.
 		// Loading the respawnWorld's inventory will override the player's location, so we need need to
@@ -28,7 +28,7 @@ class RespawnListener implements Listener {
 			Player player = plugin.getServer().getPlayer(playerUUID);
 			if(player == null || player.getWorld().getName().equals(respawnWorld) == false) return;
 
-			splitWorlds.loadProfile(player, player.getUniqueId(), respawnWorld, true, false);
+			SplitWorlds.loadProfile(player, player.getUniqueId(), respawnWorld, true, /*false*/true);
 			SplitWorldUtils.untrackedTeleport(player, evt.getRespawnLocation(), true);
 		}}.runTaskLater(Eventials.getPlugin(), 1);
 	}

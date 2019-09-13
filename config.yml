@@ -258,7 +258,7 @@ book-editor-enabled: true
 #             Split Worlds             #
 #--------------------------------------#
 splitworlds-enabled: true
-vaccinate-players: true
+vaccinate-players: false
 
 # Groups of worlds that share the inventories. World inventories are separate by default
 # Groups can be named whatever you like, but be precise with world names. * is wild.
@@ -282,7 +282,7 @@ shared-inv-worlds:
 #--------------------------------------#
 mailbox-enabled: true
 mailbox-host: 'hardcore.tk'
-mailbox-port: 9565
+mailbox-port: 9561
 mailbox-max-connections: 100
 
 #--------------------------------------#
