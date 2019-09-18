@@ -9,8 +9,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
-import bridge.Connection.ChannelReceiver;
-import bridge.EvBridgeHost;
+import Eventials.bridge.EvBridgeHost;
+import Eventials.bridge.Connection.ChannelReceiver;
 
 public final class MailboxHoster implements ChannelReceiver{
 	final String MAIL_DIR;

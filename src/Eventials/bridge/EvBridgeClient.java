@@ -1,12 +1,12 @@
-package bridge;
+package Eventials.bridge;
 
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
-import bridge.ClientMain;
-import bridge.Connection.ChannelReceiver;
-import bridge.Connection.MessageReceiver;
-import bridge.Connection.MessageSender;
+import Eventials.bridge.ClientMain;
+import Eventials.bridge.Connection.ChannelReceiver;
+import Eventials.bridge.Connection.MessageReceiver;
+import Eventials.bridge.Connection.MessageSender;
 
 public final class EvBridgeClient implements MessageReceiver{
 	final Logger logger;

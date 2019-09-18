@@ -1,4 +1,4 @@
-package bridge;
+package Eventials.bridge;
 
 import java.util.HashMap;
 import java.util.Timer;
@@ -8,10 +8,10 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import Eventials.bridge.Connection.ChannelReceiver;
+import Eventials.bridge.Connection.MessageReceiver;
+import Eventials.bridge.Connection.MessageSender;
 import Eventials.mailbox.MailboxHoster;
-import bridge.Connection.ChannelReceiver;
-import bridge.Connection.MessageReceiver;
-import bridge.Connection.MessageSender;
 
 public final class EvBridgeHost implements MessageReceiver{
 	final Logger logger;
@@ -34,7 +34,7 @@ public final class EvBridgeHost implements MessageReceiver{
 		timer.schedule(new TimerTask(){@Override public void run(){heartbeat();}}, 15000, 15000);
 	}
 	EvBridgeHost(){
-		this(Logger.getLogger("EvHost"), 9561, 100);
+		this(Logger.getLogger("EvHost"), 42374, 100);
 	}
 	public static void main(String[] args){
 		EvBridgeHost evHost = new EvBridgeHost();

@@ -4,8 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
-import bridge.Connection.ChannelReceiver;
-import bridge.EvBridgeClient;
+import Eventials.Eventials;
+import Eventials.bridge.EvBridgeClient;
+import Eventials.bridge.Connection.ChannelReceiver;
 import net.evmodder.EvLib.FileIO;
 
 public final class MailboxClient implements ChannelReceiver{
@@ -17,12 +18,18 @@ public final class MailboxClient implements ChannelReceiver{
 	final Logger logger;
 	final EvBridgeClient bridge;
 	final HashMap<UUID, MailListener> waitingCallbacks;
+	final CommandMailbox mailboxCommand;
 
-	public MailboxClient(Logger logger, EvBridgeClient bridge){
+	public MailboxClient(Eventials pl){
 		waitingCallbacks = new HashMap<UUID, MailListener>();
-		this.logger = logger;
-		this.bridge = bridge;
-		bridge.registerChannel(this, "mailbox");
+		bridge = Eventials.getBridge();
+		logger = pl.getLogger();
+		Eventials.getBridge().registerChannel(this, "mailbox");
+		mailboxCommand = new CommandMailbox(pl, this);
+	}
+
+	public void onDisable(){
+		//TODO: force close mailboxes?
 	}
 
 	public void loadMailbox(UUID playerUUID, MailListener callback, boolean lock){

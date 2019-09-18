@@ -4,15 +4,15 @@ import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 import EventAndMisc.EventAndMisc;
 import Eventials.listeners.*;
-import Eventials.mailbox.ShippingService;
+import Eventials.mailbox.MailboxClient;
 import Eventials.books.WriterTools;
+import Eventials.bridge.EvBridgeClient;
 import Eventials.commands.*;
 import Eventials.custombows.CustomBows;
 import Eventials.spawners.*;
 import Eventials.splitworlds.SplitWorlds;
 import Eventials.economy.Economy;
 import Eventials.voter.EvVoter;
-import bridge.EvBridgeClient;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.FileIO;
 
@@ -27,15 +27,15 @@ public class Eventials extends EvPlugin {
 	private static EvBridgeClient bridge; public static EvBridgeClient getBridge(){return bridge;}
 	private EvVoter voter;
 	private Economy eco;
-	private ShippingService mailbox;
+	private MailboxClient mailbox;
 
 	@Override public void onEvEnable(){
 		plugin = this;
 		new EventAndMisc(this);//TODO: Temporary?
 
 		String bridge_host = config.getString("bridge-host", "localhost");
-		int bridge_port = config.getInt("bridge-port", 9565);
-		new EvBridgeClient(getLogger(), bridge_host, bridge_port);//TODO: make flag-controlled in config
+		int bridge_port = config.getInt("bridge-port", 42374);
+		bridge = new EvBridgeClient(getLogger(), bridge_host, bridge_port);//TODO: make flag-controlled in config
 
 		if(config.getBoolean("book-editor-enabled", true)) new WriterTools(this);
 		if(config.getBoolean("enable-custom-bows", true)) new CustomBows(this);
@@ -44,7 +44,7 @@ public class Eventials extends EvPlugin {
 		if(config.getBoolean("evspawner-enabled", true)) new EvSpawner(this);
 		if(config.getBoolean("evvoter-enabled", true)) voter = new EvVoter(this);
 		if(config.getBoolean("splitworlds-enabled", true)) new SplitWorlds(this);
-		if(config.getBoolean("mailbox-enabled", true)) mailbox = new ShippingService(this);
+		if(config.getBoolean("mailbox-enabled", true)) mailbox = new MailboxClient(this);
 
 		if(config.getBoolean("pre-command", true))
 			getServer().getPluginManager().registerEvents(new PreCommandListener(), this);

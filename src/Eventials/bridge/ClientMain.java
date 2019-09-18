@@ -1,4 +1,4 @@
-package bridge;
+package Eventials.bridge;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import bridge.Connection.MessageSender;
+import Eventials.bridge.Connection.MessageSender;
 
 public class ClientMain extends Connection implements MessageSender{
 	//=========== Added main function =============================================
@@ -51,7 +51,7 @@ public class ClientMain extends Connection implements MessageSender{
 			System.out.println("Connected to server "+host+":"+port);
 		}
 		catch(IOException e){
-			System.out.println("Unable to connect to server!");
+			System.out.println("Unable to connect to server! (address="+host+":"+port+")");
 			return;
 		}
 

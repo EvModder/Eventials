@@ -1,4 +1,4 @@
-package bridge;
+package Eventials.bridge;
 
 import java.util.UUID;
 

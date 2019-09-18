@@ -281,8 +281,8 @@ shared-inv-worlds:
 #             Mail Service             #
 #--------------------------------------#
 mailbox-enabled: true
-mailbox-host: 'hardcore.tk'
-mailbox-port: 9561
+bridge-host: 'hardcore.tk'
+bridge-port: 42374
 mailbox-max-connections: 100
 
 #--------------------------------------#
