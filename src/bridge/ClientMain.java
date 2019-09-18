@@ -1,4 +1,4 @@
-package Eventials.mailbox;
+package bridge;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,27 +6,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import Eventials.mailbox.ClientMain;
-import Eventials.mailbox.Connection;
-import Eventials.mailbox.Connection.MessageSender;
+import bridge.Connection.MessageSender;
 
 public class ClientMain extends Connection implements MessageSender{
 	//=========== Added main function =============================================
 	public static void main(String[] args){
+		MessageReceiver receiver = new MessageReceiver(){
+			@Override
+			public void receiveMessage(MessageSender server, String message) {
+				System.out.println("Received: "+message);
+			}
+		};
 		//Connect to server
-		ClientMain connection = new ClientMain(
-			new MessageReceiver(){
-				@Override
-				public void receiveMessage(MessageSender server, String message) {
-					System.out.println("Received: "+message);
-				}
-			}, "localhost", 42374
-		);
+		ClientMain connection = new ClientMain(receiver, "localhost", 42374);
 		
 		Scanner scan = new Scanner(System.in);
 		while(scan.hasNextLine()){
 			String message = scan.nextLine();
-			connection.sendMessage(message);
+			connection.sendMessage(receiver, message);
 			System.out.println("Sent: "+message);
 		}
 		scan.close();
@@ -39,13 +36,12 @@ public class ClientMain extends Connection implements MessageSender{
 	PrintWriter out;
 	BufferedReader in;
 
-	@Override public void sendMessage(String message){
-		out.print(message);
+	@Override public void sendMessage(MessageReceiver source, String message){
+		out.println(message);
 		out.flush();
 	}
 
 	public ClientMain(MessageReceiver recv, String host, int port){
-		super(recv);
 		HOST_ADDRESS = host;
 		PORT = port;
 		try{
@@ -66,8 +62,7 @@ public class ClientMain extends Connection implements MessageSender{
 					try{
 						if(in.ready()){
 							StringBuilder builder = new StringBuilder("");
-							do{builder.append((char)in.read());}
-							while(in.ready());
+							for(char c = (char)in.read(); c != '\n'; c = (char)in.read()) builder.append(c);
 							receiver.receiveMessage(ClientMain.this, builder.toString());
 						}
 					}

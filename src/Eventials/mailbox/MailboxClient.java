@@ -4,42 +4,42 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
-import Eventials.mailbox.Connection.MessageReceiver;
-import Eventials.mailbox.Connection.MessageSender;
+import bridge.Connection.ChannelReceiver;
+import bridge.EvBridgeClient;
 import net.evmodder.EvLib.FileIO;
 
-public final class MailboxClient implements MailboxFetcher, MessageReceiver{
+public final class MailboxClient implements ChannelReceiver{
+	public interface MailListener{
+		public abstract void playerMailboxLoaded(UUID playerUUID, File mailbox, String message);
+		public abstract void playerMailboxSaved(UUID playerUUID, String message);
+	};
+
 	final Logger logger;
-	final UUID MAILBOX_UUID;
-
-	// Client-only
+	final EvBridgeClient bridge;
 	final HashMap<UUID, MailListener> waitingCallbacks;
-	final ClientMain mailServer;
 
-	public MailboxClient(Logger logger, String HOST, int PORT){
-		MAILBOX_UUID = UUID.randomUUID();
+	public MailboxClient(Logger logger, EvBridgeClient bridge){
 		waitingCallbacks = new HashMap<UUID, MailListener>();
-
 		this.logger = logger;
-		mailServer = new ClientMain(this, HOST, PORT);
+		this.bridge = bridge;
+		bridge.registerChannel(this, "mailbox");
 	}
 
-	@Override public void loadMailbox(UUID playerUUID, MailListener callback, boolean lock){
+	public void loadMailbox(UUID playerUUID, MailListener callback, boolean lock){
 		if(lock && waitingCallbacks.containsKey(playerUUID)){
 			callback.playerMailboxLoaded(playerUUID, null, "locked");
 			return;
 		}
 		waitingCallbacks.put(playerUUID, callback);
-		mailServer.sendMessage("load "+(lock ? "lock " : "")+playerUUID);
+		bridge.sendMessage(this, "load "+(lock ? "lock " : "")+playerUUID);
 		logger.info("[DEBUG] mailbox load request sent to mail server");
 	}
-	@Override public void saveMailbox(UUID playerUUID, File mailboxFile, MailListener callback, boolean lock){
-		String mailFileData = ShippingService.readBinaryFileAsString(mailboxFile);
+	public void saveMailbox(UUID playerUUID, File mailboxFile, MailListener callback, boolean lock){
+		String mailFileData = MailboxUtils.readBinaryFileAsString(mailboxFile);
 		if(mailFileData != null){
 			waitingCallbacks.put(playerUUID, callback);
-			mailServer.sendMessage("save "+(lock ? "lock " : "")+playerUUID+"|"+mailFileData);
+			bridge.sendMessage(this, "save "+(lock ? "lock " : "")+playerUUID+"|"+mailFileData);
 			logger.info("[DEBUG] mailbox save request sent to server");
-			logger.info("[DEBUG] message: "+mailFileData);
 		}
 		else{
 			logger.warning("Failed to save mail file for player: "+playerUUID);
@@ -47,7 +47,7 @@ public final class MailboxClient implements MailboxFetcher, MessageReceiver{
 		}
 	}
 
-	@Override public void receiveMessage(MessageSender conn, String message){
+	@Override public void receiveMessage(UUID hostUUID, String message){
 		String metadata;
 		int idx = message.indexOf('|');
 		if(idx != -1){metadata = message.substring(0, idx); message = message.substring(idx+1);}
@@ -87,7 +87,7 @@ public final class MailboxClient implements MailboxFetcher, MessageReceiver{
 				new File(filename).delete();
 			}
 			if(load){
-				if(ShippingService.saveBinaryStringToFile(new File(filename), message)){
+				if(MailboxUtils.saveBinaryStringToFile(new File(filename), message)){
 					logger.info("[DEBUG] got mailbox file from mail server");
 					waitingCallbacks.remove(playerUUID).playerMailboxLoaded(playerUUID, new File(filename), "loaded");
 				}

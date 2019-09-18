@@ -1,4 +1,4 @@
-package Eventials.mailbox;
+package bridge;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import Eventials.mailbox.Connection;
-import Eventials.mailbox.ServerMain;
 
 public class ServerMain extends Connection{
 	//=========== Added main function =============================================
@@ -48,14 +46,13 @@ public class ServerMain extends Connection{
 			catch(IOException e){e.printStackTrace();}
 		}
 
-		@Override public void sendMessage(String message){
-			out.print(message);
+		@Override public void sendMessage(MessageReceiver source, String message){
+			out.println(message);
 			out.flush();
 		}
 	}
 
 	public ServerMain(MessageReceiver recv, int port, int maxClients){
-		super(recv);
 		PORT = port;
 		MAX_CLIENTS = maxClients;
 		try{socket = new ServerSocket(port);}
@@ -97,7 +94,7 @@ public class ServerMain extends Connection{
 		System.out.println("Server opened on port "+port);
 	}
 
-	public void loop(){
+	void loop(){
 		synchronized(clients){
 			Iterator<Client> it = clients.iterator();
 			while(it.hasNext()){
@@ -109,7 +106,9 @@ public class ServerMain extends Connection{
 					}
 					else{
 						if(client.in.ready()){
-							receiver.receiveMessage(client, client.in.readLine());
+							StringBuilder builder = new StringBuilder("");
+							for(char c = (char)client.in.read(); c != '\n'; c = (char)client.in.read()) builder.append(c);
+							receiver.receiveMessage(client, builder.toString());
 						}
 						if(outgoing != null){
 							client.out.print(outgoing.toString());
@@ -122,12 +121,6 @@ public class ServerMain extends Connection{
 			outgoing = null;
 		}
 	}
-	
-	@SuppressWarnings("deprecation")
-	public void close(){
-		connectionWaitThread.stop();
-		if(socket != null) try{socket.close();} catch(IOException e){}
-	}
 
 	public int numClients(){
 		return clients.size();
@@ -136,6 +129,12 @@ public class ServerMain extends Connection{
 	public void sendToAll(String message){
 		if(outgoing == null) outgoing = new StringBuilder(message).append('\n');
 		else outgoing.append(message).append('\n');
+	}
+
+	@Override @SuppressWarnings("deprecation")
+	public void close(){
+		connectionWaitThread.stop();
+		if(socket != null) try{socket.close();} catch(IOException e){}
 	}
 
 	@Override

@@ -20,18 +20,18 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import Eventials.mailbox.MailboxFetcher.MailListener;
+import Eventials.mailbox.MailboxClient.MailListener;
 import Eventials.splitworlds.SplitWorlds;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
 public class CommandMailbox extends EvCommand implements MailListener{
 	final EvPlugin plugin;
-	final MailboxFetcher mailFetcher;
+	final MailboxClient mailFetcher;
 	final HashMap<UUID, UUID> mailReaders;
 	final HashMap<UUID, ItemStack[]> currentlyOpen;
 
-	public CommandMailbox(EvPlugin pl, MailboxFetcher mailboxHook){
+	public CommandMailbox(EvPlugin pl, MailboxClient mailboxHook){
 		super(pl, true);
 		plugin = pl;
 		mailFetcher = mailboxHook;
@@ -131,6 +131,7 @@ public class CommandMailbox extends EvCommand implements MailListener{
 		targetInv.setContents(contents);
 		player.openInventory(targetInv);
 		plugin.getLogger().info(player.getName()+" has opened their mailbox");
+		player.sendMessage(ChatColor.GREEN+"Mailbox opened");
 
 		//TODO: Look to write back (save mailbox) every few seconds
 
@@ -169,12 +170,12 @@ public class CommandMailbox extends EvCommand implements MailListener{
 	@Override public void playerMailboxSaved(UUID targetUUID, String message){
 		UUID viewerUUID = mailReaders.remove(targetUUID);
 		if(viewerUUID == null) plugin.getLogger().severe("Unknown viewer: "+viewerUUID);
+		Player player = plugin.getServer().getPlayer(viewerUUID);
 
 		if(message.startsWith("failed")){
 			plugin.getLogger().warning("Failed to save mailbox: "+targetUUID);
 			ItemStack[] contents = currentlyOpen.remove(viewerUUID);
 			if(contents == null) plugin.getLogger().severe("Unable to locate mailbox items");
-			Player player = plugin.getServer().getPlayer(viewerUUID);
 			if(player != null) for(ItemStack overflowItem : player.getInventory().addItem(contents).values()){
 				player.getWorld().dropItem(player.getLocation(), overflowItem);
 			}
@@ -190,6 +191,7 @@ public class CommandMailbox extends EvCommand implements MailListener{
 		}
 		else{
 			plugin.getLogger().info("[DEBUG] Mailbox saved successfully: "+targetUUID);
+			player.sendMessage(ChatColor.GOLD+"Mailbox saved");
 		}
 	}
 

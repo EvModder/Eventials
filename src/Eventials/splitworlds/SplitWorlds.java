@@ -144,14 +144,16 @@ public final class SplitWorlds{
 						+ playerUUID + ".dat");
 	}
 
-	static boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld, boolean useShared, boolean skipIfCurrent){
-		if(skipIfCurrent && handler.getUniqueId().equals(fromPlayer) && inSharedInvGroup(handler.getWorld().getName(), fromWorld)) {
+	static public boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld, boolean useShared, boolean useCurrent){
+		if(useCurrent && handler.getUniqueId().equals(fromPlayer) && inSharedInvGroup(handler.getWorld().getName(), fromWorld)) {
 			return false;
 		}
 		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
-		File sourceFile = getPlayerdata(fromPlayer, fromWorld, useShared, false);
+		File sourceFile = getPlayerdata(fromPlayer, fromWorld, useShared, useCurrent);
 		if(sourceFile == null || !sourceFile.exists() || currentFile == null){
 			Eventials.getPlugin().getLogger().warning("Unable to load profile from world: "+fromWorld);
+			Eventials.getPlugin().getLogger().warning("Source file: "+sourceFile.getPath()+
+					", Current file: "+currentFile.getPath());
 			return false;
 		}
 
@@ -167,14 +169,16 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace();}
 		return true;
 	}
-	static public boolean saveProfile(Player handler, UUID toPlayer, String toWorld, boolean useShared, boolean skipIfCurrent){
-		if(skipIfCurrent && handler.getUniqueId().equals(toPlayer) && !inSharedInvGroup(handler.getWorld().getName(), toWorld)){
+	static public boolean saveProfile(Player handler, UUID toPlayer, String toWorld, boolean useShared, boolean useCurrent){
+		if(useCurrent && handler.getUniqueId().equals(toPlayer) && !inSharedInvGroup(handler.getWorld().getName(), toWorld)){
 			return false;
 		}
 		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
-		File destFile = getPlayerdata(toPlayer, toWorld, useShared, false);
+		File destFile = getPlayerdata(toPlayer, toWorld, useShared, useCurrent);
 		if(currentFile == null || !currentFile.exists() || destFile == null){
 			Eventials.getPlugin().getLogger().warning("Unable to save profile to world: "+toWorld);
+			Eventials.getPlugin().getLogger().warning("Desination file: "+destFile.getPath()+
+					", Current file: "+currentFile.getPath());
 			return false;
 		}
 		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)

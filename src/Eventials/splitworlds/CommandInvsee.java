@@ -139,7 +139,7 @@ public class CommandInvsee extends EvCommand{
 		GameMode gm = player.getGameMode();
 
 		// Load the target's profile data
-		if(!splitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, false)){
+		if(!splitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, true)){
 			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
 			return true;
 		}
@@ -169,9 +169,9 @@ public class CommandInvsee extends EvCommand{
 				pl.getLogger().info("Updating inventory: "+fTargetWorld+" > "+fTargetPlayer.getName());
 
 				splitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
-				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, false);
+				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true);
 				player.getInventory().setContents(evt.getInventory().getContents());
-				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, false);
+				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true);
 				splitWorlds.loadCurrentProfile(player);
 
 				HandlerList.unregisterAll(this);

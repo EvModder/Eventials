@@ -12,6 +12,7 @@ import Eventials.spawners.*;
 import Eventials.splitworlds.SplitWorlds;
 import Eventials.economy.Economy;
 import Eventials.voter.EvVoter;
+import bridge.EvBridgeClient;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.FileIO;
 
@@ -23,6 +24,7 @@ public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;
 //	private Scheduler scheduler;
+	private static EvBridgeClient bridge; public static EvBridgeClient getBridge(){return bridge;}
 	private EvVoter voter;
 	private Economy eco;
 	private ShippingService mailbox;
@@ -30,6 +32,10 @@ public class Eventials extends EvPlugin {
 	@Override public void onEvEnable(){
 		plugin = this;
 		new EventAndMisc(this);//TODO: Temporary?
+
+		String bridge_host = config.getString("bridge-host", "localhost");
+		int bridge_port = config.getInt("bridge-port", 9565);
+		new EvBridgeClient(getLogger(), bridge_host, bridge_port);//TODO: make flag-controlled in config
 
 		if(config.getBoolean("book-editor-enabled", true)) new WriterTools(this);
 		if(config.getBoolean("enable-custom-bows", true)) new CustomBows(this);
