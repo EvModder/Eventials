@@ -28,7 +28,7 @@ class RespawnListener implements Listener {
 			Player player = plugin.getServer().getPlayer(playerUUID);
 			if(player == null || player.getWorld().getName().equals(respawnWorld) == false) return;
 
-			SplitWorlds.loadProfile(player, player.getUniqueId(), respawnWorld, true, /*false*/true);
+			SplitWorlds.loadProfile(player, player.getUniqueId(), respawnWorld, true, /*false*/true, /*false*/true);
 			SplitWorldUtils.untrackedTeleport(player, evt.getRespawnLocation(), true);
 		}}.runTaskLater(Eventials.getPlugin(), 1);
 	}

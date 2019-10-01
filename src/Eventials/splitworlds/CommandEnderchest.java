@@ -131,14 +131,16 @@ public class CommandEnderchest extends EvCommand{
 		}
 
 		// Save my current profile
+		GameMode gm = player.getGameMode();
+		boolean isFlying = player.isFlying();
 		if(!splitWorlds.saveCurrentProfile(player)){
 			sender.sendMessage(ChatColor.RED+"Encounter error while saving your current inventory!");
 			return true;
 		}
-		GameMode gm = player.getGameMode();
 
 		// Load the target's profile data
-		if(!splitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, true)){
+		if(!splitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, true,
+				!player.getUniqueId().equals(targetPlayer.getUniqueId()))){
 			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
 			return true;
 		}
@@ -147,6 +149,10 @@ public class CommandEnderchest extends EvCommand{
 		// Reload my profile
 		splitWorlds.loadCurrentProfile(player);
 		player.setGameMode(gm); // In case I'm in creative and they're not and I don't want to fall out of the sky
+		player.setFlying(isFlying);
+		if(player.getEnderChest().getContents().equals(contents)){
+			pl.getLogger().warning("/enderchest match, might be an issue..");
+		}
 
 		// Create and display an inventory using the enderchest ItemStack[]
 		final String invName = "> "+targetPlayer.getName()+" - "+splitWorlds.getInvGroup(targetWorld);
@@ -167,11 +173,16 @@ public class CommandEnderchest extends EvCommand{
 
 				pl.getLogger().info("Updating inventory: "+fTargetWorld+" > "+fTargetPlayer.getName());
 
+				GameMode gm = player.getGameMode();
+				boolean isFlying = player.isFlying();
 				splitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
-				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true);
+				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true,
+						!player.getUniqueId().equals(fTargetPlayer.getUniqueId()));
 				player.getEnderChest().setContents(evt.getInventory().getContents());
-				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true);
+				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true, true);
 				splitWorlds.loadCurrentProfile(player);
+				player.setGameMode(gm);
+				player.setFlying(isFlying);
 
 				HandlerList.unregisterAll(this);
 			}
