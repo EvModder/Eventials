@@ -55,6 +55,7 @@ public class ServerMain extends Connection{
 	public ServerMain(MessageReceiver recv, int port, int maxClients){
 		PORT = port;
 		MAX_CLIENTS = maxClients;
+		receiver = recv;
 		try{socket = new ServerSocket(port);}
 		catch(IOException e){e.printStackTrace();return;}
 

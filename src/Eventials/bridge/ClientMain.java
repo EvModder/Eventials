@@ -44,6 +44,7 @@ public class ClientMain extends Connection implements MessageSender{
 	public ClientMain(MessageReceiver recv, String host, int port){
 		HOST_ADDRESS = host;
 		PORT = port;
+		receiver = recv;
 		try{
 			socket = new Socket(host, port);
 			out = new PrintWriter(socket.getOutputStream());
@@ -52,6 +53,7 @@ public class ClientMain extends Connection implements MessageSender{
 		}
 		catch(IOException e){
 			System.out.println("Unable to connect to server! (address="+host+":"+port+")");
+			socket = null;
 			return;
 		}
 

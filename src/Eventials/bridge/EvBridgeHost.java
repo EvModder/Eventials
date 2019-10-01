@@ -31,7 +31,7 @@ public final class EvBridgeHost implements MessageReceiver{
 		this.logger = logger;
 		conn = new ServerMain(this, port, MAX_SERVERS);
 		Timer timer = new Timer();
-		timer.schedule(new TimerTask(){@Override public void run(){heartbeat();}}, 15000, 15000);
+		timer.schedule(new TimerTask(){@Override public void run(){heartbeat();}}, 45000, 45000);
 	}
 	EvBridgeHost(){
 		this(Logger.getLogger("EvHost"), 42374, 100);
@@ -48,10 +48,12 @@ public final class EvBridgeHost implements MessageReceiver{
 
 	private int hbResponses;
 	void heartbeat(){
-		if(hbResponses != 0) logger.info("HB responses: "+hbResponses);
-		hbResponses = 0;
-		conn.sendToAll("hb");
-		logger.info("Sent heartbeat to "+conn.clients.size()+" clients");
+		if(conn.clients.size() != 0){
+			logger.info("Heartbeat clients: "+hbResponses);
+			conn.sendToAll("hb");
+//			logger.info("Sent HB to "+conn.clients.size()+" clients");
+			hbResponses = 0;
+		}
 	}
 
 	public ChannelReceiver registerChannel(ChannelReceiver channel, String channelName){
@@ -61,6 +63,7 @@ public final class EvBridgeHost implements MessageReceiver{
 	}
 
 	@Override public void receiveMessage(MessageSender conn, String message){
+		if(message.equals("hb")){++hbResponses; return;}
 		UUID uuid;
 		String channel;
 		int idx = message.indexOf('|');

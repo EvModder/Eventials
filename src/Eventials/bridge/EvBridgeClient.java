@@ -32,7 +32,7 @@ public final class EvBridgeClient implements MessageReceiver{
 
 	@Override public void receiveMessage(MessageSender conn, String message){
 		if(message.equals("hb")){
-			logger.info("received heartbeat");
+//			logger.info("received heartbeat");
 			conn.sendMessage(this, "hb");
 			return;
 		}
@@ -64,4 +64,6 @@ public final class EvBridgeClient implements MessageReceiver{
 		String channel = channelNameLookup.get(sourceChannel);
 		conn.sendMessage(this, CLIENT_UUID+"|"+channel+"|"+message);
 	}
+
+	public boolean isClosed(){return conn.isClosed();}
 }
