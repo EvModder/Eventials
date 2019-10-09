@@ -64,6 +64,7 @@ public final class MailboxHoster implements ChannelReceiver{
 			if(lock){
 				UUID currentLock = currentLocks.get(playerUUID);
 				if(currentLock != null){
+					logger.info("[DEBUG] response to load request: LOCKED");
 					evHost.sendMessage(this, clientUUID, "fail lock "+playerUUID);
 					return;
 				}
@@ -74,10 +75,9 @@ public final class MailboxHoster implements ChannelReceiver{
 				String mailFileData = MailboxUtils.readBinaryFileAsString(mailFile);
 				if(mailFileData != null){
 					evHost.sendMessage(this, clientUUID, "load "+playerUUID+"|"+mailFileData);
-					logger.info("[DEBUG] responded to mailbox load request");
+					logger.info("[DEBUG] response to load request: SUCCESS");
 
 					// If lock is never released (TODO: ensure client receives mailbox), assume mailbox has been emptied
-					new File(MAIL_DIR+playerUUID+"_tmp.dat").delete();
 					mailFile.renameTo(new File(MAIL_DIR+playerUUID+"_tmp.dat"));
 				}
 				else{
@@ -91,15 +91,19 @@ public final class MailboxHoster implements ChannelReceiver{
 			if(lock){
 				//TODO: Ensure that this is the same client who is holding the lock
 				currentLocks.remove(playerUUID);
+				logger.info("[DEBUG] Unlocked: "+playerUUID);
 			}
 			// If message is empty, save nothing (leave mailbox file deleted; last contents are in *_tmp.dat)
-			if(message == null || message.trim().isEmpty() ||
+			if(message != null && !message.trim().isEmpty() &&
 					MailboxUtils.saveBinaryStringToFile(new File(MAIL_DIR+playerUUID+".dat"), message)){
+				new File(MAIL_DIR+playerUUID+"_tmp.dat").delete();
 				evHost.sendMessage(this, clientUUID, "save "+playerUUID);
 				logger.info("[DEBUG] responded to mailbox save request");
 			}
 			else{
-				logger.warning("Failed to save mail file for player: "+playerUUID);
+				if(message != null && !message.trim().isEmpty())
+					logger.warning("Received empty save from client for player: "+playerUUID);
+				else logger.warning("Failed to save mail file for player: "+playerUUID);
 				evHost.sendMessage(this, clientUUID, "fail save "+playerUUID);
 			}
 		}

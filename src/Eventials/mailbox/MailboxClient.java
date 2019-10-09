@@ -22,14 +22,15 @@ public final class MailboxClient implements ChannelReceiver{
 
 	public MailboxClient(Eventials pl){
 		waitingCallbacks = new HashMap<UUID, MailListener>();
-		bridge = Eventials.getBridge();
+		bridge = pl.bridge;
 		logger = pl.getLogger();
-		Eventials.getBridge().registerChannel(this, "mailbox");
+		bridge.registerChannel(this, "mailbox");
 		mailboxCommand = new CommandMailbox(pl, this);
 	}
 
 	public void onDisable(){
 		//TODO: force close mailboxes?
+		mailboxCommand.closeAllMailboxes();
 	}
 
 	public void loadMailbox(UUID playerUUID, MailListener callback, boolean lock){
@@ -75,32 +76,34 @@ public final class MailboxClient implements ChannelReceiver{
 			logger.warning("Illegal UUID from mail server client: "+metadata);
 			return;
 		}
+		
+		MailListener callback = waitingCallbacks.remove(playerUUID);
 
 		if(lock){
 			logger.warning("Mailbox is currently locked (opened elsewhere)");
-			if(save) waitingCallbacks.remove(playerUUID).playerMailboxSaved(playerUUID, "locked");
-			if(load) waitingCallbacks.remove(playerUUID).playerMailboxLoaded(playerUUID, null, "locked");
+			if(save) callback.playerMailboxSaved(playerUUID, "locked");
+			if(load) callback.playerMailboxLoaded(playerUUID, null, "locked");
 		}
-		if(fail){
+		else if(fail){
 			logger.warning("Failure response from server");
-			if(save) waitingCallbacks.remove(playerUUID).playerMailboxSaved(playerUUID, "failed");
-			if(load) waitingCallbacks.remove(playerUUID).playerMailboxLoaded(playerUUID, null, "failed");
+			if(save) callback.playerMailboxSaved(playerUUID, "failed");
+			if(load) callback.playerMailboxLoaded(playerUUID, null, "failed");
 		}
 		else{
 			String filename = FileIO.getEvFolder()+playerUUID+"_mail_tmp.dat";
 			if(save){
 				logger.info("[DEBUG] got save confirmation from mail server");
-				waitingCallbacks.remove(playerUUID).playerMailboxSaved(playerUUID, "saved");
+				callback.playerMailboxSaved(playerUUID, "saved");
 				new File(filename).delete();
 			}
 			if(load){
 				if(MailboxUtils.saveBinaryStringToFile(new File(filename), message)){
 					logger.info("[DEBUG] got mailbox file from mail server");
-					waitingCallbacks.remove(playerUUID).playerMailboxLoaded(playerUUID, new File(filename), "loaded");
+					callback.playerMailboxLoaded(playerUUID, new File(filename), "loaded");
 				}
 				else{
 					logger.warning("Failed to load mail file for player: "+playerUUID);
-					waitingCallbacks.remove(playerUUID).playerMailboxLoaded(playerUUID, null, "failed");
+					callback.playerMailboxLoaded(playerUUID, null, "failed");
 				}
 			}
 		}
