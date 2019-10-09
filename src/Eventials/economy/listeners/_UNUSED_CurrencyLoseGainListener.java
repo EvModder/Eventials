@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.EvPlugin;
 
 public class _UNUSED_CurrencyLoseGainListener implements Listener{
@@ -14,6 +14,6 @@ public class _UNUSED_CurrencyLoseGainListener implements Listener{
 	LinkedList<UUID> world;
 
 	public _UNUSED_CurrencyLoseGainListener(){
-		currency = Economy.getEconomy().getCurrency();
+		currency = EvEconomy.getEconomy().getCurrency();
 	}
 }

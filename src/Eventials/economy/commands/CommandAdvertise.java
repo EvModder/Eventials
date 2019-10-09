@@ -15,19 +15,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.Eventials;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandAdvertise extends EvCommand{
-	private Economy economy;
+	private EvEconomy economy;
 	final int MAX_LENGTH;// Max characters in ad
 	final int COST;// Price of advertising
 	final long DURATION;// Duration (in millis) of ad
 	final String curSymbol;// Currency symbol used in Economy
 	private long expiresOn;// Date on which the current advertisement expires
 
-	public CommandAdvertise(JavaPlugin pl, Economy eco){
+	public CommandAdvertise(JavaPlugin pl, EvEconomy eco){
 		super(pl);
 		economy = eco;
 		DURATION = pl.getConfig().getInt("ad-duration")*86400000L;//days to millis

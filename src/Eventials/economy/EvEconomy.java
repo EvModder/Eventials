@@ -20,13 +20,13 @@ import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.extras.MethodMocker.MessageInterceptor;
 import net.evmodder.EvLib.extras.TextUtils;
 
-public class Economy extends ServerEconomy{
+public class EvEconomy extends ServerEconomy{
 	final boolean useCurItem, updateBalsOnPayment;
 
-	private static Economy eco; public static Economy getEconomy(){return eco;}
+	private static EvEconomy eco; public static EvEconomy getEconomy(){return eco;}
 	private static Material currencyType; public Material getCurrency(){return currencyType;}
 
-	public Economy(Eventials pl){
+	public EvEconomy(Eventials pl){
 		super(pl, !pl.getConfig().getBoolean("track-server-balance", true),
 				   pl.getConfig().getBoolean("track-global-balance", true),
 				   (long) pl.getConfig().getDouble("starting-balance", 0),

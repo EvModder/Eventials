@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import Evil_Code_EvKits.EvKits;
 import net.evmodder.EvLib.extras.RefNBTTag;
 import net.evmodder.EvLib.extras.RefNBTTagList;
@@ -96,7 +96,7 @@ public class AC_Old implements Listener {
 			
 			if(fromWorldName.equals("VictoryHills")
 					&& evt.getFrom().getBlockX() == -9 && evt.getFrom().getBlockZ() == 4 && evt.getFrom().getBlockY() == 148){
-				if(Economy.getEconomy().playerToServer(p.getUniqueId(), 500) == false){
+				if(EvEconomy.getEconomy().playerToServer(p.getUniqueId(), 500) == false){
 					evt.setCancelled(true);
 					p.sendMessage("�cYou do not have enough money to afford this portal");
 				}

@@ -10,7 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.ess3.api.IEssentials;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.extras.TextUtils;
@@ -92,14 +92,14 @@ public class Extras{
 						.append(playerName).append("'s Essentials userdata\n");
 			
 			// Extract money directly from server bal
-			try{Economy.getEconomy().chargeServer(EssEcoHook.getBalance(player));}
+			try{EvEconomy.getEconomy().chargeServer(EssEcoHook.getBalance(player));}
 			catch(Exception e){e.printStackTrace();}
 			
 //			//send money from server to player after restoring profile
 //			try{Economy.getEconomy().serverToPlayer(uuid, VaultHook.getBalance(player));}
 //			catch(UserDoesNotExistException e1){}
 			
-			Economy.getEconomy().updateBalance(uuid, player.isOnline());
+			EvEconomy.getEconomy().updateBalance(uuid, player.isOnline());
 		}
 		else returnMsg.append(ChatColor.RED).append("Unable to find ").append(playerName)
 					.append("'s Essentials userdata!\n");
@@ -155,13 +155,13 @@ public class Extras{
 //						.append("'s world-stats data!\n");
 		}
 
-		Economy.getEconomy().removeBalance(uuid);
+		EvEconomy.getEconomy().removeBalance(uuid);
 		
 		// Remove Essentials data
 		file = new File("./plugins/Essentials/userdata/"+uuid+".yml");
 		if(file.exists()){
 			// Add balance directly to server
-			try{Economy.getEconomy().payServer(EssEcoHook.getBalance(player));}
+			try{EvEconomy.getEconomy().payServer(EssEcoHook.getBalance(player));}
 
 //			// Alternatively, transfer money to server before deleting profile
 //			try{Economy.getEconomy().playerToServer(uuid, VaultHook.getBalance(player));}

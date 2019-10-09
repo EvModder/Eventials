@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import com.earth2me.essentials.Essentials;
 import Eventials.Eventials;
 import Eventials.Extras;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 
 public class PreCommandListener implements Listener {
 	final Eventials plugin;
@@ -92,10 +92,10 @@ public class PreCommandListener implements Listener {
 		}
 
 		if(watchBalances && balanceWatchCommands.contains(noSlash)){
-			Economy.getEconomy().updateBalance(evt.getPlayer().getUniqueId(), true);
+			EvEconomy.getEconomy().updateBalance(evt.getPlayer().getUniqueId(), true);
 			for(String arg : message.split(" ")){
 				OfflinePlayer p = plugin.getServer().getOfflinePlayer(arg);
-				if(p != null && p.hasPlayedBefore()) Economy.getEconomy().updateBalance(p.getUniqueId(), true);
+				if(p != null && p.hasPlayedBefore()) EvEconomy.getEconomy().updateBalance(p.getUniqueId(), true);
 			}
 		}
 
@@ -188,7 +188,7 @@ public class PreCommandListener implements Listener {
 				String arg = message.split(" ")[1];
 				if(StringUtils.isNumeric(arg)) page = Integer.parseInt(arg);
 			}
-			Economy.getEconomy().showBaltop(evt.getPlayer(), page);
+			EvEconomy.getEconomy().showBaltop(evt.getPlayer(), page);
 			evt.setCancelled(true);
 		}
 	}

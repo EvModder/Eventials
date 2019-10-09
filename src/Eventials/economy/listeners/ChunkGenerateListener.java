@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import Eventials.Eventials;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 
 public class ChunkGenerateListener implements Listener{
 	enum FailureResult{TP_SPAWN, NOTHING};
@@ -64,7 +64,7 @@ public class ChunkGenerateListener implements Listener{
 			if(dSqNearest < 200*200){
 				final double CHUNK_GEN_COST = chunkGenCosts.getOrDefault(evt.getWorld().getName(), DEFAULT_COST);
 				final UUID uuid = player.getUniqueId();
-				if(Economy.getEconomy().playerToServer(uuid, CHUNK_GEN_COST)){
+				if(EvEconomy.getEconomy().playerToServer(uuid, CHUNK_GEN_COST)){
 					Double has = currentDebt.get(uuid);
 					currentDebt.put(uuid, (has == null ? 0 : has) + CHUNK_GEN_COST);
 					if(!noSpam.contains(uuid)){

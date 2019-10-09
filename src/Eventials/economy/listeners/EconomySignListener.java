@@ -11,16 +11,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import Eventials.Eventials;
 import Eventials.Extras;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.extras.TypeUtils;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 
 public class EconomySignListener implements Listener {
 	String symbol;
-	Economy economy;
+	EvEconomy economy;
 	public EconomySignListener(){
 		Eventials plugin = Eventials.getPlugin();
-		economy = Economy.getEconomy();
+		economy = EvEconomy.getEconomy();
 		symbol = plugin.getConfig().getString("currency-symbol", "$");
 	}
 	

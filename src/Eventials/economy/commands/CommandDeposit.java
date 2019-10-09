@@ -8,17 +8,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 
 public class CommandDeposit extends EvCommand{
-	final Economy economy;
+	final EvEconomy economy;
 	final String curSymbol;
 
-	public CommandDeposit(EvPlugin pl, Economy eco, boolean enabled){
+	public CommandDeposit(EvPlugin pl, EvEconomy eco, boolean enabled){
 		super(pl);
 		if(!enabled) pl.getCommand("Deposit").setExecutor(new CommandExecutor(){
 			@Override

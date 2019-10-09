@@ -108,4 +108,8 @@ public abstract class ServerEconomy extends BalanceTracker{
 	public boolean serverToPlayer(UUID pUUID, double amount){
 		return serverToPlayer(pUUID, BigDecimal.valueOf(amount));
 	}
+
+	public boolean playerHasAtLeast(UUID pUUID, double amount){
+		return EssEcoHook.hasAtLeast(plugin.getServer().getOfflinePlayer(pUUID), amount);
+	}
 }

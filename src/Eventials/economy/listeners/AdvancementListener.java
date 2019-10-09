@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import Eventials.Eventials;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.EvUtils;
 
 public class AdvancementListener implements Listener{
@@ -57,7 +57,7 @@ public class AdvancementListener implements Listener{
 					.append(ChatColor.GOLD).append(evt.getPlayer().getName()).append(ChatColor.GREEN)
 					.append(" has completed all of Minecraft's advancements!").toString());
 		}
-		if(Economy.getEconomy().serverToPlayer(evt.getPlayer().getUniqueId(), payoff)){
+		if(EvEconomy.getEconomy().serverToPlayer(evt.getPlayer().getUniqueId(), payoff)){
 			pl.getLogger().info(evt.getPlayer().getName()+" was awarded "+payoff);
 			pl.runCommand("title "+evt.getPlayer().getName() +
 					" actionbar [{\"text\":\"You were awarded \",\"color\":\"green\"}," +

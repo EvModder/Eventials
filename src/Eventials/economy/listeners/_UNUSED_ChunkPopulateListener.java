@@ -9,7 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import Eventials.Eventials;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.EvPlugin;
 
 public class _UNUSED_ChunkPopulateListener implements Listener {
@@ -19,7 +19,7 @@ public class _UNUSED_ChunkPopulateListener implements Listener {
 	LinkedList<UUID> world;
 
 	public _UNUSED_ChunkPopulateListener(){
-		currency = Economy.getEconomy().getCurrency();
+		currency = EvEconomy.getEconomy().getCurrency();
 		plugin = Eventials.getPlugin();
 		chunkX = new LinkedList<Integer>();
 		chunkZ = new LinkedList<Integer>();
@@ -43,7 +43,7 @@ public class _UNUSED_ChunkPopulateListener implements Listener {
 							if(chunk.getBlock(x, y, z).getType() == currency) ++newMoney;
 
 				if(newMoney > 0){
-					Economy.getEconomy().addGlobalBal(newMoney);
+					EvEconomy.getEconomy().addGlobalBal(newMoney);
 					Eventials.getPlugin().getLogger().info("Added to global bal: "+newMoney);
 				}
 			}

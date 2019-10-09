@@ -16,14 +16,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public class PlayerLoginListener implements Listener{
 	private Eventials plugin;
-	private Economy eco;
+	private EvEconomy eco;
 	public static HashMap<String, UUID> addressMap;
 	private LinkedList<String> recentJoins;
 	final boolean playNote, showRecentJoins, saveIps, serverFundsNoobs, trackGlobalBal, announceDailyMoney;
@@ -34,7 +34,7 @@ public class PlayerLoginListener implements Listener{
 	public PlayerLoginListener(){
 		plugin = Eventials.getPlugin();
 		boolean ecoEnabled = plugin.getConfig().getBoolean("economy-enabled", true);
-		eco = Economy.getEconomy();
+		eco = EvEconomy.getEconomy();
 		playNote = plugin.getConfig().getBoolean("login-noteblock");
 		showRecentJoins = plugin.getConfig().getBoolean("login-show-recent-joins", true);
 		MAX_RECENT_JOINS_SHOWN = plugin.getConfig().getInt("max-recent-joins-shown", 25);

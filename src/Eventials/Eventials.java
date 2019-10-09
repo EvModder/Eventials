@@ -11,7 +11,7 @@ import Eventials.commands.*;
 import Eventials.custombows.CustomBows;
 import Eventials.spawners.*;
 import Eventials.splitworlds.SplitWorlds;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import Eventials.voter.EvVoter;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.FileIO;
@@ -24,9 +24,9 @@ public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;
 //	private Scheduler scheduler;
-	private static EvBridgeClient bridge; public static EvBridgeClient getBridge(){return bridge;}
+	public EvBridgeClient bridge;//TODO: getter/setter
 	private EvVoter voter;
-	private Economy eco;
+	private EvEconomy eco;
 	private MailboxClient mailbox;
 
 	@Override public void onEvEnable(){
@@ -39,7 +39,7 @@ public class Eventials extends EvPlugin {
 
 		if(config.getBoolean("book-editor-enabled", true)) new WriterTools(this);
 		if(config.getBoolean("enable-custom-bows", true)) new CustomBows(this);
-		if(config.getBoolean("economy-enabled", true)) eco = new Economy(this);
+		if(config.getBoolean("economy-enabled", true)) eco = new EvEconomy(this);
 		if(config.getBoolean("scheduler-enabled", true)) new Scheduler(this);
 		if(config.getBoolean("evspawner-enabled", true)) new EvSpawner(this);
 		if(config.getBoolean("evvoter-enabled", true)) voter = new EvVoter(this);
@@ -105,6 +105,13 @@ public class Eventials extends EvPlugin {
 //		saveConfig();
 		if(config.getBoolean("scheduler-enabled", true))
 			FileIO.saveFile("scheduler-data.txt", "current-cylce: "+config.getInt("current-cylce", 0));
+	}
+
+	public void saveData(){
+		if(eco != null) eco.onDisable();
+		if(loginListener != null) loginListener.onDisable();
+		if(voter != null) voter.onDisable();
+//		saveConfig();
 	}
 
 	public void runCommand(String command){

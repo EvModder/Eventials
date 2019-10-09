@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TextUtils;
@@ -20,11 +20,11 @@ import net.evmodder.EvLib.hooks.EssEcoHook;
 import org.bukkit.ChatColor;
 
 public class CommandMoneyOrder extends EvCommand implements Listener{
-	final Economy economy;
+	final EvEconomy economy;
 	final String curSymbol;
 	final int MAX_MO, MIN_MO, TAX_MO;
 
-	public CommandMoneyOrder(EvPlugin pl, Economy eco, boolean enabled){
+	public CommandMoneyOrder(EvPlugin pl, EvEconomy eco, boolean enabled){
 		super(pl, enabled);
 		if(enabled) pl.getServer().getPluginManager().registerEvents(this, pl);
 		economy = eco;
@@ -56,7 +56,7 @@ public class CommandMoneyOrder extends EvCommand implements Listener{
 		Player p = (Player) sender;
 
 		if(args.length != 1){
-			double amount = Economy.getMoneyOrderValue(p.getInventory().getItemInMainHand());
+			double amount = EvEconomy.getMoneyOrderValue(p.getInventory().getItemInMainHand());
 			if(args.length == 0 && amount != 0){
 				if(!economy.serverToPlayer(p.getUniqueId(), amount)){
 					p.sendMessage(ChatColor.RED+"Error in economy system--the server appears to be out of money!");
@@ -104,9 +104,9 @@ public class CommandMoneyOrder extends EvCommand implements Listener{
 
 	@EventHandler
 	public void onPlayerInteractBlock(PlayerInteractEvent evt){
-		if(Economy.getMoneyOrderValue(evt.getPlayer().getInventory().getItemInMainHand()) != 0){
-			double amount = Economy.getMoneyOrderValue(evt.getItem());
-			Economy eco = Economy.getEconomy();
+		if(EvEconomy.getMoneyOrderValue(evt.getPlayer().getInventory().getItemInMainHand()) != 0){
+			double amount = EvEconomy.getMoneyOrderValue(evt.getItem());
+			EvEconomy eco = EvEconomy.getEconomy();
 			eco.serverToPlayer(evt.getPlayer().getUniqueId(), amount);
 
 			int numMOs = evt.getPlayer().getInventory().getItemInMainHand().getAmount();

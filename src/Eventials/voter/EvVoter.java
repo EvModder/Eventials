@@ -1,7 +1,7 @@
 package Eventials.voter;
 
 import Eventials.Eventials;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.FileIO;
 import java.util.UUID;
@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class EvVoter implements Listener{
 	private static EvVoter voter; public static EvVoter getVoteManager(){return voter;}
 
-	private Economy eco;
+	private EvEconomy eco;
 	private Eventials plugin;
 //	private List<UUID> fireworkWaits = new ArrayList<UUID>();
 	private YamlConfiguration voters;
@@ -29,7 +29,7 @@ public class EvVoter implements Listener{
 	public EvVoter(Eventials pl){
 		voter = this;
 		plugin = pl;
-		eco = Economy.getEconomy();
+		eco = EvEconomy.getEconomy();
 		voters = FileIO.loadYaml("voters.yml", "");
 
 		boolean votifierInstalled = plugin.getServer().getPluginManager().getPlugin("Votifier") != null;
