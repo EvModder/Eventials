@@ -185,6 +185,12 @@ cycles-per-holiday-action: 5
 skip-automessage-if-other-event: true
 skip-automessage-if-no-chats: true
 
+pmc-auto-bump: true
+pmc-resource-id:
+pmc-login-token: "a61f2bd3aa2d3ecdc0f3e26e51d0ca406b17e998712949380a35e1d\
+                  44de5239588cbacc64b185c48126bf9800ab4c4ea16016c13a8fc38\
+                  0de18621abb64a2fd95e43c884847641db247273f5eb1ccb0ed63a77"
+
 #Remember usernames for personalized automsgs
 save-ips: true
 max-saved-ips: 200
@@ -284,6 +290,14 @@ mailbox-enabled: true
 bridge-host: 'hardcore.tk'
 bridge-port: 42374
 mailbox-max-connections: 100
+
+# Prices for sending/receiving different items are set in 'mail_fees.csv'.
+# Items with no specified price can only be mailed if 'default-price' is >=0.
+# Alternatively, items with the 'mailable' tag can be mailed for free.
+
+default-sending-fee: -1 #-1 to disable sending
+default-receiving-fee: -1 #-1 to disable receiving
+container-fee-includes-contents: true
 
 #--------------------------------------#
 #              More Stuff              #

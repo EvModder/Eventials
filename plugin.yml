@@ -121,15 +121,8 @@ commands:
    mailbox:
       description: Open the global mailbox
       usage: /mailbox [player] 
-      aliases: [ups,packages,dropbox]
+      aliases: [ups,fedex,package,packages,dropbox,shipping,gms,shippingservice]
       permission: eventials.mailbox
-      permission-message: You do not have permission to do this.
-
-   enderchest:
-      description: View enderchest contents
-      usage: /echest [world] [player]
-      aliases: [echest,echestspy,enderspy,endspy,enderchestsee,enderchestspy,echestsee,endersee]
-      permission: eventials.echest
       permission-message: You do not have permission to do this.
 
 #======== Extras (Admin Tools & Game Modifying)

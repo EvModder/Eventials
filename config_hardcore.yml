@@ -234,6 +234,14 @@ shared-inv-worlds:
     - '*_the_end'
 
 #--------------------------------------#
+#             Mail Service             #
+#--------------------------------------#
+mailbox-enabled: true
+bridge-host: 'hardcore.tk'
+bridge-port: 42374
+mailbox-max-connections: 100
+
+#--------------------------------------#
 #              More Stuff              #
 #--------------------------------------#
 world-borders:

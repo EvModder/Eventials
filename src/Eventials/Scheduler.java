@@ -1,7 +1,11 @@
 package Eventials;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +23,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import Eventials.economy.Economy;
+import Eventials.economy.EvEconomy;
 import Eventials.economy.commands.CommandAdvertise;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TextUtils;
@@ -35,7 +39,9 @@ public final class Scheduler{
 	final String[] autoMsgs;
 	final String msgC, msgP, escapedMsgP;
 	final int period, cAutomsg, cWorldsave, cDelete, cButcher, cMagic, cHoliday, cEventialsSave;
-	final boolean cSkipAutomsg, skipAutomsgIfSilent;
+	final long MILLIS_PER_TICK = 50, MILLIS_PER_DAY = 1000L*60*60*24;
+	final boolean cSkipAutomsg, skipAutomsgIfSilent, AUTOBUMP_PMC;
+	final String PMC_LOGIN_TOKEN, PMC_RESOURCE_ID;
 	final HashMap<KillFlag, Boolean> butcherFlags;
 	private static Scheduler sch; public static Scheduler getScheduler(){return sch;}
 
@@ -65,6 +71,11 @@ public final class Scheduler{
 		cSkipAutomsg = plugin.getConfig().getBoolean("skip-automessage-if-other-event", true);
 		skipAutomsgIfSilent = plugin.getConfig().getBoolean("skip-automessage-if-no-chats", true);
 
+		PMC_RESOURCE_ID = ""+plugin.getConfig().getInt("pmc-resource-id", 0);
+		PMC_LOGIN_TOKEN = plugin.getConfig().getString("pmc-login-token", "");
+		AUTOBUMP_PMC = plugin.getConfig().getBoolean("pmc-auto-bump", false)
+					&& !PMC_LOGIN_TOKEN.isEmpty() && !PMC_RESOURCE_ID.equals("0");
+
 		//TODO: load from config file
 		butcherFlags = new HashMap<KillFlag, Boolean>();
 		butcherFlags.put(KillFlag.ANIMALS, false);
@@ -82,11 +93,18 @@ public final class Scheduler{
 	private void runCycle(){
 		//check if new day
 		long now = new GregorianCalendar().getTimeInMillis();
-		long last = now - period*50;//time since last cylce in millis, *50 to convert from ticks to millis
-		if((int)(last / 86400000) < (int)(now / 86400000)){//if new day 1000*60*60*24
+		long last = now - period*MILLIS_PER_TICK;
+		if((last/MILLIS_PER_DAY) < (now/MILLIS_PER_DAY)){
+			// Get date
+			GregorianCalendar date = new GregorianCalendar();
+			int day = date.get(Calendar.DAY_OF_MONTH), month = date.get(Calendar.MONTH)+1, year = date.get(Calendar.YEAR);
+
+			// Broadcast new day
 			plugin.getServer().broadcastMessage(""+ChatColor.DARK_GREEN+ChatColor.BOLD+ChatColor.ITALIC+
 					"Another day has passed on Alternatecraft!");
+			plugin.getLogger().info("Day: "+day+", Month: "+month+", Year: "+year+", Since epoch: "+(now / 86400000));
 
+			// Expire old ads
 			long DURATION = plugin.getConfig().getLong("ad-duration")*86400000L;
 			long EXPIRES = plugin.getConfig().getLong("ad-expires-on");
 			if(EXPIRES != 0 && now > EXPIRES + DURATION){//If 2x past the purchase date
@@ -94,27 +112,23 @@ public final class Scheduler{
 				plugin.getConfig().set("ad-expires-on", 0);
 			}
 
-			//------ Pay daily money ------------------------------
-			long ticksSinceNewDay = (now % 86400000)/50;
+			// Pay daily money
+			long ticksSinceNewDay = (now % MILLIS_PER_DAY)/MILLIS_PER_TICK;
 			List<Player> sendTo = new ArrayList<Player>();
 			for(Player p : plugin.getServer().getOnlinePlayers())
 				if(p.getStatistic(Statistic.PLAY_ONE_MINUTE)*60*20 > ticksSinceNewDay) sendTo.add(p);
-			
-			if(!sendTo.isEmpty()) payDailyMoney(sendTo.toArray(new Player[sendTo.size()]));
-			//-----------------------------------------------------
+			if(!sendTo.isEmpty()) payDailyMoney(sendTo);
 
-			GregorianCalendar date = new GregorianCalendar();
-			int day = date.get(Calendar.DAY_OF_MONTH), month = date.get(Calendar.MONTH)+1, year = date.get(Calendar.YEAR);
-			plugin.getLogger().info("Day: "+day+", Month: "+month+", Year: "+year+", Since epoch: "+(now / 86400000));
-//			plugin.getLogger().info("Current Millis>Day: "+(int)(now / 86400000)+
-			//						", Prev. Millis>Day: "+(int)(last/ 86400000));
-
+			// Trigger magic day 
 			magicDay = day*month == year%100;
-			int cyclesPerDay = 1728000/period;
-			if(cycleCount > Integer.MAX_VALUE-cyclesPerDay)
-				plugin.getConfig().set("current-cycle", cycleCount=-1);
+
+			// Bump server on PlanetMinecraft
+			if(AUTOBUMP_PMC) bumpOnPMC(PMC_LOGIN_TOKEN, PMC_RESOURCE_ID);
+
+			// Reset current cycle
+			plugin.getConfig().set("current-cycle", cycleCount=1);
 		}
-		plugin.getConfig().set("current-cycle", ++cycleCount);
+		else plugin.getConfig().set("current-cycle", ++cycleCount);
 
 		boolean event = false;
 		if(cDelete != 0 && cycleCount % cDelete == 0){
@@ -183,7 +197,8 @@ public final class Scheduler{
 			}
 		}
 		if(cEventialsSave != 0 && cycleCount % cEventialsSave == 0){
-			plugin.onDisable();//Disabling involves writing to file :)
+			plugin.saveData();
+			//plugin.onEvDisable();//Disabling involves writing to file :)
 		}
 	}
 
@@ -210,7 +225,7 @@ public final class Scheduler{
 		}
 	}
 
-	public void payDailyMoney(Player... ppl){
+	public void payDailyMoney(Collection<Player> ppl){
 		double dailyMoney = plugin.getConfig().getBoolean("economy-enabled") ?
 					(plugin.getConfig().getDouble("login-daily-money", 0) +
 					plugin.getConfig().getDouble("online-when-daily-money-bonus", 0)) : 0;
@@ -219,11 +234,54 @@ public final class Scheduler{
 				plugin.getConfig().getString("currency-symbol", "&2L"));
 		boolean announce = plugin.getConfig().getBoolean("announce-daily-money");
 		for(Player p : ppl){
-			if(Economy.getEconomy().serverToPlayer(p.getUniqueId(), dailyMoney) && announce){
+			if(EvEconomy.getEconomy().serverToPlayer(p.getUniqueId(), dailyMoney) && announce){
 				plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + 
 					p.getPlayer().getDisplayName() + ChatColor.GREEN + " received " + ChatColor.YELLOW +
 					dailyMoney + curSymbol + ChatColor.GREEN + " for logging on today!");
 			}
 		}
+	}
+
+	public static void bumpOnPMC(String autoLoginToken, String rssId){
+		try{
+			String url = 
+					"https://www.planetminecraft.com/ajax.php" +
+					"?module=public%2Fresource%2Fmanage" +//TODO: try with '/' instead of '%2'
+					"&module_plugin=log" +
+					"&module_plugin_task=bump" +
+					"&resource_id="+rssId;
+			HttpURLConnection conn = (HttpURLConnection)new URL(url).openConnection();
+			conn.setRequestMethod("GET");
+
+			conn.setRequestProperty("Host", "www.planetminecraft.com");
+			conn.setRequestProperty("User-Agent",
+					"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:70.0) Gecko/20100101 Firefox/70.0");
+			conn.setRequestProperty("Accept", "application/json, text/javascript, */*; q=0.01");
+			conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			conn.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
+			conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+			conn.setRequestProperty("Connection", "keep-alive");
+			conn.setRequestProperty("Referer", "https://www.planetminecraft.com/account/manage/servers/"+rssId+"/");
+			conn.setRequestProperty("Cookie",
+					//"PHPSESSID=92663eeb9ee2bbb870fcbfe4058bd0f8; "
+					//+ "_ga=GA1.2.1507515249.1523593069; "
+					//+ "__cfduid=d6b4adf4ac887cf0224df10b6a20292581555195284; "
+					//+ "__gads=ID=5bd0fad04673ae98:T=1556962714:S=ALNI_MZaTWiCcK2ZEtE3EGqI_f2NhJKt_g; "
+					//+ "__qca=P0-1125965822-1557462131204; OX_plg=swf|shk|pm; "
+					//+ "_gid=GA1.2.229742935.1569489269; "
+				"pmc_autologin="+autoLoginToken+"; "
+					//+ "_gat=1"
+			);
+			conn.setRequestProperty("TE", "Trailers");
+			int responseCode = conn.getResponseCode();
+			System.out.println("\nSending 'GET' request to URL : " + url);
+			System.out.println("Response Code : " + responseCode);
+		}catch(IOException e){e.printStackTrace();}
+	}
+	public static void main(String... args){
+		String autoLoginToken =
+				"a61f2bd3aa2d3ecdc0f3e26e51d0ca406b17e998712949380a35e1d44de5239588cbacc64b185c48126" +
+				"bf9800ab4c4ea16016c13a8fc380de18621abb64a2fd95e43c884847641db247273f5eb1ccb0ed63a77";
+		bumpOnPMC(autoLoginToken, "4368271");
 	}
 }
