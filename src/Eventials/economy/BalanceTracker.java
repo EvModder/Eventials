@@ -35,7 +35,7 @@ public abstract class BalanceTracker{
 		@Override
 		public boolean equals(Object obj){
 			if(obj instanceof PlayerBalance){
-				return equals(((PlayerBalance)obj).uuid) && equals(((PlayerBalance)obj).name);
+				return uuid.equals(((PlayerBalance)obj).uuid) && name.equals(((PlayerBalance)obj).name);
 			}
 			else if(obj instanceof UUID) return uuid.equals(obj);
 			else if(obj instanceof String) return name.equals(obj);
