@@ -219,7 +219,7 @@ public class AC_Old implements Listener {
 
 			evt.getPlayer().sendMessage(ChatColor.RED+"Staring world-cleanup");
 
-			new Thread(){public void run(){
+			new Thread(){@Override public void run(){
 				File folder = new File("./"+wName+"/region/");
 				File[] listOfFiles = folder.listFiles();
 

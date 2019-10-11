@@ -102,7 +102,7 @@ public class Determined implements Listener{
 				shooter.launchProjectile(SpectralArrow.class, velocity);
 				break;
 			case WITHER_SKELETON_SKULL:
-				WitherSkull w = (WitherSkull)shooter.launchProjectile(WitherSkull.class, velocity.multiply(2));
+				WitherSkull w = shooter.launchProjectile(WitherSkull.class, velocity.multiply(2));
 				w.setCharged(true);
 				w.setGlowing(true);
 				w.setYield(2);

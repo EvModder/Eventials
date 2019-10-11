@@ -78,7 +78,7 @@ public class CommandFloatingText extends EvCommand{
 	}
 
 	public static ArmorStand placeFloater(Location loc, String msg){
-		ArmorStand as = (ArmorStand) loc.getWorld().spawn(loc, ArmorStand.class);
+		ArmorStand as = loc.getWorld().spawn(loc, ArmorStand.class);
 
 		as.setInvulnerable(true);
 		as.setGravity(false);

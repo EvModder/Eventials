@@ -17,7 +17,7 @@ public class CommandUnsignBook extends EvCommand{
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
-	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/unsign
 		if(sender instanceof Player == false){
 			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players");

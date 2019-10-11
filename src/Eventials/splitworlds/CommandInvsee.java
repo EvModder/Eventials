@@ -21,17 +21,15 @@ import net.evmodder.EvLib.EvPlugin;
 
 public class CommandInvsee extends EvCommand{
 	private EvPlugin pl;
-	private SplitWorlds splitWorlds;
 
-	public CommandInvsee(EvPlugin p, SplitWorlds sw){
+	public CommandInvsee(EvPlugin p){
 		super(p, true);
 		pl = p;
-		splitWorlds = sw;
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
-	@Override @SuppressWarnings({ "deprecation", "static-access" })
+	@Override @SuppressWarnings( "deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/invsee [world] [player]
 		//----- Argument Parsing ---------------------------------------------------------------------------//
@@ -118,7 +116,7 @@ public class CommandInvsee extends EvCommand{
 		//if(targetPlayer.hasPermission("eventials.inventory.universal")) targetWorld = splitWorlds.DEFAULT_WORLD;
 
 		if(sender.getName().equals(targetPlayer.getName()) && (
-				splitWorlds.inSharedInvGroup(targetWorld, player.getWorld().getName()) ||
+				SplitWorlds.inSharedInvGroup(targetWorld, player.getWorld().getName()) ||
 				sender.hasPermission("eventials.inventory.universal"))){
 			//sender.sendMessage(ChatColor.RED+"Your "+targetWorld+" inventory is already open");
 			((Player)sender).openWorkbench(null, true);
@@ -126,7 +124,7 @@ public class CommandInvsee extends EvCommand{
 		}
 
 		if(targetPlayer.isOnline() &&
-				splitWorlds.inSharedInvGroup(targetWorld, targetPlayer.getPlayer().getWorld().getName())){
+				SplitWorlds.inSharedInvGroup(targetWorld, targetPlayer.getPlayer().getWorld().getName())){
 			player.openInventory(targetPlayer.getPlayer().getInventory());
 			return true;
 		}
@@ -134,13 +132,13 @@ public class CommandInvsee extends EvCommand{
 		// Save my current profile
 		GameMode gm = player.getGameMode();
 		boolean isFlying = player.isFlying();
-		if(!splitWorlds.saveCurrentProfile(player)){
+		if(!SplitWorlds.saveCurrentProfile(player)){
 			sender.sendMessage(ChatColor.RED+"Encounter error while saving your current inventory!");
 			return true;
 		}
 
 		// Load the target's profile data
-		if(!splitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, true,
+		if(!SplitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, true,
 				!player.getUniqueId().equals(targetPlayer.getUniqueId()))){
 			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
 			return true;
@@ -148,12 +146,12 @@ public class CommandInvsee extends EvCommand{
 		ItemStack[] contents = player.getInventory().getContents();
 
 		// Reload my profile
-		splitWorlds.loadCurrentProfile(player);
+		SplitWorlds.loadCurrentProfile(player);
 		player.setGameMode(gm); // In case I'm in creative and they're not and I don't want to fall out of the sky
 		player.setFlying(isFlying);
 
 		// Create and display an inventory using the ItemStack[]
-		final String invName = "> "+targetPlayer.getName()+" - "+splitWorlds.getInvGroup(targetWorld);
+		final String invName = "> "+targetPlayer.getName()+" - "+SplitWorlds.getInvGroup(targetWorld);
 		Inventory targetInv = pl.getServer().createInventory(player, InventoryType.PLAYER, invName);
 		targetInv.setContents(contents);
 		player.openInventory(targetInv);
@@ -173,12 +171,12 @@ public class CommandInvsee extends EvCommand{
 
 				GameMode gm = player.getGameMode();
 				boolean isFlying = player.isFlying();
-				splitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
-				splitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true,
+				SplitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
+				SplitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true,
 						!player.getUniqueId().equals(fTargetPlayer.getUniqueId()));
 				player.getInventory().setContents(evt.getInventory().getContents());
-				splitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true, true);
-				splitWorlds.loadCurrentProfile(player);
+				SplitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true, true);
+				SplitWorlds.loadCurrentProfile(player);
 				player.setGameMode(gm);
 				player.setFlying(isFlying);
 

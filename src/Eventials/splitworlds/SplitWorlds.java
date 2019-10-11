@@ -114,8 +114,8 @@ public final class SplitWorlds{
 
 		plugin.getServer().getPluginManager().registerEvents(new TeleportListener(this), plugin);
 		plugin.getServer().getPluginManager().registerEvents(new RespawnListener(), plugin);
-		new CommandEnderchest(plugin, this);
-		new CommandInvsee(plugin, this);
+		new CommandEnderchest(plugin);
+		new CommandInvsee(plugin);
 	}
 
 	public static String getInvGroup(String worldName){

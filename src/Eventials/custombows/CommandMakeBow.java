@@ -30,7 +30,7 @@ public class CommandMakeBow extends EvCommand{
 		return null;
 	}
 
-	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/makebow <type>
 		if(sender instanceof Player == false){
 			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players");

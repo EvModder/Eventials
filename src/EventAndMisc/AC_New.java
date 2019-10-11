@@ -115,7 +115,7 @@ public class AC_New implements Listener{
 
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent evt){
-		FPlayer fplayer = (FPlayer) FPlayers.i.get(evt.getPlayer());
+		FPlayer fplayer = FPlayers.i.get(evt.getPlayer());
 		if(!fplayer.hasFaction()) evt.setFormat(ChatColor.GRAY+"%s"+ChatColor.RESET+" %s");
 	}
 

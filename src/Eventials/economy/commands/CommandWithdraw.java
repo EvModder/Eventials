@@ -49,7 +49,7 @@ public class CommandWithdraw extends EvCommand{
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:	/withdraw <amount>
 		if(sender instanceof Player == false){
