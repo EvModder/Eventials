@@ -49,15 +49,20 @@ public class CommandEnderchest extends EvCommand{
 			World w = pl.getServer().getWorld(args[0]);
 			if(w != null) targetWorld = w.getName();
 			else{
-				targetPlayer = pl.getServer().getPlayer(args[0]);
+				Player onlineTarget = pl.getServer().getPlayer(args[0]);
+				targetPlayer = onlineTarget;
 				if(targetPlayer == null) targetPlayer = pl.getServer().getOfflinePlayer(args[0]);
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){
 					try{targetPlayer = pl.getServer().getOfflinePlayer(UUID.fromString(args[0]));}
 					catch(IllegalArgumentException ex){}
 				}
 				if(targetPlayer == null || !targetPlayer.hasPlayedBefore()){
-					if(sender.hasPermission("eventials.echest.others"))
-						sender.sendMessage(ChatColor.RED+"Unable to find world or player matching: "+args[0]);
+					if(sender.hasPermission("eventials.echest.others")){
+						if(onlineTarget == null || !SplitWorlds.inSharedInvGroup(
+								onlineTarget.getWorld().getName(), player.getWorld().getName()))
+							sender.sendMessage(ChatColor.RED+"Unable to find world or player matching: "+args[0]);
+						else player.openInventory(targetPlayer.getPlayer().getEnderChest());
+					}
 					else sender.sendMessage(ChatColor.RED+"Unable to find world: "+args[0]);
 					return false;
 				}
