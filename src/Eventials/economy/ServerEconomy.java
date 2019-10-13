@@ -10,7 +10,7 @@ import Eventials.economy.commands.CommandDonateServer;
 import Eventials.economy.commands.CommandGlobalBal;
 
 public abstract class ServerEconomy extends BalanceTracker{
-	public final boolean infServerBal, trackGlobalBal;
+	final boolean INFINITE_SERVER_BAL, TRACK_GLOBAL_BAL;
 	private BigDecimal serverBal, globalBal;
 	protected JavaPlugin plugin;
 
@@ -24,8 +24,8 @@ public abstract class ServerEconomy extends BalanceTracker{
 		super(startBal, curSymbol);
 		plugin = pl;
 		loadServerBalances();
-		infServerBal = infServer;
-		trackGlobalBal = trackGlobal;
+		INFINITE_SERVER_BAL = infServer;
+		TRACK_GLOBAL_BAL = trackGlobal;
 		new CommandServerBal(pl, this, !infServer);
 		new CommandGlobalBal(pl, this, trackGlobal);
 		new CommandDonateServer(pl, this, !infServer);
@@ -54,19 +54,20 @@ public abstract class ServerEconomy extends BalanceTracker{
 
 	public void onDisable(){
 		savePlayerBalances();
-		StringBuilder builder = new StringBuilder();
-		builder.append("server-balance: ").append(serverBal).append("\nglobal-balance: ").append(globalBal);
-		long EXPIRES = plugin.getConfig().getLong("ad-expires-on");
-		if(EXPIRES != 0) builder.append("\nad-expires-on: ").append(EXPIRES);
 
-		FileIO.saveFile("ecostats.txt", builder.toString());
+		StringBuilder builder = new StringBuilder();
+		if(!INFINITE_SERVER_BAL) builder.append("server-balance: ").append(serverBal).append('\n');
+		if(TRACK_GLOBAL_BAL) builder.append("global-balance: ").append(globalBal).append('\n');
+		long EXPIRES = plugin.getConfig().getLong("ad-expires-on");
+		if(EXPIRES != 0) builder.append("ad-expires-on: ").append(EXPIRES).append('\n');
+		if(builder.length() > 0) FileIO.saveFile("ecostats.txt", builder.toString());
 	}
 
 	public boolean payServer(BigDecimal amt){return chargeServer(amt.negate());}
 	public boolean chargeServer(BigDecimal amt){
 		serverBal = serverBal.subtract(amt);
-		if(infServerBal || amt.compareTo(BigDecimal.ZERO) <= 0
-						|| serverBal.compareTo(BigDecimal.ZERO) >= 0) return true;
+		if(INFINITE_SERVER_BAL || amt.compareTo(BigDecimal.ZERO) <= 0
+							|| serverBal.compareTo(BigDecimal.ZERO) >= 0) return true;
 		else{
 			serverBal = serverBal.add(amt);
 			return false;

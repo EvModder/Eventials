@@ -1,4 +1,4 @@
-package EventAndMisc;
+package _SpecificAndMisc;
 
 import java.io.InputStream;
 import org.bukkit.Material;

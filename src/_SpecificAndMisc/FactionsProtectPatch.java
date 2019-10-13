@@ -1,4 +1,4 @@
-package EventAndMisc;
+package _SpecificAndMisc;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;

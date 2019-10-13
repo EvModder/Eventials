@@ -58,14 +58,15 @@ public final class SplitWorlds{
 		final HashSet<String> primaryKeys2 = new HashSet<String>();
 		for(String groupName : worldSettings.getKeys(false)){
 			List<String> groupWorlds = worldSettings.getStringList(groupName);
-			logger.info("World group primary (in config): " + groupWorlds.get(0));
+			logger.fine("World group primary (in config): " + groupWorlds.get(0));
 			primaryKeys2.add(groupWorlds.get(0));
-			ufind.insertSets(SplitWorldUtils.findMatchGroups(worldNames, groupWorlds, false));
+			ufind.insertSets(SplitWorldUtils.findMatchGroups(worldNames, groupWorlds));
 		}
 		for(List<String> group : ufind.getSets()){
 			Collections.sort(group, Comparator.comparing(String::length));
 			String pKey1 = null, pKey2 = null;
 			for(String s : group){
+				if(s.equalsIgnoreCase(DEFAULT_WORLD)){pKey1 = s; break;}// primaryKey0
 				if(primaryKeys1.contains(s)){
 					if(pKey1 != null){
 						logger.warning("SharedInvGroup contains multiple worlds that have a /playerdata/ folder");
@@ -78,12 +79,14 @@ public final class SplitWorlds{
 				else if(pKey1 == null && primaryKeys2.contains(s)) pKey2 = s;
 			}
 			String primaryWorld = pKey1 != null ? pKey1 : pKey2 != null ? pKey2 : group.get(0);
-			logger.info("SharedInvGroup: [" + primaryWorld + "] -> (" + Strings.join(group, ',') + ")");
+			logger.info("SharedInvGroup: [" + primaryWorld + "]->(" + Strings.join(group, ',') + ")");
 			for(String s : group)
 				sharedInvWorlds.put(s, primaryWorld);
 		}
 		for(String world : worldNames){
-			if(!sharedInvWorlds.containsKey(world)) sharedInvWorlds.put(world, world);
+			if(sharedInvWorlds.putIfAbsent(world, world) == null){
+				logger.info("SharedInvGroup: [" + world + "]");
+			}
 		}
 		SINGLE_INV_GROUP = sharedInvWorlds.size() == 1;
 	}

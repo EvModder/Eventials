@@ -18,7 +18,7 @@ import net.minecraft.server.v1_14_R1.EntityPlayer;
 
 public final class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
-	public static Collection<List<String>> findMatchGroups(List<String> strs, List<String> search, boolean strict){
+	public static Collection<List<String>> findMatchGroups(List<String> strs, List<String> search){
 		HashSet<String> validSubs = null;
 		final List<String> staticTerms = new ArrayList<String>();
 		final List<String> complexTerms = new ArrayList<String>();
@@ -26,7 +26,10 @@ public final class SplitWorldUtils{
 		for(String m : search){
 			int wild = m.indexOf('*');
 			if(wild == -1){
-				if(!strs.contains(m) && !strict) return new ArrayList<>();
+				if(!strs.contains(m)){
+					Eventials.getPlugin().getLogger().warning("Unknown world: "+m);
+					continue;// return new ArrayList<>();
+				}
 				staticTerms.add(m);
 			}
 			else{
