@@ -6,10 +6,11 @@ import java.util.UUID;
 import java.util.logging.Logger;
 import Eventials.Eventials;
 import Eventials.bridge.EvBridgeClient;
-import Eventials.bridge.Connection.ChannelReceiver;
+import Eventials.bridge.basics.Connection.ChannelReceiver;
 import net.evmodder.EvLib.FileIO;
 
 public final class MailboxClient implements ChannelReceiver{
+	final long TEN_MIN_IN_MILLIS = 600000;
 	public interface MailListener{
 		public abstract void playerMailboxLoaded(UUID playerUUID, File mailbox, String message);
 		public abstract void playerMailboxSaved(UUID playerUUID, String message);
@@ -37,6 +38,9 @@ public final class MailboxClient implements ChannelReceiver{
 		if(lock && waitingCallbacks.containsKey(playerUUID)){
 			callback.playerMailboxLoaded(playerUUID, null, "locked");
 			return;
+		}
+		else if(System.currentTimeMillis() - bridge.getLastHeartbeat() > TEN_MIN_IN_MILLIS){
+			callback.playerMailboxLoaded(playerUUID, null, "failed");
 		}
 		waitingCallbacks.put(playerUUID, callback);
 		bridge.sendMessage(this, "load "+(lock ? "lock " : "")+playerUUID);

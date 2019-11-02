@@ -1,6 +1,8 @@
 #--------------------------------------#
 #           Eventials config           #
 #--------------------------------------#
+server-name: VictoryHills
+
 #Horse armor, Saddles, Nametags, CrackedBricks, DoubleSlabs, PackedIce
 add-recipes: true #False because unrenewables
 

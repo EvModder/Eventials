@@ -3,16 +3,18 @@ package Eventials.bridge;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
-import Eventials.bridge.ClientMain;
-import Eventials.bridge.Connection.ChannelReceiver;
-import Eventials.bridge.Connection.MessageReceiver;
-import Eventials.bridge.Connection.MessageSender;
+import Eventials.Eventials;
+import Eventials.bridge.basics.ClientMain;
+import Eventials.bridge.basics.Connection.ChannelReceiver;
+import Eventials.bridge.basics.Connection.MessageReceiver;
+import Eventials.bridge.basics.Connection.MessageSender;
 
 public final class EvBridgeClient implements MessageReceiver{
 	final Logger logger;
 	final UUID CLIENT_UUID;
 	final HashMap<String, ChannelReceiver> activeChannels;
 	final HashMap<ChannelReceiver, String> channelNameLookup;
+	long lastHB;
 
 	final ClientMain conn;
 
@@ -22,6 +24,8 @@ public final class EvBridgeClient implements MessageReceiver{
 		channelNameLookup = new HashMap<ChannelReceiver, String>();
 		this.logger = logger;
 		conn = new ClientMain(this, HOST, PORT);
+		if(!conn.isClosed()) conn.sendMessage(this,
+				"name:"+Eventials.getPlugin().getConfig().getString("server-name", "xxx"));
 	}
 
 	public ChannelReceiver registerChannel(ChannelReceiver channel, String channelName){
@@ -34,6 +38,7 @@ public final class EvBridgeClient implements MessageReceiver{
 		if(message.equals("hb")){
 //			logger.info("received heartbeat");
 			conn.sendMessage(this, "hb");
+			lastHB = System.currentTimeMillis();
 			return;
 		}
 		UUID uuid;
@@ -64,6 +69,8 @@ public final class EvBridgeClient implements MessageReceiver{
 		String channel = channelNameLookup.get(sourceChannel);
 		conn.sendMessage(this, CLIENT_UUID+"|"+channel+"|"+message);
 	}
+
+	public long getLastHeartbeat(){return lastHB;}
 
 	public boolean isClosed(){return conn.isClosed();}
 }

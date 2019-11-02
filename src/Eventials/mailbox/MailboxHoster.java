@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 import Eventials.bridge.EvBridgeHost;
-import Eventials.bridge.Connection.ChannelReceiver;
+import Eventials.bridge.basics.Connection.ChannelReceiver;
 
 public final class MailboxHoster implements ChannelReceiver{
 	final String MAIL_DIR;

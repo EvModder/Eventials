@@ -1,6 +1,8 @@
 #--------------------------------------#
 #           Eventials config           #
 #--------------------------------------#
+server-name: Hardcore
+
 add-recipes: false
 pre-command: true #Disabling kills lots of features/functionality
 fancy-help: true

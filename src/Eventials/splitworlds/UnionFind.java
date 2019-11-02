@@ -37,6 +37,7 @@ public class UnionFind<T>{
 	}
 
 	public void insertSet(Collection<T> ts){
+		if(ts.isEmpty()) return;
 		T k = add(ts.iterator().next());
 		for(T t : ts) addToSet(t, k);
 	}

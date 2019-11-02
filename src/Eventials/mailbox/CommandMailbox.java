@@ -312,7 +312,7 @@ public class CommandMailbox extends EvCommand implements MailListener{
 	}
 
 	@Override public void playerMailboxSaved(UUID targetUUID, String message){
-		UUID viewerUUID = viewerByTarget.remove(targetUUID);		
+		UUID viewerUUID = viewerByTarget.remove(targetUUID);
 		if(viewerUUID == null) plugin.getLogger().severe("Unknown viewer: "+viewerUUID);
 		targetByViewer.remove(viewerUUID);
 		fileByTarget.remove(targetUUID);

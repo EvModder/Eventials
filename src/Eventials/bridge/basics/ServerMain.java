@@ -1,4 +1,4 @@
-package Eventials.bridge;
+package Eventials.bridge.basics;
 
 import java.io.BufferedReader;
 import java.io.IOException;

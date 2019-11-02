@@ -1,4 +1,4 @@
-package Eventials.bridge;
+package Eventials.bridge.basics;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import Eventials.bridge.Connection.MessageSender;
+import Eventials.bridge.basics.Connection.MessageSender;
 
 public class ClientMain extends Connection implements MessageSender{
 	//=========== Added main function =============================================

@@ -17,6 +17,8 @@
 #--------------------------------------#
 #           Eventials config           #
 #--------------------------------------#
+server-name: MysteryPeaks
+
 #Horse armor, Saddles, Nametags, CrackedBricks, DoubleSlabs, PackedIce
 add-recipes: false #False because unrenewables
 
