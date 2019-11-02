@@ -2,7 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry excluding="net/evmodder/EvLib/hooks/WorldEditHook.java|net/evmodder/EvLib/util/IndexMultiMapDriver.java|net/evmodder/EvLib/util/IndexTreeMap.java|net/evmodder/EvLib/util/IndexTreeMultiMap.java|net/evmodder/EvLib/util/IndexTreeMultiMap2.java" kind="src" path="EvLib"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Vault.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Essentials.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/EvKits.jar"/>

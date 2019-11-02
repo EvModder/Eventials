@@ -2,7 +2,6 @@ package Eventials;
 
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
-import EventAndMisc.EventAndMisc;
 import Eventials.listeners.*;
 import Eventials.mailbox.MailboxClient;
 import Eventials.books.WriterTools;
@@ -13,6 +12,7 @@ import Eventials.spawners.*;
 import Eventials.splitworlds.SplitWorlds;
 import Eventials.economy.EvEconomy;
 import Eventials.voter.EvVoter;
+import _SpecificAndMisc.EventAndMisc;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.FileIO;
 
@@ -103,8 +103,11 @@ public class Eventials extends EvPlugin {
 		if(voter != null) voter.onDisable();
 		if(mailbox != null) mailbox.onDisable();
 //		saveConfig();
-		if(config.getBoolean("scheduler-enabled", true))
-			FileIO.saveFile("scheduler-data.txt", "current-cylce: "+config.getInt("current-cylce", 0));
+		if(config.getBoolean("scheduler-enabled", true)){
+			int currentCycle = config.getInt("current-cylce", 0);
+			if(currentCycle == 0) FileIO.deleteFile("scheduler-data.txt");
+			else FileIO.saveFile("scheduler-data.txt", "current-cylce: "+currentCycle);
+		}
 	}
 
 	public void saveData(){
