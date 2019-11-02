@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -48,8 +49,8 @@ public class PreCommandListener implements Listener {
 		getCommandFromAlias = new HashMap<String, String>();
 		cooldownCommands = new HashMap<String, Integer>();
 		recentCooldownCommands = new HashMap<String, Long>();
-		for(Entry<String, Object> e : plugin.getConfig().getConfigurationSection("global-command-cooldowns")
-				.getValues(false).entrySet()){
+		ConfigurationSection commandCooldowns = plugin.getConfig().getConfigurationSection("global-command-cooldowns");
+		if(commandCooldowns != null) for(Entry<String, Object> e : commandCooldowns.getValues(false).entrySet()){
 			PluginCommand cmd = plugin.getServer().getPluginCommand(e.getKey());
 			if(cmd != null){
 				String lowerCmd = cmd.getName().toLowerCase();
