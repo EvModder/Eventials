@@ -58,8 +58,8 @@ economy-enabled: true
 
 #Set track-server-balance to false for an infinite server balance
 track-server-balance: false
-starting-server-balance: 0
 track-global-balance: false
+starting-server-balance: 0
 starting-global-balance: 0
 starting-balance: 100
 server-pays-starting-balance: false
@@ -143,9 +143,9 @@ moneyorder-tax-percent: 25
 #Adjust chunk generation cost per-world
 default-chunk-generate-cost: 0
 chunk-generate-cost:
-  MysteryPeaks: 0.1
-  MysteryPeaks_nether: 0.07
-  MysteryPeaks_the_end: 0.05
+#  VictoryHills: 1
+#  VictoryHills_nether: 0.5
+#  VictoryHills_the_end: 0.1
 # What happens when a player can't afford the chunk-generate-cost
 # Possible values are: TP_SPAWN, NOTHING
 chunk-generate-failure: TP_SPAWN
@@ -253,7 +253,7 @@ shared-inv-worlds:
     - '*'
     - '*_nether'
     - '*_the_end'
-  old_worlds:
+  survival_group:
     - 'VictoryHills'
     - 'Events'
     - 'world'
@@ -265,7 +265,7 @@ shared-inv-worlds:
 #             Mail Service             #
 #--------------------------------------#
 mailbox-enabled: true
-bridge-host: 'hardcore.tk'
+bridge-host: 'altcraft.net'
 bridge-port: 42374
 mailbox-max-connections: 100
 
@@ -398,7 +398,7 @@ ping-messages:
   - 'Suggestions welcome!'
   - ''
   - 'Press [refresh] for more random messages!'
-  - '&7&oflat&f | &7&ohard | &7&ocreative | &7&ocustom'
+  - '&7&oflat&f | &7&ohard&f | &7&ocreative&f | &7&ocustom'
   - Yawn
   - ''
   - 'The mind is weak but the body is strong.'

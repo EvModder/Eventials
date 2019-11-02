@@ -20,8 +20,9 @@ enable-custom-bows: false
 prevent-arrow-invulnerability: false
 
 login-noteblock: true
-show-recent-joins: true
-max-recent-joins: 20
+login-show-recent-joins: true
+max-recent-joins-shown: 25
+max-recent-joins-stored: 50
 record-player-addresses: true
 
 default-nophysics-radius: 32
@@ -237,9 +238,17 @@ shared-inv-worlds:
 #             Mail Service             #
 #--------------------------------------#
 mailbox-enabled: true
-bridge-host: 'hardcore.tk'
+bridge-host: 'altcraft.net'
 bridge-port: 42374
 mailbox-max-connections: 100
+
+# Prices for sending/receiving different items are set in 'mail_fees.csv'.
+# Items with no specified price can only be mailed if 'default-price' is >=0.
+# Alternatively, items with the 'mailable' tag can be mailed for free.
+
+default-sending-fee: -1
+default-receiving-fee: -1
+container-fee-includes-contents: true
 
 #--------------------------------------#
 #              More Stuff              #
@@ -252,9 +261,9 @@ auto-messages:
   - |
        Hardcore is still in &bBETA&r.
        There may still be adjustments to mechanics
-#  - |
-#       We have an ongoing stats challenge!
-#       Top players (on Aug 25th) will receive a &aprize=>&750USD and a unique in-game reward!&r!
+  - |
+       We have an ongoing stats challenge!
+       The top player (on Nov 30th) will win &aprize money=>&750USD and a unique in-game reward! :D&r!
   - 'As part of &bBETA&r, expect periodic tweaks'
   - 'Teaming is encouraged, but always be cautious!'
   - 'Remember, anyone can join- be careful around others!'
@@ -295,8 +304,8 @@ auto-messages:
        Try out the &aCreative&r world!
   - 'Curious about your horse? Check out &2/hm'
   - |
-       When you teleport someone, neither you nor they will be
-       able to teleport the other unless you both reset (die).
+       When you teleport someone, neither of you will be able
+       to teleport the other again until you both reset (die).
   - 'Ye like? &2/vote&r for links!'
   - 'Funding help isn''t required, but is always appreciated :)'
 #  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
@@ -341,13 +350,13 @@ auto-messages:
 ping-messages:
   - ''
   - 'Wazzup %name%?'
-#  - 'Event prizes will be awarded end of August!'
+  - 'Event prizes will be awarded on December 1st!'
   - 'Omae Wa Mou Shindeiru'
-#  - 'Event ongoing til August 25th'
+  - 'Event ongoing til August 25th'
   - ''
   - 'Press &fRefresh&r for more random ping messages!'
   - 'Yeet a bug'
-#  - 'Win up to $150 cash by August 25th!'
+  - 'The current Nov.2019 Event has a cash prize of $50!'
   - ''
   - 'Chicken Fried Steak'
   - 'A Minecraft Server'
@@ -362,7 +371,7 @@ ping-messages:
   - ''
   - '&oPlots world coming "soon"!'
   - 'Now with additional lag!'
-#  - 'Dying also resets your progress towards challenges!'
+  - 'Dying also resets your Event scores, be cautious!'
   - ''
   - '&oPeriodic Events!'
   - 'Suggestions welcome!'

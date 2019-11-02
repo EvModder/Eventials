@@ -186,7 +186,7 @@ skip-automessage-if-other-event: true
 skip-automessage-if-no-chats: true
 
 pmc-auto-bump: true
-pmc-resource-id:
+pmc-resource-id: 4368271
 pmc-login-token: "a61f2bd3aa2d3ecdc0f3e26e51d0ca406b17e998712949380a35e1d\
                   44de5239588cbacc64b185c48126bf9800ab4c4ea16016c13a8fc38\
                   0de18621abb64a2fd95e43c884847641db247273f5eb1ccb0ed63a77"
@@ -287,7 +287,7 @@ shared-inv-worlds:
 #             Mail Service             #
 #--------------------------------------#
 mailbox-enabled: true
-bridge-host: 'hardcore.tk'
+bridge-host: 'altcraft.net'
 bridge-port: 42374
 mailbox-max-connections: 100
 
@@ -428,7 +428,7 @@ ping-messages:
   - 'Suggestions welcome!'
   - ''
   - 'Press [refresh] for more random messages!'
-  - '&7&oflat&f | &7&ohard | &7&ocreative | &7&ocustom'
+  - '&7&oflat&f | &7&ohard&f | &7&ocreative&f | &7&ocustom'
   - Yawn
   - ''
   - 'The mind is weak but the body is strong.'
