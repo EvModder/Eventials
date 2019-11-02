@@ -50,21 +50,22 @@ public class CommandMailbox extends EvCommand implements MailListener{
 	final HashMap<Material, Pair<Double, Double>> mailFees;
 	final double DEFAULT_ADD_FEE, DEFAULT_REMOVE_FEE;
 	final boolean CONTAINER_ITEMS_FEE;
-	//give EvDoc minecraft:diamond_chestplate{CustomModelData:1, PublicBukkitValues:{"Eventials:mailable": 42}} 1
+	//give @p minecraft:golden_boots{CustomModelData:1, PublicBukkitValues:{"Eventials:mailable": 42}} 1
 
 	void loadMailFeesFile(){
 		mailFees.clear();
 		InputStream defaultFees = plugin.getClass().getResourceAsStream("/mail_fees.csv");
 		String[] fees = FileIO.loadFile("mail_fees.csv", defaultFees).split("\n");
 		for(int i=0; i<fees.length; ++i){
-			String[] data = fees[i].split(",");
+			String[] data = fees[i].split(",", -1);// limit=-1 prevents split() from removing trailing empty strings
 			if(data.length != 3){
-				plugin.getLogger().warning("Invalid line in 'mail_fees.csv': ["+fees[i]+"]");
+				plugin.getLogger().warning("Invalid line in 'mail_fees.csv': ["+fees[i]+"], len="+data.length);
 				continue;
 			}
 			Material type;
 			try{type = Material.getMaterial(data[0].toUpperCase());}
-			catch(IllegalArgumentException ex){
+			catch(IllegalArgumentException ex){type = null;}
+			if(type == null){
 				if(i != 0) plugin.getLogger().warning("Unknown item type: "+data[0]+" (please use exact material names)");
 				continue;
 			}
@@ -353,7 +354,7 @@ public class CommandMailbox extends EvCommand implements MailListener{
 		}
 
 		void chargeFeesAndCloseMailbox(Player player){
-			if(!EvEconomy.getEconomy().playerToServer(viewerUUID, currentCost)){
+			if(currentCost > 0 && !EvEconomy.getEconomy().playerToServer(viewerUUID, currentCost)){
 				double missingItemsCost = 0D;
 				player.sendMessage(ChatColor.DARK_RED+"Error: "+ChatColor.RED+"Unable to afford mailbox interaction");
 				for(Entry<ItemStack, Integer> itemAndAmt : itemsToRemove.entrySet()){
