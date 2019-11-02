@@ -95,7 +95,7 @@ public final class SplitWorldUtils{
 		//tracker.clear(playerHandle);
 		((CraftWorld)destination.getWorld()).getHandle().unregisterEntity(playerHandle);
 		boolean success = player.teleport(destination);
-		((CraftWorld)destination.getWorld()).getHandle().addEntity(playerHandle);
+		//((CraftWorld)destination.getWorld()).getHandle().addEntity(playerHandle);
 		//tracker.updatePlayer(playerHandle);
 		return success;
 	}
