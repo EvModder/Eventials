@@ -108,7 +108,11 @@ public class ServerMain extends Connection{
 					else{
 						if(client.in.ready()){
 							StringBuilder builder = new StringBuilder("");
-							for(char c = (char)client.in.read(); c != '\n'; c = (char)client.in.read()) builder.append(c);
+							boolean windums = false;
+							for(char c = (char)client.in.read(); c != '\n'; c = (char)client.in.read()){
+								if(windums) builder.append('\r');
+								if(!(windums = (c == '\r'))) builder.append(c);
+							}
 							receiver.receiveMessage(client, builder.toString());
 						}
 						if(outgoing != null){

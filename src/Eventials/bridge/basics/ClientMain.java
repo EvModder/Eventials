@@ -37,7 +37,8 @@ public class ClientMain extends Connection implements MessageSender{
 	BufferedReader in;
 
 	@Override public void sendMessage(MessageReceiver source, String message){
-		out.println(message);
+		out.print(message);
+		out.print('\n');
 		out.flush();
 	}
 

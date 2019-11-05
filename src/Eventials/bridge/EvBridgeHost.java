@@ -6,10 +6,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.ConsoleHandler;
 import java.util.stream.Collectors;
 import Eventials.bridge.basics.ServerMain;
 import Eventials.bridge.basics.Connection.ChannelReceiver;
@@ -41,29 +38,28 @@ public final class EvBridgeHost implements MessageReceiver{
 	}
 	EvBridgeHost(){
 		this(Logger.getLogger("EvHost"), 42374, 100);
-		//logger.setUseParentHandlers(false);
+		/*StreamHandler handler = new StreamHandler(System.out, new java.util.logging.Formatter(){
+			@Override public String format(LogRecord record){
+				return "> "+record.getLevel()+": "+record.getMessage()+"\n";
+			}
+		});
+		handler.setLevel(Level.ALL);
+		logger.setUseParentHandlers(false);
+		logger.addHandler(handler);*/
+		System.setProperty("java.util.logging.SimpleFormatter.format", "> %4$s: %5$s%6$s%n");
 	}
 	public static void main(String[] args){
 		EvBridgeHost evHost = new EvBridgeHost();
 		new MailboxHoster(evHost, evHost.logger, null, null);
-
-		ConsoleHandler handler = new ConsoleHandler();
-		handler.setFormatter(new java.util.logging.Formatter(){
-			@Override public String format(LogRecord record){
-				return "> "+record.getLevel()+": "+record.getMessage();
-			}
-		});
-		handler.setLevel(Level.ALL);
-		evHost.logger.addHandler(handler);
 	}
 
 	private List<String> hbResponses = new ArrayList<String>();
 	void heartbeat(){
 		if(conn.numClients() != 0){
 			logger.info("Heartbeat clients: ["+hbResponses.stream().collect(Collectors.joining(", "))+"]");
+			hbResponses.clear();
 			conn.sendToAll("hb");
 //			logger.info("Sent HB to "+conn.clients.size()+" clients");
-			hbResponses.clear();
 		}
 	}
 
@@ -74,9 +70,14 @@ public final class EvBridgeHost implements MessageReceiver{
 	}
 
 	@Override public void receiveMessage(MessageSender conn, String message){
+		String originalMsg = message;
 		String name = clientNames.getOrDefault(conn, "xxx");
 		if(message.equals("hb")){hbResponses.add(name); return;}
-		else if(message.startsWith("name:")){clientNames.put(conn, message.substring(5)); return;}
+		else if(message.startsWith("name:")){
+			clientNames.put(conn, name=message.substring(5));
+			logger.info("Handshake with client name:'"+name+"'");
+			return;
+		}
 		UUID uuid;
 		String channel;
 		int idx = message.indexOf('|');
@@ -89,9 +90,11 @@ public final class EvBridgeHost implements MessageReceiver{
 			else{channel = message; message = "";}
 		}
 		else{uuid = null; channel = null; message = null;}
-		if(uuid == null) logger.severe("Unable to parse client UUID from message");
+		if(uuid == null){
+			logger.severe("Unable to parse client UUID from message:'"+originalMsg+"'");
+		}
 		connectedClients.put(uuid, conn);
-		logger.info("[DEBUG] Received message from client '"+name+"'("+uuid+") on channel: "+channel);
+		logger.info("[DEBUG] Received message from client:'"+name+"' on channel:'"+channel+"'");
 
 		ChannelReceiver receiver = activeChannels.get(channel);
 		if(receiver == null){

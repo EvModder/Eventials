@@ -30,7 +30,7 @@ public final class MailboxHoster implements ChannelReceiver{
 			try(InputStream is = MailboxHoster.class.getResourceAsStream("/empty_inv_playerdata.dat")){
 				Files.copy(is, Paths.get(playerdataFile), StandardCopyOption.REPLACE_EXISTING);
 			}
-			catch(IOException e){System.err.println("Failed to load empty_inv resource");}
+			catch(IOException e){logger.severe("Failed to load empty_inv resource");}
 			EMPTY_MAIL_PLAYERDATA = MailboxUtils.readBinaryFileAsString(new File(playerdataFile));
 		}
 		evHost = host;
@@ -43,7 +43,7 @@ public final class MailboxHoster implements ChannelReceiver{
 		int idx = message.indexOf('|');
 		if(idx != -1){metadata = message.substring(0, idx); message = message.substring(idx+1);}
 		else metadata = message;
-		System.out.println("[DEBUG] Received from conn: "+metadata);
+		logger.info("[DEBUG] Received from conn: "+metadata);
 
 		boolean failure = metadata.startsWith("fail ");
 		if(failure) metadata = metadata.substring(5);
@@ -56,7 +56,7 @@ public final class MailboxHoster implements ChannelReceiver{
 		UUID playerUUID;
 		try{playerUUID = UUID.fromString(metadata);}
 		catch(IllegalArgumentException ex){
-			System.out.println("Illegal UUID from mail server client: '"+metadata+"'");
+			logger.severe("Illegal UUID from client: '"+metadata+"'");
 			return;
 		}
 

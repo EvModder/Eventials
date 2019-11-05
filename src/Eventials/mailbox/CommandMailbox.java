@@ -114,7 +114,8 @@ public class CommandMailbox extends EvCommand implements MailListener{
 		}
 		if(item.getItemMeta().getPersistentDataContainer().has(MAIL_ITEM_FLAG, PersistentDataType.BYTE)) return fee;
 		Pair<Double, Double> sendCost = mailFees.get(item.getType());
-		return sendCost == null ? (DEFAULT_ADD_FEE < 0 ? null : DEFAULT_ADD_FEE + fee) : sendCost.a + fee;
+		return sendCost == null || sendCost.a == null ?
+				(DEFAULT_ADD_FEE < 0 ? null : DEFAULT_ADD_FEE + fee) : sendCost.a + fee;
 	}
 	public Double costToRemove(ItemStack item){
 		if(item == null || item.getType() == Material.AIR) return 0D;
@@ -130,7 +131,8 @@ public class CommandMailbox extends EvCommand implements MailListener{
 		}
 		if(item.getItemMeta().getPersistentDataContainer().has(MAIL_ITEM_FLAG, PersistentDataType.BYTE)) return fee;
 		Pair<Double, Double> receiveCost = mailFees.get(item.getType());
-		return receiveCost == null ? (DEFAULT_REMOVE_FEE < 0 ? null : DEFAULT_REMOVE_FEE + fee) : receiveCost.b + fee;
+		return receiveCost == null || receiveCost.b == null ?
+				(DEFAULT_REMOVE_FEE < 0 ? null : DEFAULT_REMOVE_FEE + fee) : receiveCost.b + fee;
 	}
 
 	public boolean addToMailbox(ItemStack item, UUID sender){
@@ -210,6 +212,10 @@ public class CommandMailbox extends EvCommand implements MailListener{
 				sender.sendMessage(ChatColor.RED+"Unable to find player: "+args[0]);
 				return false;
 			}
+		}
+		if(viewerByTarget.containsKey(targetPlayer.getUniqueId()) || targetByViewer.containsKey(player.getUniqueId())){
+			sender.sendMessage(ChatColor.RED+"That mailbox is currently in use by another player");
+			return true;
 		}
 
 		sender.sendMessage(ChatColor.GOLD+"Please wait, loading mailbox...");

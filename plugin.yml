@@ -439,7 +439,7 @@ permissions:
 #======== Mailbox
    eventials.mailbox:
       description: Permission to use /mailbox
-      default: op
+      default: true
 
    eventials.mailbox.others:
       description: Permission to use /mailbox [player]

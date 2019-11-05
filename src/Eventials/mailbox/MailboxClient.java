@@ -40,6 +40,7 @@ public final class MailboxClient implements ChannelReceiver{
 			return;
 		}
 		else if(System.currentTimeMillis() - bridge.getLastHeartbeat() > TEN_MIN_IN_MILLIS){
+			logger.severe("No heartbeat from server for 10+ minutes--connection lost");
 			callback.playerMailboxLoaded(playerUUID, null, "failed");
 		}
 		waitingCallbacks.put(playerUUID, callback);

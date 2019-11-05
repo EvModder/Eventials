@@ -13,6 +13,7 @@ import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffectType;
 import Eventials.Eventials;
 import net.minecraft.server.v1_14_R1.EntityPlayer;
 
@@ -125,6 +126,7 @@ public final class SplitWorldUtils{
 //		player.setLevel(0);
 //		player.setExp(0F);
 //		for(PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
+		player.removePotionEffect(PotionEffectType.INVISIBILITY);
 //		player.getInventory().clear();
 //		player.getEnderChest().clear();
 		
