@@ -25,6 +25,7 @@ public class EvVoter implements Listener{
 	final double playerCash, serverCash;
 	final boolean serverPays, trackGlobalBal;
 	final long hrInMillis = 3600000, dayInMillis = 24*hrInMillis, graceInMillis;
+	private boolean anyEvent = false;
 
 	public EvVoter(Eventials pl){
 		voter = this;
@@ -54,7 +55,7 @@ public class EvVoter implements Listener{
 	}
 
 	public void onDisable(){
-		FileIO.saveYaml("voters.yml", voters);
+		if(anyEvent) FileIO.saveYaml("voters.yml", voters);
 	}
 
 	@EventHandler
@@ -68,6 +69,7 @@ public class EvVoter implements Listener{
 			for(int i=0; i<votes; ++i) rewardPlayer(evt.getPlayer(), streak);
 		}
 		voters.set(uuid+".offline", null);
+		anyEvent = true;
 	}
 
 /*	@EventHandler
@@ -83,7 +85,7 @@ public class EvVoter implements Listener{
 
 		// Hasn't voted in >X hours, streak is 0
 		long timeSinceVote = System.currentTimeMillis() - voters.getLong(uuid+".streak-last", 0);
-		if(timeSinceVote > dayInMillis + graceInMillis) voters.set(uuid+".streak", 0);
+		if(timeSinceVote > dayInMillis + graceInMillis){voters.set(uuid+".streak", 0); anyEvent=true;}
 		return voters.getInt(uuid+".streak", 0);
 	}
 
@@ -116,6 +118,7 @@ public class EvVoter implements Listener{
 			if(!voters.isConfigurationSection(uuid+".offline")) voters.createSection(uuid+".offline");
 			voters.set(uuid+".offline."+streak, voters.getInt(uuid+".offline."+streak, 0) + 1);
 		}
+		anyEvent = true;
 	}
 
 	public long lastVote(UUID uuid){

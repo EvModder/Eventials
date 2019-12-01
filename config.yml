@@ -45,6 +45,11 @@ max-recent-joins-shown: 25
 max-recent-joins-stored: 50
 record-player-addresses: true
 
+# Maximum number of online players before new players cannot join
+# New-player status removed after 1 hr of gameplay
+# newP = (hasPlayedBefore || p.getstat(timeplayed) < 1 hr)
+max-capacity-allowing-new-players:
+
 default-nophysics-radius: 32
 
 # range (0-1], set to 1 (for 100%) to disable
