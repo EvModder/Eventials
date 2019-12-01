@@ -264,8 +264,11 @@ auto-messages:
        Hardcore is still in &bBETA&r.
        There may still be adjustments to mechanics
   - |
-       We have an ongoing stats challenge!
-       The top player (on Nov 30th) will win &aprize money=>&750USD and a unique in-game reward! :D&r!
+        Who is watching me? O.o
+        Perhaps &2/spectate list&r will help you out
+#  - |
+#       We have an ongoing stats challenge!
+#       The top player (on Nov 30th) will win &aprize money=>&750USD and a unique in-game reward! :D&r!
   - 'As part of &bBETA&r, expect periodic tweaks'
   - 'Teaming is encouraged, but always be cautious!'
   - 'Remember, anyone can join- be careful around others!'
@@ -282,23 +285,23 @@ auto-messages:
 #       There are 3 ongoing contests:
 #       (&71&r) Number of &bAdvancements=>https://minecraft.gamepedia.com/Tutorials/Advancement_guide&r,
 #       (&72&r) XP Levels, and (&73&r) Quality of base
-  - 'Death-trapping End portals is against the rules'
+  - 'Death-trapping the End platform isn''t allowed'
   - 'You can only teleport each person once per life!'
   - |
        Periodically, custom server &aEvents=>&7What got AlternateCraft started!&r will be held!
        Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
-  - '&4[&c&lWarning&4]&r Unused chunks may be periodically reset!'
-#  - 'Griefing is generally discouraged'
-#  - |
+  - '&4[&c&lWarning&4]&r Old, unused chunks may get reset!'
+  - 'Griefing is discouraged, but not prohibited'
+  - |
 #       Exploring generates new chunks.
 #       When Minecraft updates, new terrain and features
 #       &owill not be present&r in those chunks!
-#  - |
-#       The Nether Roof is an excellent way to travel!
-#       See &bthis tutorial=>xxx&r for how to get there!
-#  - |
-#       Heard of EnderPorters? Store enderpearls in a water-
-#       column for vanilla teleportation! &bTutorial link=>xxx&r
+  - |
+       The Nether Roof is an excellent way to travel!
+       See &bthis tutorial=>xxx&r for how to get there!
+  - |
+       Heard of EnderPorters? Store enderpearls in a water-
+       column for vanilla teleportation! &bTutorial link=>xxx&r
   - 'Wanna see who''s died recently? &2/deathlog'
   - 'To skip night, 50%+ of alive, overworld players must sleep'
   - |
@@ -341,7 +344,7 @@ auto-messages:
 #  - |
 #       Have something important to tell? Looking for ways
 #       to promote your &d@Marketplace&r shop? Try &2/advertise&r!
-  - '@ Server admins: Avoid &cClearLagg&r, it sucks!'
+  - 'Something non-vanilla that you dislike? Let us know'
   - |
        We believe in server transparency!
        Check out &2/pl&r or the &bplugins page=>http://www.altcraft.net/plugins&r on the website
@@ -352,13 +355,13 @@ auto-messages:
 ping-messages:
   - ''
   - 'Wazzup %name%?'
-  - 'Event prizes will be awarded on December 1st!'
+  - 'New spectator features'
   - 'Omae Wa Mou Shindeiru'
-  - 'Event ongoing til August 25th'
+  - 'Suggestions welcome!'
   - ''
   - 'Press &fRefresh&r for more random ping messages!'
   - 'Yeet a bug'
-  - 'The November Event has a $50 cash prize!'
+  - 'Holiday spirit!'
   - ''
   - 'Chicken Fried Steak'
   - 'A Minecraft Server'
@@ -373,10 +376,10 @@ ping-messages:
   - ''
   - '&oPlots world coming "soon"!'
   - 'Now with additional lag!'
-  - 'Dying also resets your Event scores, be cautious!'
+  - 'Dying can reset your Event score, be cautious!'
   - ''
   - '&oPeriodic Events!'
-  - 'Suggestions welcome!'
+  - '&o"Ph1lza had a good run!"'
   - ''
   - 'Press [refresh] for more random messages!'
   - '&ohard'
