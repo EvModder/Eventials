@@ -62,6 +62,7 @@ public final class SplitWorlds{
 			primaryKeys2.add(groupWorlds.get(0));
 			ufind.insertSets(SplitWorldUtils.findMatchGroups(worldNames, groupWorlds));
 		}
+		int numGroups = 0;
 		for(List<String> group : ufind.getSets()){
 			Collections.sort(group, Comparator.comparing(String::length));
 			String pKey1 = null, pKey2 = null;
@@ -80,15 +81,17 @@ public final class SplitWorlds{
 			}
 			String primaryWorld = pKey1 != null ? pKey1 : pKey2 != null ? pKey2 : group.get(0);
 			logger.info("SharedInvGroup: [" + primaryWorld + "]->(" + Strings.join(group, ',') + ")");
+			++numGroups;
 			for(String s : group)
 				sharedInvWorlds.put(s, primaryWorld);
 		}
 		for(String world : worldNames){
 			if(sharedInvWorlds.putIfAbsent(world, world) == null){
+				++numGroups;
 				logger.info("SharedInvGroup: [" + world + "]");
 			}
 		}
-		SINGLE_INV_GROUP = sharedInvWorlds.size() == 1;
+		SINGLE_INV_GROUP = numGroups == 1;
 	}
 
 	public static void minimal_init(EvPlugin pl){
