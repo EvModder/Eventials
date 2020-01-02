@@ -2,6 +2,7 @@ package Eventials.listeners;
 
 import java.util.HashSet;
 import java.util.UUID;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -36,13 +37,18 @@ public class PlayerSleepListener implements Listener{
 
 	void attemptSkips(UUID worldId, int numSleeping, int numInWorld){
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT)){
-			if(skipNightWorlds.add(worldId))
-			new BukkitRunnable(){@Override public void run(){
-				World world = pl.getServer().getWorld(worldId);
-				long Relative_Time = 24000 - world.getTime();
-				world.setFullTime(world.getFullTime() + Relative_Time);
-				skipNightWorlds.remove(worldId);
-			}}.runTaskLater(Eventials.getPlugin(), 200);
+			if(skipNightWorlds.add(worldId)){
+				String sleepPercentStr = ""+(int)(SKIP_NIGHT_PERCENT*100);
+				pl.getServer().broadcastMessage(ChatColor.GRAY
+						+sleepPercentStr+"% or more of players in the overworld are now sleeping ("+numSleeping+"). "
+						+"Skipping the night...");
+				new BukkitRunnable(){@Override public void run(){
+					World world = pl.getServer().getWorld(worldId);
+					long Relative_Time = 24000 - world.getTime();
+					world.setFullTime(world.getFullTime() + Relative_Time);
+					skipNightWorlds.remove(worldId);
+				}}.runTaskLater(Eventials.getPlugin(), 200);
+			}
 		}
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_STORM_PERCENT)){
 			if(skipStormWorlds.add(worldId))

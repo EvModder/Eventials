@@ -1,4 +1,4 @@
-1/1 -> &aHappy 2017!!
+1/1 -> &aWelcome to 2021!!
 1/28 -> &6&lHappy Birthday Alternatecraft!!&7 - &d&l<3&7 - &b4yrs old
 2/14 -> &d&lHappy Valentines!!
 2/15 -> &6Presidents' Day
@@ -35,6 +35,18 @@
 11/26/Thursday -> &c}&6&lEAT TURKEY!!!&c{
 11/27/Friday -> &8&lBLACK FRIDAY!
 11/30/Monday -> &3&oCyber Monday!
+12/14 -> On the first day of Christmas..!
+12/15 -> On the second day of Christmas..!
+12/16 -> On the third day of Christmas...!
+12/17 -> On the fourth day of Christmas..!
+12/18 -> On the fifth day of Christmas..!
+12/19 -> On the sixth day of Christmas..!
+12/20 -> On the seventh day of Christmas..!
+12/21 -> On the eighth day of Christmas..!
+12/22 -> On the ninth day of Christmas..!
+#12/23 -> On the tenth day of Christmas..!
+#12/24 -> On the eleventh day of Christmas..!
+#12/25 -> On the twelfth day of Christmas..!
 12/1/Sunday -> Advent Sunday #1
 12/7/Sunday -> Advent Sunday #2!
 12/14/Sunday -> Advent Sunday #3!!
