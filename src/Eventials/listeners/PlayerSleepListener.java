@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,6 +37,7 @@ public class PlayerSleepListener implements Listener{
 	}
 
 	void attemptSkips(UUID worldId, int numSleeping, int numInWorld){
+		if(numSleeping <= 0) return;
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT)){
 			if(skipNightWorlds.add(worldId)){
 				String sleepPercentStr = ""+(int)(SKIP_NIGHT_PERCENT*100);
@@ -70,7 +72,7 @@ public class PlayerSleepListener implements Listener{
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerSleep(PlayerBedEnterEvent evt){
-		if(evt.isCancelled()) return;
+		if(evt.isCancelled() || evt.getPlayer().getWorld().getEnvironment() != Environment.NORMAL) return;
 		if(ONLY_SKIP_IF_NIGHT){
 			long time = evt.getPlayer().getWorld().getTime();
 			if(time < BED_ENTER_START_TICK || time > BED_ENTER_END_TICK) return;
@@ -91,6 +93,7 @@ public class PlayerSleepListener implements Listener{
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent evt){
+		if(evt.getPlayer().getWorld().getEnvironment() != Environment.NORMAL) return;
 		if(ONLY_SKIP_IF_NIGHT){
 			long time = evt.getPlayer().getWorld().getTime();
 			if(time < BED_ENTER_START_TICK || time > BED_ENTER_END_TICK) return;

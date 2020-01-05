@@ -292,7 +292,7 @@ auto-messages:
        Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
   - '&4[&c&lWarning&4]&r Old, unused chunks may get reset!'
   - 'Griefing is discouraged, but not prohibited'
-  - |
+#  - |
 #       Exploring generates new chunks.
 #       When Minecraft updates, new terrain and features
 #       &owill not be present&r in those chunks!
