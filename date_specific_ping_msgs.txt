@@ -1,7 +1,8 @@
 1/1 -> &aWelcome to 2021!!
-1/28 -> &6&lHappy Birthday Alternatecraft!!&7 - &d&l<3&7 - &b4yrs old
+#TODO: update yearly
+1/28 -> &6&lHappy Birthday Alternatecraft!!&7 - &d&l<3&7 -&b 8yrs old
 2/14 -> &d&lHappy Valentines!!
-2/15 -> &6Presidents' Day
+2/15/Monday -> &6Presidents' Day
 3/10/Saturday -> &aS&2p&ar&2i&an&2g &aB&2r&ae&2a&ak&b!&f&l =D
 3/11/Sunday -> &aS&2p&ar&2i&an&2g &aB&2r&ae&2a&ak&b!&f&l :D
 3/12/Monday -> &aS&2p&ar&2i&an&2g &aB&2r&ae&2a&ak&b!&f&l :D
