@@ -73,9 +73,10 @@ public final class SplitWorldUtils{
 	static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
 	static final RefClass classCraftWorld = ReflectionUtils.getRefClass("{cb}.CraftWorld");
 	static final RefClass classWorldServer = ReflectionUtils.getRefClass("{nms}.WorldServer");
+	static final RefClass classEntity = ReflectionUtils.getRefClass("{nms}.Entity");
 	static RefMethod methodGetPlayerHandle = classCraftPlayer.getMethod("getHandle");
 	static RefMethod methodGetWorldHandle = classCraftWorld.getMethod("getHandle");
-	static RefMethod methodUnregisterEntity = classWorldServer.getMethod("unregisterEntity");
+	static RefMethod methodUnregisterEntity = classWorldServer.getMethod("unregisterEntity", classEntity);
 	private static void untrackPlayer(Player player, org.bukkit.World world){
 		Object playerHandle = methodGetPlayerHandle.of(player).call();
 		Object worldHandle = methodGetWorldHandle.of(world).call();
