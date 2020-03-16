@@ -13,10 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import Eventials.Eventials;
-
-import net.minecraft.server.v1_15_R1.EntityPlayer;
-import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import net.evmodder.EvLib.extras.ReflectionUtils;
+import net.evmodder.EvLib.extras.ReflectionUtils.RefClass;
+import net.evmodder.EvLib.extras.ReflectionUtils.RefMethod;
 
 public final class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
@@ -58,18 +57,6 @@ public final class SplitWorldUtils{
 		return matchGroups;
 	}
 
-	//Reflection
-/*	static final RefClass classEntityTracker = ReflectionUtils.getRefClass("{nms}.PlayerChunkMap.EntityTracker");
-	static final RefClass classCraftWorld = ReflectionUtils.getRefClass("{cb}.CraftWorld");
-	static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
-	static final RefClass classEntity = ReflectionUtils.getRefClass("{nms}.Entity");
-	static final RefClass classWorldServer = ReflectionUtils.getRefClass("{nms}.WorldServer");
-	static RefMethod methodGetEntityHandle = classCraftPlayer.getMethod("getHandle");
-	static RefMethod methodGetWorldHandle = classCraftWorld.getMethod("getHandle");
-	static RefMethod methodGetTracker = classWorldServer.getMethod("getTracker");
-	static RefMethod methodTrack = classEntityTracker.getMethod("track", classEntity);
-	static RefMethod methodUntrackEntity = classEntityTracker.getMethod("untrackEntity", classEntity);*/
-
 	/*public static void scheduleUntrackedTeleport(final SplitWorlds sw,
 			final UUID playerUUID, final Location destination, final long delay, boolean loadInv){
 		new BukkitRunnable(){@Override public void run(){
@@ -82,23 +69,30 @@ public final class SplitWorldUtils{
 		}}.runTaskLater(Eventials.getPlugin(), delay);
 	}*/
 
+	//Reflection
+	static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
+	static final RefClass classCraftWorld = ReflectionUtils.getRefClass("{cb}.CraftWorld");
+	static final RefClass classWorldServer = ReflectionUtils.getRefClass("{nms}.WorldServer");
+	static RefMethod methodGetPlayerHandle = classCraftPlayer.getMethod("getHandle");
+	static RefMethod methodGetWorldHandle = classCraftWorld.getMethod("getHandle");
+	static RefMethod methodUnregisterEntity = classWorldServer.getMethod("unregisterEntity");
+	private static void untrackPlayer(Player player, org.bukkit.World world){
+		Object playerHandle = methodGetPlayerHandle.of(player).call();
+		Object worldHandle = methodGetWorldHandle.of(world).call();
+		methodUnregisterEntity.of(worldHandle).call(playerHandle);
+	}
+	private static void retrackPlayer(Player player, org.bukkit.World world){
+		//((CraftWorld)destination.getWorld()).getHandle().addEntity(playerHandle);
+		//tracker.updatePlayer(playerHandle);
+	}
+
 	public static boolean untrackedTeleport(final Player player, final Location destination, boolean skipInvCheck){
 		if(skipInvCheck){
 			player.setMetadata(SplitWorlds.SKIP_TP_INV_CHECK_TAG, new FixedMetadataValue(Eventials.getPlugin(), ""));
 		}
-		/*Object playerHandle = methodGetEntityHandle.of(player).call();
-		Object tracker = methodGetTracker.of(methodGetWorldHandle.of(destination.getWorld()).call()).call();
-		methodUntrackEntity.of(tracker).call(playerHandle);
+		untrackPlayer(player, destination.getWorld());
 		boolean success = player.teleport(destination);
-		methodTrack.of(tracker).call(playerHandle);
-		return success;*/
-		EntityPlayer playerHandle = ((CraftPlayer)player).getHandle();
-		//EntityTracker tracker = ((CraftWorld)destination.getWorld()).getHandle().?
-		//tracker.clear(playerHandle);
-		((CraftWorld)destination.getWorld()).getHandle().unregisterEntity(playerHandle);
-		boolean success = player.teleport(destination);
-		//((CraftWorld)destination.getWorld()).getHandle().addEntity(playerHandle);
-		//tracker.updatePlayer(playerHandle);
+		retrackPlayer(player, destination.getWorld());
 		return success;
 	}
 
