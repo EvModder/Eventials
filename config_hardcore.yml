@@ -260,9 +260,9 @@ world-borders:
 #Legend: &e = text, &b = link/download, &d = @Location, &2 = command, &a = $money/event/world, 
 #Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
 auto-messages:
-  - |
-       Want to win some $$$ or get a Zombie Horse?
-       Check the Equine Event in the sidebar!
+#  - |
+#       Want to win some $$$ or get a Zombie Horse?
+#       Check the Equine Event in the sidebar!
   - |
        Hardcore is still in &bBETA&r.
        There may still be adjustments to mechanics
@@ -272,9 +272,9 @@ auto-messages:
 #  - |
 #       We have an ongoing stats challenge!
 #       The top player (on Nov 30th) will win &aprize money=>&750USD and a unique in-game reward! :D&r!
-  - |
-       We have an ongoing Equine Event!
-       The &btop=>&8(&7and bottom!&8)&r horse/donkey/etc in each category wins a prize!
+#  - |
+#       We have an ongoing Equine Event!
+#       The &btop=>&8(&7and bottom!&8)&r horse/donkey/etc in each category wins a prize!
   - 'As part of &bBETA&r, expect periodic tweaks'
   - 'Teaming is encouraged, but always be cautious!'
   - 'Remember, anyone can join- be careful around others!'
@@ -284,9 +284,9 @@ auto-messages:
 #  - |
 #       For the opening of Hardcore, we're hosting an Event!
 #       Top players in each of 3 objectives win a &aprize=>&750USD and a unique in-game reward!&r!
-  - |
-       There is also an event prize for "Best Overall" for
-       each of these Equines: Horse, Donkey, Mule, Llama
+#  - |
+#       There is also an event prize for "Best Overall" for
+#       each of these Equines: Horse, Donkey, Mule, Llama
   - 'Beware public locations such as x=0,z=0 and The End!'
   - 'Feeling plain? Try &2/color&r!'
   - 'Check the horse leaderboard at &2/hm top&r!'
@@ -294,9 +294,9 @@ auto-messages:
 #       There are 3 ongoing contests:
 #       (&71&r) Number of &bAdvancements=>https://minecraft.gamepedia.com/Tutorials/Advancement_guide&r,
 #       (&72&r) XP Levels, and (&73&r) Quality of base
-  - |
-       There are currently &l24&r ongoing Equine contests:
-       &f[&rSpeed, Jump, and Health&f]&r x &f[&rEach Equine species&f]&r!
+#  - |
+#       There are currently &l24&r ongoing Equine contests:
+#       &f[&rSpeed, Jump, and Health&f]&r x &f[&rEach Equine species&f]&r!
   - 'Death-trapping the End platform isn''t allowed'
   - 'You can only teleport each person once per life!'
   - |
@@ -314,9 +314,9 @@ auto-messages:
   - |
        Heard of EnderPorters? Store enderpearls in a water-
        column for vanilla teleportation! &bTutorial link=>xxx&r
-  - |
-       All your horses are trash? Don't give up yet!
-       There are also prizes for &olowest&r in each category!
+#  - |
+#       All your horses are trash? Don't give up yet!
+#       There are also prizes for &olowest&r in each category!
   - 'Wanna see who''s died recently? &2/deathlog'
   - 'To skip night, 50%+ of alive, overworld players must sleep'
   - |
@@ -328,9 +328,9 @@ auto-messages:
        to teleport the other again until you both reset (die).
   - 'Ye like? &2/vote&r for links!'
   - 'Funding help isn''t required, but is always appreciated :)'
-  - |
-       There are also 4 prizes for Worst-Overall-Stats in the
-       Equine Event for Horses, Donkeys, Mules, and Llamas!
+#  - |
+#       There are also 4 prizes for Worst-Overall-Stats in the
+#       Equine Event for Horses, Donkeys, Mules, and Llamas!
 #  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
   - 'Suggestions are always welcome!'
   - 'Please check &2/rules&r periodically for updates'

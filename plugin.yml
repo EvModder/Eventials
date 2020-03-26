@@ -141,7 +141,7 @@ commands:
       permission-message: You do not have permission to do this.
 
    discord:
-      description: Displays a link to join the discord server
+      description: A link to join the discord server
       usage: /discord
       aliases: [discordlink,discord-link]
       permission: eventials.discord
