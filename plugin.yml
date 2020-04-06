@@ -250,14 +250,14 @@ commands:
    statsclear:
       description: Delete all data files related to a player
       usage: /statsclear <name/uuid>
-      aliases: [clearstats,statsdelete,deletestats]
+      aliases: [clearstats,statsdelete,deletestats,delete-data]
       permission: eventials.clearstats
       permission-message: You do not have permission to do this.
 
    statsrestore:
       description: Recover data for a deleted player
       usage: /statsrestore <name/uuid>
-      aliases: [restorestats,statsrecover,recoverstats]
+      aliases: [restorestats,statsrecover,recoverstats,restore-data]
       permission: eventials.clearstats
       permission-message: You do not have permission to do this.
 

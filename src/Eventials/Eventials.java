@@ -20,6 +20,7 @@ import net.evmodder.EvLib.FileIO;
  *  and not really meant for (or useful for) public distribution.
  */
 //Event Ideas: Randomizing Blocks
+//TODO: Dye a (live) shulker by clicking with a dye?
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;

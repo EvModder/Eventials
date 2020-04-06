@@ -337,7 +337,7 @@ auto-messages:
   - 'Sharing server IPs is fine, but &nno soliciting&r please'
   - 'Staff are here to help, so ask away!'
   - 'Use &2/hm claim&r to add your horse to the contest scores!'
-  - 'Slaughter is fun, so why not start a head collection? ;)'
+  - 'Killing stuff is fun, so why not start a head collection? ;)'
   - |
         Want to ensure nobody can spectate you unless you give
         them explicit permission to? &2/spectate mode whitelist
@@ -390,7 +390,7 @@ ping-messages:
 #  - 'Challenge 3/3: Highest quality base'
   - ''
   - '&oPlots world coming "soon"!'
-  - 'Now with additional lag!'
+  - 'Added bonus lag!'
   - 'Dying can reset your Event score, be cautious!'
   - ''
   - '&oPeriodic Events!'

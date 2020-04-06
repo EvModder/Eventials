@@ -113,9 +113,8 @@ public class Extras{
 		Eventials pl = Eventials.getPlugin();
 		String playerName = player.getName();
 		UUID uuid = player.getUniqueId();
-		
-		StringBuilder returnMsg = new StringBuilder(ChatColor.GRAY+
-				"\n-----------------------------------------------------\n");
+
+		StringBuilder returnMsg = new StringBuilder(ChatColor.GRAY+"\n-----------------------------------------------------\n");
 		File delFolder = new File("./plugins/EvFolder/DELETED/"+playerName);
 		if(!delFolder.mkdir()){
 			new File("./plugins/EvFolder/DELETED").mkdir();
@@ -156,7 +155,7 @@ public class Extras{
 		}
 
 		EvEconomy.getEconomy().removeBalance(uuid);
-		
+
 		// Remove Essentials data
 		file = new File("./plugins/Essentials/userdata/"+uuid+".yml");
 		if(file.exists()){

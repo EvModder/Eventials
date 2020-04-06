@@ -60,7 +60,7 @@ count-gm3-in-sleep-required: false
 count-gm1-in-sleep-required: false
 only-skip-if-nighttime: true
 
-inactive-days-until-player-delete: 200
+inactive-days-until-player-delete: 999
 #TODO: Advancements checker is broken
 keep-if-has-x-advancements: 20
 keep-if-time-played-outweighs-time-inactive: true
@@ -282,13 +282,13 @@ shared-inv-worlds:
     - '*'
     - '*_nether'
     - '*_the_end'
-  old_worlds:
-    - 'VictoryHills'
-    - 'Events'
-    - 'world'
-  creative_group:
-    - 'Creative'
-    - 'TC Creative'
+#  old_worlds:
+#    - 'VictoryHills'
+#    - 'Events'
+#    - 'world'
+#  creative_group:
+#    - 'Creative'
+#    - 'TC Creative'
 
 #--------------------------------------#
 #             Mail Service             #
@@ -429,7 +429,7 @@ ping-messages:
   - '&oMarketplace!'
   - ''
   - '&oPlots world coming "soon"!'
-  - 'Now with additional lag!'
+  - 'Now with extra lag!'
   - ''
   - '&oPeriodic Events!'
   - 'Suggestions welcome!'
