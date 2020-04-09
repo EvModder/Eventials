@@ -19,7 +19,7 @@ import net.evmodder.EvLib.extras.TextUtils;
 public class PlayerSleepListener implements Listener{
 	final double SKIP_NIGHT_PERCENT, SKIP_STORM_PERCENT, SKIP_THUNDER_PERCENT;
 	final long BED_ENTER_START_TICK = 12540, BED_ENTER_END_TICK = 23460;
-	final boolean INCLUDE_GM3, INCLUDE_GM1, ONLY_SKIP_IF_NIGHT;
+	final boolean INCLUDE_GM3, INCLUDE_GM1, ONLY_SKIP_IF_NIGHT, BROADCAST_VANILLA_SKIPS;
 	final HashSet<UUID> skipNightWorlds, skipStormWorlds, skipThunderWorlds;
 	final Eventials pl;
 
@@ -31,6 +31,7 @@ public class PlayerSleepListener implements Listener{
 		INCLUDE_GM3 = pl.getConfig().getBoolean("count-gm3-in-sleep-required", false);
 		INCLUDE_GM1 = pl.getConfig().getBoolean("count-gm1-in-sleep-required", false);
 		ONLY_SKIP_IF_NIGHT = pl.getConfig().getBoolean("only-skip-if-nighttime", true);
+		BROADCAST_VANILLA_SKIPS = pl.getConfig().getBoolean("skip-night-notify-if-natural", false);
 		skipNightWorlds = new HashSet<UUID>();
 		skipStormWorlds = new HashSet<UUID>();
 		skipThunderWorlds = new HashSet<UUID>();
@@ -41,9 +42,10 @@ public class PlayerSleepListener implements Listener{
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT)){
 			if(skipNightWorlds.add(worldId)){
 				String sleepPercentStr = ""+(int)(SKIP_NIGHT_PERCENT*100);
-				pl.getServer().broadcastMessage(ChatColor.GRAY
-						+sleepPercentStr+"% or more of players in the overworld are now sleeping ("+numSleeping+"). "
-						+"Skipping the night...");
+				if(numSleeping < numInWorld) pl.getServer().broadcastMessage(ChatColor.GRAY
+							+sleepPercentStr+"% or more of players in the overworld are now sleeping ("+numSleeping+"). Skipping the night...");
+				else if(BROADCAST_VANILLA_SKIPS) pl.getServer().broadcastMessage(ChatColor.GRAY
+						+"Everyone in the overworld is sleeping ("+numSleeping+"). Skipping the night...");
 				new BukkitRunnable(){@Override public void run(){
 					World world = pl.getServer().getWorld(worldId);
 					long Relative_Time = 24000 - world.getTime();

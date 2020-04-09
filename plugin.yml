@@ -2,8 +2,11 @@ name: Eventials
 main: Eventials.Eventials
 author: EvModder/EvDoc/Evil_Witchdoctor
 version: 1.3.3 # .3=mailbox, ..3=sleep to skip night/storm
-softdepend: [Votifier, Essentials, Renewable]
+softdepend: [Votifier, Essentials]
 api-version: 1.13
+
+# Updating Eventials will update EvLib for these plugins
+loadbefore: [ArcheryEvent, ChatManager, DropHeads, HardcoreTweaks, HorseOwners, ReduceLag, Renewable]
 
 commands:
 #======== Economy

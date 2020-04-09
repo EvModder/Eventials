@@ -21,6 +21,7 @@ import net.evmodder.EvLib.FileIO;
  */
 //Event Ideas: Randomizing Blocks
 //TODO: Dye a (live) shulker by clicking with a dye?
+//TODO: Stay in bed to skip night (mimic vanilla?)
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;

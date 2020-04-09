@@ -38,6 +38,7 @@ skip-thunder-sleep-percent-required: 0.5
 count-gm3-in-sleep-required: false
 count-gm1-in-sleep-required: false
 only-skip-if-nighttime: true
+skip-night-notify-if-natural: true
 
 inactive-days-until-player-delete: 200
 #TODO: Advancements checker is broken
