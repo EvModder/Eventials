@@ -236,6 +236,7 @@ army-size-standard-deviation: 100
 army-spawn-likelyhood: .002
 army-enable-recursive-spawning: true
 feed-slimes: true
+dye-shulkers: true
 
 #--------------------------------------#
 #            EvVoter config            #

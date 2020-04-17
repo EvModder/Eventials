@@ -55,8 +55,8 @@ public class EvSpawner implements Listener {
 		}
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		if(plugin.getConfig().getBoolean("feed-slimes", true))
-			plugin.getServer().getPluginManager().registerEvents(new FeedSlimeListener(), plugin);
+		if(plugin.getConfig().getBoolean("feed-slimes", true) || plugin.getConfig().getBoolean("dye-shulkers", true))
+			plugin.getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(), plugin);
 	}
 
 	public static void CopySpawnerState(CreatureSpawner from, CreatureSpawner to){
