@@ -53,7 +53,11 @@ public final class Scheduler{
 		autoMsgs = list.toArray(new String[list.size()]);
 		msgC = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("message-color", "&e"));
 		msgP = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("message-prefix", "&e"));
-		escapedMsgP = TextUtils.escapeTextActionCodes(msgP);
+
+		String[] markers = new String[TextUtils.TextAction.values().length];
+		for(int i=0; i<markers.length; ++i) markers[i] = TextUtils.TextAction.values()[i].toString();
+		escapedMsgP = TextUtils.escape(msgP, markers);//TODO: this is disgusting pls fix
+
 		for(int i = 0; i < autoMsgs.length; ++i){
 			autoMsgs[i] = TextUtils.translateAlternateColorCodes('&', autoMsgs[i].replaceAll("&r", msgC)
 					.replaceAll("\\\\n", "\\n"));
