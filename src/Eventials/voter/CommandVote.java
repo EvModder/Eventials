@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.EvUtils;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.TextUtils.TextAction;
 
@@ -97,13 +96,13 @@ public class CommandVote extends EvCommand{
 			long timeSinceVote = now - lastVote;
 			long timeLeft = (voteManager.dayInMillis + voteManager.graceInMillis) - timeSinceVote;
 			player.sendMessage(ChatColor.GRAY+"Time until streak is lost: "
-					+EvUtils.formatTime(timeLeft, ChatColor.GOLD, ChatColor.GRAY));
+					+TextUtils.formatTime(timeLeft, ChatColor.GOLD, ChatColor.GRAY));
 
 			if(timeSinceVote < voteManager.dayInMillis){
 				long lastStreakVote = voteManager.lastStreakVote(player.getUniqueId());
 				long timeUntilIncr = voteManager.dayInMillis - (now - lastStreakVote);
 				player.sendMessage(ChatColor.GRAY+"Time until streak can be increased: "
-						+EvUtils.formatTime(timeUntilIncr, ChatColor.GOLD, ChatColor.GRAY));;
+						+TextUtils.formatTime(timeUntilIncr, ChatColor.GOLD, ChatColor.GRAY));;
 			}
 		}
 		return true;

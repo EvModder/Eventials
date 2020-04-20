@@ -21,8 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
-import net.evmodder.EvLib.EvUtils;
-import net.evmodder.EvLib.extras.RefNBTTag;
+import net.evmodder.EvLib.extras.NBTTagUtils;
+import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTag;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.TypeUtils;
 
@@ -127,7 +127,7 @@ public class EvSpawner implements Listener {
 
 			ItemStack item = new ItemStack(Material.SPAWNER);
 			BlockStateMeta meta = (BlockStateMeta) item.getItemMeta();
-			meta.setDisplayName(ChatColor.WHITE+EvUtils.getNormalizedName(BASE_STATE.getSpawnedType())+" Spawner");
+			meta.setDisplayName(ChatColor.WHITE+TextUtils.getNormalizedName(BASE_STATE.getSpawnedType())+" Spawner");
 			if(stackableSpawners){
 				CopySpawnerState(spawnerState, BASE_STATE);
 				meta.setBlockState(BASE_STATE);
@@ -138,7 +138,7 @@ public class EvSpawner implements Listener {
 				item.setItemMeta(meta);
 				RefNBTTag tag = new RefNBTTag();
 				tag.setInt("ev_spawner_key", rand.nextInt());
-				item = RefNBTTag.setTag(item, tag);
+				item = NBTTagUtils.setTag(item, tag);
 			}
 
 			evt.setExpToDrop(0);

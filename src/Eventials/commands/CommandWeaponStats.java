@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvUtils;
+import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.TypeUtils;
 
 public class CommandWeaponStats extends EvCommand implements Listener{
@@ -229,7 +229,7 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 				incrementWeaponStat(weapon, stat, 1);
 
 				String victimName = evt.getEntity().getCustomName();
-				if(victimName == null) victimName = EvUtils.getNormalizedName(evt.getEntityType());
+				if(victimName == null) victimName = TextUtils.getNormalizedName(evt.getEntityType());
 				setWeaponStat(weapon, WeaponStat.LAST_VICTIM, victimName);
 			}
 		}
