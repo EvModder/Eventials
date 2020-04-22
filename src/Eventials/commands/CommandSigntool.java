@@ -111,7 +111,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 								+" tried to use a SignTool, but failed SignChangeEvent");
 					}
 					else{
-						Eventials.getPlugin().getLogger().info(evt.getPlayer().getName()+" used a SignTool");
+						Eventials.getPlugin().getLogger().fine(evt.getPlayer().getName()+" used a SignTool: "+String.join(">", lines));
 						Sign sign = (Sign) evt.getClickedBlock().getState();
 						for(int i=0; i<lines.length; ++i) if(!lines[i].isEmpty()) sign.setLine(i, lines[i]);
 						sign.update();

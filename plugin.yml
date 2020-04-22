@@ -6,7 +6,7 @@ softdepend: [Votifier, Essentials]
 api-version: 1.13
 
 # Updating Eventials will update EvLib for these plugins
-loadbefore: [ArcheryEvent, ChatManager, DropHeads, HardcoreTweaks, HorseOwners, ReduceLag, Renewable]
+loadbefore: [ArcheryEvent, ChatManager, DropHeads, HardcoreTweaks, HorseOwners, ReduceLag, Renewable, EnchantBook]
 
 commands:
 #======== Economy

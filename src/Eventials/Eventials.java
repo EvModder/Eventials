@@ -21,6 +21,7 @@ import net.evmodder.EvLib.FileIO;
  */
 //Event Ideas: Randomizing Blocks
 //TODO: Must stay in bed to skip night (mimic vanilla?)
+//TODO: Eye-of-ender popping
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;
