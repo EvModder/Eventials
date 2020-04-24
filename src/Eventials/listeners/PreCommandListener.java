@@ -65,7 +65,8 @@ public class PreCommandListener implements Listener {
 		hyperWarps = plugin.getConfig().getBoolean("use-hyperwarps", true);
 	}
 
-	@SuppressWarnings("deprecation") @EventHandler(priority = EventPriority.LOWEST)
+	@SuppressWarnings("deprecation")
+	@EventHandler(priority = EventPriority.HIGH) // High because this actually handles commands that can do things..
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){
 		if(evt.isAsynchronous() || evt.isCancelled()) return;
 
