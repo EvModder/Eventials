@@ -96,13 +96,13 @@ public class CommandVote extends EvCommand{
 			long timeSinceVote = now - lastVote;
 			long timeLeft = (voteManager.dayInMillis + voteManager.graceInMillis) - timeSinceVote;
 			player.sendMessage(ChatColor.GRAY+"Time until streak is lost: "
-					+TextUtils.formatTime(timeLeft, ChatColor.GOLD, ChatColor.GRAY));
+					+TextUtils.formatTime(timeLeft, false, ChatColor.GOLD, ChatColor.GRAY));
 
 			if(timeSinceVote < voteManager.dayInMillis){
 				long lastStreakVote = voteManager.lastStreakVote(player.getUniqueId());
 				long timeUntilIncr = voteManager.dayInMillis - (now - lastStreakVote);
 				player.sendMessage(ChatColor.GRAY+"Time until streak can be increased: "
-						+TextUtils.formatTime(timeUntilIncr, ChatColor.GOLD, ChatColor.GRAY));;
+						+TextUtils.formatTime(timeUntilIncr, false, ChatColor.GOLD, ChatColor.GRAY));;
 			}
 		}
 		return true;

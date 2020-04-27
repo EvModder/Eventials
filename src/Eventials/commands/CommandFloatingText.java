@@ -173,7 +173,7 @@ public class CommandFloatingText extends EvCommand{
 		String txt = implodeAndFormat(args, 1, args.length);
 
 		CommandFloatingText.placeFloater(loc, txt);
-		sender.sendMessage(ICON + ChatColor.GRAY + " " + TextUtils.locationToString(loc) + ChatColor.GREEN + ": \""
+		sender.sendMessage(ICON + ChatColor.GRAY + " " + TextUtils.locationToString(loc, ChatColor.GRAY, ChatColor.DARK_GRAY) + ChatColor.GREEN + ": \""
 								+ ChatColor.RESET + txt + ChatColor.GREEN + "\" placed.");
 		return true;
 	}
@@ -257,7 +257,7 @@ public class CommandFloatingText extends EvCommand{
 		}
 		nearbyFloaters.set(choice, null);
 
-		sender.sendMessage(ICON + " " + ChatColor.GRAY + TextUtils.locationToString(loc) + ChatColor.GRAY + ": \""
+		sender.sendMessage(ICON + " " + ChatColor.GRAY + TextUtils.locationToString(loc, ChatColor.GRAY, ChatColor.DARK_GRAY) + ChatColor.GRAY + ": \""
 				+ ChatColor.RESET + txt + ChatColor.GRAY + "\" removed.");
 		return true;
 	}
@@ -308,8 +308,8 @@ public class CommandFloatingText extends EvCommand{
 		nearbyFloaters.set(choice, placeFloater(newLoc, oldTxt));*/
 
 		sender.sendMessage(ICON + ChatColor.GREEN + " Move of ["+ChatColor.RESET+oldTxt+ChatColor.GREEN+"] successful!");
-		sender.sendMessage(ICON + ChatColor.GOLD + " Old: " + ChatColor.GRAY + TextUtils.locationToString(oldLoc));
-		sender.sendMessage(ICON + ChatColor.GOLD + " New: " + ChatColor.GRAY + TextUtils.locationToString(newLoc));
+		sender.sendMessage(ICON + ChatColor.GOLD + " Old: " + ChatColor.GRAY + TextUtils.locationToString(oldLoc, ChatColor.GRAY, ChatColor.DARK_GRAY));
+		sender.sendMessage(ICON + ChatColor.GOLD + " New: " + ChatColor.GRAY + TextUtils.locationToString(newLoc, ChatColor.GRAY, ChatColor.DARK_GRAY));
 		return true;
 	}
 

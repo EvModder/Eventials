@@ -31,7 +31,7 @@ public class PlayerDeathListener implements Listener{
 			String coordsStr = new StringBuilder().append(ChatColor.GOLD).append("Death Coords")
 					.append(ChatColor.DARK_GRAY).append(": ")
 					.append(TextUtils.locationToString(loc, ChatColor.GRAY, ChatColor.DARK_GRAY, 0))
-					.append('.').toString();
+					.append(ChatColor.DARK_GRAY).append('.').toString();
 			if(tellPlayer) evt.getEntity().sendMessage(coordsStr);
 			if(logConsole) plugin.getLogger().info(evt.getEntity().getName()+"'s "+coordsStr);
 		}
