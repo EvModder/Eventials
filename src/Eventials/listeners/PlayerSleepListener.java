@@ -20,7 +20,8 @@ import net.evmodder.EvLib.extras.TextUtils;
 public class PlayerSleepListener implements Listener{
 	final double SKIP_NIGHT_PERCENT, SKIP_STORM_PERCENT, SKIP_THUNDER_PERCENT;
 	final long BED_ENTER_START_TICK = 12540, BED_ENTER_END_TICK = 23460;
-	final boolean INCLUDE_GM3, INCLUDE_GM1, ONLY_SKIP_IF_NIGHT, BROADCAST_VANILLA_SKIPS, SKIP_IF_DAYLIGHT_CYCLE_IS_OFF;
+	final boolean INCLUDE_GM3, INCLUDE_GM1, ONLY_SKIP_IF_NIGHT, SKIP_IF_DAYLIGHT_CYCLE_IS_OFF;
+	final boolean BROADCAST_VANILLA_SKIPS, BROADCAST_SKIPS_TO_ALL_WORLDS = false;
 	final HashSet<UUID> skipNightWorlds, skipStormWorlds, skipThunderWorlds;
 	final Eventials pl;
 
@@ -44,14 +45,21 @@ public class PlayerSleepListener implements Listener{
 		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT)){
 			if(skipNightWorlds.add(worldId)){
 				String sleepPercentStr = ""+(int)(SKIP_NIGHT_PERCENT*100);
-				if(numSleeping < numInWorld) pl.getServer().broadcastMessage(ChatColor.GRAY
-							+sleepPercentStr+"% or more of players in the overworld are now sleeping ("+numSleeping+"). Skipping the night...");
-				else if(BROADCAST_VANILLA_SKIPS) pl.getServer().broadcastMessage(ChatColor.GRAY
-						+"Everyone in the overworld is sleeping ("+numSleeping+"). Skipping the night...");
+				String broadcastMsg = null;
+				if(numSleeping < numInWorld) broadcastMsg =
+						ChatColor.GRAY+sleepPercentStr+"% or more of players in the overworld are now sleeping ("+numSleeping+"). Skipping the night...";
+				else if(BROADCAST_VANILLA_SKIPS) broadcastMsg =
+						ChatColor.GRAY+"Everyone in the overworld is sleeping ("+numSleeping+"). Skipping the night...";
+				if(broadcastMsg != null){
+					if(BROADCAST_SKIPS_TO_ALL_WORLDS) pl.getServer().broadcastMessage(broadcastMsg);
+					else for(Player p : pl.getServer().getWorld(worldId).getPlayers()){
+						p.sendMessage(broadcastMsg);
+					}
+				}
 				new BukkitRunnable(){@Override public void run(){
 					World world = pl.getServer().getWorld(worldId);
-					long Relative_Time = 24000 - world.getTime();
-					world.setFullTime(world.getFullTime() + Relative_Time);
+					long relativeTime = 24000 - world.getTime();
+					world.setFullTime(world.getFullTime() + relativeTime);
 					skipNightWorlds.remove(worldId);
 				}}.runTaskLater(Eventials.getPlugin(), 200);
 			}

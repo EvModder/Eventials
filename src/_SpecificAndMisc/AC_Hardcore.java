@@ -35,9 +35,9 @@ public class AC_Hardcore implements Listener{
 //			enableTest("Renewable")+"Renewable=>Prevents unrenewable items from being destroyed§r, §a\\" +
 			enableTest("Essentials")+"Essentials=>Collection of useful tools and commands§r, §a\\" +
 			enableTest("Eventials")+"Eventials=>Package of custom-built features and tweaks§r, §a\\" +
-			enableTest("ChatManager")+"Chat++=>Keeps chat pg13 + Color/Format for chat & signs§r, \\\\n§a\\" +
+			enableTest("ChatManager")+"ChatTweaks=>Keeps chat pg13 + Color/Format for chat & signs§r, \\\\n§a\\" +
 			enableTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, §a\\" +
-			enableTest("HorseOwners")+"HorseOwners=>Claim, name, and view stats for horses§r, §a\\" +
+			enableTest("HorseOwners")+"HorseRanks=>Claim, name, and view stats for horses§r, §a\\" +
 //			enableTest("EnchantBook")+"EnchantBook=>Color item names in anvils, looting on axes, etc!§r, §a\\" +
 			"More=>\\"+
 //			enableTest("WorldEdit")+"WorldEdit\\§f, \\" +

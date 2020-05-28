@@ -49,9 +49,12 @@ public class EventAndMisc{
 			}
 			new AC_Hardcore();
 		}
-		else/*if(pl.getServer().getWorld("MysteryPeaks") != null)*/{
+		else if(pl.getServer().getWorld("MysteryPeaks") != null){
 			new AC_New();
 			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
+		}
+		else{
+			// Testcraft? Other?
 		}
 
 		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();

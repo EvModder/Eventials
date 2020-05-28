@@ -27,6 +27,7 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 	private EvPlugin pl;
 	private Set<UUID> breakPhysics;
 	final int RADIUS, RADIUS_SQ;
+	private boolean GLOBAL = false;
 
 	public CommandBreakPhysics(EvPlugin p) {
 		super(p);
@@ -46,8 +47,12 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 		if(args.length > 0) p = Eventials.getPlugin().getServer().getPlayer(args[0]);
 		else if(sender instanceof Player) p = (Player) sender;
 		else{
-			sender.sendMessage(ChatColor.RED+"Too few arguments!");
-			return false;
+			boolean newGlobal = !GLOBAL;
+			setGlobal(newGlobal);
+			sender.sendMessage(ChatColor.YELLOW+"Toggled global break-physics: "+newGlobal);
+			return true;
+//			sender.sendMessage(ChatColor.RED+"Too few arguments!");
+//			return false;
 		}
 		if(p == null) sender.sendMessage(ChatColor.RED+"Could not find the specified player!");
 		else{
@@ -64,7 +69,11 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 
 	@EventHandler
 	public void onBlockPhysicsEvent(BlockPhysicsEvent evt){
-		if(!evt.isCancelled())
+		if(evt.isCancelled()) return;
+		if(GLOBAL){
+			evt.setCancelled(true);
+			return;
+		}
 		for(Player p : pl.getServer().getOnlinePlayers()){
 			if(breakPhysics.contains(p.getUniqueId()) &&
 					evt.getBlock().getLocation().distanceSquared(p.getLocation()) < RADIUS_SQ){
@@ -94,13 +103,22 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 		}
 	}
 
+	public void setGlobal(boolean newGlobal){
+		if(newGlobal == GLOBAL) return;
+		if(breakPhysics.isEmpty()){
+			if(newGlobal) pl.getServer().getPluginManager().registerEvents(this, pl);
+			else HandlerList.unregisterAll(this);
+		}
+		GLOBAL = newGlobal;
+	}
+
 	public boolean remove(UUID player){
 		boolean contained = breakPhysics.remove(player);
-		if(contained && breakPhysics.isEmpty()) HandlerList.unregisterAll(this);
+		if(contained && breakPhysics.isEmpty() && !GLOBAL) HandlerList.unregisterAll(this);
 		return contained;
 	}
 	public void add(UUID player){
-		if(breakPhysics.isEmpty()) pl.getServer().getPluginManager().registerEvents(this, pl);
+		if(breakPhysics.isEmpty() && !GLOBAL) pl.getServer().getPluginManager().registerEvents(this, pl);
 		breakPhysics.add(player);
 	}
 }
