@@ -21,7 +21,10 @@ import net.evmodder.EvLib.FileIO;
  */
 //Event Ideas: Randomizing Blocks
 //TODO: Must stay in bed to skip night (mimic vanilla?)
+//TODO: hover-text for recent-joins shows how long since they were on
+//TODO: chat "ping/tick" sound (toggleable) and name mention sound?
 //TODO: Eye-of-ender popping
+//TODO: splitworlds option to also separate stats/advancements per-world
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;

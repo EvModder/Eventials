@@ -21,7 +21,7 @@ public class PlayerSleepListener implements Listener{
 	final double SKIP_NIGHT_PERCENT, SKIP_STORM_PERCENT, SKIP_THUNDER_PERCENT;
 	final long BED_ENTER_START_TICK = 12540, BED_ENTER_END_TICK = 23460;
 	final boolean INCLUDE_GM3, INCLUDE_GM1, ONLY_SKIP_IF_NIGHT, SKIP_IF_DAYLIGHT_CYCLE_IS_OFF;
-	final boolean BROADCAST_VANILLA_SKIPS, BROADCAST_SKIPS_TO_ALL_WORLDS = false;
+	final boolean BROADCAST_VANILLA_SKIPS, BROADCAST_SKIPS_TO_ALL_WORLDS = false, PERCENT_INCLUSIVE;
 	final HashSet<UUID> skipNightWorlds, skipStormWorlds, skipThunderWorlds;
 	final Eventials pl;
 
@@ -30,6 +30,7 @@ public class PlayerSleepListener implements Listener{
 		SKIP_NIGHT_PERCENT = pl.getConfig().getDouble("skip-night-sleep-percent-required", 0.5);
 		SKIP_STORM_PERCENT = pl.getConfig().getDouble("skip-storm-sleep-percent-required", 0.5);
 		SKIP_THUNDER_PERCENT = pl.getConfig().getDouble("skip-thunder-sleep-percent-required", 0.5);
+		PERCENT_INCLUSIVE = pl.getConfig().getBoolean("skip-percent-inclusive-bound", true);
 		INCLUDE_GM3 = pl.getConfig().getBoolean("count-gm3-in-sleep-required", false);
 		INCLUDE_GM1 = pl.getConfig().getBoolean("count-gm1-in-sleep-required", false);
 		ONLY_SKIP_IF_NIGHT = pl.getConfig().getBoolean("only-skip-if-nighttime", true);
@@ -42,12 +43,16 @@ public class PlayerSleepListener implements Listener{
 
 	void attemptSkips(UUID worldId, int numSleeping, int numInWorld){
 		if(numSleeping <= 0) return;
-		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT)){
+		if(numSleeping >= (int)Math.ceil(numInWorld*SKIP_NIGHT_PERCENT) + (PERCENT_INCLUSIVE && numSleeping != numInWorld ? 0.1 : 0.0)){
 			if(skipNightWorlds.add(worldId)){
 				String sleepPercentStr = ""+(int)(SKIP_NIGHT_PERCENT*100);
 				String broadcastMsg = null;
-				if(numSleeping < numInWorld) broadcastMsg =
-						ChatColor.GRAY+sleepPercentStr+"% or more of players in the overworld are now sleeping ("+numSleeping+"). Skipping the night...";
+				if(numSleeping < numInWorld){
+					if(PERCENT_INCLUSIVE) broadcastMsg = ChatColor.GRAY
+						+sleepPercentStr+"% or more of players in the overworld are now sleeping ("+numSleeping+"). Skipping the night...";
+					else broadcastMsg = ChatColor.GRAY+"More than "
+						+sleepPercentStr+"% of players in the overworld are now sleeping ("+numSleeping+"). Skipping the night...";
+				}
 				else if(BROADCAST_VANILLA_SKIPS) broadcastMsg =
 						ChatColor.GRAY+"Everyone in the overworld is sleeping ("+numSleeping+"). Skipping the night...";
 				if(broadcastMsg != null){

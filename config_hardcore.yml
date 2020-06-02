@@ -33,6 +33,7 @@ default-nophysics-radius: 32
 skip-night-sleep-percent-required: 0.5
 skip-storm-sleep-percent-required: 0.5
 skip-thunder-sleep-percent-required: 0.5
+skip-percent-inclusive-bound: false
 count-gm3-in-sleep-required: false
 count-gm1-in-sleep-required: false
 only-skip-if-nighttime: true
