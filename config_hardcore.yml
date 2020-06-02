@@ -300,7 +300,7 @@ auto-messages:
 #  - |
 #       There are currently &l24&r ongoing Equine contests:
 #       &f[&rSpeed, Jump, and Health&f]&r x &f[&rEach Equine species&f]&r!
-  - 'Death-trapping the End platform isn''t allowed'
+#  - 'Death-trapping the End platform isn''t allowed'
   - 'You can only teleport each person once per life!'
   - |
        Periodically, custom server &aEvents=>&7What got AlternateCraft started!&r will be held!
