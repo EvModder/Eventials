@@ -1,9 +1,9 @@
 3 Goals: Configurable, Compatible, Comprehensible
 # Eventials
-* Every command and feature comes with complete, carefully designed permissions
-* Each section can be enabled/disabled in the config
-* Carefully structured Time complexity (This plugin won't lag)
-* Almost all displayed messages are configurable<br>
+* Extensive permissions for each command/feature
+* Modules can each be enabled/disabled in the config
+* Thoughtfully designed with large servers in mind to minimize lag
+* All messages used by the plugin can be configured<br>
 
 Although I plan to eventually do a public release of this plugin, there is currently too much legacy code and dependance on my other plugins for **Eventials** to be very useful to any other server in its current form.
 
