@@ -2,6 +2,7 @@ package Eventials;
 
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
+import org.bukkit.entity.Player;
 import Eventials.listeners.*;
 import Eventials.mailbox.MailboxClient;
 import Eventials.books.WriterTools;
@@ -20,11 +21,12 @@ import net.evmodder.EvLib.FileIO;
  *  and not really meant for (or useful for) public distribution.
  */
 //Event Ideas: Randomizing Blocks
-//TODO: Must stay in bed to skip night (mimic vanilla?)
+//TODO: Must stay in bed to skip storm/thunder (mimic vanilla?)
 //TODO: hover-text for recent-joins shows how long since they were on
 //TODO: chat "ping/tick" sound (toggleable) and name mention sound?
 //TODO: Eye-of-ender popping
 //TODO: splitworlds option to also separate stats/advancements per-world
+//TODO: scoreboardUUID option to load values from player stats files
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;
@@ -130,4 +132,8 @@ public class Eventials extends EvPlugin {
 		MessageInterceptor pmi = new MessageInterceptor(getServer().getConsoleSender(), true);
 		getServer().dispatchCommand(pmi.getProxy(), command);
 	}*/
+
+	public void sendTellraw(Player target, String message){
+		getServer().dispatchCommand(getServer().getConsoleSender(), "minecraft:tellraw "+target.getName()+" "+message);
+	}
 }
