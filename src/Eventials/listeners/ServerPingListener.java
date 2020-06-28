@@ -100,7 +100,7 @@ public class ServerPingListener implements Listener{
 
 	@EventHandler
 	public void onServerPing(ServerListPingEvent evt){
-		String playerIP = evt.getAddress().getHostAddress();
+		String playerIP = evt.getAddress().toString();
 		if(blacklistIPs.contains(playerIP)){
 			evt.setMotd(ChatColor.DARK_RED+"Can't connect to server.");
 			return;

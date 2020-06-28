@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -32,6 +33,157 @@ import net.evmodder.EvLib.extras.ButcherUtils.KillFlag;
 import com.earth2me.essentials.IEssentials;
 
 public final class Scheduler{
+	// ======================================== TODO: DELETE ALL THIS CRAP
+	// ========================================//
+	enum Event {
+		CLICK, HOVER
+	};
+
+	public enum TextAction {
+		// ClickEvent
+		LINK("§b", "open_url", Event.CLICK), FILE("&[something]", "open_file", Event.CLICK), RUN_CMD("§2", "run_command", Event.CLICK), SUGGEST_CMD("§9",
+				"suggest_command", Event.CLICK), PAGE("${PAGE}", "change_page", Event.CLICK),
+		// HoverEvent
+		SHOW_TEXT("§a", "show_text", Event.HOVER), ACHIEVEMENT("${ACHIEVEMENT}", "show_achievement", Event.HOVER), ITEM("${ITEM}", "show_item",
+				Event.HOVER), ENTITY("${ENTITY}", "show_entity", Event.HOVER),
+
+		// custom
+		WARP(ChatColor.LIGHT_PURPLE + "@", "run_command", Event.CLICK);
+		// MONEY(ChatColor.GREEN+"$", "show_text"),
+		// PLUGIN(ChatColor.RED+"", "show_item"),
+
+		Event type;
+		String marker, action;
+
+		TextAction(String s, String a, Event t){
+			marker = s;
+			action = a;
+			type = t;
+		}
+
+		@Override public String toString(){
+			return marker;
+		}
+
+		public static int countNodes(String str){
+			int count = 0;
+			for(TextAction n : TextAction.values()){
+				count += StringUtils.countMatches(str.replace("\\" + n.marker, ""), n.marker);
+			}
+			return count;
+		}
+
+		public static String parseToRaw(String string, String endIndicator){
+			// {"text":"xxx","extra":[{"text":"xxx","clickEvent":{"action":"xxx","value":"xxx"}}]}
+			StringBuilder raw = new StringBuilder("[{\"text\":\"\"}");
+
+			int nodes = TextAction.countNodes(string);// component count
+			for(short i = 0; i < nodes; ++i){
+				// get next node
+				TextAction node = null;
+				int nodeIndex = string.length();
+				for(TextAction n : TextAction.values()){
+					int x = -1;
+					do{ x = string.indexOf(n.marker, x + 1); }
+					while(x != -1 && TextUtils.isEscaped(string, x));
+					if(x != -1 && x < nodeIndex){
+						nodeIndex = x;
+						node = n;
+					}
+				}
+
+				// cut off preText
+				String preText = string.substring(0, nodeIndex);
+				string = string.substring(nodeIndex);
+				preText = TextUtils.unescapeString(preText);
+
+				// cut off hyperText
+				int endSpecial = string.indexOf(endIndicator);
+				if(endSpecial == -1) endSpecial = string.length();
+				String hyperText = string.substring(0, endSpecial);
+				string = string.substring(endSpecial);
+				hyperText = TextUtils.unescapeString(hyperText);
+
+				String actionText = "";
+				// detect underlying command/link/values
+				int keyValueI = hyperText.indexOf("=>");
+				if(keyValueI != -1){
+					actionText = hyperText.substring(keyValueI + 2).trim();
+					hyperText = hyperText.substring(0, keyValueI);
+				}
+				else{
+					if(node == TextAction.RUN_CMD){
+						actionText = hyperText.substring(node.marker.length()).trim();
+					}
+					else if(node == TextAction.WARP){
+						actionText = "/warp " + hyperText.substring(node.marker.length()).trim();
+					}
+					else actionText = hyperText.trim();
+				}
+
+				if(!preText.isEmpty()) raw.append(",{\"text\":\"").append(preText).append("\"}");
+				if(!hyperText.isEmpty()){
+					raw.append(",{\"text\":\"").append(hyperText).append('"');
+					if(node != null) raw.append(",\"").append(node.type == Event.CLICK ? "clickEvent" : "hoverEvent").append("\":{\"action\":\"")
+							.append(node.action).append("\",\"value\":\"").append(actionText).append("\"}");
+					raw.append('}');
+				}
+			}
+			string = TextUtils.unescapeString(string);
+			if(!string.isEmpty()) raw.append(",{\"text\":\"").append(string).append("\"}");
+			return raw.append(']').toString();
+		}
+	};
+
+	public static void sendModifiedText(String preMsg, String hyperMsg, TextAction action, String value, String postMsg, Player... recipients){
+		preMsg = preMsg.replace("\n", "\\n");
+		hyperMsg = hyperMsg.replace("\n", "\\n");
+		value = value.replace("\n", "\\n");
+		postMsg = postMsg.replace("\n", "\\n");
+		StringBuilder raw = new StringBuilder("[");
+		if(preMsg != null && !preMsg.isEmpty()) raw.append("{\"text\":\"").append(preMsg).append("\"},");
+		raw.append("{\"text\":\"").append(hyperMsg).append("\",\"clickEvent\":{\"action\":\"").append(action.action).append("\",\"value\":\"").append(value)
+				.append("\"}}");
+		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
+		raw.append(']');
+		for(Player p : recipients){
+			Eventials.getPlugin().sendTellraw(p, raw.toString());
+		}
+	}
+
+	public static void getModifiedText(String preMsg, String hyperMsg, TextAction action, String value, String postMsg, Player... recipients){
+		preMsg = preMsg.replace("\n", "\\n");
+		hyperMsg = hyperMsg.replace("\n", "\\n");
+		value = value.replace("\n", "\\n");
+		postMsg = postMsg.replace("\n", "\\n");
+		StringBuilder raw = new StringBuilder("[");
+		if(preMsg != null && !preMsg.isEmpty()) raw.append("{\"text\":\"").append(preMsg).append("\"},");
+		raw.append("{\"text\":\"").append(hyperMsg).append("\",\"clickEvent\":{\"action\":\"").append(action.action).append("\",\"value\":\"").append(value)
+				.append("\"}}");
+		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
+		raw.append(']');
+		for(Player p : recipients){
+			Eventials.getPlugin().sendTellraw(p, raw.toString());
+		}
+	}
+
+	public static void sendModifiedText(String[] preMsgs, String[] hyperMsgs, TextAction[] actions, String[] values, String postMsg, Player... recipients){
+		if(preMsgs.length != hyperMsgs.length || hyperMsgs.length != actions.length || actions.length != values.length || preMsgs.length == 0) return;
+
+		StringBuilder raw = new StringBuilder("[");
+		for(int i = 0; i < hyperMsgs.length; ++i){
+			if(i != 0) raw.append(',');
+			raw.append(" {\"text\":\"").append(preMsgs[i]).append("\"}, {\"text\":\"").append(hyperMsgs[i]).append("\", \"clickEvent\": {\"action\": \"")
+					.append(actions[i].action).append("\", \"value\": \"").append(values[i]).append("\"}}");
+		}
+		if(postMsg != null && !postMsg.isEmpty()) raw.append(", {\"text\": \"").append(postMsg).append("\"} ");
+		raw.append(']');
+		for(Player p : recipients){
+			Eventials.getPlugin().sendTellraw(p, raw.toString());
+		}
+	}
+	// ============================================================================================================//
+
 	private Eventials plugin;
 	private int cycleCount, automsg_index;
 	private boolean magicDay, serverIsSilent, playerSinceButcher, playerSinceSave;
@@ -54,8 +206,8 @@ public final class Scheduler{
 		msgC = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("message-color", "&e"));
 		msgP = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("message-prefix", "&e"));
 
-		String[] markers = new String[TextUtils.TextAction.values().length];
-		for(int i=0; i<markers.length; ++i) markers[i] = TextUtils.TextAction.values()[i].toString();
+		String[] markers = new String[TextAction.values().length];
+		for(int i=0; i<markers.length; ++i) markers[i] = TextAction.values()[i].toString();
 		escapedMsgP = TextUtils.escape(msgP, markers);//TODO: this is disgusting pls fix
 
 		for(int i = 0; i < autoMsgs.length; ++i){
@@ -214,13 +366,13 @@ public final class Scheduler{
 	}
 
 	public void sendHyperMessage(String msg, Player... ppl){
-		if(TextUtils.TextAction.countNodes(msg) == 0){
+		if(TextAction.countNodes(msg) == 0){
 			plugin.getServer().broadcastMessage(msgP+msg);
 		}
 		else{
 			plugin.getServer().getConsoleSender().sendMessage(msgP+msg);
 
-			String raw = TextUtils.TextAction.parseToRaw(escapedMsgP+msg, msgC);
+			String raw = TextAction.parseToRaw(escapedMsgP+msg, msgC);
 
 			for(Player p : ppl){
 //				p.sendRawMessage(raw);//Doesn't work! (last checked: 1.12.1)

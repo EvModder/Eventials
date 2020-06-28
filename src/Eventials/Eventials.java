@@ -27,6 +27,7 @@ import net.evmodder.EvLib.FileIO;
 //TODO: Eye-of-ender popping
 //TODO: splitworlds option to also separate stats/advancements per-world
 //TODO: scoreboardUUID option to load values from player stats files
+//TODO: more frequent date checking (or scheduling?) for holiday-specific motds etc
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;

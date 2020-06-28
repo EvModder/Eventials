@@ -1,7 +1,6 @@
 package Eventials.spawners;
 
 import java.util.Random;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,7 +30,7 @@ public class CreatureSpawnListener implements Listener{
 		if(evt.isCancelled()) return;
 
 		if(evt.getSpawnReason() == SpawnReason.NATURAL && evt.getEntity() instanceof Monster
-				&& armySpawnEnabled && evt.getEntityType() != EntityType.PIG_ZOMBIE && rand.nextDouble() < CHANCE)
+				&& armySpawnEnabled && rand.nextDouble() < CHANCE)
 		{
 			if(!RECURSIVE_SPAWNING) armySpawnEnabled = false;
 			//

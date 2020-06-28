@@ -12,8 +12,9 @@ import org.bukkit.entity.Player;
 import Eventials.economy.EvEconomy;
 import net.ess3.api.IEssentials;
 import net.evmodder.EvLib.hooks.EssEcoHook;
-import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.TextUtils.TextAction;
+import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
 
 public class Extras{
 	public static void runPlayerDelete(){
@@ -196,17 +197,14 @@ public class Extras{
 			}
 		}
 		if(warps.isEmpty()) return;
-		String[] preMsgs = new String[warps.size()]; preMsgs[0] = ChatColor.GOLD+"HyperWarps: ";
-		String[] hyperMsgs = new String[warps.size()]; hyperMsgs[0] = ChatColor.GREEN+warps.firstElement();
-		String[] cmdMsgs = new String[warps.size()]; cmdMsgs[0] = "/warp "+warps.firstElement();
-		TextAction[] actions = new TextAction[warps.size()]; actions[0] = TextAction.RUN_CMD;
-		for(int i=1; i<warps.size(); ++i){
-			preMsgs[i] = ChatColor.GOLD+", ";
-			hyperMsgs[i] = ChatColor.GREEN+warps.get(i);
-			cmdMsgs[i] = "/warp "+warps.get(i);
-			actions[i] = TextAction.RUN_CMD;
+		
+		TellrawBlob blob = new TellrawBlob();
+		for(int i=0; i<warps.size(); ++i){
+			if(i == 0) blob.addComponent(ChatColor.GOLD+"HyperWarps: ");
+			else blob.addComponent(ChatColor.GOLD+", ");
+			blob.addComponent(new ActionComponent(ChatColor.GREEN+warps.get(i), ClickEvent.RUN_COMMAND, "/warp "+warps.get(i)));
 		}
-		TextUtils.sendModifiedText(preMsgs, hyperMsgs, actions, cmdMsgs, null, player);
+		Eventials.getPlugin().sendTellraw(player, blob.toString());
 	}
 
 	public static boolean isAdminShop(Block block){

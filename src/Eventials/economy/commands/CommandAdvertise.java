@@ -18,6 +18,9 @@ import Eventials.Eventials;
 import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
 
 public class CommandAdvertise extends EvCommand{
 	private EvEconomy economy;
@@ -63,20 +66,23 @@ public class CommandAdvertise extends EvCommand{
 
 		if(sender instanceof Player && !args[0].equals("pay*")){
 			//-----------------------------------------------------------
-			sender.sendMessage("\n\n\n\n\n\n\n\n\n"+ChatColor.DARK_AQUA+ChatColor.BOLD+ChatColor.STRIKETHROUGH
-							+"=======================================");
-			TextUtils.sendModifiedText(ChatColor.GRAY+"Click to pay the "+
-									ChatColor.GREEN+curSymbol+COST+ChatColor.GRAY+" and set the ad: [",
-									ChatColor.WHITE+">>"+ChatColor.AQUA+"Pay "+curSymbol+COST+ChatColor.WHITE+"<<",
-									TextUtils.TextAction.RUN_CMD, "/advertise pay* "+advert, ChatColor.GRAY+"]", (Player)sender);
-			sender.sendMessage(""+ChatColor.BLUE+ChatColor.BOLD+ChatColor.STRIKETHROUGH
-					+"=======================================");
-			sender.sendMessage(ChatColor.DARK_RED+"["+ChatColor.RED+ChatColor.BOLD+"Warn"+ChatColor.DARK_RED+"] "
-							+ChatColor.GOLD+"Advertising other servers within this section is not permitted, " +
-											"and you will not be refunded if your advertisement is removed.\n\n ");
+			String preMsg = "\n\n\n\n\n\n\n\n\n"+ChatColor.DARK_AQUA+ChatColor.BOLD+ChatColor.STRIKETHROUGH
+					+"======================================="
+					+ChatColor.GRAY+"Click to pay the "+ChatColor.GREEN+curSymbol+COST+ChatColor.GRAY+" and set the ad: [";
+			String hyperMsg = ChatColor.WHITE+">>"+ChatColor.AQUA+"Pay "+curSymbol+COST+ChatColor.WHITE+"<<";
+			String postMsg = ChatColor.GRAY+"]\n"+ChatColor.BLUE+ChatColor.BOLD+ChatColor.STRIKETHROUGH
+					+"======================================="
+					+ChatColor.DARK_RED+"["+ChatColor.RED+ChatColor.BOLD+"Warn"+ChatColor.DARK_RED+"] "
+					+ChatColor.GOLD+"Advertising other servers within this section is not permitted, " +
+					"and you will not be refunded if your advertisement is removed.\n\n ";
+			TellrawBlob blob = new TellrawBlob();
+			blob.addComponent(preMsg);
+			blob.addComponent(new ActionComponent(hyperMsg, ClickEvent.RUN_COMMAND, "/advertise pay* "+advert));
+			blob.addComponent(postMsg);
+			Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
 			//-----------------------------------------------------------
 			sender.sendMessage(ChatColor.AQUA+"- "+ChatColor.DARK_GRAY+"[ "+ChatColor.LIGHT_PURPLE
-								+"Ad: "+ChatColor.DARK_GREEN+formattedAdvert+ChatColor.DARK_GRAY+" ]");
+					+"Ad: "+ChatColor.DARK_GREEN+formattedAdvert+ChatColor.DARK_GRAY+" ]");
 			return true;
 		}
 		else{

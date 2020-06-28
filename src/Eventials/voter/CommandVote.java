@@ -5,25 +5,26 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
 import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.TextUtils.TextAction;
 
 public class CommandVote extends EvCommand{
-	final String[] links;
-	final String website;
-	final String[] hyper;
-	final String[] nonHyper;
-	final TextAction[] clickResult;
 	final EvVoter voteManager;
+	final String websiteLink, tellrawStringLinks;
 
 	public CommandVote(EvPlugin pl, EvVoter v){this(pl, v, true);}
 	public CommandVote(EvPlugin pl, EvVoter v, boolean enabled){
 		super(pl, enabled);
 		voteManager = EvVoter.getVoteManager();
 		List<String> confLinks = pl.getConfig().getStringList("vote-links");
-		website = pl.getConfig().getString("vote-site-page", "http://www.altcraft.net/voting");
+		websiteLink = pl.getConfig().getString("vote-site-page", "http://www.altcraft.net/voting");
+		final String[] links, hyper;
 		if(confLinks == null/* || confLinks.isEmpty()*/){// What if they don't want voting links?
 			links = new String[]{
 				"https://www.planetminecraft.com/",
@@ -55,16 +56,13 @@ public class CommandVote extends EvCommand{
 				++i;
 			}
 		}
-
-		nonHyper = new String[links.length];
-		clickResult = new TextAction[links.length];
-		if(links.length != 0){
-			for(int i=0; i<links.length;){
-				clickResult[i] = TextAction.LINK;
-				nonHyper[i] = TextUtils.translateAlternateColorCodes('&', "  &d"+(++i)+"&7.");
-			}
-			nonHyper[0] = TextUtils.translateAlternateColorCodes('&', "&eVoting Links:  &d1&7.");
+		TellrawBlob blob = new TellrawBlob();
+		for(int i=0; i<links.length; ++i){
+			if(i == 0) blob.addComponent("&eVoting Links:  &d1&7.");
+			else blob.addComponent("  "+ChatColor.LIGHT_PURPLE+(i+1)+ChatColor.GRAY+".");
+			blob.addComponent(new ActionComponent(hyper[i], ClickEvent.OPEN_URL, links[i]));
 		}
+		tellrawStringLinks = blob.toString();
 	}
 
 	@Override
@@ -77,14 +75,13 @@ public class CommandVote extends EvCommand{
 			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players");
 		}
 		Player player = (Player)sender;
-		if(website != null && !website.isEmpty())
-			TextUtils.sendModifiedText(
-					new String[]{ChatColor.YELLOW+"Voting"},
-					new String[]{ChatColor.AQUA+" website page"},
-					new TextAction[]{TextAction.LINK},
-					new String[]{website}, "", player);
-		if(links.length > 0)
-			TextUtils.sendModifiedText(nonHyper, hyper, clickResult, links, "", player);
+		if(websiteLink != null && !websiteLink.isEmpty()){
+			Eventials.getPlugin().sendTellraw(player, new TellrawBlob(
+					new RawTextComponent(ChatColor.YELLOW+"Voting"),
+					new ActionComponent(ChatColor.AQUA+" website page", ClickEvent.OPEN_URL, websiteLink))
+					.toString());
+		}
+		if(tellrawStringLinks.length() > 2) Eventials.getPlugin().sendTellraw(player, tellrawStringLinks);
 
 		int s = voteManager.getStreak(player);
 		ChatColor c = (s > 0 ? s > voteManager.streakMax ?

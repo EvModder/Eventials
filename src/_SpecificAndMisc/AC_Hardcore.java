@@ -13,7 +13,10 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
 
 public class AC_Hardcore implements Listener{
 	private final Eventials pl;
@@ -30,27 +33,34 @@ public class AC_Hardcore implements Listener{
 		return (plugin != null && plugin.isEnabled()) ? ChatColor.GREEN : ChatColor.RED;
 	}
 	void showFancyPlugins(Player player){
-		String raw = TextUtils.TextAction.parseToRaw(
-			"Plugins: §a\\" +
-//			enableTest("Renewable")+"Renewable=>Prevents unrenewable items from being destroyed§r, §a\\" +
-			enableTest("Essentials")+"Essentials=>Collection of useful tools and commands§r, §a\\" +
-			enableTest("Eventials")+"Eventials=>Package of custom-built features and tweaks§r, §a\\" +
-			enableTest("ChatManager")+"ChatTweaks=>Keeps chat pg13 + Color/Format for chat & signs§r, \\\\n§a\\" +
-			enableTest("DropHeads")+"DropHeads=>Provides a chance to get heads from mobs/players§r, §a\\" +
-			enableTest("HorseOwners")+"HorseRanks=>Claim, name, and view stats for horses§r, §a\\" +
-//			enableTest("EnchantBook")+"EnchantBook=>Color item names in anvils, looting on axes, etc!§r, §a\\" +
-			"More=>\\"+
-//			enableTest("WorldEdit")+"WorldEdit\\§f, \\" +
-//			enableTest("WorldGuard")+"WorldGuard\\§f, \\" +
-//			enableTest("PluginLoader")+"PluginLoader\\§f, \\" +
-			ChatColor.GREEN+"EvNoCheat\\§f, \\" +
-//			enableTest("PermissionsBukkit")+"PermissionsBukkit\\§f, \\" +
-			enableTest("BungeeTabListPlus")+"TabList+\\§f, \\" +
-			enableTest("Votifier")+"Votifier§r" +
-			".\\\\n\\§7\\§oHover over a plugin to see more details!",
-			"§r"
+		TellrawBlob blob = new TellrawBlob(
+			new RawTextComponent("Plugins: "),
+//			new ActionComponent(enableTest("Renewable")+"Essentials", HoverEvent.SHOW_TEXT, "Prevents unrenewable items from being destroyed"),
+//			new RawTextComponent("§r, "),
+			new ActionComponent(enableTest("Essentials")+"Essentials", HoverEvent.SHOW_TEXT, "Collection of useful tools and commands"),
+			new RawTextComponent("§r, "),
+			new ActionComponent(enableTest("Eventials")+"Eventials", HoverEvent.SHOW_TEXT, "Package of custom-built features and tweaks"),
+			new RawTextComponent("§r, "),
+			new ActionComponent(enableTest("ChatManager")+"ChatTweaks", HoverEvent.SHOW_TEXT, "Keeps chat pg13 + Color/Format for chat & signs"),
+			new RawTextComponent("§r,\n"),
+			new ActionComponent(enableTest("DropHeads")+"DropHeads", HoverEvent.SHOW_TEXT, "Provides a chance to get heads from mobs/players"),
+			new RawTextComponent("§r, "),
+			new ActionComponent(enableTest("HorseOwners")+"HorseRanks", HoverEvent.SHOW_TEXT, "Claim, name, and view stats for horses"),
+			new RawTextComponent("§r, "),
+//			new ActionComponent(enableTest("EnchantBook")+"EnchantBook", HoverEvent.SHOW_TEXT, "Color item names in anvils, looting on axes, etc!"),
+//			new RawTextComponent("§r, "),
+			new ActionComponent("More", HoverEvent.SHOW_TEXT,
+//					enableTest("WorldEdit")+"WorldEdit§r, "+
+//					enableTest("WorldGuard")+"WorldGuard§r, "+
+//					enableTest("PluginLoader")+"PluginLoader§r, "+
+					"§aEvNoCheat§r, "+
+//					enableTest("PermissionsBukkit")+"PermissionsBukkit§r, "+
+					enableTest("BungeeTabListPlus")+"TabList+§r, "+
+					enableTest("Votifier")+"Votifier§r."+
+					"\n§7§oHover over a plugin to see more details!"
+			)
 		);
-		Eventials.getPlugin().runCommand("tellraw "+player.getName()+' '+raw);
+		Eventials.getPlugin().sendTellraw(player, blob.toString());
 	}
 
 	@EventHandler
