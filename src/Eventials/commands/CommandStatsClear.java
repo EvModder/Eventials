@@ -2,7 +2,7 @@ package Eventials.commands;
 
 import java.util.List;
 import java.util.UUID;
-
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,6 @@ import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
-import net.md_5.bungee.api.ChatColor;
 
 public class CommandStatsClear extends EvCommand {
 	public CommandStatsClear(EvPlugin p){
