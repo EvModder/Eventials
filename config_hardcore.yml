@@ -306,7 +306,7 @@ auto-messages:
        Periodically, custom server &aEvents=>&7What got AlternateCraft started!&r will be held!
        Check out &baltcraft.net=>http://www.altcraft.net/events/&r, or wait and be surprised!
   - '&4[&c&lWarning&4]&r Old, unused chunks may get reset!'
-  - 'Griefing is discouraged, but not prohibited'
+  - 'Griefing is allowed, but generally discouraged'
 #  - |
 #       Exploring generates new chunks.
 #       When Minecraft updates, new terrain and features

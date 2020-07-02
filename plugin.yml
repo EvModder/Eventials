@@ -1,6 +1,7 @@
 name: Eventials
 main: Eventials.Eventials
-author: EvModder/EvDoc/Evil_Witchdoctor
+author: EvModder/EvDoc
+description: Large bundle of miscellaneous features
 version: 1.3.3 # .3=mailbox, ..3=sleep to skip night/storm
 softdepend: [Votifier, Essentials]
 api-version: 1.13

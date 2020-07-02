@@ -1,6 +1,8 @@
 package _SpecificAndMisc;
 
 import java.io.InputStream;
+import java.util.List;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -12,8 +14,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.plugin.Plugin;
 import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.Component;
+import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 
 public class EventAndMisc{
 	final Eventials pl;
@@ -170,5 +177,29 @@ public class EventAndMisc{
 //		Chiseled bricks
 //		ItemStack chiseledBricks = new ItemStack(Material.BRICK, 1, (byte)3);
 //		pl.getServer().addRecipe((new ShapedRecipe(chiseledBricks)));
+	}
+
+	public static Component getPluginDisplay(String pluginName){
+		Plugin plugin = Eventials.getPlugin().getServer().getPluginManager().getPlugin(pluginName);
+		if(plugin == null) return new RawTextComponent(ChatColor.RED+pluginName);
+		ChatColor color = plugin.isEnabled() ? ChatColor.GREEN : ChatColor.RED;
+		
+		String version = plugin.getDescription().getVersion();
+		String description = plugin.getDescription().getDescription();
+		String website = plugin.getDescription().getWebsite();
+		List<String> authors = plugin.getDescription().getAuthors();
+		
+		StringBuilder builder = new StringBuilder();
+		if(version != null && !version.trim().isEmpty())
+			builder.append(ChatColor.RESET).append("Version: ").append(ChatColor.GRAY).append(version).append('\n');
+		if(description != null && !description.trim().isEmpty())
+			builder.append(ChatColor.RESET).append("Description: ").append(ChatColor.GRAY).append(description).append('\n');
+		if(website != null && !website.trim().isEmpty())
+			builder.append(ChatColor.RESET).append("Website: ").append(ChatColor.GRAY).append(website).append('\n');
+		if(authors != null && !authors.isEmpty())
+			builder.append(ChatColor.RESET).append(authors.size() == 1 ? "Author: " : "Authors: ")
+			.append(ChatColor.GRAY).append(String.join(ChatColor.RESET+", "+ChatColor.GRAY, authors)).append('\n');
+		if(builder.length() == 0) return new RawTextComponent(color+plugin.getName());
+		return new ActionComponent(color+plugin.getName(), HoverEvent.SHOW_TEXT, builder.substring(0, builder.length()-1));
 	}
 }

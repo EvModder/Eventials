@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
 import net.evmodder.EvLib.util.Pair;
@@ -46,12 +47,12 @@ public class PlayerSleepListener implements Listener{
 		SKIP_NIGHT_PERCENT_STR = (int)(SKIP_NIGHT_PERCENT*100)+"%";
 	}
 
-	String getSkipNightBroadcast(int numSleeping, int numToCount, int numInWorld){
+	String getSkipNightTellrawMsg(int numSleeping, int numToCount, int numInWorld){
 		if(numSleeping < numToCount){
-			if(PERCENT_INCLUSIVE) return ChatColor.GRAY+SKIP_NIGHT_PERCENT_STR
-					+" or more of players in the overworld are now sleeping ("+numSleeping+"/"+numInWorld+"). Skipping the night...";
-			else return ChatColor.GRAY+"More than "+SKIP_NIGHT_PERCENT_STR
-					+" of players in the overworld are now sleeping ("+numSleeping+"). Skipping the night...";
+			if(PERCENT_INCLUSIVE) return new RawTextComponent(ChatColor.GRAY+SKIP_NIGHT_PERCENT_STR
+					+" or more of players in the overworld are sleeping ("+numSleeping+"/"+numInWorld+"). Skipping the night...").toString();
+			else return new RawTextComponent(ChatColor.GRAY+"More than "+SKIP_NIGHT_PERCENT_STR
+					+" of players in the overworld are sleeping ("+numSleeping+"). Skipping the night...").toString();
 		}
 		else if(numToCount < numInWorld){ // Technically this is a vanilla-skip as well...
 			TellrawBlob blob = new TellrawBlob();
@@ -61,7 +62,7 @@ public class PlayerSleepListener implements Listener{
 		}
 		else if(BROADCAST_VANILLA_SKIPS){
 			//TODO: hover-over 'Everyone*' (if relevent) => 'in gamemode survival'
-			return ChatColor.GRAY+"Everyone in the overworld is sleeping ("+numSleeping+"). Skipping the night...";
+			return new RawTextComponent(ChatColor.GRAY+"Everyone in the overworld is sleeping ("+numSleeping+"). Skipping the night...").toString();
 		}
 		return null;
 	}
@@ -84,28 +85,30 @@ public class PlayerSleepListener implements Listener{
 			if(world.getTime() < BED_ENTER_START_TICK || BED_ENTER_END_TICK < world.getTime()) return;
 		}
 		Pair<Integer, Integer> sleepingAndCounted = getNumSleepingAndCounted(world, triggerPlayer, includeTrigger);
+		int CUR_SLEEPERS = sleepingAndCounted.a, MAX_SLEEPERS = sleepingAndCounted.b;
 		if(sleepingAndCounted.a <= 0) return;
-		int numToSkipNight = (int)Math.ceil(sleepingAndCounted.b*SKIP_NIGHT_PERCENT);
-		int numToSkipStorm = (int)Math.ceil(sleepingAndCounted.b*SKIP_STORM_PERCENT);
-		int numToSkipThunder = (int)Math.ceil(sleepingAndCounted.b*SKIP_THUNDER_PERCENT);
-		if(!PERCENT_INCLUSIVE){
-			if(numToSkipNight < sleepingAndCounted.b) ++numToSkipNight; // 100% is always inclusive
-			if(numToSkipStorm < sleepingAndCounted.b) ++numToSkipStorm;
-			if(numToSkipThunder < sleepingAndCounted.b) ++numToSkipThunder;
-		}
+		double needToSkipNight = MAX_SLEEPERS*SKIP_NIGHT_PERCENT;
+		double needToSkipStorm = MAX_SLEEPERS*SKIP_STORM_PERCENT;
+		double needToSkipThunder = MAX_SLEEPERS*SKIP_THUNDER_PERCENT;
+		int numToSkipNight = (int)(Math.ceil(needToSkipNight) > needToSkipNight ? Math.ceil(needToSkipNight)
+				: needToSkipNight + (!PERCENT_INCLUSIVE && needToSkipNight < MAX_SLEEPERS ? 1 : 0));
+		int numToSkipStorm = (int)(Math.ceil(needToSkipStorm) > needToSkipStorm ? Math.ceil(needToSkipStorm)
+				: needToSkipStorm + (!PERCENT_INCLUSIVE && needToSkipStorm < MAX_SLEEPERS ? 1 : 0));
+		int numToSkipThunder = (int)(Math.ceil(needToSkipThunder) > needToSkipThunder ? Math.ceil(needToSkipThunder)
+				: needToSkipThunder + (!PERCENT_INCLUSIVE && needToSkipThunder < MAX_SLEEPERS ? 1 : 0));
 		if(SKIP_IF_DAYLIGHT_CYCLE_IS_OFF || world.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE)){
 			if(includeTrigger){
 				Player player = pl.getServer().getPlayer(triggerPlayer);
-				if(player != null) player.sendMessage("§b"+sleepingAndCounted.a+" §7of§6 "+numToSkipNight+" §8|§7 "+sleepingAndCounted.b);
+				if(player != null) player.sendMessage("§b"+CUR_SLEEPERS+" §7of§6 "+numToSkipNight+" §8|§7 "+MAX_SLEEPERS);
 			}
-			if(sleepingAndCounted.a >= numToSkipNight){
+			if(CUR_SLEEPERS >= numToSkipNight){
 				if(skipNightWorlds.add(world.getUID()))
 				new BukkitRunnable(){@Override public void run(){
 					Pair<Integer, Integer> sleepingAndCounted = getNumSleepingAndCounted(world, triggerPlayer, includeTrigger);
 					int numToSkipNight = (int)Math.ceil(sleepingAndCounted.b*SKIP_NIGHT_PERCENT);
 					if(!PERCENT_INCLUSIVE && numToSkipNight < sleepingAndCounted.b) ++numToSkipNight; // 100% is always inclusive
 					if(sleepingAndCounted.a >= Math.max(1, numToSkipNight)){
-						String broadcastMsg = getSkipNightBroadcast(sleepingAndCounted.a, sleepingAndCounted.b, world.getPlayers().size());
+						String broadcastMsg = getSkipNightTellrawMsg(CUR_SLEEPERS, MAX_SLEEPERS, world.getPlayers().size());
 						if(broadcastMsg != null) for(Player p : BROADCAST_SKIPS_TO_ALL_WORLDS
 									? pl.getServer().getOnlinePlayers() : world.getPlayers()) pl.sendTellraw(p, broadcastMsg);
 						long relativeTime = 24000 - world.getTime();

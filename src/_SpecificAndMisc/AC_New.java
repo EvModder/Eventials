@@ -157,7 +157,7 @@ public class AC_New implements Listener{
 				new RawTextComponent("§r, "),
 				new ActionComponent(enableTest("EnchantBook")+"EnchantBook", HoverEvent.SHOW_TEXT, "Color item names in anvils, looting on axes, etc!"),
 				new RawTextComponent("§r, "),
-				new ActionComponent("More", HoverEvent.SHOW_TEXT,
+				new ActionComponent("§aMore", HoverEvent.SHOW_TEXT,
 						enableTest("WorldEdit")+"WorldEdit§r, "+
 						enableTest("WorldGuard")+"WorldGuard§r, "+
 						enableTest("PluginLoader")+"PluginLoader§r, "+
@@ -165,9 +165,9 @@ public class AC_New implements Listener{
 						enableTest("Votifier")+"Votifier§r, "+
 						"§aEvAntiCheat§r, "+
 						enableTest("BungeeTabListPlus")+"TabList+§r, "+
-						enableTest("PermissionsBukkit")+"PermissionsBukkit§r."+
-						"\n§7§oHover over a plugin to see more details!"
-				)
+						enableTest("PermissionsBukkit")+"PermissionsBukkit§r."
+				),
+				new RawTextComponent("\n§7§oHover over a plugin to see more details!")
 			);
 		Eventials.getPlugin().sendTellraw(player, blob.toString());
 	}

@@ -49,16 +49,15 @@ public class AC_Hardcore implements Listener{
 			new RawTextComponent("§r, "),
 //			new ActionComponent(enableTest("EnchantBook")+"EnchantBook", HoverEvent.SHOW_TEXT, "Color item names in anvils, looting on axes, etc!"),
 //			new RawTextComponent("§r, "),
-			new ActionComponent("More", HoverEvent.SHOW_TEXT,
+			new ActionComponent("§aMore", HoverEvent.SHOW_TEXT,
 //					enableTest("WorldEdit")+"WorldEdit§r, "+
 //					enableTest("WorldGuard")+"WorldGuard§r, "+
 //					enableTest("PluginLoader")+"PluginLoader§r, "+
 					"§aEvNoCheat§r, "+
 //					enableTest("PermissionsBukkit")+"PermissionsBukkit§r, "+
 					enableTest("BungeeTabListPlus")+"TabList+§r, "+
-					enableTest("Votifier")+"Votifier§r."+
-					"\n§7§oHover over a plugin to see more details!"
-			)
+					enableTest("Votifier")+"Votifier§r."),
+			new RawTextComponent("\n§7§oHover over a plugin to see more details!")
 		);
 		Eventials.getPlugin().sendTellraw(player, blob.toString());
 	}
