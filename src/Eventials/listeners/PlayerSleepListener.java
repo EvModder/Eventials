@@ -56,7 +56,7 @@ public class PlayerSleepListener implements Listener{
 		}
 		else if(numToCount < numInWorld){ // Technically this is a vanilla-skip as well...
 			TellrawBlob blob = new TellrawBlob();
-			blob.addComponent(new ActionComponent("§7Everyone*", HoverEvent.SHOW_TEXT, "§7in gamemode survival"));
+			blob.addComponent(new ActionComponent("§7Everyone*", HoverEvent.SHOW_TEXT, "§7*in gamemode survival"));
 			blob.addComponent("§7 in the overworld is sleeping ("+numSleeping+"). Skipping the night...");
 			return blob.toString();
 		}
