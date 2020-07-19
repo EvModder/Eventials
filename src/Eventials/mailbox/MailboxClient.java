@@ -95,7 +95,7 @@ public final class MailboxClient implements ChannelReceiver{
 			if(load) callback.playerMailboxLoaded(playerUUID, null, "failed");
 		}
 		else{
-			String filename = FileIO.getEvFolder()+playerUUID+"_mail_tmp.dat";
+			String filename = FileIO.DIR+playerUUID+"_mail_tmp.dat";
 			if(save){
 				logger.info("[DEBUG] got save confirmation from mail server");
 				callback.playerMailboxSaved(playerUUID, "saved");
