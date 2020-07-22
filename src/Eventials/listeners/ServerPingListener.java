@@ -41,7 +41,8 @@ public class ServerPingListener implements Listener{
 		List<String> msgs = plugin.getConfig().getStringList("ping-messages");
 		pingMsgs = new String[msgs.size()];
 		int i=-1;
-		String pingMsgColor = TextUtils.getCurrentColorAndFormat(pingPrefix);
+		//String pingMsgColorAndFormat = TextUtils.getCurrentColorAndFormat(pingPrefix);//TODO: update for 1.16 hex colors
+		char pingMsgColor = TextUtils.getCurrentColor(pingPrefix).getChar();
 		for(String msg : msgs) pingMsgs[++i] = TextUtils.translateAlternateColorCodes('&', msg, pingMsgColor);
 
 		blacklistIPs = new HashSet<String>();
