@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.Plugin;
@@ -73,6 +76,13 @@ public class AC_Hardcore implements Listener{
 			}}.runTaskLater(pl, 20);
 			try{new File("./plugins/EvFolder/aug_evt/"+uuid+".txt").createNewFile();}
 			catch(IOException e){e.printStackTrace();}
+		}
+	}
+
+	@EventHandler
+	public void onEntitySpawn(EntitySpawnEvent evt){
+		if(evt.getEntityType() == EntityType.ZOMBIFIED_PIGLIN && ((Zombie)evt.getEntity()).isBaby()){
+			evt.setCancelled(true);
 		}
 	}
 

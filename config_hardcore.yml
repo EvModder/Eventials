@@ -412,7 +412,7 @@ ping-messages:
   - ''
   - '&oPlots world coming "soon"!'
   - 'Added bonus lag!'
-  - 'Dying can reset your Event score, be cautious!'
+#  - 'Dying can reset your Event score, be cautious!'
   - ''
   - '&oPeriodic Events!'
   - '&o"Ph1lza had a good run!"'
