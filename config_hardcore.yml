@@ -270,6 +270,8 @@ world-borders:
 #Legend: &e = text, &b = link/download, &d = @Location, &2 = command, &a = $money/event/world, 
 #Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
 auto-messages:
+  - |
+       The &2/archery&r event will continue until sept.30
 #  - |
 #       Want to win some $$$ or get a Zombie Horse?
 #       Check the Equine Event in the sidebar!
