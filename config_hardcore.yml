@@ -21,6 +21,7 @@ discord-link: 'https://discord.gg/DMcxR5D'
 enable-custom-bows: false
 prevent-arrow-invulnerability: false
 shift-click-to-ride-in-gm1: true
+click-to-remove-eyes-of-ender: true
 
 login-noteblock: true
 login-show-recent-joins: true

@@ -72,6 +72,8 @@ public class Eventials extends EvPlugin {
 //			getServer().getPluginManager().registerEvents(new InventoryCloseListener(), this);
 		if(config.getBoolean("shift-click-to-ride-in-gm1", true))
 			getServer().getPluginManager().registerEvents(new PlayerClickEntityListener(), this);
+		if(config.getBoolean("click-to-remove-eyes-of-ender", true))
+			getServer().getPluginManager().registerEvents(new PlayerClickBlockListener(), this);
 		getServer().getPluginManager().registerEvents(loginListener = new PlayerLoginListener(), this);
 
 
