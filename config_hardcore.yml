@@ -271,8 +271,8 @@ world-borders:
 #Legend: &e = text, &b = link/download, &d = @Location, &2 = command, &a = $money/event/world, 
 #Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
 auto-messages:
-  - |
-       The &2/archery&r event will continue until sept.30
+#  - |
+#       The &2/archery&r event will continue until sept.30
 #  - |
 #       Want to win some $$$ or get a Zombie Horse?
 #       Check the Equine Event in the sidebar!
@@ -282,9 +282,9 @@ auto-messages:
   - |
        "Who is watching me?" O.o
        &2/spectate list&r will help you find out
-  - |
-       We have an archery range contest!
-       Type &2/archery&r to attempt the targets
+#  - |
+#       We have an archery range contest!
+#       Type &2/archery&r to attempt the targets
 #  - |
 #       We have an ongoing stats challenge!
 #       The top player (on Nov 30th) will win &aprize money=>&750USD and a unique in-game reward! :D&r!
@@ -303,7 +303,7 @@ auto-messages:
 #  - |
 #       There is also an event prize for "Best Overall" for
 #       each of these Equines: Horse, Donkey, Mule, Llama
-  - 'Winner of &2/archery&r event gets a Minecraft account!'
+#  - 'Winner of &2/archery&r event gets a Minecraft account!'
   - 'Beware public locations such as x=0,z=0 and The End!'
   - 'Feeling plain? Try &2/color&r!'
   - 'Check the horse leaderboard at &2/hm top&r!'
@@ -314,9 +314,9 @@ auto-messages:
 #  - |
 #       There are currently &l24&r ongoing Equine contests:
 #       &f[&rSpeed, Jump, and Health&f]&r x &f[&rEach Equine species&f]&r!
-  - |
-       Be sure to find every hidden target,
-       and use all of your attempts at &2/archery&r!
+#  - |
+#       Be sure to find every hidden target,
+#       and use all of your attempts at &2/archery&r!
 #  - 'Death-trapping the End platform isn''t allowed'
   - 'You can only teleport each person once per life!'
   - |
@@ -337,9 +337,9 @@ auto-messages:
 #  - |
 #       All your horses are trash? Don't give up yet!
 #       There are also prizes for &olowest&r in each category!
-  - |
-       Tough luck so far on the &2/archery&r contest?
-       Try looking for hidden targets nobody has found yet!
+#  - |
+#       Tough luck so far on the &2/archery&r contest?
+#       Try looking for hidden targets nobody has found yet!
   - 'Wanna see who has died recently? &2/deathlog'
   - 'To skip night, 50%+ of alive, overworld players must sleep'
   - |
@@ -355,7 +355,7 @@ auto-messages:
 #       There are also 4 prizes for Worst-Overall-Stats in the
 #       Equine Event for Horses, Donkeys, Mules, and Llamas!
 #  - 'Wanna see a half-baked website? Visit &baltcraft.net=>http://www.altcraft.net'
-  - 'There are 1st/2nd/3rd place & more prizes for &2/archery&r'
+#  - 'There are 1st/2nd/3rd place & more prizes for &2/archery&r'
   - 'Compasses can be used to search for player''s beds'
   - 'Suggestions are always welcome!'
   - 'Please check &2/rules&r periodically for updates'
