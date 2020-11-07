@@ -9,12 +9,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
@@ -83,6 +86,16 @@ public class AC_Hardcore implements Listener{
 	public void onEntitySpawn(EntitySpawnEvent evt){
 		if(evt.getEntityType() == EntityType.ZOMBIFIED_PIGLIN && ((Zombie)evt.getEntity()).isBaby()){
 			evt.setCancelled(true);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onBowShootEvent(EntityShootBowEvent evt){
+		if(evt.getBow() != null && evt.getBow().hasItemMeta() &&
+				evt.getBow().getItemMeta().hasCustomModelData() && evt.getBow().getItemMeta().getCustomModelData() == 2020){
+			Vector lookingVector = evt.getEntity().getEyeLocation().toVector().normalize()
+					.multiply(evt.getProjectile().getVelocity().length());
+			evt.getProjectile().setVelocity(lookingVector);
 		}
 	}
 
