@@ -18,7 +18,7 @@ enable-weaponstats: true
 
 discord-link: 'https://discord.gg/DMcxR5D'
 
-enable-custom-bows: false
+enable-custom-bows: true
 prevent-arrow-invulnerability: false
 shift-click-to-ride-in-gm1: true
 click-to-remove-eyes-of-ender: true

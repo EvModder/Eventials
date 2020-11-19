@@ -30,8 +30,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
 import Eventials.economy.EvEconomy;
 import Evil_Code_EvKits.EvKits;
-import net.evmodder.EvLib.extras.RefNBTTag;
-import net.evmodder.EvLib.extras.RefNBTTagList;
+import net.evmodder.EvLib.extras.NBTTagUtils;
+import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTag;
+import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagList;
 
 public class AC_Old implements Listener {
 	Eventials pl;
@@ -166,7 +167,7 @@ public class AC_Old implements Listener {
 		tag.set("AttributeModifiers", attributeModifiers);
 		//----------------------------------------------------------------
 		ItemStack item = new ItemStack(Material.EGG);
-		item = RefNBTTag.setTag(item, tag);
+		item = NBTTagUtils.setTag(item, tag);
 
 		ItemMeta meta = item.getItemMeta();
 		meta.addEnchant(Enchantment.KNOCKBACK, 2, true);

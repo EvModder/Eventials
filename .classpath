@@ -9,11 +9,11 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Vault.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Essentials.jar"/>
-	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/EvKits.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/FactionsOne.jar"/>
-	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Renewable.jar" sourcepath="/RenewablePlugin"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/NuVotifier.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/bukkit-latest.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/bukkit_server-latest.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/EvKits.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Renewable.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
