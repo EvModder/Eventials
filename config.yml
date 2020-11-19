@@ -40,6 +40,7 @@ enable-custom-bows: false
 prevent-arrow-invulnerability: true
 shift-click-to-ride-in-gm1: true
 click-to-remove-eyes-of-ender: true
+remove-eye-of-ender-shatter-chance: 0.2
 
 login-noteblock: true
 login-show-recent-joins: true
@@ -381,7 +382,7 @@ auto-messages:
   - 'Unwarranted griefing can result in jail -> tempban'
   - |
        We recommend the &6LithosCore&r texture pack-
-       You can download the customized version &bhere=>http://www.altcraft.net/LithosCoreSimplified.zip&r.
+       You can download the customized version &bhere=>http://www.altcraft.net/EvPackBeta.zip&r.
   - 'YouTuber? Promote your channel, ask for the prefix!'
   - 'Rare items can be found in the &d@AdminShop&r or &d@Market&r.'
   - 'Found a bug? &2/mail Admin&r so we can get it fixed!'

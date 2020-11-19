@@ -93,7 +93,7 @@ public class AC_Hardcore implements Listener{
 	public void onBowShootEvent(EntityShootBowEvent evt){
 		if(evt.getBow() != null && evt.getBow().hasItemMeta() &&
 				evt.getBow().getItemMeta().hasCustomModelData() && evt.getBow().getItemMeta().getCustomModelData() == 2020){
-			Vector lookingVector = evt.getEntity().getEyeLocation().toVector().normalize()
+			Vector lookingVector = evt.getEntity().getEyeLocation().getDirection().normalize()
 					.multiply(evt.getProjectile().getVelocity().length());
 			evt.getProjectile().setVelocity(lookingVector);
 		}
