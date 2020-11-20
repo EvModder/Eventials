@@ -23,7 +23,7 @@ public class CommandVote extends EvCommand{
 		super(pl, enabled);
 		voteManager = EvVoter.getVoteManager();
 		List<String> confLinks = pl.getConfig().getStringList("vote-links");
-		websiteLink = pl.getConfig().getString("vote-site-page", "http://www.altcraft.net/voting");
+		websiteLink = pl.getConfig().getString("vote-site-page", null);
 		final String[] links, hyper;
 		if(confLinks == null/* || confLinks.isEmpty()*/){// What if they don't want voting links?
 			links = new String[]{
@@ -35,8 +35,9 @@ public class CommandVote extends EvCommand{
 				"https://www.minecraft-index.com/"
 			};
 			hyper = new String[]{
-				ChatColor.AQUA+" PMC", ChatColor.AQUA+" MMP", ChatColor.AQUA+" MC Servers",
-				ChatColor.AQUA+" MCSL", ChatColor.AQUA+" MC biz", ChatColor.AQUA+" MC Index"
+				""+ChatColor.AQUA+ChatColor.ITALIC+" PMC", ""+ChatColor.AQUA+ChatColor.ITALIC+" MMP",
+				""+ChatColor.AQUA+ChatColor.ITALIC+" MC Servers", ""+ChatColor.AQUA+ChatColor.ITALIC+" MCSL",
+				""+ChatColor.AQUA+ChatColor.ITALIC+" MC biz", ""+ChatColor.AQUA+ChatColor.ITALIC+" MC Index"
 			};
 		}
 		else{
@@ -58,7 +59,7 @@ public class CommandVote extends EvCommand{
 		}
 		TellrawBlob blob = new TellrawBlob();
 		for(int i=0; i<links.length; ++i){
-			if(i == 0) blob.addComponent("&eVoting Links:  &d1&7.");
+			if(i == 0) blob.addComponent(TextUtils.translateAlternateColorCodes('&', "&eVoting Links:  &d1&7."));
 			else blob.addComponent("  "+ChatColor.LIGHT_PURPLE+(i+1)+ChatColor.GRAY+".");
 			blob.addComponent(new ActionComponent(hyper[i], ClickEvent.OPEN_URL, links[i]));
 		}
@@ -83,23 +84,26 @@ public class CommandVote extends EvCommand{
 		}
 		if(tellrawStringLinks.length() > 2) Eventials.getPlugin().sendTellraw(player, tellrawStringLinks);
 
-		int s = voteManager.getStreak(player);
-		ChatColor c = (s > 0 ? s > voteManager.streakMax ?
-				ChatColor.GREEN : ChatColor.AQUA : ChatColor.YELLOW);
-		player.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+s);
-		if(s > 0){
-			long now = System.currentTimeMillis();
-			long lastVote = voteManager.lastVote(player.getUniqueId());
-			long timeSinceVote = now - lastVote;
-			long timeLeft = (voteManager.dayInMillis + voteManager.graceInMillis) - timeSinceVote;
-			player.sendMessage(ChatColor.GRAY+"Time until streak is lost: "
-					+TextUtils.formatTime(timeLeft, false, ChatColor.GOLD, ChatColor.GRAY));
-
-			if(timeSinceVote < voteManager.dayInMillis){
-				long lastStreakVote = voteManager.lastStreakVote(player.getUniqueId());
-				long timeUntilIncr = voteManager.dayInMillis - (now - lastStreakVote);
-				player.sendMessage(ChatColor.GRAY+"Time until streak can be increased: "
-						+TextUtils.formatTime(timeUntilIncr, false, ChatColor.GOLD, ChatColor.GRAY));;
+		int votes = voteManager.getTotalVotes(player.getUniqueId());
+		if(votes > 0){
+			int streak = voteManager.getStreak(player.getUniqueId());
+			player.sendMessage(ChatColor.GRAY+"Total votes: "+ChatColor.GOLD+votes);
+			ChatColor c = (streak > 0 ? streak > voteManager.streakMax ? ChatColor.GREEN : ChatColor.AQUA : ChatColor.YELLOW);
+			player.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+streak);
+			if(streak > 0){
+				long now = System.currentTimeMillis();
+				long lastVote = voteManager.getLastVote(player.getUniqueId());
+				long timeSinceVote = now - lastVote;
+				long timeLeft = (voteManager.dayInMillis + voteManager.graceInMillis) - timeSinceVote;
+				player.sendMessage(ChatColor.GRAY+"Time until streak is lost: "
+						+TextUtils.formatTime(timeLeft, false, ChatColor.GOLD, ChatColor.GRAY));
+	
+				if(timeSinceVote < voteManager.dayInMillis){
+					long lastStreakVote = voteManager.getLastStreakVote(player.getUniqueId());
+					long timeUntilIncr = voteManager.dayInMillis - (now - lastStreakVote);
+					player.sendMessage(ChatColor.GRAY+"Time until streak can be increased: "
+							+TextUtils.formatTime(timeUntilIncr, false, ChatColor.GOLD, ChatColor.GRAY));;
+				}
 			}
 		}
 		return true;

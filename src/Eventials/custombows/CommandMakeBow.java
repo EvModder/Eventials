@@ -62,10 +62,12 @@ public class CommandMakeBow extends EvCommand{
 		ItemMeta meta = item.getItemMeta();
 		switch(type){
 			case DETERMINED:
+				meta.setCustomModelData(42);
 				break;
 			case FINDER:
 				break;
 			case FLINT:
+				meta.setCustomModelData(42);
 				addAttribute(meta, Attribute.GENERIC_ATTACK_DAMAGE, 4, Operation.ADD_NUMBER, /*randUUID=*/false); // Attack +4
 				addAttribute(meta, Attribute.GENERIC_MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement +5%
 				meta.setDisplayName(ChatColor.DARK_GRAY+""+ChatColor.BOLD+"Flint");
@@ -77,6 +79,7 @@ public class CommandMakeBow extends EvCommand{
 			case FORCE:
 				break;
 			case GANDIVA:
+				meta.setCustomModelData(42);
 				addAttribute(meta, Attribute.GENERIC_ATTACK_DAMAGE, 2, Operation.ADD_NUMBER, /*randUUID=*/false); // Attack +2
 				addAttribute(meta, Attribute.GENERIC_KNOCKBACK_RESISTANCE, .25D, Operation.ADD_SCALAR, /*randUUID=*/false); // Knockback +25%
 				addAttribute(meta, Attribute.GENERIC_MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement -5%

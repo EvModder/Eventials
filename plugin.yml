@@ -80,7 +80,7 @@ commands:
    vote:
       description: Display voting links
       usage: /vote
-      aliases: [votelist,votewhere,votelinks]
+      aliases: [votelist,votewhere,votelinks,votes]
       permission: eventials.vote
       permission-message: You do not have permission to do this.
 

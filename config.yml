@@ -247,17 +247,17 @@ dye-shulkers: true
 #--------------------------------------#
 evvoter-enabled: true
 
-#To disable voting streaks, set 'op' and 'amount' to 0
-#op 0=add, 1=multiply, 2=
-vote-streak-op: 0
+# NOTE: This is not automatically given to a player! Enter a vote-triggered
+# command below for your preferred economy plugin, using %reward_amount%.
+player-cash-reward: 2
+
+# Voting streaks can be used to modify the player-cash-reward amount.
+# To disable voting streaks, set 'op' and 'amount' to 0.
+vote-streak-op: 0 #op 0=add, 1=multiply, 2=tbd
 vote-streak-amount: 1
 vote-streak-max-days: 10
 #How much time before a vote streak is lost?
 vote-streak-grace-hours: 48
-
-player-cash-reward: 2
-server-cash-reward: 0
-server-pays-player-cash-reward: true
 
 vote-site-page: 'http://www.altcraft.net/voting'
 vote-links:
@@ -267,6 +267,16 @@ vote-links:
   - 'MCSL, http://minecraft-server-list.com/server/254265/vote/'
   - 'MC biz, https://minecraftservers.biz/servers/2600/vote/'
 # - 'MC Index, https://www.minecraft-index.com/31471-alternatecraft/vote'
+
+# Available params: %uuid%, %name%, %display_name%, %site_name%, %site_url%, %votes%, %streak%
+vote-triggered-commands:
+  - 'minecraft:tellraw @p[name=!%name%] ["",{"text":"[","color":"gold"},{"text":"AC","color":"yellow"},{"text":"]","color":"gold"},{"text":" %display_name% up-voted the server on ","color":"gray"},{"text":"%site_name%","clickEvent":{"action":"open_url","value":"%site_url%"}}]'
+  - 'minecraft:tellraw @p[name=%name%] ["",{"text":"[","color":"gold"},{"text":"AC","color":"yellow"},{"text":" ->","color":"gold"},{"text":" Me","color":"aqua"},{"text":"]","color":"gold"},{"text":" Thanks for voting for us on ","color":"gray"},"%site_name%",{"text":"!","color":"gray"}]'
+
+# Available params: %uuid%, %name%, %display_name%, %votes%, %streak%, %reward_amount%, %reward_amount_int%
+vote-triggered-commands-once-online:
+  - 'serverbal transfer %reward_amount% %name%'
+  - 'minecraft:tellraw @p[name=%name%] {"text":"Your offline votes were added, thanks!","color":"gray"}'
 
 #--------------------------------------#
 #          BookEditor config           #

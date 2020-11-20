@@ -91,13 +91,19 @@ public class AC_Hardcore implements Listener{
 				showFancyPlugins(player);
 			}
 		}
-		if(command.contains("add_participant") && evt.getPlayer().getName().equals("EvDoc")){
+		/*if(command.contains("add_participant") && evt.getPlayer().getName().equals("EvDoc")){//TOOD: remove hacky 2019 aug event helper
 			String name = message.split(" ")[1];
 			@SuppressWarnings("deprecation")
 			OfflinePlayer p = pl.getServer().getOfflinePlayer(name);
 			try{new File("./plugins/EvFolder/aug_evt/"+p.getUniqueId()+".txt").createNewFile();}
 			catch(IOException e){e.printStackTrace();}
 			evt.getPlayer().sendMessage("Added: "+p.getName()+" ("+p.getUniqueId()+")");
+		}*/
+		if(command.equals("vote") || command.equals("votes")){
+			pl.runCommand("minecraft:tellraw "+player.getName()+" ["
+					+ "{\"text\":\"You currently have \",\"color\":\"gray\"},"
+					+ "{\"score\":{\"name\":\"EvDoc\",\"objective\":\"votes\"},\"color\":\"dark_green\"},"
+					+ "{\"text\":\" unused votes.\",\"color\":\"gray\"}]");
 		}
 	}
 }

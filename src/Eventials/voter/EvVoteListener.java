@@ -1,24 +1,22 @@
 package Eventials.voter;
 
-import org.bukkit.ChatColor;
+import java.util.List;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import Eventials.Eventials;
 
 public class EvVoteListener implements Listener{
-	public static final String prefix = ChatColor.YELLOW+"["+ChatColor.AQUA+"AC"+ChatColor.YELLOW+" "
-			+'-'+ChatColor.YELLOW+"> "+ChatColor.RED+"Me"+ChatColor.YELLOW+"]"+ChatColor.GRAY+" ";
-	public static final String prefix2= ChatColor.AQUA+"["+ChatColor.GRAY+"AC"+ChatColor.AQUA+"]"+ChatColor.WHITE+" ";
 	private Eventials plugin;
 	private EvVoter voteManager;
+	final List<String> voteTriggeredCommands;
 
 	public EvVoteListener(){
 		plugin = Eventials.getPlugin();
 		voteManager = EvVoter.getVoteManager();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		voteTriggeredCommands =plugin.getConfig().getStringList("vote-triggered-commands");
 	}
 
 	// Voting event from com.vexsoftware.votifier.model.VotifierEvent
@@ -34,24 +32,22 @@ public class EvVoteListener implements Listener{
 			return;
 		}
 		String voteSite = evt.getVote().getServiceName();
+		plugin.getLogger().fine("Player "+voter.getName()+" voted for the server on "+voteSite);
 		if(evt.getVote().getAddress() == null || evt.getVote().getAddress().isEmpty()) {
 			plugin.getLogger().info("An address was not given when voting from "+voteSite);
 		}
 
-		plugin.getLogger().fine("Player "+voter.getName()+" voted for the server on "+voteSite);
-
 		voteManager.applyVote(voter);
 
-		if(voter.isOnline()){
-			voter.getPlayer().sendMessage(prefix+"Thanks for voting for us on "+voteSite+'!');
-			for(Player p : plugin.getServer().getOnlinePlayers()){
-				if(!voter.getName().equals(p.getName())) {
-					p.sendMessage(prefix2+evt.getVote().getUsername()+" voted for us on "+voteSite+'.');
-				}
-			}
-		}
-		else{
-			plugin.getServer().broadcastMessage(prefix2+voter.getName()+" voted for us on "+voteSite+'.');
+		for(String cmd : voteTriggeredCommands){
+			cmd = cmd.replace("%uuid%", voter.getUniqueId().toString()).replace("%name%", voter.getName())
+					.replace("%display_name%", voter.isOnline() ? voter.getPlayer().getDisplayName() : voter.getName())
+					.replace("%votes%", ""+voteManager.getTotalVotes(voter.getUniqueId()))
+					.replace("%streak%", ""+voteManager.getStreak(voter.getUniqueId()))
+					.replace("%site_name%", voteSite)
+					.replace("%site_url%", evt.getVote().getAddress()) // TODO: check if this is the site or the player's ip lol
+			;
+			plugin.runCommand(cmd);
 		}
 	}
 

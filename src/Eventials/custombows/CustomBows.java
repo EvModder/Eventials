@@ -61,7 +61,7 @@ public class CustomBows implements Listener{
 		RefNBTTag tag = NBTTagUtils.getTag(bow);
 		if(tag == null) return BowType.NONE;
 		String bowTypeName = tag.getString("BowType");
-		if(bowTypeName == null) return BowType.NONE;
+		if(bowTypeName == null || bowTypeName.isEmpty()) return BowType.NONE;
 		return BowType.valueOf(bowTypeName.toUpperCase());
 	}
 	

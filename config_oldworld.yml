@@ -241,6 +241,12 @@ vote-links:
   - 'MC biz, https://minecraftservers.biz/servers/2600/vote/'
 # - 'MC Index, https://www.minecraft-index.com/31471-alternatecraft/vote'
 
+vote-triggered-commands:
+  - 'minecraft:tellraw @p[name=!%name%] ["",{"text":"[","color":"gold"},{"text":"AC","color":"yellow"},{"text":"]","color":"gold"},{"text":" %display_name% up-voted the server on ","color":"gray"},{"text":"%site_name%","clickEvent":{"action":"open_url","value":"%site_url%"}}]'
+  - 'minecraft:tellraw @p[name=%name%] ["",{"text":"[","color":"gold"},{"text":"AC","color":"yellow"},{"text":" ->","color":"gold"},{"text":" Me","color":"aqua"},{"text":"]","color":"gold"},{"text":" Thanks for voting for us on ","color":"gray"},"%site_name%",{"text":"!","color":"gray"}]'
+vote-triggered-commands-once-online:
+  - 'minecraft:tellraw @p[name=%name%] {"text":"Your offline votes were added, thanks!","color":"gray"}'
+
 #--------------------------------------#
 #          BookEditor config           #
 #--------------------------------------#
