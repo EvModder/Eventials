@@ -229,16 +229,16 @@ vote-links:
 
 # Available params: %uuid%, %name%, %display_name%, %site_name%, %site_url%, %votes%, %streak%
 vote-triggered-commands:
-  - 'minecraft:scoreboard players add %name% votes 1'
-  - 'minecraft:scoreboard players add %uuid% votes 1'
+  - 'minecraft:scoreboard players add %name% votes-by-name 1'
+  - 'minecraft:scoreboard players add %uuid% votes-by-uuid 1'
   - 'minecraft:tellraw @p[name=!%name%] ["",{"text":"[","color":"gold"},{"text":"H","color":"#D00000"},{"text":"C","color":"#B4052F"},{"text":"]","color":"gold"},{"text":" %display_name% up-voted the server on ","color":"gray"},{"text":"%site_name%","clickEvent":{"action":"open_url","value":"%site_url%"}}]'
   - 'minecraft:tellraw @p[name=%name%] ["",{"text":"[","color":"gold"},{"text":"H","color":"#D00000"},{"text":"C","color":"#B4052F"},{"text":" ->","color":"gold"},{"text":" Me","color":"aqua"},{"text":"]","color":"gold"},{"text":" Thanks for voting for us on ","color":"gray"},"%site_name%",{"text":"!","color":"gray"}]'
 
 # Available params: %uuid%, %name%, %display_name%, %votes%, %streak%, %reward_amount%, %reward_amount_int%
 vote-triggered-commands-once-online:
   - 'minecraft:tag %name% add voter'
-  - 'minecraft:scoreboard players add %name% votes %reward_amount_int%'
-  - 'minecraft:scoreboard players add %uuid% votes %reward_amount_int%'
+  - 'minecraft:scoreboard players add %name% votes-by-name %reward_amount_int%'
+  - 'minecraft:scoreboard players add %uuid% votes-by-uuid %reward_amount_int%'
   - 'minecraft:tellraw %name% [{"text":"Available votes: ","color":"gray"},{"text":"%votes%","color":"green"}]'
 
 #--------------------------------------#

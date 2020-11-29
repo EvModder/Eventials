@@ -2,7 +2,10 @@ package _SpecificAndMisc;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -10,13 +13,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TextUtils;
 
 public class AC_Hardcore implements Listener{
 	private final Eventials pl;
@@ -76,6 +83,7 @@ public class AC_Hardcore implements Listener{
 		}
 	}
 
+	enum Engraving{FORGE, ENGRAVE, BLESS, CURSE, SALUTE};
 	@EventHandler
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){
 		if(evt.getMessage().charAt(0) != '/') return;
@@ -102,8 +110,59 @@ public class AC_Hardcore implements Listener{
 		if(command.equals("vote") || command.equals("votes")){
 			pl.runCommand("minecraft:tellraw "+player.getName()+" ["
 					+ "{\"text\":\"You currently have \",\"color\":\"gray\"},"
-					+ "{\"score\":{\"name\":\"EvDoc\",\"objective\":\"votes\"},\"color\":\"dark_green\"},"
+					+ "{\"score\":{\"name\":\""+player.getUniqueId()+"\",\"objective\":\"votes\"},\"color\":\"dark_green\"},"
 					+ "{\"text\":\" unused votes.\",\"color\":\"gray\"}]");
+		}
+		if(command.equals("engrave") || command.equals("embellish")){
+			evt.setCancelled(true);
+			ItemStack item = player.getInventory().getItemInMainHand();
+			Engraving engraving = null;
+			if(item != null && space > 0){
+				try{engraving = Engraving.valueOf(message.substring(space+1).toUpperCase());}
+				catch(IllegalArgumentException ex){engraving = null;}
+			}
+			if(item == null || engraving == null){
+				TellrawBlob blob = new TellrawBlob(
+						new RawTextComponent(ChatColor.GRAY
+								+ "To embellish an item with your name using votes, hold the item\n"
+								+ "you wish to modify in your main hand and select one option:\n"),
+						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#bbb&oEngrave &f(cost:&6 5&f)\n"), ClickEvent.RUN_COMMAND, "/embellish engrave"),
+						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#ec5&oForge &f(cost:&6 10&f)\n"), ClickEvent.RUN_COMMAND, "/embellish forge"),
+						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#adf&oBless &f(cost:&6 7&f)\n"), ClickEvent.RUN_COMMAND, "/embellish bless"),
+						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#e41&oCurse &f(cost:&6 7&f)\n"), ClickEvent.RUN_COMMAND, "/embellish curse"),
+						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#ec5&oSalute &f(cost:&6 6&f)\n"), ClickEvent.RUN_COMMAND, "/embellish salute")
+				);
+				pl.sendTellraw(player, blob.toString());
+				return;
+			}
+			int votes = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("votes").getScore(player.getUniqueId().toString()).getScore();
+			int cost = 10;
+			String lore = null;
+			switch(engraving){
+				case FORGE: cost = 15; lore = "&#ec5&oForged by "; break;
+				case BLESS: cost = 10; lore = "#adf&oBlessed by "; break;
+				case CURSE: cost = 10; lore = "#e41&oCursed by "; break;
+				case SALUTE: cost = 7; lore = "#ec5&oSaluted by "; break;
+				case ENGRAVE: cost = 6; lore = "#bbb&oEngraved by "; break;
+			}
+			if(votes >= cost){
+				ItemMeta meta = item.getItemMeta();
+				List<String> lores = meta.hasLore() ? meta.getLore() : Arrays.asList();
+				lores.add(lore);
+				meta.setLore(lores);
+				item.setItemMeta(meta);
+				player.getInventory().setItemInMainHand(item);
+				player.sendMessage(ChatColor.GREEN+"Loretext added!");
+				pl.runCommand("scoreboard players set "+player.getUniqueId()+" votes "+(votes-cost));
+			}
+			else{
+				player.sendMessage(ChatColor.RED+"You do not have enough votes");
+			}
 		}
 	}
 }

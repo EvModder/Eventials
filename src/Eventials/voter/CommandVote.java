@@ -35,9 +35,9 @@ public class CommandVote extends EvCommand{
 				"https://www.minecraft-index.com/"
 			};
 			hyper = new String[]{
-				""+ChatColor.AQUA+ChatColor.ITALIC+" PMC", ""+ChatColor.AQUA+ChatColor.ITALIC+" MMP",
-				""+ChatColor.AQUA+ChatColor.ITALIC+" MC Servers", ""+ChatColor.AQUA+ChatColor.ITALIC+" MCSL",
-				""+ChatColor.AQUA+ChatColor.ITALIC+" MC biz", ""+ChatColor.AQUA+ChatColor.ITALIC+" MC Index"
+				""+ChatColor.AQUA+ChatColor.UNDERLINE+" PMC", ""+ChatColor.AQUA+ChatColor.UNDERLINE+" MMP",
+				""+ChatColor.AQUA+ChatColor.UNDERLINE+" MC Servers", ""+ChatColor.AQUA+ChatColor.UNDERLINE+" MCSL",
+				""+ChatColor.AQUA+ChatColor.UNDERLINE+" MC biz", ""+ChatColor.AQUA+ChatColor.UNDERLINE+" MC Index"
 			};
 		}
 		else{
