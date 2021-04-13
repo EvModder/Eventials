@@ -33,6 +33,7 @@ public class AC_Hardcore implements Listener{
 		pl = Eventials.getPlugin();
 		fancyPl = pl.getConfig().getBoolean("fancy-pl", true);
 		pl.getServer().getPluginManager().registerEvents(this, pl);
+		pl.getLogger().info("Loaded Hardcore-specific things (/pl, /engrave, /votes)");
 	}
 
 	ChatColor enableTest(String pluginName){
@@ -46,13 +47,13 @@ public class AC_Hardcore implements Listener{
 //			new RawTextComponent("§r, "),
 			new ActionComponent(enableTest("Essentials")+"Essentials", HoverEvent.SHOW_TEXT, "Collection of useful tools and commands"),
 			new RawTextComponent("§r, "),
-			new ActionComponent(enableTest("Eventials")+"Eventials", HoverEvent.SHOW_TEXT, "Package of custom-built features and tweaks"),
+			new ActionComponent(enableTest("HardcoreTweaks")+"HCTweaks", HoverEvent.SHOW_TEXT, "Package of custom-built features and tweaks"),
 			new RawTextComponent("§r, "),
-			new ActionComponent(enableTest("ChatManager")+"ChatTweaks", HoverEvent.SHOW_TEXT, "Keeps chat pg13 + Color/Format for chat & signs"),
+			new ActionComponent(enableTest("ChatManager")+"ChatManager", HoverEvent.SHOW_TEXT, "Keeps chat pg13 + Color/Format for chat & signs"),
 			new RawTextComponent("§r,\n"),
 			new ActionComponent(enableTest("DropHeads")+"DropHeads", HoverEvent.SHOW_TEXT, "Provides a chance to get heads from mobs/players"),
 			new RawTextComponent("§r, "),
-			new ActionComponent(enableTest("HorseOwners")+"HorseRanks", HoverEvent.SHOW_TEXT, "Claim, name, and view stats for horses"),
+			new ActionComponent(enableTest("HorseOwners")+"HorseRank", HoverEvent.SHOW_TEXT, "Naming horses and viewing/ranking their stats"),
 			new RawTextComponent("§r, "),
 //			new ActionComponent(enableTest("EnchantBook")+"EnchantBook", HoverEvent.SHOW_TEXT, "Color item names in anvils, looting on axes, etc!"),
 //			new RawTextComponent("§r, "),
@@ -110,7 +111,7 @@ public class AC_Hardcore implements Listener{
 		if(command.equals("vote") || command.equals("votes")){
 			pl.runCommand("minecraft:tellraw "+player.getName()+" ["
 					+ "{\"text\":\"You currently have \",\"color\":\"gray\"},"
-					+ "{\"score\":{\"name\":\""+player.getUniqueId()+"\",\"objective\":\"votes\"},\"color\":\"dark_green\"},"
+					+ "{\"score\":{\"name\":\""+player.getUniqueId().toString()+"\",\"objective\":\"votes-by-uuid\"},\"color\":\"dark_green\"},"
 					+ "{\"text\":\" unused votes.\",\"color\":\"gray\"}]");
 		}
 		if(command.equals("engrave") || command.equals("embellish")){
@@ -138,6 +139,7 @@ public class AC_Hardcore implements Listener{
 								"&8 • &#ec5&oSalute &f(cost:&6 6&f)\n"), ClickEvent.RUN_COMMAND, "/embellish salute")
 				);
 				pl.sendTellraw(player, blob.toString());
+				pl.getLogger().info("TEMP DELETE THIS IN AC_HARDCORE:\ntellraw blob: "+blob.toString());
 				return;
 			}
 			int votes = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("votes").getScore(player.getUniqueId().toString()).getScore();

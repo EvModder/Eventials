@@ -34,7 +34,12 @@ public class PlayerInteractEntityListener implements Listener {
 				int newAmt = heldItem.getAmount()-slime.getSize();
 				if(newAmt >= 0){
 					heldItem.setAmount(newAmt);
-					evt.getPlayer().getInventory().setItemInMainHand(heldItem.getAmount() > 0 ? heldItem : new ItemStack(Material.AIR));
+					if(evt.getHand() == EquipmentSlot.HAND){
+						evt.getPlayer().getInventory().setItemInMainHand(heldItem.getAmount() > 0 ? heldItem : new ItemStack(Material.AIR));
+					}
+					else{
+						evt.getPlayer().getInventory().setItemInOffHand(heldItem.getAmount() > 0 ? heldItem : new ItemStack(Material.AIR));
+					}
 					slime.setSize(slime.getSize()+1);
 				}
 			}
@@ -43,10 +48,22 @@ public class PlayerInteractEntityListener implements Listener {
 			if(TypeUtils.isDye(heldItem.getType())){
 				((Shulker)evt.getRightClicked()).setColor(TypeUtils.getDyeColor(heldItem.getType()));
 				int newAmt = heldItem.getAmount() - 1;
-				if(newAmt == 0) evt.getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+				if(newAmt == 0){
+					if(evt.getHand() == EquipmentSlot.HAND){
+						evt.getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+					}
+					else{
+						evt.getPlayer().getInventory().setItemInOffHand(new ItemStack(Material.AIR));
+					}
+				}
 				else {
 					heldItem.setAmount(newAmt);
-					evt.getPlayer().getInventory().setItemInMainHand(heldItem);
+					if(evt.getHand() == EquipmentSlot.HAND){
+						evt.getPlayer().getInventory().setItemInMainHand(heldItem);
+					}
+					else{
+						evt.getPlayer().getInventory().setItemInOffHand(heldItem);
+					}
 				}
 			}
 		}

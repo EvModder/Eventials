@@ -220,7 +220,7 @@ vote-streak-grace-hours: 48
 
 vote-site-page: '' # 'http://www.altcraft.net/voting'
 vote-links:
-  - 'PMC, https://www.planetminecraft.com/server/alternatecraft-2724346/vote/'
+  - 'PMC, https://www.planetminecraft.com/server/hardcore-4368271/vote/'
   - 'MMP, http://minecraft-mp.com/server/109051/vote/'
   - 'MC Servers, http://minecraftservers.org/vote/280048'
   - 'MCSL, http://minecraft-server-list.com/server/254265/vote/'
@@ -237,8 +237,8 @@ vote-triggered-commands:
 # Available params: %uuid%, %name%, %display_name%, %votes%, %streak%, %reward_amount%, %reward_amount_int%
 vote-triggered-commands-once-online:
   - 'minecraft:tag %name% add voter'
-  - 'minecraft:scoreboard players add %name% votes-by-name %reward_amount_int%'
-  - 'minecraft:scoreboard players add %uuid% votes-by-uuid %reward_amount_int%'
+#  - 'minecraft:scoreboard players add %name% votes-by-name %reward_amount_int%'
+#  - 'minecraft:scoreboard players add %uuid% votes-by-uuid %reward_amount_int%'
   - 'minecraft:tellraw %name% [{"text":"Available votes: ","color":"gray"},{"text":"%votes%","color":"green"}]'
 
 #--------------------------------------#
@@ -347,8 +347,8 @@ auto-messages:
        The Nether Roof is an excellent way to travel!
        See &bthis tutorial=>xxx&r for how to get there!
   - |
-       Heard of EnderPorters? Store enderpearls in a water-
-       column for vanilla teleportation! &bTutorial link=>xxx&r
+       Store enderpearls in a water-column for vanilla
+       teleportation! &btodo: Tutorial link=>xxx&r
 #  - |
 #       All your horses are trash? Don't give up yet!
 #       There are also prizes for &olowest&r in each category!
