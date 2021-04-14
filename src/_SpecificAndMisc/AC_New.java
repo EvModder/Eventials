@@ -23,10 +23,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.util.Pair;
 import net.evmodder.Renewable.Renewable;
 import net.evmodder.Renewable.RenewableAPI;
@@ -137,27 +137,36 @@ public class AC_New implements Listener{
 		return (plugin != null && plugin.isEnabled()) ? ChatColor.GREEN : ChatColor.RED;
 	}
 	void showFancyPlugins(Player player){
-		TellrawBlob blob = new TellrawBlob(
+		ListComponent blob = new ListComponent(
 				new RawTextComponent("Plugins: "),
-				new ActionComponent(enableTest("OpenTerrainGenerator")+"OTG", HoverEvent.SHOW_TEXT, "Open Terrain Generator (custom terrain)"),
+				new RawTextComponent(enableTest("OpenTerrainGenerator")+"OTG",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Open Terrain Generator (custom terrain)")),
 				new RawTextComponent("§r, "),
-				new ActionComponent(enableTest("Renewable")+"Renewable", HoverEvent.SHOW_TEXT, "Prevents unrenewable items from being destroyed"),
+				new RawTextComponent(enableTest("Renewable")+"Renewable",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Prevents unrenewable items from being destroyed")),
 				new RawTextComponent("§r, "),
-				new ActionComponent(enableTest("Essentials")+"Essentials", HoverEvent.SHOW_TEXT, "Collection of useful tools and commands"),
+				new RawTextComponent(enableTest("Essentials")+"Essentials",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Collection of useful tools and commands")),
 				new RawTextComponent("§r, "),
-				new ActionComponent(enableTest("Eventials")+"Eventials", HoverEvent.SHOW_TEXT, "Package of custom-built features and tweaks"),
+				new RawTextComponent(enableTest("Eventials")+"Eventials",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Package of custom-built features and tweaks")),
 				new RawTextComponent("§r, "),
-				new ActionComponent(enableTest("DropHeads")+"DropHeads", HoverEvent.SHOW_TEXT, "Provides a chance to get heads from mobs/players"),
+				new RawTextComponent(enableTest("DropHeads")+"DropHeads",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Provides a chance to get heads from mobs/players")),
 				new RawTextComponent("§r,\n"),
-				new ActionComponent(enableTest("Factions")+"Factions", HoverEvent.SHOW_TEXT, "Protect your land and build communities"),
+				new RawTextComponent(enableTest("Factions")+"Factions",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Protect your land and build communities")),
 				new RawTextComponent("§r, "),
-				new ActionComponent(enableTest("HorseOwners")+"HorseRanks", HoverEvent.SHOW_TEXT, "Claim, name, and view stats for horses"),
+				new RawTextComponent(enableTest("HorseOwners")+"HorseRanks",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Claim, name, and view stats for horses")),
 				new RawTextComponent("§r, "),
-				new ActionComponent(enableTest("ChatManager")+"ChatTweaks", HoverEvent.SHOW_TEXT, "Keeps chat pg13 + Color/Format for chat & signs"),
+				new RawTextComponent(enableTest("ChatManager")+"ChatTweaks",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Keeps chat pg13 + Color/Format for chat & signs")),
 				new RawTextComponent("§r, "),
-				new ActionComponent(enableTest("EnchantBook")+"EnchantBook", HoverEvent.SHOW_TEXT, "Color item names in anvils, looting on axes, etc!"),
+				new RawTextComponent(enableTest("EnchantBook")+"EnchantBook",
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "Color item names in anvils, looting on axes, etc!")),
 				new RawTextComponent("§r, "),
-				new ActionComponent("§aMore", HoverEvent.SHOW_TEXT,
+				new RawTextComponent("§aMore", new TextHoverAction(HoverEvent.SHOW_TEXT,
 						enableTest("WorldEdit")+"WorldEdit§r, "+
 						enableTest("WorldGuard")+"WorldGuard§r, "+
 						enableTest("PluginLoader")+"PluginLoader§r, "+
@@ -166,7 +175,7 @@ public class AC_New implements Listener{
 						"§aEvAntiCheat§r, "+
 						enableTest("BungeeTabListPlus")+"TabList+§r, "+
 						enableTest("PermissionsBukkit")+"PermissionsBukkit§r."
-				),
+				)),
 				new RawTextComponent("\n§7§oHover over a plugin to see more details!")
 			);
 		Eventials.getPlugin().sendTellraw(player, blob.toString());

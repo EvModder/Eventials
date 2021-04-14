@@ -11,9 +11,10 @@ import Eventials.Eventials;
 import Eventials.Extras;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 
 public class CommandStatsClear extends EvCommand {
 	public CommandStatsClear(EvPlugin p){
@@ -45,9 +46,9 @@ public class CommandStatsClear extends EvCommand {
 
 		if(sender instanceof Player && (args.length == 1 || !args[1].equals("confirm"))){
 			//-----------------------------------------------------------
-			TellrawBlob blob = new TellrawBlob();
+			ListComponent blob = new ListComponent();
 			blob.addComponent(""+ChatColor.RED+ChatColor.BOLD+"Warning:"+ChatColor.GRAY+" This action cannot be undone. "+ChatColor.RED+"[");
-			blob.addComponent(new ActionComponent(" Confirm ", ClickEvent.RUN_COMMAND, "/clearstats "+target.getName()+" confirm"));
+			blob.addComponent(new RawTextComponent(" Confirm ", new TextClickAction(ClickEvent.RUN_COMMAND, "/clearstats "+target.getName()+" confirm")));
 			blob.addComponent(ChatColor.RED+"]");
 			Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
 			//-----------------------------------------------------------

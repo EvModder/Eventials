@@ -12,9 +12,10 @@ import org.bukkit.entity.Player;
 import Eventials.economy.EvEconomy;
 import net.ess3.api.IEssentials;
 import net.evmodder.EvLib.hooks.EssEcoHook;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 
 public class Extras{
 	public static void runPlayerDelete(){
@@ -198,11 +199,11 @@ public class Extras{
 		}
 		if(warps.isEmpty()) return;
 		
-		TellrawBlob blob = new TellrawBlob();
+		ListComponent blob = new ListComponent();
 		for(int i=0; i<warps.size(); ++i){
 			if(i == 0) blob.addComponent(ChatColor.GOLD+"HyperWarps: ");
 			else blob.addComponent(ChatColor.GOLD+", ");
-			blob.addComponent(new ActionComponent(ChatColor.GREEN+warps.get(i), ClickEvent.RUN_COMMAND, "/warp "+warps.get(i)));
+			blob.addComponent(new RawTextComponent(ChatColor.GREEN+warps.get(i), new TextClickAction(ClickEvent.RUN_COMMAND, "/warp "+warps.get(i))));
 		}
 		Eventials.getPlugin().sendTellraw(player, blob.toString());
 	}

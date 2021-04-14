@@ -2,6 +2,7 @@ package Eventials.listeners;
 
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.GameRule;
@@ -17,8 +18,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.util.Pair;
 
 public class PlayerSleepListener implements Listener{
@@ -47,24 +48,36 @@ public class PlayerSleepListener implements Listener{
 		SKIP_NIGHT_PERCENT_STR = (int)(SKIP_NIGHT_PERCENT*100)+"%";
 	}
 
-	String getSkipNightTellrawMsg(int numSleeping, int numToCount, int numInWorld){
+	String getSkipNightTellrawMsg(int numSleeping, int numToCount, World world){
+		int numInWorld = world.getPlayers().size();
+		String sleepingPlayers = world.getPlayers().stream().filter(p -> p.isSleeping())
+				.map(p -> p.getDisplayName()).collect(Collectors.joining(ChatColor.GRAY+", "+ChatColor.RESET));
+		RawTextComponent sleepingPlayersComp = new RawTextComponent(""+numSleeping, new TextHoverAction(HoverEvent.SHOW_TEXT, sleepingPlayers));
+		ListComponent blob = new ListComponent();
 		if(numSleeping < numToCount){
-			if(PERCENT_INCLUSIVE) return new RawTextComponent(ChatColor.GRAY+SKIP_NIGHT_PERCENT_STR
-					+" or more of players in the overworld are sleeping ("+numSleeping+"/"+numInWorld+"). Skipping the night...").toString();
-			else return new RawTextComponent(ChatColor.GRAY+"More than "+SKIP_NIGHT_PERCENT_STR
-					+" of players in the overworld are sleeping ("+numSleeping+"). Skipping the night...").toString();
+			if(PERCENT_INCLUSIVE){
+				blob.addComponent(ChatColor.GRAY+SKIP_NIGHT_PERCENT_STR+" or more of players in the overworld are sleeping (");
+				blob.addComponent(sleepingPlayersComp);
+				blob.addComponent("/"+numInWorld+"). Skipping the night...");
+			}
+			else{
+				blob.addComponent(ChatColor.GRAY+"More than "+SKIP_NIGHT_PERCENT_STR+" of players in the overworld are sleeping (");
+				blob.addComponent(sleepingPlayersComp);
+				blob.addComponent("). Skipping the night...");
+			}
 		}
 		else if(numToCount < numInWorld){ // Technically this is a vanilla-skip as well...
-			TellrawBlob blob = new TellrawBlob();
-			blob.addComponent(new ActionComponent("§7Everyone*", HoverEvent.SHOW_TEXT, "§7*in gamemode survival"));
-			blob.addComponent("§7 in the overworld is sleeping ("+numSleeping+"). Skipping the night...");
-			return blob.toString();
+			blob.addComponent(new RawTextComponent("§7Everyone*", new TextHoverAction(HoverEvent.SHOW_TEXT, "§7*in gamemode survival")));
+			blob.addComponent("§7 in the overworld is sleeping (");
+			blob.addComponent(sleepingPlayersComp);
+			blob.addComponent("). Skipping the night...");
 		}
 		else if(BROADCAST_VANILLA_SKIPS){
-			//TODO: hover-over 'Everyone*' (if relevent) => 'in gamemode survival'
-			return new RawTextComponent(ChatColor.GRAY+"Everyone in the overworld is sleeping ("+numSleeping+"). Skipping the night...").toString();
+			blob.addComponent(ChatColor.GRAY+"Everyone in the overworld is sleeping (");
+			blob.addComponent(sleepingPlayersComp);
+			blob.addComponent("). Skipping the night...");
 		}
-		return null;
+		return blob.toString();
 	}
 	
 	Pair<Integer, Integer> getNumSleepingAndCounted(World world, UUID triggerPlayer, boolean includeTrigger){
@@ -108,7 +121,7 @@ public class PlayerSleepListener implements Listener{
 					int numToSkipNight = (int)Math.ceil(sleepingAndCounted.b*SKIP_NIGHT_PERCENT);
 					if(!PERCENT_INCLUSIVE && numToSkipNight < sleepingAndCounted.b) ++numToSkipNight; // 100% is always inclusive
 					if(sleepingAndCounted.a >= Math.max(1, numToSkipNight)){
-						String broadcastMsg = getSkipNightTellrawMsg(CUR_SLEEPERS, MAX_SLEEPERS, world.getPlayers().size());
+						String broadcastMsg = getSkipNightTellrawMsg(CUR_SLEEPERS, MAX_SLEEPERS, world);
 						if(broadcastMsg != null) for(Player p : BROADCAST_SKIPS_TO_ALL_WORLDS
 									? pl.getServer().getOnlinePlayers() : world.getPlayers()) pl.sendTellraw(p, broadcastMsg);
 						long relativeTime = 24000 - world.getTime();

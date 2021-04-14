@@ -18,7 +18,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.plugin.Plugin;
 import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
 import net.evmodder.EvLib.extras.TellrawUtils.Component;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
@@ -181,7 +181,7 @@ public class EventAndMisc{
 //		pl.getServer().addRecipe((new ShapedRecipe(chiseledBricks)));
 	}
 
-	public static Component getPluginDisplay(String pluginName){
+	public static Component getPluginDisplay(String pluginName){//TODO: this beautiful function is currently unused!
 		Plugin plugin = Eventials.getPlugin().getServer().getPluginManager().getPlugin(pluginName);
 		if(plugin == null) return new RawTextComponent(ChatColor.RED+pluginName);
 		ChatColor color = plugin.isEnabled() ? ChatColor.GREEN : ChatColor.RED;
@@ -202,6 +202,6 @@ public class EventAndMisc{
 			builder.append(ChatColor.RESET).append(authors.size() == 1 ? "Author: " : "Authors: ")
 			.append(ChatColor.GRAY).append(String.join(ChatColor.RESET+", "+ChatColor.GRAY, authors)).append('\n');
 		if(builder.length() == 0) return new RawTextComponent(color+plugin.getName());
-		return new ActionComponent(color+plugin.getName(), HoverEvent.SHOW_TEXT, builder.substring(0, builder.length()-1));
+		return new RawTextComponent(color+plugin.getName(), new TextHoverAction(HoverEvent.SHOW_TEXT, builder.substring(0, builder.length()-1)));
 	}
 }

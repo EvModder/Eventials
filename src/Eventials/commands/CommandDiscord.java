@@ -7,9 +7,10 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 
 public class CommandDiscord extends EvCommand{
 	final String linkLocation;
@@ -26,10 +27,10 @@ public class CommandDiscord extends EvCommand{
 		String preText = ChatColor.GREEN+"Discord join link:"+ChatColor.WHITE+" ";
 		String linkDisplay = linkLocation.replaceAll("https?://", "");
 		if(sender instanceof Player){
-			TellrawBlob blob = new TellrawBlob();
-			blob.addComponent(preText);
-			blob.addComponent(new ActionComponent(linkDisplay, ClickEvent.OPEN_URL, linkLocation));
-			Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
+			ListComponent comp = new ListComponent();
+			comp.addComponent(preText);
+			comp.addComponent(new RawTextComponent(linkDisplay, new TextClickAction(ClickEvent.OPEN_URL, linkLocation)));
+			Eventials.getPlugin().sendTellraw((Player)sender, comp.toString());
 		}
 		else sender.sendMessage(preText+linkLocation);
 		return true;

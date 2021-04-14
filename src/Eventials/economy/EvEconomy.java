@@ -18,9 +18,10 @@ import Eventials.economy.commands.*;
 import Eventials.economy.listeners.*;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.extras.MethodMocker.MessageInterceptor;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public class EvEconomy extends ServerEconomy{
@@ -106,9 +107,9 @@ public class EvEconomy extends ServerEconomy{
 							cmdValue += " confirm";
 							String hyperMsg = ChatColor.DARK_GREEN+cmdValue;
 							
-							TellrawBlob blob = new TellrawBlob();
+							ListComponent blob = new ListComponent();
 							blob.addComponent(preMsg);
-							blob.addComponent(new ActionComponent(hyperMsg, ClickEvent.RUN_COMMAND, cmdValue));
+							blob.addComponent(new RawTextComponent(hyperMsg, new TextClickAction(ClickEvent.RUN_COMMAND, cmdValue)));
 							Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
 							return true;
 						}

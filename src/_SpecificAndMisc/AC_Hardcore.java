@@ -18,11 +18,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public class AC_Hardcore implements Listener{
@@ -41,30 +42,37 @@ public class AC_Hardcore implements Listener{
 		return (plugin != null && plugin.isEnabled()) ? ChatColor.GREEN : ChatColor.RED;
 	}
 	void showFancyPlugins(Player player){
-		TellrawBlob blob = new TellrawBlob(
+		ListComponent blob = new ListComponent(
 			new RawTextComponent("Plugins: "),
-//			new ActionComponent(enableTest("Renewable")+"Essentials", HoverEvent.SHOW_TEXT, "Prevents unrenewable items from being destroyed"),
+//			new RawTextComponent(enableTest("Renewable")+"Essentials",
+//					new TextHoverAction(HoverEvent.SHOW_TEXT, "Prevents unrenewable items from being destroyed")),
 //			new RawTextComponent("§r, "),
-			new ActionComponent(enableTest("Essentials")+"Essentials", HoverEvent.SHOW_TEXT, "Collection of useful tools and commands"),
+			new RawTextComponent(enableTest("Essentials")+"Essentials",
+					new TextHoverAction(HoverEvent.SHOW_TEXT, "Collection of useful tools and commands")),
 			new RawTextComponent("§r, "),
-			new ActionComponent(enableTest("HardcoreTweaks")+"HCTweaks", HoverEvent.SHOW_TEXT, "Package of custom-built features and tweaks"),
+			new RawTextComponent(enableTest("HardcoreTweaks")+"HCTweaks",
+					new TextHoverAction(HoverEvent.SHOW_TEXT, "Package of custom-built features and tweaks")),
 			new RawTextComponent("§r, "),
-			new ActionComponent(enableTest("ChatManager")+"ChatManager", HoverEvent.SHOW_TEXT, "Keeps chat pg13 + Color/Format for chat & signs"),
+			new RawTextComponent(enableTest("ChatManager")+"ChatManager",
+					new TextHoverAction(HoverEvent.SHOW_TEXT, "Keeps chat pg13 + Color/Format for chat & signs")),
 			new RawTextComponent("§r,\n"),
-			new ActionComponent(enableTest("DropHeads")+"DropHeads", HoverEvent.SHOW_TEXT, "Provides a chance to get heads from mobs/players"),
+			new RawTextComponent(enableTest("DropHeads")+"DropHeads",
+					new TextHoverAction(HoverEvent.SHOW_TEXT, "Provides a chance to get heads from mobs/players")),
 			new RawTextComponent("§r, "),
-			new ActionComponent(enableTest("HorseOwners")+"HorseRank", HoverEvent.SHOW_TEXT, "Naming horses and viewing/ranking their stats"),
+			new RawTextComponent(enableTest("HorseOwners")+"HorseRank",
+					new TextHoverAction(HoverEvent.SHOW_TEXT, "Naming horses and viewing/ranking their stats")),
 			new RawTextComponent("§r, "),
-//			new ActionComponent(enableTest("EnchantBook")+"EnchantBook", HoverEvent.SHOW_TEXT, "Color item names in anvils, looting on axes, etc!"),
+//			new RawTextComponent(enableTest("EnchantBook")+"EnchantBook",
+//					new TextHoverAction(HoverEvent.SHOW_TEXT, "Color item names in anvils, looting on axes, etc!")),
 //			new RawTextComponent("§r, "),
-			new ActionComponent("§aMore", HoverEvent.SHOW_TEXT,
+			new RawTextComponent("§aMore", new TextHoverAction(HoverEvent.SHOW_TEXT,
 //					enableTest("WorldEdit")+"WorldEdit§r, "+
 //					enableTest("WorldGuard")+"WorldGuard§r, "+
 //					enableTest("PluginLoader")+"PluginLoader§r, "+
 					"§aEvNoCheat§r, "+
 //					enableTest("PermissionsBukkit")+"PermissionsBukkit§r, "+
 					enableTest("BungeeTabListPlus")+"TabList+§r, "+
-					enableTest("Votifier")+"Votifier§r."),
+					enableTest("Votifier")+"Votifier§r.")),
 			new RawTextComponent("\n§7§oHover over a plugin to see more details!")
 		);
 		Eventials.getPlugin().sendTellraw(player, blob.toString());
@@ -123,20 +131,20 @@ public class AC_Hardcore implements Listener{
 				catch(IllegalArgumentException ex){engraving = null;}
 			}
 			if(item == null || engraving == null){
-				TellrawBlob blob = new TellrawBlob(
+				ListComponent blob = new ListComponent(
 						new RawTextComponent(ChatColor.GRAY
 								+ "To embellish an item with your name using votes, hold the item\n"
 								+ "you wish to modify in your main hand and select one option:\n"),
-						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#bbb&oEngrave &f(cost:&6 5&f)\n"), ClickEvent.RUN_COMMAND, "/embellish engrave"),
-						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#ec5&oForge &f(cost:&6 10&f)\n"), ClickEvent.RUN_COMMAND, "/embellish forge"),
-						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#adf&oBless &f(cost:&6 7&f)\n"), ClickEvent.RUN_COMMAND, "/embellish bless"),
-						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#e41&oCurse &f(cost:&6 7&f)\n"), ClickEvent.RUN_COMMAND, "/embellish curse"),
-						new ActionComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#ec5&oSalute &f(cost:&6 6&f)\n"), ClickEvent.RUN_COMMAND, "/embellish salute")
+						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#bbb&oEngrave &f(cost:&6 5&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish engrave")),
+						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#ec5&oForge &f(cost:&6 10&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish forge")),
+						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#adf&oBless &f(cost:&6 7&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish bless")),
+						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#e41&oCurse &f(cost:&6 7&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish curse")),
+						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
+								"&8 • &#ec5&oSalute &f(cost:&6 6&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish salute"))
 				);
 				pl.sendTellraw(player, blob.toString());
 				pl.getLogger().info("TEMP DELETE THIS IN AC_HARDCORE:\ntellraw blob: "+blob.toString());

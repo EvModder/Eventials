@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandVote extends EvCommand{
@@ -57,11 +57,11 @@ public class CommandVote extends EvCommand{
 				++i;
 			}
 		}
-		TellrawBlob blob = new TellrawBlob();
+		ListComponent blob = new ListComponent();
 		for(int i=0; i<links.length; ++i){
 			if(i == 0) blob.addComponent(TextUtils.translateAlternateColorCodes('&', "&eVoting Links:  &d1&7."));
 			else blob.addComponent("  "+ChatColor.LIGHT_PURPLE+(i+1)+ChatColor.GRAY+".");
-			blob.addComponent(new ActionComponent(hyper[i], ClickEvent.OPEN_URL, links[i]));
+			blob.addComponent(new RawTextComponent(hyper[i], new TextClickAction(ClickEvent.OPEN_URL, links[i])));
 		}
 		tellrawStringLinks = blob.toString();
 	}
@@ -77,9 +77,9 @@ public class CommandVote extends EvCommand{
 		}
 		Player player = (Player)sender;
 		if(websiteLink != null && !websiteLink.isEmpty()){
-			Eventials.getPlugin().sendTellraw(player, new TellrawBlob(
+			Eventials.getPlugin().sendTellraw(player, new ListComponent(
 					new RawTextComponent(ChatColor.YELLOW+"Voting"),
-					new ActionComponent(ChatColor.AQUA+" website page", ClickEvent.OPEN_URL, websiteLink))
+					new RawTextComponent(ChatColor.AQUA+" website page", new TextClickAction(ClickEvent.OPEN_URL, websiteLink)))
 					.toString());
 		}
 		if(tellrawStringLinks.length() > 2) Eventials.getPlugin().sendTellraw(player, tellrawStringLinks);

@@ -51,7 +51,28 @@ public class Eventials extends EvPlugin {
 		if(config.getBoolean("evspawner-enabled", true)) new EvSpawner(this);
 		if(config.getBoolean("evvoter-enabled", true)) voter = new EvVoter(this);
 		if(config.getBoolean("splitworlds-enabled", true)) new SplitWorlds(this);
-		if(config.getBoolean("mailbox-enabled", true)) mailbox = new MailboxClient(this);
+//		if(config.getBoolean("mailbox-enabled", true)) mailbox = new MailboxClient(this);//TODO: this seems to cause a NoClassDefFoundError ???
+/*java.lang.NoClassDefFoundError: Eventials/bridge
+	at Eventials.Eventials.onEvEnable(Eventials.java:54) ~[?:?]
+	at net.evmodder.EvLib.EvPlugin.onEnable(EvPlugin.java:29) ~[?:?]
+	at org.bukkit.plugin.java.JavaPlugin.setEnabled(JavaPlugin.java:263) ~[patched_1.16.5.jar:git-Paper-581]
+	at org.bukkit.plugin.java.JavaPluginLoader.enablePlugin(JavaPluginLoader.java:380) ~[patched_1.16.5.jar:git-Paper-581]
+	at org.bukkit.plugin.SimplePluginManager.enablePlugin(SimplePluginManager.java:483) ~[patched_1.16.5.jar:git-Paper-581]
+	at org.bukkit.craftbukkit.v1_16_R3.CraftServer.enablePlugin(CraftServer.java:501) ~[patched_1.16.5.jar:git-Paper-581]
+	at org.bukkit.craftbukkit.v1_16_R3.CraftServer.enablePlugins(CraftServer.java:415) ~[patched_1.16.5.jar:git-Paper-581]
+	at net.minecraft.server.v1_16_R3.MinecraftServer.loadWorld(MinecraftServer.java:580) ~[patched_1.16.5.jar:git-Paper-581]
+	at net.minecraft.server.v1_16_R3.DedicatedServer.init(DedicatedServer.java:280) ~[patched_1.16.5.jar:git-Paper-581]
+	at net.minecraft.server.v1_16_R3.MinecraftServer.w(MinecraftServer.java:1055) ~[patched_1.16.5.jar:git-Paper-581]
+	at net.minecraft.server.v1_16_R3.MinecraftServer.lambda$a$0(MinecraftServer.java:289) ~[patched_1.16.5.jar:git-Paper-581]
+	at java.lang.Thread.run(Thread.java:831) [?:?]
+Caused by: java.lang.ClassNotFoundException: Eventials.bridge
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:433) ~[?:?]
+	at org.bukkit.plugin.java.PluginClassLoader.findClass(PluginClassLoader.java:182) ~[patched_1.16.5.jar:git-Paper-581]
+	at org.bukkit.plugin.java.PluginClassLoader.findClass(PluginClassLoader.java:111) ~[patched_1.16.5.jar:git-Paper-581]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:586) ~[?:?]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:519) ~[?:?]
+	... 12 more
+*/
 
 		if(config.getBoolean("pre-command", true))
 			getServer().getPluginManager().registerEvents(new PreCommandListener(), this);

@@ -11,9 +11,10 @@ import Eventials.Eventials;
 import Eventials.Extras;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 
 public class CommandStatsRestore extends EvCommand {
 	public CommandStatsRestore(EvPlugin p){
@@ -41,9 +42,10 @@ public class CommandStatsRestore extends EvCommand {
 		if(target.hasPlayedBefore()){
 			if(sender instanceof Player && (args.length == 1 || !args[1].equals("confirm"))){
 				//-----------------------------------------------------------
-				TellrawBlob blob = new TellrawBlob();
+				ListComponent blob = new ListComponent();
 				blob.addComponent(""+ChatColor.RED+ChatColor.BOLD+"Warning:"+ChatColor.GRAY+" This will overwrite existing stats!\n"+ChatColor.RED+"[");
-				blob.addComponent(new ActionComponent(ChatColor.GOLD+" Confirm ", ClickEvent.RUN_COMMAND, "/statsrestore "+target.getName()+" confirm"));
+				blob.addComponent(new RawTextComponent(ChatColor.GOLD+" Confirm ",
+						new TextClickAction(ClickEvent.RUN_COMMAND, "/statsrestore "+target.getName()+" confirm")));
 				blob.addComponent(ChatColor.RED+"]");
 				Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
 				//-----------------------------------------------------------

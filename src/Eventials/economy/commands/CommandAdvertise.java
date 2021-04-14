@@ -18,9 +18,10 @@ import Eventials.Eventials;
 import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.TellrawUtils.ActionComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.TellrawBlob;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 
 public class CommandAdvertise extends EvCommand{
 	private EvEconomy economy;
@@ -75,9 +76,9 @@ public class CommandAdvertise extends EvCommand{
 					+ChatColor.DARK_RED+"["+ChatColor.RED+ChatColor.BOLD+"Warn"+ChatColor.DARK_RED+"] "
 					+ChatColor.GOLD+"Advertising other servers within this section is not permitted, " +
 					"and you will not be refunded if your advertisement is removed.\n\n ";
-			TellrawBlob blob = new TellrawBlob();
+			ListComponent blob = new ListComponent();
 			blob.addComponent(preMsg);
-			blob.addComponent(new ActionComponent(hyperMsg, ClickEvent.RUN_COMMAND, "/advertise pay* "+advert));
+			blob.addComponent(new RawTextComponent(hyperMsg, new TextClickAction(ClickEvent.RUN_COMMAND, "/advertise pay* "+advert)));
 			blob.addComponent(postMsg);
 			Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
 			//-----------------------------------------------------------
