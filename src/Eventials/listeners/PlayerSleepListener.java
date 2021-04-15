@@ -51,31 +51,32 @@ public class PlayerSleepListener implements Listener{
 	String getSkipNightTellrawMsg(int numSleeping, int numToCount, World world){
 		int numInWorld = world.getPlayers().size();
 		String sleepingPlayers = world.getPlayers().stream().filter(p -> p.isSleeping())
-				.map(p -> p.getDisplayName()).collect(Collectors.joining(ChatColor.GRAY+", "+ChatColor.RESET));
-		RawTextComponent sleepingPlayersComp = new RawTextComponent(""+numSleeping, new TextHoverAction(HoverEvent.SHOW_TEXT, sleepingPlayers));
+				.map(p -> p.getDisplayName()).collect(Collectors.joining("§7, §r"));
+		pl.getLogger().info("Sleeping players: "+sleepingPlayers);
+		RawTextComponent sleepingPlayersComp = new RawTextComponent("§7"+numSleeping, new TextHoverAction(HoverEvent.SHOW_TEXT, sleepingPlayers));
 		ListComponent blob = new ListComponent();
 		if(numSleeping < numToCount){
 			if(PERCENT_INCLUSIVE){
 				blob.addComponent(ChatColor.GRAY+SKIP_NIGHT_PERCENT_STR+" or more of players in the overworld are sleeping (");
 				blob.addComponent(sleepingPlayersComp);
-				blob.addComponent("/"+numInWorld+"). Skipping the night...");
+				blob.addComponent("§7/"+numInWorld+"). Skipping the night...");
 			}
 			else{
-				blob.addComponent(ChatColor.GRAY+"More than "+SKIP_NIGHT_PERCENT_STR+" of players in the overworld are sleeping (");
+				blob.addComponent("§7More than "+SKIP_NIGHT_PERCENT_STR+" of players in the overworld are sleeping (");
 				blob.addComponent(sleepingPlayersComp);
-				blob.addComponent("). Skipping the night...");
+				blob.addComponent("§7). Skipping the night...");
 			}
 		}
 		else if(numToCount < numInWorld){ // Technically this is a vanilla-skip as well...
 			blob.addComponent(new RawTextComponent("§7Everyone*", new TextHoverAction(HoverEvent.SHOW_TEXT, "§7*in gamemode survival")));
 			blob.addComponent("§7 in the overworld is sleeping (");
 			blob.addComponent(sleepingPlayersComp);
-			blob.addComponent("). Skipping the night...");
+			blob.addComponent("§7). Skipping the night...");
 		}
 		else if(BROADCAST_VANILLA_SKIPS){
-			blob.addComponent(ChatColor.GRAY+"Everyone in the overworld is sleeping (");
+			blob.addComponent("§7Everyone in the overworld is sleeping (");
 			blob.addComponent(sleepingPlayersComp);
-			blob.addComponent("). Skipping the night...");
+			blob.addComponent("§7). Skipping the night...");
 		}
 		return blob.toString();
 	}
