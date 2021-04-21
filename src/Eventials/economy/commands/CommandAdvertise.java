@@ -80,7 +80,7 @@ public class CommandAdvertise extends EvCommand{
 			blob.addComponent(preMsg);
 			blob.addComponent(new RawTextComponent(hyperMsg, new TextClickAction(ClickEvent.RUN_COMMAND, "/advertise pay* "+advert)));
 			blob.addComponent(postMsg);
-			Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
+			Eventials.getPlugin().sendTellraw(sender.getName(), blob.toString());
 			//-----------------------------------------------------------
 			sender.sendMessage(ChatColor.AQUA+"- "+ChatColor.DARK_GRAY+"[ "+ChatColor.LIGHT_PURPLE
 					+"Ad: "+ChatColor.DARK_GREEN+formattedAdvert+ChatColor.DARK_GRAY+" ]");

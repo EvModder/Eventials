@@ -2,7 +2,6 @@ package Eventials;
 
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
-import org.bukkit.entity.Player;
 import Eventials.listeners.*;
 import Eventials.mailbox.MailboxClient;
 import Eventials.books.WriterTools;
@@ -16,6 +15,9 @@ import Eventials.voter.EvVoter;
 import _SpecificAndMisc.EventAndMisc;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.extras.TellrawUtils;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TranslationComponent;
 
 /** Everything inside this class is very AltCraft-specific,
  *  and not really meant for (or useful for) public distribution.
@@ -30,13 +32,15 @@ import net.evmodder.EvLib.FileIO;
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;
-//	private Scheduler scheduler;
 	public EvBridgeClient bridge;//TODO: getter/setter
 	private EvVoter voter;
 	private EvEconomy eco;
 	private MailboxClient mailbox;
 
 	@Override public void onEvEnable(){
+		getLogger().info(new RawTextComponent("test").getColor());
+		getLogger().info(new TranslationComponent("test").getJsonKey());
+		getLogger().info(TellrawUtils.convertHexColorsToComponents("aaa§x§9§3§a§A§B§Bbbb§rccc").toString());
 		plugin = this;
 		new EventAndMisc(this);//TODO: Temporary?
 
@@ -158,7 +162,7 @@ Caused by: java.lang.ClassNotFoundException: Eventials.bridge
 		getServer().dispatchCommand(pmi.getProxy(), command);
 	}*/
 
-	public void sendTellraw(Player target, String message){
-		getServer().dispatchCommand(getServer().getConsoleSender(), "minecraft:tellraw "+target.getName()+" "+message);
+	public void sendTellraw(String target, String message){
+		getServer().dispatchCommand(getServer().getConsoleSender(), "minecraft:tellraw "+target+" "+message);
 	}
 }

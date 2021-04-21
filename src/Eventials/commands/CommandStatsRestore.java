@@ -47,7 +47,7 @@ public class CommandStatsRestore extends EvCommand {
 				blob.addComponent(new RawTextComponent(ChatColor.GOLD+" Confirm ",
 						new TextClickAction(ClickEvent.RUN_COMMAND, "/statsrestore "+target.getName()+" confirm")));
 				blob.addComponent(ChatColor.RED+"]");
-				Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
+				Eventials.getPlugin().sendTellraw(sender.getName(), blob.toString());
 				//-----------------------------------------------------------
 				return true;
 			}

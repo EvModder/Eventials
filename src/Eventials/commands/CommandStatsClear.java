@@ -50,7 +50,7 @@ public class CommandStatsClear extends EvCommand {
 			blob.addComponent(""+ChatColor.RED+ChatColor.BOLD+"Warning:"+ChatColor.GRAY+" This action cannot be undone. "+ChatColor.RED+"[");
 			blob.addComponent(new RawTextComponent(" Confirm ", new TextClickAction(ClickEvent.RUN_COMMAND, "/clearstats "+target.getName()+" confirm")));
 			blob.addComponent(ChatColor.RED+"]");
-			Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
+			Eventials.getPlugin().sendTellraw(sender.getName(), blob.toString());
 			//-----------------------------------------------------------
 		}
 		else{

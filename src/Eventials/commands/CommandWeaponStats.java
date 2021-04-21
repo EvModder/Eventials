@@ -202,7 +202,7 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 		return true;
 	}
 
-	@EventHandler
+	@SuppressWarnings("deprecation") @EventHandler
 	public void onMobKill(EntityDeathEvent evt){
 		if(evt.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent
 				&& evt.getEntity() instanceof LivingEntity){

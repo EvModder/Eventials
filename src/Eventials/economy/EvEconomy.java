@@ -110,7 +110,7 @@ public class EvEconomy extends ServerEconomy{
 							ListComponent blob = new ListComponent();
 							blob.addComponent(preMsg);
 							blob.addComponent(new RawTextComponent(hyperMsg, new TextClickAction(ClickEvent.RUN_COMMAND, cmdValue)));
-							Eventials.getPlugin().sendTellraw((Player)sender, blob.toString());
+							Eventials.getPlugin().sendTellraw(sender.getName(), blob.toString());
 							return true;
 						}
 						else{

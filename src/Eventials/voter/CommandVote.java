@@ -77,12 +77,12 @@ public class CommandVote extends EvCommand{
 		}
 		Player player = (Player)sender;
 		if(websiteLink != null && !websiteLink.isEmpty()){
-			Eventials.getPlugin().sendTellraw(player, new ListComponent(
+			Eventials.getPlugin().sendTellraw(player.getName(), new ListComponent(
 					new RawTextComponent(ChatColor.YELLOW+"Voting"),
 					new RawTextComponent(ChatColor.AQUA+" website page", new TextClickAction(ClickEvent.OPEN_URL, websiteLink)))
 					.toString());
 		}
-		if(tellrawStringLinks.length() > 2) Eventials.getPlugin().sendTellraw(player, tellrawStringLinks);
+		if(tellrawStringLinks.length() > 2) Eventials.getPlugin().sendTellraw(player.getName(), tellrawStringLinks);
 
 		int votes = voteManager.getTotalVotes(player.getUniqueId());
 		if(votes > 0){

@@ -205,7 +205,7 @@ public class Extras{
 			else blob.addComponent(ChatColor.GOLD+", ");
 			blob.addComponent(new RawTextComponent(ChatColor.GREEN+warps.get(i), new TextClickAction(ClickEvent.RUN_COMMAND, "/warp "+warps.get(i))));
 		}
-		Eventials.getPlugin().sendTellraw(player, blob.toString());
+		Eventials.getPlugin().sendTellraw(player.getName(), blob.toString());
 	}
 
 	public static boolean isAdminShop(Block block){

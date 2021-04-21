@@ -30,7 +30,7 @@ public class CommandDiscord extends EvCommand{
 			ListComponent comp = new ListComponent();
 			comp.addComponent(preText);
 			comp.addComponent(new RawTextComponent(linkDisplay, new TextClickAction(ClickEvent.OPEN_URL, linkLocation)));
-			Eventials.getPlugin().sendTellraw((Player)sender, comp.toString());
+			Eventials.getPlugin().sendTellraw(sender.getName(), comp.toString());
 		}
 		else sender.sendMessage(preText+linkLocation);
 		return true;

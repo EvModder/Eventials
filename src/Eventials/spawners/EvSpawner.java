@@ -115,7 +115,7 @@ public class EvSpawner implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@SuppressWarnings("deprecation") @EventHandler(priority = EventPriority.MONITOR)
 	public void onSpawnerMine(BlockBreakEvent evt){
 		if(evt.isCancelled()) return;
 

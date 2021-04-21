@@ -178,7 +178,7 @@ public class AC_New implements Listener{
 				)),
 				new RawTextComponent("\n§7§oHover over a plugin to see more details!")
 			);
-		Eventials.getPlugin().sendTellraw(player, blob.toString());
+		Eventials.getPlugin().sendTellraw(player.getName(), blob.toString());
 	}
 	@EventHandler
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){

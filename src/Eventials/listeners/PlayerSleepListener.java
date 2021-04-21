@@ -116,20 +116,25 @@ public class PlayerSleepListener implements Listener{
 				if(player != null) player.sendMessage("§b"+CUR_SLEEPERS+" §7of§6 "+numToSkipNight+" §8|§7 "+MAX_SLEEPERS);
 			}
 			if(CUR_SLEEPERS >= numToSkipNight){
-				if(skipNightWorlds.add(world.getUID()))
-				new BukkitRunnable(){@Override public void run(){
-					Pair<Integer, Integer> sleepingAndCounted = getNumSleepingAndCounted(world, triggerPlayer, includeTrigger);
-					int numToSkipNight = (int)Math.ceil(sleepingAndCounted.b*SKIP_NIGHT_PERCENT);
-					if(!PERCENT_INCLUSIVE && numToSkipNight < sleepingAndCounted.b) ++numToSkipNight; // 100% is always inclusive
-					if(sleepingAndCounted.a >= Math.max(1, numToSkipNight)){
-						String broadcastMsg = getSkipNightTellrawMsg(CUR_SLEEPERS, MAX_SLEEPERS, world);
-						if(broadcastMsg != null) for(Player p : BROADCAST_SKIPS_TO_ALL_WORLDS
-									? pl.getServer().getOnlinePlayers() : world.getPlayers()) pl.sendTellraw(p, broadcastMsg);
-						long relativeTime = 24000 - world.getTime();
-						world.setFullTime(world.getFullTime() + relativeTime);
-					}
-					skipNightWorlds.remove(world.getUID());
-				}}.runTaskLater(Eventials.getPlugin(), 200);
+				if(skipNightWorlds.add(world.getUID())) {
+					new BukkitRunnable(){@Override public void run(){
+						
+					}}.runTaskLater(Eventials.getPlugin(), 180);
+					new BukkitRunnable(){@Override public void run(){
+						Pair<Integer, Integer> sleepingAndCounted = getNumSleepingAndCounted(world, triggerPlayer, includeTrigger);
+						int numToSkipNight = (int)Math.ceil(sleepingAndCounted.b*SKIP_NIGHT_PERCENT);
+						if(!PERCENT_INCLUSIVE && numToSkipNight < sleepingAndCounted.b) ++numToSkipNight; // 100% is always inclusive
+						if(sleepingAndCounted.a >= Math.max(1, numToSkipNight)){
+							String broadcastMsg = getSkipNightTellrawMsg(CUR_SLEEPERS, MAX_SLEEPERS, world);
+							if(broadcastMsg != null)
+								for(Player p : BROADCAST_SKIPS_TO_ALL_WORLDS
+										? pl.getServer().getOnlinePlayers() : world.getPlayers()) pl.sendTellraw(p.getName(), broadcastMsg);
+							long relativeTime = 24000 - world.getTime();
+							world.setFullTime(world.getFullTime() + relativeTime);
+						}
+						skipNightWorlds.remove(world.getUID());
+					}}.runTaskLater(Eventials.getPlugin(), 200);
+				}
 			}
 		}
 		if(sleepingAndCounted.a >= numToSkipStorm){

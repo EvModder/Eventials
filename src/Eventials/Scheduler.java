@@ -147,7 +147,7 @@ public final class Scheduler{
 		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
 		raw.append(']');
 		for(Player p : recipients){
-			Eventials.getPlugin().sendTellraw(p, raw.toString());
+			Eventials.getPlugin().sendTellraw(p.getName(), raw.toString());
 		}
 	}
 
@@ -163,7 +163,7 @@ public final class Scheduler{
 		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
 		raw.append(']');
 		for(Player p : recipients){
-			Eventials.getPlugin().sendTellraw(p, raw.toString());
+			Eventials.getPlugin().sendTellraw(p.getName(), raw.toString());
 		}
 	}
 
@@ -179,7 +179,7 @@ public final class Scheduler{
 		if(postMsg != null && !postMsg.isEmpty()) raw.append(", {\"text\": \"").append(postMsg).append("\"} ");
 		raw.append(']');
 		for(Player p : recipients){
-			Eventials.getPlugin().sendTellraw(p, raw.toString());
+			Eventials.getPlugin().sendTellraw(p.getName(), raw.toString());
 		}
 	}
 	// ============================================================================================================//

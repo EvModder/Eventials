@@ -75,7 +75,7 @@ public class AC_Hardcore implements Listener{
 					enableTest("Votifier")+"Votifier§r.")),
 			new RawTextComponent("\n§7§oHover over a plugin to see more details!")
 		);
-		Eventials.getPlugin().sendTellraw(player, blob.toString());
+		Eventials.getPlugin().sendTellraw(player.getName(), blob.toString());
 	}
 
 	@EventHandler
@@ -146,11 +146,11 @@ public class AC_Hardcore implements Listener{
 						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
 								"&8 • &#ec5&oSalute &f(cost:&6 6&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish salute"))
 				);
-				pl.sendTellraw(player, blob.toString());
-				pl.getLogger().info("TEMP DELETE THIS IN AC_HARDCORE:\ntellraw blob: "+blob.toString());
+				pl.sendTellraw(player.getName(), blob.toString());
+				pl.getLogger().info("TEMP DELETE THIS IN /SpecificAndMisc/AC_HARDCORE:\ntellraw blob: "+blob.toString());
 				return;
 			}
-			int votes = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("votes").getScore(player.getUniqueId().toString()).getScore();
+			int votes = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("votes-by-uuid").getScore(player.getUniqueId().toString()).getScore();
 			int cost = 10;
 			String lore = null;
 			switch(engraving){
@@ -168,7 +168,8 @@ public class AC_Hardcore implements Listener{
 				item.setItemMeta(meta);
 				player.getInventory().setItemInMainHand(item);
 				player.sendMessage(ChatColor.GREEN+"Loretext added!");
-				pl.runCommand("scoreboard players set "+player.getUniqueId()+" votes "+(votes-cost));
+				pl.runCommand("scoreboard players set "+player.getUniqueId()+" votes-by-uuid "+(votes-cost));
+				pl.runCommand("scoreboard players set "+player.getName()+" votes-by-name "+(votes-cost));
 			}
 			else{
 				player.sendMessage(ChatColor.RED+"You do not have enough votes");
