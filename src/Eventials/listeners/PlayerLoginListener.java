@@ -20,6 +20,10 @@ import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
 
 public class PlayerLoginListener implements Listener{
 	private Eventials plugin;
@@ -88,6 +92,14 @@ public class PlayerLoginListener implements Listener{
 		return joins;
 	}
 
+	public String getTimeOffline(String name){
+		@SuppressWarnings("deprecation")
+		OfflinePlayer p = plugin.getServer().getOfflinePlayer(name);
+		if(p == null || !p.hasPlayedBefore()) return "unknown";
+		long timeSinceLastJoin = System.currentTimeMillis() - p.getLastPlayed();
+		return TextUtils.formatTime(timeSinceLastJoin, /*show0s=*/false, /*timeColor=*/ChatColor.WHITE, /*unitColor=*/ChatColor.GRAY);
+	}
+
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerLoginEvent login){
@@ -124,28 +136,33 @@ public class PlayerLoginListener implements Listener{
 			}
 			else if(!recentJoins.peekLast().equals(name)){
 				Iterator<String> iterator = recentJoins.descendingIterator();
-				StringBuilder builder = new StringBuilder("")
-						.append(ChatColor.BLUE).append("Players since last join: ")
-						.append(ChatColor.GRAY).append(iterator.next());
+//				StringBuilder builder = new StringBuilder("")
+//						.append(ChatColor.BLUE).append("Players since last join: ")
+//						.append(ChatColor.GRAY).append(iterator.next());
+
+				ListComponent listComp = new ListComponent(new RawTextComponent(new StringBuilder()
+						.append(ChatColor.BLUE).append("Players since last join: ").append(ChatColor.GRAY).toString()));
+				String pName = iterator.next();
+				listComp.addComponent(new RawTextComponent(pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
 	
 				int numShown = 1;
-				String pName = null;
 				while(iterator.hasNext() && !name.equals(pName=iterator.next())){
 					if(numShown == MAX_RECENT_JOINS_SHOWN) break;
-					builder.append(ChatColor.BLUE).append(", ").append(ChatColor.GRAY).append(pName);
+//					builder.append(ChatColor.BLUE).append(", ").append(ChatColor.GRAY).append(pName);
+					listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "+ChatColor.GRAY));
+					listComp.addComponent(new RawTextComponent(pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
 					++numShown;
 				}
-				builder.append(ChatColor.BLUE);
 				if(name.equals(pName)){
 					iterator.remove();
-					builder.append('.');
+					listComp.addComponent(new RawTextComponent(ChatColor.BLUE+"."));
 				}
-				else builder.append(", ").append(ChatColor.GRAY).append("...");
+				else listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "+ChatColor.GRAY+"..."));
+//					builder.append(", ").append(ChatColor.GRAY).append("...");
 	
-				final String message = builder.toString();
+				final String message = listComp.toString();//builder.toString();
 				new BukkitRunnable(){@Override public void run(){
-					Player player = plugin.getServer().getPlayer(uuid);
-					if(player != null) player.sendMessage(message);
+					Eventials.getPlugin().sendTellraw(name, message);
 				}}.runTaskLater(plugin, 5); //5 ticks
 
 				// Remove lingering duplicates
