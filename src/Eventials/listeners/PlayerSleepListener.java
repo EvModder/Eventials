@@ -118,13 +118,11 @@ public class PlayerSleepListener implements Listener{
 			if(CUR_SLEEPERS >= numToSkipNight){
 				if(skipNightWorlds.add(world.getUID())) {
 					new BukkitRunnable(){@Override public void run(){
-						
-					}}.runTaskLater(Eventials.getPlugin(), 180);
-					new BukkitRunnable(){@Override public void run(){
 						Pair<Integer, Integer> sleepingAndCounted = getNumSleepingAndCounted(world, triggerPlayer, includeTrigger);
-						int numToSkipNight = (int)Math.ceil(sleepingAndCounted.b*SKIP_NIGHT_PERCENT);
-						if(!PERCENT_INCLUSIVE && numToSkipNight < sleepingAndCounted.b) ++numToSkipNight; // 100% is always inclusive
-						if(sleepingAndCounted.a >= Math.max(1, numToSkipNight)){
+						int CUR_SLEEPERS = sleepingAndCounted.a, MAX_SLEEPERS = sleepingAndCounted.b;
+						int numToSkipNight = (int)Math.ceil(MAX_SLEEPERS*SKIP_NIGHT_PERCENT);
+						if(!PERCENT_INCLUSIVE && numToSkipNight < MAX_SLEEPERS) ++numToSkipNight; // 100% is always inclusive
+						if(CUR_SLEEPERS >= Math.max(1, numToSkipNight)){
 							String broadcastMsg = getSkipNightTellrawMsg(CUR_SLEEPERS, MAX_SLEEPERS, world);
 							if(broadcastMsg != null)
 								for(Player p : BROADCAST_SKIPS_TO_ALL_WORLDS
@@ -133,7 +131,7 @@ public class PlayerSleepListener implements Listener{
 							world.setFullTime(world.getFullTime() + relativeTime);
 						}
 						skipNightWorlds.remove(world.getUID());
-					}}.runTaskLater(Eventials.getPlugin(), 200);
+					}}.runTaskLater(Eventials.getPlugin(), 100);
 				}
 			}
 		}

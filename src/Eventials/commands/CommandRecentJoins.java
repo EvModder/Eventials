@@ -35,11 +35,11 @@ public class CommandRecentJoins extends EvCommand {
 		if(names.size() < num) num = names.size();
 		ListComponent listComp = new ListComponent(new RawTextComponent(new StringBuilder()
 				.append(ChatColor.BLUE).append("Last ").append(ChatColor.YELLOW).append(num)
-				.append(ChatColor.BLUE).append(" players to join: ").append(ChatColor.GRAY).toString()));
+				.append(ChatColor.BLUE).append(" players to join: ").toString()));
 		if(!names.isEmpty()){
 			Iterator<String> iterator = names.iterator();
 			String name = iterator.next();
-			listComp.addComponent(new RawTextComponent(name,
+			listComp.addComponent(new RawTextComponent(ChatColor.GRAY+name,
 					new TextHoverAction(HoverEvent.SHOW_TEXT, pl.loginListener.getTimeOffline(name))));
 			while(iterator.hasNext()){
 				name = iterator.next();

@@ -97,7 +97,7 @@ public class PlayerLoginListener implements Listener{
 		OfflinePlayer p = plugin.getServer().getOfflinePlayer(name);
 		if(p == null || !p.hasPlayedBefore()) return "unknown";
 		long timeSinceLastJoin = System.currentTimeMillis() - p.getLastPlayed();
-		return TextUtils.formatTime(timeSinceLastJoin, /*show0s=*/false, /*timeColor=*/ChatColor.WHITE, /*unitColor=*/ChatColor.GRAY);
+		return TextUtils.formatTime(timeSinceLastJoin, /*show0s=*/false, /*sigUnits=*/2, /*timeColor=*/ChatColor.WHITE, /*unitColor=*/ChatColor.GRAY);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -141,16 +141,16 @@ public class PlayerLoginListener implements Listener{
 //						.append(ChatColor.GRAY).append(iterator.next());
 
 				ListComponent listComp = new ListComponent(new RawTextComponent(new StringBuilder()
-						.append(ChatColor.BLUE).append("Players since last join: ").append(ChatColor.GRAY).toString()));
+						.append(ChatColor.BLUE).append("Players since last join: ").toString()));
 				String pName = iterator.next();
-				listComp.addComponent(new RawTextComponent(pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
+				listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
 	
 				int numShown = 1;
 				while(iterator.hasNext() && !name.equals(pName=iterator.next())){
 					if(numShown == MAX_RECENT_JOINS_SHOWN) break;
 //					builder.append(ChatColor.BLUE).append(", ").append(ChatColor.GRAY).append(pName);
-					listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "+ChatColor.GRAY));
-					listComp.addComponent(new RawTextComponent(pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
+					listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "));
+					listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
 					++numShown;
 				}
 				if(name.equals(pName)){
@@ -161,9 +161,7 @@ public class PlayerLoginListener implements Listener{
 //					builder.append(", ").append(ChatColor.GRAY).append("...");
 	
 				final String message = listComp.toString();//builder.toString();
-				new BukkitRunnable(){@Override public void run(){
-					Eventials.getPlugin().sendTellraw(name, message);
-				}}.runTaskLater(plugin, 5); //5 ticks
+				new BukkitRunnable(){@Override public void run(){plugin.sendTellraw(name, message);}}.runTaskLater(plugin, 5); //5 ticks
 
 				// Remove lingering duplicates
 				while(iterator.hasNext()){

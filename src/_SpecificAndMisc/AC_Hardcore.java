@@ -152,7 +152,7 @@ public class AC_Hardcore implements Listener{
 			}
 			int votes = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("votes-by-uuid").getScore(player.getUniqueId().toString()).getScore();
 			int cost = 10;
-			String lore = null;
+			String lore = "ERROR";
 			switch(engraving){
 				case FORGE: cost = 15; lore = "&#ec5&oForged by "; break;
 				case BLESS: cost = 10; lore = "#adf&oBlessed by "; break;
@@ -162,7 +162,7 @@ public class AC_Hardcore implements Listener{
 			}
 			if(votes >= cost){
 				ItemMeta meta = item.getItemMeta();
-				List<String> lores = meta.hasLore() ? meta.getLore() : Arrays.asList();
+				List<String> lores = (meta.hasLore() && meta.getLore() != null) ? meta.getLore() : Arrays.asList();
 				lores.add(lore);
 				meta.setLore(lores);
 				item.setItemMeta(meta);
