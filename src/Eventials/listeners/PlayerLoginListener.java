@@ -97,7 +97,7 @@ public class PlayerLoginListener implements Listener{
 		OfflinePlayer p = plugin.getServer().getOfflinePlayer(name);
 		if(p == null || !p.hasPlayedBefore()) return "unknown";
 		long timeSinceLastJoin = System.currentTimeMillis() - p.getLastPlayed();
-		return TextUtils.formatTime(timeSinceLastJoin, /*show0s=*/false, /*sigUnits=*/2, /*timeColor=*/ChatColor.WHITE, /*unitColor=*/ChatColor.GRAY);
+		return TextUtils.formatTime(timeSinceLastJoin, /*show0s=*/false, /*timeColor=*/ChatColor.WHITE, /*unitColor=*/ChatColor.GRAY, /*sigUnits=*/2);
 	}
 
 	@SuppressWarnings("deprecation")
