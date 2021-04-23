@@ -1,20 +1,30 @@
 package Eventials.commands;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.extras.NBTTagUtils;
+import net.evmodder.EvLib.extras.TellrawUtils;
+import net.evmodder.EvLib.extras.TellrawUtils.Component;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTag;
 
 public class CommandItemName extends EvCommand{
+	public CommandItemName(EvPlugin p){super(p);}
 
-	public CommandItemName(EvPlugin p) {
-		super(p);
+	public final static ItemStack setDisplayName(@Nonnull ItemStack item, @Nonnull Component name){
+		RefNBTTag tag = NBTTagUtils.getTag(item);
+		RefNBTTag display = tag.hasKey("display") ? (RefNBTTag)tag.get("display") : new RefNBTTag();
+		display.setString("Name", name.toString());
+		tag.set("display", display);
+		return NBTTagUtils.setTag(item, tag);
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
@@ -36,12 +46,9 @@ public class CommandItemName extends EvCommand{
 			return true;
 		}
 
-		StringBuilder builder = new StringBuilder(args[0]);
-		for(int i=1; i<args.length; ++i) builder.append(' ').append(args[i]);
-
-		ItemMeta named = item.getItemMeta();
-		named.setDisplayName(TextUtils.translateAlternateColorCodes('&', builder.toString()));
-		item.setItemMeta(named);
+		String nameStr = TextUtils.translateAlternateColorCodes('&', String.join(" ", args));
+		ListComponent nameComp = TellrawUtils.convertHexColorsToComponents(nameStr);
+		item = setDisplayName(item, nameComp);
 		player.getInventory().setItemInMainHand(item);
 		return true;
 	}

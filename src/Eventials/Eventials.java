@@ -38,9 +38,10 @@ public class Eventials extends EvPlugin {
 	private MailboxClient mailbox;
 
 	@Override public void onEvEnable(){
-		getLogger().info(new RawTextComponent("test").getColor());
-		getLogger().info(new TranslationComponent("test").getJsonKey());
-		getLogger().info(TellrawUtils.convertHexColorsToComponents("aaa§x§9§3§a§A§B§Bbbb§rccc").toString());
+		// TODO: Hacky temp fix, call these random things to ensure they get loaded HERE in Eventials...
+		new RawTextComponent("test").getColor();
+		new TranslationComponent("test").getJsonKey();
+		TellrawUtils.convertHexColorsToComponents("aaa§x§9§3§a§A§B§Bbbb§rccc").toString();
 		plugin = this;
 		new EventAndMisc(this);//TODO: Temporary?
 
