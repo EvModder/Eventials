@@ -14,19 +14,19 @@ import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
 
 public class CommandRecentJoins extends EvCommand {
-	int maxRecents;
-	Eventials pl;
+	final int MAX_RECENTS, DEFAULT_RECENTS_SHOWN = 20;
+	final Eventials pl;
 
 	public CommandRecentJoins(Eventials pl) {
 		super(pl);
 		this.pl = pl;
-		maxRecents = pl.getConfig().getInt("max-recent-joins-stored", 50);
+		MAX_RECENTS = pl.getConfig().getInt("max-recent-joins-stored", 50);
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
 
 	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		int num = maxRecents;
+		int num = DEFAULT_RECENTS_SHOWN;
 		if(args.length == 1){
 			try{ num = Integer.parseInt(args[0]); }
 			catch(NumberFormatException ex){}
