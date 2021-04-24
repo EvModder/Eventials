@@ -15,7 +15,9 @@ import Eventials.voter.EvVoter;
 import _SpecificAndMisc.EventAndMisc;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.Updater;
 import net.evmodder.EvLib.extras.TellrawUtils;
+import net.evmodder.EvLib.extras.TellrawUtils.Format;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.TranslationComponent;
 
@@ -42,6 +44,10 @@ public class Eventials extends EvPlugin {
 		new RawTextComponent("test").getColor();
 		new TranslationComponent("test").getJsonKey();
 		TellrawUtils.convertHexColorsToComponents("aaa§x§9§3§a§A§B§Bbbb§rccc").toString();
+		new TellrawUtils.FormatFlag(Format.ITALIC, true);
+		//new Updater(/*plugin=*/this, /*id=*/000, getFile(), Updater.UpdateType.NO_DOWNLOAD, /*announce=*/false);
+		Updater.class.getClass();
+		Updater.UpdateType.DEFAULT.name();
 		plugin = this;
 		new EventAndMisc(this);//TODO: Temporary?
 

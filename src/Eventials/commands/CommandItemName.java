@@ -7,12 +7,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 import net.evmodder.EvLib.extras.NBTTagUtils;
 import net.evmodder.EvLib.extras.TellrawUtils;
 import net.evmodder.EvLib.extras.TellrawUtils.Component;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTag;
 
@@ -40,15 +40,19 @@ public class CommandItemName extends EvCommand{
 
 		if(item == null) return false;
 
-		if(args.length == 0){
-			sender.sendMessage("Removed item name");
-			if(item.hasItemMeta()) item.getItemMeta().setDisplayName(null);
+		String nameStr = TextUtils.translateAlternateColorCodes('&', String.join(" ", args));
+		Component comp = TellrawUtils.parseComponentFromString(nameStr);
+		if(comp == null) comp = TellrawUtils.convertHexColorsToComponents(nameStr);
+
+		if(comp.toPlainText().isEmpty()){
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName(null);
+			item.setItemMeta(meta);
+			player.getInventory().setItemInMainHand(item);
+			player.sendMessage("Removed item name");
 			return true;
 		}
-
-		String nameStr = TextUtils.translateAlternateColorCodes('&', String.join(" ", args));
-		ListComponent nameComp = TellrawUtils.convertHexColorsToComponents(nameStr);
-		item = setDisplayName(item, nameComp);
+		item = setDisplayName(item, comp);
 		player.getInventory().setItemInMainHand(item);
 		return true;
 	}
