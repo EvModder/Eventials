@@ -95,7 +95,7 @@ public class CommandVote extends EvCommand{
 				long lastVote = voteManager.getLastVote(player.getUniqueId());
 				long timeSinceVote = now - lastVote;
 				long timeLeft = (voteManager.dayInMillis + voteManager.graceInMillis) - timeSinceVote;
-				player.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+streak+", time left: "
+				player.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+streak+ChatColor.GRAY+", time left: "
 						+TextUtils.formatTime(timeLeft, false, ChatColor.GOLD, ChatColor.GRAY));
 	
 				if(timeSinceVote < voteManager.dayInMillis){

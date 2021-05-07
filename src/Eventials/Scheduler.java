@@ -33,11 +33,8 @@ import net.evmodder.EvLib.extras.ButcherUtils.KillFlag;
 import com.earth2me.essentials.IEssentials;
 
 public final class Scheduler{
-	// ======================================== TODO: DELETE ALL THIS CRAP
-	// ========================================//
-	enum Event {
-		CLICK, HOVER
-	};
+	// ======================================== TODO: DELETE ALL THIS CRAP ========================================//
+	enum Event{CLICK, HOVER};
 
 	public enum TextAction {
 		// ClickEvent
@@ -359,9 +356,7 @@ public final class Scheduler{
 	}
 
 	public void sendAutomessage(Player... ppl){
-		for(String line : autoMsgs[automsg_index].split("\n")){
-			sendHyperMessage(line, ppl);
-		}
+		sendHyperMessage(autoMsgs[automsg_index].trim().replace("\n", "\n"+msgP), ppl);
 		if(++automsg_index == autoMsgs.length) automsg_index = 0;
 	}
 
@@ -373,6 +368,7 @@ public final class Scheduler{
 			plugin.getServer().getConsoleSender().sendMessage(msgP+msg);
 
 			String raw = TextAction.parseToRaw(escapedMsgP+msg, msgC);
+			plugin.getServer().getConsoleSender().sendMessage("here is raw (for debug): "+raw);
 
 			for(Player p : ppl){
 //				p.sendRawMessage(raw);//Doesn't work! (last checked: 1.12.1)

@@ -2,7 +2,7 @@ package _SpecificAndMisc;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -19,6 +19,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.extras.TabText;
+import net.evmodder.EvLib.extras.TellrawUtils;
 import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
@@ -29,11 +31,46 @@ import net.evmodder.EvLib.extras.TextUtils;
 public class AC_Hardcore implements Listener{
 	private final Eventials pl;
 	final boolean fancyPl;
+	final String engravingsTellraw;
 
 	public AC_Hardcore(){
 		pl = Eventials.getPlugin();
 		fancyPl = pl.getConfig().getBoolean("fancy-pl", true);
 		pl.getServer().getPluginManager().registerEvents(this, pl);
+
+		//-----------------------------------------------------------------
+		String[] engravings = TabText.parse(TextUtils.translateAlternateColorCodes('&',
+				"&8 • &#ec5&oForge`&f(&615 &2votes&f)\n" +
+				"&8 • &#adf&oBless`&f(&610 &2votes&f)\n" +
+				"&8 • &#e41&oCurse`&f(&610 &2votes&f)\n" +
+				"&8 • &#5e6&oSalute`&f(&67 &2votes&f)\n" +
+				"&8 • &#bbb&oEngrave`&f(&66 &2votes&f)\n" +
+				"&8 • &#666remove #`&f(&61 &2vote&f)"
+		), /*mono=*/false, /*flexFill=*/false, /*tabs=*/new int[]{62, 62}).split("\\n");
+		ListComponent engraveComp = new ListComponent(
+			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish forge")),
+			TellrawUtils.convertHexColorsToComponents(engravings[0]+"\n"));
+		ListComponent forgeComp = new ListComponent(
+			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish bless")),
+			TellrawUtils.convertHexColorsToComponents(engravings[1]+"\n"));
+		ListComponent blessComp = new ListComponent(
+			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish curse")),
+			TellrawUtils.convertHexColorsToComponents(engravings[2]+"\n"));
+		ListComponent curseComp = new ListComponent(
+			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish salute")),
+			TellrawUtils.convertHexColorsToComponents(engravings[3]+"\n"));
+		ListComponent saluteComp = new ListComponent(
+			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish engrave")),
+			TellrawUtils.convertHexColorsToComponents(engravings[4]+"\n"));
+		ListComponent removeComp = TellrawUtils.convertHexColorsToComponents(engravings[5]);
+		engravingsTellraw = new ListComponent(
+			new RawTextComponent(ChatColor.GRAY
+					+ "To embellish an item with your name using votes, hold the item\n"
+					+ "you wish to modify in your main hand and select one option:\n",
+				new TextHoverAction(HoverEvent.SHOW_TEXT, ChatColor.GRAY+"Click on a command to run it")),
+			engraveComp, forgeComp, blessComp, curseComp, saluteComp, removeComp
+		).toString();
+		//-----------------------------------------------------------------
 		pl.getLogger().info("Loaded Hardcore-specific things (/pl, /engrave, /votes)");
 	}
 
@@ -92,7 +129,17 @@ public class AC_Hardcore implements Listener{
 		}
 	}
 
-	enum Engraving{FORGE, ENGRAVE, BLESS, CURSE, SALUTE};
+	enum Engraving{FORGE, BLESS, CURSE, SALUTE, ENGRAVE};
+	Engraving getEngraving(String loreLine){
+		loreLine = ChatColor.stripColor(loreLine).toLowerCase();
+		if(loreLine.contains("forged")) return Engraving.FORGE;
+		if(loreLine.contains("blessed")) return Engraving.BLESS;
+		if(loreLine.contains("cursed")) return Engraving.CURSE;
+		if(loreLine.contains("saluted")) return Engraving.SALUTE;
+		if(loreLine.contains("engraved")) return Engraving.ENGRAVE;
+		return null;
+	}
+
 	@EventHandler
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){
 		if(evt.getMessage().charAt(0) != '/') return;
@@ -125,55 +172,110 @@ public class AC_Hardcore implements Listener{
 		if(command.equals("engrave") || command.equals("embellish")){
 			evt.setCancelled(true);
 			ItemStack item = player.getInventory().getItemInMainHand();
+			if(item == null){pl.sendTellraw(player.getName(), engravingsTellraw); return;}
 			Engraving engraving = null;
-			if(item != null && space > 0){
+			if(space > 0){
 				try{engraving = Engraving.valueOf(message.substring(space+1).toUpperCase());}
 				catch(IllegalArgumentException ex){engraving = null;}
 			}
-			if(item == null || engraving == null){
-				ListComponent blob = new ListComponent(
-						new RawTextComponent(ChatColor.GRAY
-								+ "To embellish an item with your name using votes, hold the item\n"
-								+ "you wish to modify in your main hand and select one option:\n"),
-						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#bbb&oEngrave &f(cost:&6 5&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish engrave")),
-						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#ec5&oForge &f(cost:&6 10&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish forge")),
-						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#adf&oBless &f(cost:&6 7&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish bless")),
-						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#e41&oCurse &f(cost:&6 7&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish curse")),
-						new RawTextComponent(TextUtils.translateAlternateColorCodes('&',
-								"&8 • &#ec5&oSalute &f(cost:&6 6&f)\n"), new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish salute"))
-				);
-				pl.sendTellraw(player.getName(), blob.toString());
-				pl.getLogger().info("TEMP DELETE THIS IN /SpecificAndMisc/AC_HARDCORE:\ntellraw blob: "+blob.toString());
+			int removeIndex = -1;
+			if(engraving == null){
+				int space2 = message.lastIndexOf(' ');
+				if(space2 != space && message.substring(space+1, space2).equalsIgnoreCase("remove")){
+					try{removeIndex = Integer.parseInt(message.substring(space2+1));}
+					catch(IllegalArgumentException ex){
+						player.sendMessage(ChatColor.RED+"Please specify the embellishment to remove (ordered from top to bottom, starting at 1)");
+						return;
+					};
+				}
+				else{pl.sendTellraw(player.getName(), engravingsTellraw); return;}
+			}
+			ItemMeta meta = item.getItemMeta();
+			List<String> lores = (meta.hasLore() && meta.getLore() != null) ? meta.getLore() : new ArrayList<>();
+			int currentIndex = 0, loreRemoveIndex = -1, loreInsertIndex = -1;
+			boolean isForger = false;
+			int engravingsByMe = 0;
+			for(int i=0; i<lores.size(); ++i){
+				Engraving existingEngraving = getEngraving(lores.get(i));
+				if(existingEngraving != null){
+					if(loreInsertIndex == -1){
+						switch(existingEngraving){
+							case FORGE: break;
+							case BLESS:
+								if(engraving == Engraving.FORGE) loreInsertIndex = i;
+								break;
+							case CURSE:
+								if(engraving == Engraving.FORGE || engraving == Engraving.BLESS) loreInsertIndex = i;
+								break;
+							case SALUTE:
+								if(engraving != Engraving.ENGRAVE && engraving != Engraving.SALUTE) loreInsertIndex = i;
+								break;
+							case ENGRAVE:
+								if(engraving != Engraving.ENGRAVE) loreInsertIndex = i;
+								break; 
+						}
+					}
+					if(++currentIndex == removeIndex) loreRemoveIndex = i;
+					if(lores.get(i).toLowerCase().endsWith(" "+player.getName().toLowerCase())){
+						if(existingEngraving == Engraving.FORGE) isForger = true;
+						if(existingEngraving == engraving){
+							player.sendMessage(ChatColor.RED+"You already have that embellishment on this item");
+							return;
+						}
+						if(++engravingsByMe == 2 && removeIndex == -1){
+							player.sendMessage(ChatColor.RED+"Items can only receive 2 engravings per player");
+							return;
+						}
+						if(existingEngraving == Engraving.CURSE && engraving == Engraving.BLESS){
+							player.sendMessage(ChatColor.RED+"You cannot bless an item which you have cursed");
+							return;
+						}
+						if(existingEngraving == Engraving.BLESS && engraving == Engraving.CURSE){
+							player.sendMessage(ChatColor.RED+"You cannot curse an item which you have blessed");
+							return;
+						}
+					}
+				}
+			}
+			//
+			int votes = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("votes-by-uuid").getScore(player.getUniqueId().toString()).getScore();
+			int cost = 1; // cost to remove is 1
+			String newLore = "";
+			if(engraving != null) switch(engraving){
+				case FORGE:  cost = 15; newLore = "&#ec5&oForged by "; break;
+				case BLESS:  cost = 10; newLore = "&#adf&oBlessed by "; break;
+				case CURSE:  cost = 10; newLore = "&#e41&oCursed by "; break;
+				case SALUTE: cost = 07; newLore = "&#5e6&oSaluted by "; break;
+				case ENGRAVE:cost = 06; newLore = "&#bbb&oEngraved by "; break;
+			}
+			if(votes < cost){
+				player.sendMessage(ChatColor.RED+"This requires "+cost+" votes, you only have "+votes);
 				return;
 			}
-			int votes = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("votes-by-uuid").getScore(player.getUniqueId().toString()).getScore();
-			int cost = 10;
-			String lore = "ERROR";
-			switch(engraving){
-				case FORGE: cost = 15; lore = "&#ec5&oForged by "; break;
-				case BLESS: cost = 10; lore = "#adf&oBlessed by "; break;
-				case CURSE: cost = 10; lore = "#e41&oCursed by "; break;
-				case SALUTE: cost = 7; lore = "#ec5&oSaluted by "; break;
-				case ENGRAVE: cost = 6; lore = "#bbb&oEngraved by "; break;
-			}
-			if(votes >= cost){
-				ItemMeta meta = item.getItemMeta();
-				List<String> lores = (meta.hasLore() && meta.getLore() != null) ? meta.getLore() : Arrays.asList();
-				lores.add(lore);
-				meta.setLore(lores);
-				item.setItemMeta(meta);
-				player.getInventory().setItemInMainHand(item);
-				player.sendMessage(ChatColor.GREEN+"Loretext added!");
-				pl.runCommand("scoreboard players set "+player.getUniqueId()+" votes-by-uuid "+(votes-cost));
-				pl.runCommand("scoreboard players set "+player.getName()+" votes-by-name "+(votes-cost));
+			//
+			if(removeIndex != -1){
+				if(!isForger){
+					player.sendMessage(ChatColor.RED+"For you to remove embellishments, the item must be 'Forged by "+player.getName()+"'");
+					return;
+				}
+				if(loreRemoveIndex == -1){
+					player.sendMessage(ChatColor.RED+"Specified index is too high! This item only has "+currentIndex+" embellishment");
+					return;
+				}
+				player.sendMessage(ChatColor.GRAY+"Removing: '"+lores.get(loreRemoveIndex)+ChatColor.GRAY+"'");
+				lores.remove(loreRemoveIndex);
 			}
 			else{
-				player.sendMessage(ChatColor.RED+"You do not have enough votes");
+				newLore = TextUtils.translateAlternateColorCodes('&', newLore)+player.getName();
+				if(loreInsertIndex == -1) lores.add(newLore);
+				else lores.add(loreInsertIndex, newLore);
+				player.sendMessage(newLore+"!");
 			}
+			meta.setLore(lores);
+			item.setItemMeta(meta);
+			player.getInventory().setItemInMainHand(item);
+			pl.runCommand("scoreboard players set "+player.getUniqueId()+" votes-by-uuid "+(votes-cost));
+			pl.runCommand("scoreboard players set "+player.getName()+" votes-by-name "+(votes-cost));
 		}
 	}
 }
