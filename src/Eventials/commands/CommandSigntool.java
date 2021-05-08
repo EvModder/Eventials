@@ -24,8 +24,10 @@ import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.TypeUtils;
 
 public class CommandSigntool extends EvCommand implements Listener{
+	private final Eventials plugin;
 	public CommandSigntool(Eventials pl, boolean enabled){
 		super(pl, enabled);
+		plugin = pl;
 		if(enabled) pl.getServer().getPluginManager().registerEvents(this, pl);
 	}
 
@@ -45,6 +47,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 		}
 
 		String signText;
+		
 		if(args.length < 1) signText = "";
 		else signText = TextUtils.translateAlternateColorCodes('&', StringUtils.join(args, ' '));
 
@@ -58,7 +61,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 			signText = signText.replaceAll("(?<=(?:^|[^\\\\]))(\\\\{2})*\\\\s", "$1 ");
 			signText = signText.replaceAll("(?<=(?:^|[^\\\\]))(\\\\{2})*\\\\>", "$1>");
 			signText = signText.replaceAll("\\\\\\\\", "\\\\");
-			for(String loreLine : signText.split("\n")) lore.add(ChatColor.RESET+"Line: "+loreLine);
+			for(String loreLine : signText.split("\n")) lore.add(ChatColor.GRAY+"Line: "+loreLine);
 		}
 
 		meta.setLore(lore);
@@ -80,17 +83,16 @@ public class CommandSigntool extends EvCommand implements Listener{
 		{
 			BlockPlaceEvent event = new BlockPlaceEvent(evt.getClickedBlock(), evt.getClickedBlock().getState(),
 					evt.getClickedBlock(), evt.getItem(), evt.getPlayer(), true, evt.getHand());
-			Eventials.getPlugin().getServer().getPluginManager().callEvent(event);
+			plugin.getServer().getPluginManager().callEvent(event);
 
 			if(event.isCancelled()){
-				Eventials.getPlugin().getLogger().info(evt.getPlayer().getName()
-						+" tried to use a SignTool, but failed BlockPlaceEvent");
+				plugin.getLogger().info(evt.getPlayer().getName()+" tried to use a SignTool, but failed BlockPlaceEvent");
 			}
 			else{
 				List<String> lore = evt.getItem().getItemMeta().getLore();
 				if(lore.size() == 1){
 					Sign sign = (Sign) evt.getClickedBlock().getState();
-					for(String line : sign.getLines()) lore.add(ChatColor.RESET+"Line: "+line);
+					for(String line : sign.getLines()) lore.add(ChatColor.GRAY+"Line: "+line);
 					ItemMeta meta = evt.getItem().getItemMeta();
 					meta.setLore(lore);
 					evt.getItem().setItemMeta(meta);
@@ -98,22 +100,20 @@ public class CommandSigntool extends EvCommand implements Listener{
 				else{
 					String[] lines = new String[]{"","","",""};
 
-					for(int i=1; i<lore.size() && i<=4; ++i){
-						if(lore.get(i).length() > 8){
-							lines[i-1] = lore.get(i).substring(8);
-						}
+					for(int li=0, i=1; i<lore.size() && li<4; ++i){
+						int prefixI = lore.get(i).indexOf("Line: ");
+						if(prefixI != -1) lines[li++] = lore.get(i).substring(prefixI+6);
 					}
 
 					SignChangeEvent updateEvent = new SignChangeEvent(evt.getClickedBlock(), evt.getPlayer(), lines);
-					Eventials.getPlugin().getServer().getPluginManager().callEvent(updateEvent);
+					plugin.getServer().getPluginManager().callEvent(updateEvent);
 					if(updateEvent.isCancelled()){
-						Eventials.getPlugin().getLogger().info(evt.getPlayer().getName()
-								+" tried to use a SignTool, but failed SignChangeEvent");
+						plugin.getLogger().info(evt.getPlayer().getName()+" tried to use a SignTool, but failed SignChangeEvent");
 					}
 					else{
-						Eventials.getPlugin().getLogger().fine(evt.getPlayer().getName()+" used a SignTool: "+String.join(">", lines));
+						plugin.getLogger().fine(evt.getPlayer().getName()+" used a SignTool: "+String.join(">", lines));
 						Sign sign = (Sign) evt.getClickedBlock().getState();
-						for(int i=0; i<lines.length; ++i) if(!lines[i].isEmpty()) sign.setLine(i, lines[i]);
+						for(int i=0; i<4; ++i) if(!lines[i].isEmpty()) sign.setLine(i, lines[i]);
 						sign.update();
 						evt.setUseItemInHand(Result.DENY);
 						evt.setUseInteractedBlock(Result.DENY);

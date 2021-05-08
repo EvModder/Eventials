@@ -31,6 +31,7 @@ import net.evmodder.EvLib.extras.TellrawUtils.TranslationComponent;
 //TODO: Eye-of-ender popping
 //TODO: splitworlds option to also separate stats/advancements per-world
 //TODO: ride mobs with shift-click in gm1 or somesuch
+//TODO: proper command classes for /help and /engrave
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;
