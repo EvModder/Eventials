@@ -356,7 +356,7 @@ public final class Scheduler{
 	}
 
 	public void sendAutomessage(Player... ppl){
-		sendHyperMessage(autoMsgs[automsg_index].trim().replace("\n", "\n"+msgP), ppl);
+		sendHyperMessage(autoMsgs[automsg_index].trim().replace("\n", "\\n"+msgP), ppl);
 		if(++automsg_index == autoMsgs.length) automsg_index = 0;
 	}
 
