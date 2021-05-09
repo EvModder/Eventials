@@ -183,6 +183,7 @@ public class Extras{
 		return deleted > 0;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void displayHyperWarps(Player player){
 		Vector<String> warps = new Vector<String>();
 
