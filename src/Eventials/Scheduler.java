@@ -250,24 +250,21 @@ public final class Scheduler{
 	}
 
 	public void sendAutomessage(Player... ppl){
-		sendHyperMessage(autoMsgs[automsg_index].trim().replace("\n", "\n"+msgP), ppl);
+		String msg = autoMsgs[automsg_index].trim().replace("\n", "\n"+msgP);
 		if(++automsg_index == autoMsgs.length) automsg_index = 0;
-	}
 
-	public void sendHyperMessage(String msg, Player... ppl){
 		Component raw = parseComponentFromAutomsg(msgP+msg, msgC);
 		if(raw instanceof RawTextComponent){
 			plugin.getServer().broadcastMessage(msgP+msg);
 		}
 		else{
 			plugin.getServer().getConsoleSender().sendMessage(msgP+msg);
-			plugin.getServer().getConsoleSender().sendMessage("here is raw (for debug): "+raw.toString());
+			//plugin.getServer().getConsoleSender().sendMessage("here is raw (for debug): "+raw.toString());
 			if(ppl.length == plugin.getServer().getOnlinePlayers().size()){
-				plugin.runCommand("minecraft:tellraw @a "+raw.toString());//p.sendRawMessage(raw);
+				plugin.runCommand("minecraft:tellraw @a "+raw.toString());
 			}
 			else for(Player p : ppl){
-//				p.sendRawMessage(raw);//Doesn't work! (last checked: 1.12.1)
-				plugin.runCommand("minecraft:tellraw "+p.getName()+' '+raw.toString());//p.sendRawMessage(raw);
+				plugin.runCommand("minecraft:tellraw "+p.getName()+' '+raw.toString());
 			}
 		}
 	}
