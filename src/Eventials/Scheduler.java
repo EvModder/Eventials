@@ -10,7 +10,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import org.apache.commons.lang.StringUtils;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -29,164 +30,24 @@ import Eventials.economy.commands.CommandAdvertise;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.ButcherUtils;
+import net.evmodder.EvLib.extras.TellrawUtils;
 import net.evmodder.EvLib.extras.ButcherUtils.KillFlag;
+import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.Component;
+import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
 import com.earth2me.essentials.IEssentials;
 
 public final class Scheduler{
-	// ======================================== TODO: DELETE ALL THIS CRAP ========================================//
-	enum Event{CLICK, HOVER};
-
-	public enum TextAction {
-		// ClickEvent
-		LINK("§b", "open_url", Event.CLICK), FILE("&[something]", "open_file", Event.CLICK), RUN_CMD("§2", "run_command", Event.CLICK), SUGGEST_CMD("§9",
-				"suggest_command", Event.CLICK), PAGE("${PAGE}", "change_page", Event.CLICK),
-		// HoverEvent
-		SHOW_TEXT("§a", "show_text", Event.HOVER), ACHIEVEMENT("${ACHIEVEMENT}", "show_achievement", Event.HOVER), ITEM("${ITEM}", "show_item",
-				Event.HOVER), ENTITY("${ENTITY}", "show_entity", Event.HOVER),
-
-		// custom
-		WARP(ChatColor.LIGHT_PURPLE + "@", "run_command", Event.CLICK);
-		// MONEY(ChatColor.GREEN+"$", "show_text"),
-		// PLUGIN(ChatColor.RED+"", "show_item"),
-
-		Event type;
-		String marker, action;
-
-		TextAction(String s, String a, Event t){
-			marker = s;
-			action = a;
-			type = t;
-		}
-
-		@Override public String toString(){
-			return marker;
-		}
-
-		public static int countNodes(String str){
-			int count = 0;
-			for(TextAction n : TextAction.values()){
-				count += StringUtils.countMatches(str.replace("\\" + n.marker, ""), n.marker);
-			}
-			return count;
-		}
-
-		public static String parseToRaw(String string, String endIndicator){
-			// {"text":"xxx","extra":[{"text":"xxx","clickEvent":{"action":"xxx","value":"xxx"}}]}
-			StringBuilder raw = new StringBuilder("[{\"text\":\"\"}");
-
-			int nodes = TextAction.countNodes(string);// component count
-			for(short i = 0; i < nodes; ++i){
-				// get next node
-				TextAction node = null;
-				int nodeIndex = string.length();
-				for(TextAction n : TextAction.values()){
-					int x = -1;
-					do{ x = string.indexOf(n.marker, x + 1); }
-					while(x != -1 && TextUtils.isEscaped(string, x));
-					if(x != -1 && x < nodeIndex){
-						nodeIndex = x;
-						node = n;
-					}
-				}
-
-				// cut off preText
-				String preText = string.substring(0, nodeIndex);
-				string = string.substring(nodeIndex);
-				preText = TextUtils.unescapeString(preText);
-
-				// cut off hyperText
-				int endSpecial = string.indexOf(endIndicator);
-				if(endSpecial == -1) endSpecial = string.length();
-				String hyperText = string.substring(0, endSpecial);
-				string = string.substring(endSpecial);
-				hyperText = TextUtils.unescapeString(hyperText);
-
-				String actionText = "";
-				// detect underlying command/link/values
-				int keyValueI = hyperText.indexOf("=>");
-				if(keyValueI != -1){
-					actionText = hyperText.substring(keyValueI + 2).trim();
-					hyperText = hyperText.substring(0, keyValueI);
-				}
-				else{
-					if(node == TextAction.RUN_CMD){
-						actionText = hyperText.substring(node.marker.length()).trim();
-					}
-					else if(node == TextAction.WARP){
-						actionText = "/warp " + hyperText.substring(node.marker.length()).trim();
-					}
-					else actionText = hyperText.trim();
-				}
-
-				if(!preText.isEmpty()) raw.append(",{\"text\":\"").append(preText).append("\"}");
-				if(!hyperText.isEmpty()){
-					raw.append(",{\"text\":\"").append(hyperText).append('"');
-					if(node != null) raw.append(",\"").append(node.type == Event.CLICK ? "clickEvent" : "hoverEvent").append("\":{\"action\":\"")
-							.append(node.action).append("\",\"value\":\"").append(actionText).append("\"}");
-					raw.append('}');
-				}
-			}
-			string = TextUtils.unescapeString(string);
-			if(!string.isEmpty()) raw.append(",{\"text\":\"").append(string).append("\"}");
-			return raw.append(']').toString();
-		}
-	};
-
-	public static void sendModifiedText(String preMsg, String hyperMsg, TextAction action, String value, String postMsg, Player... recipients){
-		preMsg = preMsg.replace("\n", "\\n");
-		hyperMsg = hyperMsg.replace("\n", "\\n");
-		value = value.replace("\n", "\\n");
-		postMsg = postMsg.replace("\n", "\\n");
-		StringBuilder raw = new StringBuilder("[");
-		if(preMsg != null && !preMsg.isEmpty()) raw.append("{\"text\":\"").append(preMsg).append("\"},");
-		raw.append("{\"text\":\"").append(hyperMsg).append("\",\"clickEvent\":{\"action\":\"").append(action.action).append("\",\"value\":\"").append(value)
-				.append("\"}}");
-		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
-		raw.append(']');
-		for(Player p : recipients){
-			Eventials.getPlugin().sendTellraw(p.getName(), raw.toString());
-		}
-	}
-
-	public static void getModifiedText(String preMsg, String hyperMsg, TextAction action, String value, String postMsg, Player... recipients){
-		preMsg = preMsg.replace("\n", "\\n");
-		hyperMsg = hyperMsg.replace("\n", "\\n");
-		value = value.replace("\n", "\\n");
-		postMsg = postMsg.replace("\n", "\\n");
-		StringBuilder raw = new StringBuilder("[");
-		if(preMsg != null && !preMsg.isEmpty()) raw.append("{\"text\":\"").append(preMsg).append("\"},");
-		raw.append("{\"text\":\"").append(hyperMsg).append("\",\"clickEvent\":{\"action\":\"").append(action.action).append("\",\"value\":\"").append(value)
-				.append("\"}}");
-		if(postMsg != null && !postMsg.isEmpty()) raw.append(",{\"text\": \"").append(postMsg).append("\"}");
-		raw.append(']');
-		for(Player p : recipients){
-			Eventials.getPlugin().sendTellraw(p.getName(), raw.toString());
-		}
-	}
-
-	public static void sendModifiedText(String[] preMsgs, String[] hyperMsgs, TextAction[] actions, String[] values, String postMsg, Player... recipients){
-		if(preMsgs.length != hyperMsgs.length || hyperMsgs.length != actions.length || actions.length != values.length || preMsgs.length == 0) return;
-
-		StringBuilder raw = new StringBuilder("[");
-		for(int i = 0; i < hyperMsgs.length; ++i){
-			if(i != 0) raw.append(',');
-			raw.append(" {\"text\":\"").append(preMsgs[i]).append("\"}, {\"text\":\"").append(hyperMsgs[i]).append("\", \"clickEvent\": {\"action\": \"")
-					.append(actions[i].action).append("\", \"value\": \"").append(values[i]).append("\"}}");
-		}
-		if(postMsg != null && !postMsg.isEmpty()) raw.append(", {\"text\": \"").append(postMsg).append("\"} ");
-		raw.append(']');
-		for(Player p : recipients){
-			Eventials.getPlugin().sendTellraw(p.getName(), raw.toString());
-		}
-	}
-	// ============================================================================================================//
-
 	private Eventials plugin;
 	private int cycleCount, automsg_index;
 	private boolean magicDay, serverIsSilent, playerSinceButcher, playerSinceSave;
 	private HolidayListener currentHoliday;
 	final String[] autoMsgs;
-	final String msgC, msgP, escapedMsgP;
+	final String msgC, msgP;
 	final int period, cAutomsg, cWorldsave, cDelete, cButcher, cMagic, cHoliday, cEventialsSave;
 	final long MILLIS_PER_TICK = 50, MILLIS_PER_DAY = 1000L*60*60*24;
 	final boolean cSkipAutomsg, skipAutomsgIfSilent, AUTOBUMP_PMC;
@@ -198,18 +59,12 @@ public final class Scheduler{
 		sch = this;
 		plugin = pl;
 
-		List<String> list = plugin.getConfig().getStringList("auto-messages");
-		autoMsgs = list.toArray(new String[list.size()]);
 		msgC = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("message-color", "&e"));
 		msgP = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("message-prefix", "&e"));
-
-		String[] markers = new String[TextAction.values().length];
-		for(int i=0; i<markers.length; ++i) markers[i] = TextAction.values()[i].toString();
-		escapedMsgP = TextUtils.escape(msgP, markers);//TODO: this is disgusting pls fix
-
+		List<String> list = plugin.getConfig().getStringList("auto-messages");
+		autoMsgs = list.toArray(new String[list.size()]);
 		for(int i = 0; i < autoMsgs.length; ++i){
-			autoMsgs[i] = TextUtils.translateAlternateColorCodes('&', autoMsgs[i].replaceAll("&r", msgC)
-					.replaceAll("\\\\n", "\\n"));
+			autoMsgs[i] = TextUtils.translateAlternateColorCodes('&', autoMsgs[i].replaceAll("&r", msgC));
 		}
 		period = plugin.getConfig().getInt("clock-period", 60)*20;
 		cycleCount = FileIO.loadYaml("scheduler-data.txt", "current-cycle: 0").getInt("current-cycle");
@@ -241,6 +96,45 @@ public final class Scheduler{
 		new BukkitRunnable(){@Override public void run(){
 			runCycle();
 		}}.runTaskTimer(plugin, period, period);
+	}
+
+	private Component parseComponentFromAutomsg(String msg, String msgC){
+		ListComponent comp = new ListComponent(
+				new RawTextComponent(/*text=*/"", /*insert=*/null, /*click=*/null, /*hover=*/null, /*color=*/msgC, /*formats=*/null),
+				TellrawUtils.convertHexColorsToComponents(msg));
+		Matcher matcher = Pattern.compile("§2(/[^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		boolean foundMatch = false;
+		while(matcher.find()){
+			foundMatch = true;
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, matcher.group(1))));
+		}
+		matcher = Pattern.compile("§d@([^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		while(matcher.find()){
+			foundMatch = true;
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, "/warp "+matcher.group(1))));
+		}
+		matcher = Pattern.compile("§9([^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		while(matcher.find()){
+			foundMatch = true;
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.SUGGEST_COMMAND, matcher.group(1))));
+		}
+		matcher = Pattern.compile("(§b[^§\n]+?)(?:=>(.+?))?("+msgC+"|\n)").matcher(msg);
+		while(matcher.find()){
+			foundMatch = true;
+			String link = matcher.group(2) != null && !matcher.group(2).isEmpty() ? matcher.group(2) : matcher.group(1);
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextClickAction(ClickEvent.OPEN_URL, link)));
+		}
+		matcher = Pattern.compile("(§a[^§\n]+?)=>(.+?)("+msgC+"|\n)").matcher(msg);
+		while(matcher.find()){
+			foundMatch = true;
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextHoverAction(HoverEvent.SHOW_TEXT, matcher.group(2))));
+		}
+		return foundMatch ? comp : new RawTextComponent(msg);
 	}
 
 	private void runCycle(){
@@ -356,23 +250,24 @@ public final class Scheduler{
 	}
 
 	public void sendAutomessage(Player... ppl){
-		sendHyperMessage(autoMsgs[automsg_index].trim().replace("\n", "\\n"+msgP), ppl);
+		sendHyperMessage(autoMsgs[automsg_index].trim().replace("\n", "\n"+msgP), ppl);
 		if(++automsg_index == autoMsgs.length) automsg_index = 0;
 	}
 
 	public void sendHyperMessage(String msg, Player... ppl){
-		if(TextAction.countNodes(msg) == 0){
+		Component raw = parseComponentFromAutomsg(msgP+msg, msgC);
+		if(raw instanceof RawTextComponent){
 			plugin.getServer().broadcastMessage(msgP+msg);
 		}
 		else{
 			plugin.getServer().getConsoleSender().sendMessage(msgP+msg);
-
-			String raw = TextAction.parseToRaw(escapedMsgP+msg, msgC);
-			plugin.getServer().getConsoleSender().sendMessage("here is raw (for debug): "+raw);
-
-			for(Player p : ppl){
+			plugin.getServer().getConsoleSender().sendMessage("here is raw (for debug): "+raw.toString());
+			if(ppl.length == plugin.getServer().getOnlinePlayers().size()){
+				plugin.runCommand("minecraft:tellraw @a "+raw.toString());//p.sendRawMessage(raw);
+			}
+			else for(Player p : ppl){
 //				p.sendRawMessage(raw);//Doesn't work! (last checked: 1.12.1)
-				plugin.runCommand("minecraft:tellraw "+p.getName()+' '+raw);//p.sendRawMessage(raw);
+				plugin.runCommand("minecraft:tellraw "+p.getName()+' '+raw.toString());//p.sendRawMessage(raw);
 			}
 		}
 	}

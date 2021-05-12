@@ -92,7 +92,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 				List<String> lore = evt.getItem().getItemMeta().getLore();
 				if(lore.size() == 1){
 					Sign sign = (Sign) evt.getClickedBlock().getState();
-					for(String line : sign.getLines()) lore.add(ChatColor.GRAY+"Line: "+line);
+					for(String line : sign.getLines()) lore.add(ChatColor.RESET+"Line: "+line);
 					ItemMeta meta = evt.getItem().getItemMeta();
 					meta.setLore(lore);
 					evt.getItem().setItemMeta(meta);
@@ -111,7 +111,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 						plugin.getLogger().info(evt.getPlayer().getName()+" tried to use a SignTool, but failed SignChangeEvent");
 					}
 					else{
-						plugin.getLogger().fine(evt.getPlayer().getName()+" used a SignTool: "+String.join(">", lines));
+						plugin.getLogger().info(evt.getPlayer().getName()+" used a SignTool: "+String.join(">", lines));
 						Sign sign = (Sign) evt.getClickedBlock().getState();
 						for(int i=0; i<4; ++i) if(!lines[i].isEmpty()) sign.setLine(i, lines[i]);
 						sign.update();
