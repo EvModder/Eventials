@@ -98,45 +98,6 @@ public final class Scheduler{
 		}}.runTaskTimer(plugin, period, period);
 	}
 
-	private Component parseComponentFromAutomsg(String msg, String msgC){
-		ListComponent comp = new ListComponent(
-				new RawTextComponent(/*text=*/"", /*insert=*/null, /*click=*/null, /*hover=*/null, /*color=*/msgC, /*formats=*/null),
-				TellrawUtils.convertHexColorsToComponents(msg));
-		Matcher matcher = Pattern.compile("§2(/[^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
-		boolean foundMatch = false;
-		while(matcher.find()){
-			foundMatch = true;
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
-					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, matcher.group(1))));
-		}
-		matcher = Pattern.compile("§d@([^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
-		while(matcher.find()){
-			foundMatch = true;
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
-					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, "/warp "+matcher.group(1))));
-		}
-		matcher = Pattern.compile("§9([^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
-		while(matcher.find()){
-			foundMatch = true;
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
-					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.SUGGEST_COMMAND, matcher.group(1))));
-		}
-		matcher = Pattern.compile("(§b[^§\n]+?)(?:=>(.+?))?("+msgC+"|\n)").matcher(msg);
-		while(matcher.find()){
-			foundMatch = true;
-			String link = matcher.group(2) != null && !matcher.group(2).isEmpty() ? matcher.group(2) : matcher.group(1);
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
-					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextClickAction(ClickEvent.OPEN_URL, link)));
-		}
-		matcher = Pattern.compile("(§a[^§\n]+?)=>(.+?)("+msgC+"|\n)").matcher(msg);
-		while(matcher.find()){
-			foundMatch = true;
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
-					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextHoverAction(HoverEvent.SHOW_TEXT, matcher.group(2))));
-		}
-		return foundMatch ? comp : new RawTextComponent(msg);
-	}
-
 	private void runCycle(){
 		//check if new day
 		long now = new GregorianCalendar().getTimeInMillis();
@@ -247,6 +208,69 @@ public final class Scheduler{
 			plugin.saveData();
 			//plugin.onEvDisable();//Disabling involves writing to file :)
 		}
+	}
+
+	private String getColorName(String colorCode){
+		colorCode = colorCode.replace("§", "").replace("#", "");
+		switch(colorCode){
+			case "0": return "black";
+			case "1": return "dark_blue";
+			case "2": return "dark_green";
+			case "3": return "dark_aqua";
+			case "4": return "dark_red";
+			case "5": return "dark_purple";
+			case "6": return "gold";
+			case "7": return "gray";
+			case "8": return "dark_gray";
+			case "9": return "blue";
+			case "a": return "green";
+			case "b": return "aqua";
+			case "c": return "red";
+			case "d": return "light_purple";
+			case "e": return "yellow";
+			case "f": case "r": return "white";
+			default:
+				return colorCode.matches("^[a-fA-F0-9]{6}$") ? "#"+colorCode : null;
+		}
+	}
+
+	private Component parseComponentFromAutomsg(String msg, String msgC){
+		ListComponent comp = new ListComponent(
+				new RawTextComponent(/*text=*/"", /*insert=*/null, /*click=*/null, /*hover=*/null, /*color=*/getColorName(msgC), /*formats=*/null),
+				TellrawUtils.convertHexColorsToComponents(msg));
+		Matcher matcher = Pattern.compile("§2(/[^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		boolean foundMatch = false;
+		while(matcher.find()){
+			foundMatch = true;
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, matcher.group(1))));
+		}
+		matcher = Pattern.compile("§d@([^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		while(matcher.find()){
+			foundMatch = true;
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, "/warp "+matcher.group(1))));
+		}
+		matcher = Pattern.compile("§9([^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		while(matcher.find()){
+			foundMatch = true;
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.SUGGEST_COMMAND, matcher.group(1))));
+		}
+		matcher = Pattern.compile("(§b[^§\n]+?)(?:=>(.+?))?("+msgC+"|\n)").matcher(msg);
+		while(matcher.find()){
+			foundMatch = true;
+			String link = matcher.group(2) != null && !matcher.group(2).isEmpty() ? matcher.group(2) : matcher.group(1);
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextClickAction(ClickEvent.OPEN_URL, link)));
+		}
+		matcher = Pattern.compile("(§a[^§\n]+?)=>(.+?)("+msgC+"|\n)").matcher(msg);
+		while(matcher.find()){
+			foundMatch = true;
+			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextHoverAction(HoverEvent.SHOW_TEXT, matcher.group(2))));
+		}
+		return foundMatch ? comp : new RawTextComponent(msg);
 	}
 
 	public void sendAutomessage(Player... ppl){
