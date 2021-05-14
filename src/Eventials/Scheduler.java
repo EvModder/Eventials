@@ -261,6 +261,7 @@ public final class Scheduler{
 		while(matcher.find()){
 			foundMatch = true;
 			String link = matcher.group(2) != null && !matcher.group(2).isEmpty() ? matcher.group(2) : matcher.group(1);
+			plugin.getLogger().info("group: "+matcher.group()+", g1+g3: "+matcher.group(1)+matcher.group(3)+", link: "+link);
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextClickAction(ClickEvent.OPEN_URL, link)));
 		}

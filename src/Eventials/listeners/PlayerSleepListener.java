@@ -120,9 +120,10 @@ public class PlayerSleepListener implements Listener{
 				if(skipNightWorlds.add(world.getUID())) {
 					new BukkitRunnable(){@Override public void run(){
 						Pair<Integer, Integer> sleepingAndCounted = getNumSleepingAndCounted(world, triggerPlayer, includeTrigger);
-						int CUR_SLEEPERS = sleepingAndCounted.a, MAX_SLEEPERS = sleepingAndCounted.b;
-						int numToSkipNight = (int)Math.ceil(MAX_SLEEPERS*SKIP_NIGHT_PERCENT);
-						if(!PERCENT_INCLUSIVE && numToSkipNight < MAX_SLEEPERS) ++numToSkipNight; // 100% is always inclusive
+						final int CUR_SLEEPERS = sleepingAndCounted.a, MAX_SLEEPERS = sleepingAndCounted.b;
+						final double needToSkipNight = MAX_SLEEPERS*SKIP_NIGHT_PERCENT;
+						final int numToSkipNight = (int)(Math.ceil(needToSkipNight) > needToSkipNight ? Math.ceil(needToSkipNight)
+								: needToSkipNight + (!PERCENT_INCLUSIVE && needToSkipNight < MAX_SLEEPERS ? 1 : 0));
 						if(CUR_SLEEPERS >= Math.max(1, numToSkipNight)){
 							String broadcastMsg = getSkipNightTellrawMsg(CUR_SLEEPERS, MAX_SLEEPERS, world);
 							if(broadcastMsg != null)

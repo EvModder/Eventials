@@ -44,6 +44,7 @@ public class Eventials extends EvPlugin {
 	@Override public void onEvEnable(){
 		// TODO: Hacky temp fix, call these random things to ensure they get loaded HERE in Eventials...
 		new RawTextComponent("test").getColor();
+		getLogger().info("test: "+new TranslationComponent("entity.minecraft.skeleton_horse").toPlainText());
 		new TranslationComponent("test").getJsonKey();
 		TellrawUtils.convertHexColorsToComponents("aaa§x§9§3§a§A§B§Bbbb§rccc").toString();
 		new TellrawUtils.FormatFlag(Format.ITALIC, true);
