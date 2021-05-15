@@ -157,31 +157,31 @@ public class ServerPingListener implements Listener{
 			motd = new StringBuilder(title).append('\n').append(pingPrefix).append(motd).toString();
 			evt.setMotd(motd);
 		}
-		/*
+		
 		//==================================== TEMPORARY (Event Countdown) ====================================
-		int scheduledDay = 30;
-		int scheduledHour = 18;
+		/*int scheduledDay = 15;
+		int scheduledHour = 24;
 
 		GregorianCalendar date = new GregorianCalendar();
 		int hour = scheduledHour - date.get(Calendar.HOUR_OF_DAY);		//Important Times: 5 PM (17 for Military time)
-		hour += (scheduledDay - date.get(Calendar.DAY_OF_MONTH)) *24;	//Important Times: 25 [day of month]
+		hour += (scheduledDay - date.get(Calendar.DAY_OF_MONTH))*24;	//Important Times: 25 [day of month]
 		int second = 60 - date.get(Calendar.SECOND);
 		int minute = 60 - date.get(Calendar.MINUTE);
-		if(minute > 0)hour--;
-		if(second > 0)minute--;
+		if(minute > 0) --hour;
+		if(second > 0) --minute;
 
 		String timeLeft = "§8[§7§c"+hour+"§7h §c"+minute+"§7m §c"+second+"§7s§8]";
 		if(hour < 0 || (hour == 0 && (minute < 0 || second < 0))) timeLeft = "§8[§c0§7s§8]";
-		String spaces = "                                ";
+//		String spaces = "                                ";
 		// 1 letter length = 2 spaces length
 		// the extra '-1' is just for extra space reasons and should generally be removed
-		int charsInMsg = ChatColor.stripColor(timeLeft).length();
-		if(charsInMsg < 13) for(int i = 0; i < 13-charsInMsg*1.35; ++i) spaces += ' ';
+//		int charsInMsg = ChatColor.stripColor(timeLeft).length();
+//		if(charsInMsg < 13) for(int i = 0; i < 13-charsInMsg*1.35; ++i) spaces += ' ';
 
-		evt.setMotd(title + spaces + timeLeft +
 		// Event Description here, comment it out to use normal MOTD set in server.properties
-				"\n §7§m§l-§a Mafia Event when timer hits 0!");
-*/		//=====================================================================================================
+//		evt.setMotd(title + spaces + timeLeft + "\n §7§m§l-§a Mafia Event when timer hits 0!");
+		evt.setMotd(title + "\n" + pingPrefix + "Bovine Blitz ends in " + timeLeft);*/
+		//=====================================================================================================
 	}
 
 	public int getDayOfWeek(String day){
