@@ -213,22 +213,10 @@ public final class Scheduler{
 	private String getColorName(String colorCode){
 		colorCode = colorCode.replace("§", "").replace("#", "");
 		switch(colorCode){
-			case "0": return "black";
-			case "1": return "dark_blue";
-			case "2": return "dark_green";
-			case "3": return "dark_aqua";
-			case "4": return "dark_red";
-			case "5": return "dark_purple";
-			case "6": return "gold";
-			case "7": return "gray";
-			case "8": return "dark_gray";
-			case "9": return "blue";
-			case "a": return "green";
-			case "b": return "aqua";
-			case "c": return "red";
-			case "d": return "light_purple";
-			case "e": return "yellow";
-			case "f": case "r": return "white";
+			case "0": case "1": case "2": case "3": case "4": case "5":
+			case "6": case "7": case "8": case "9": case "a": case "b":
+			case "c": case "d": case "e": case "f": return ChatColor.getByChar(colorCode).name().toLowerCase();
+			//case "r": return "white";
 			default:
 				return colorCode.matches("^[a-fA-F0-9]{6}$") ? "#"+colorCode : null;
 		}
@@ -238,26 +226,26 @@ public final class Scheduler{
 		ListComponent comp = new ListComponent(
 				new RawTextComponent(/*text=*/"", /*insert=*/null, /*click=*/null, /*hover=*/null, /*color=*/getColorName(msgC), /*formats=*/null),
 				TellrawUtils.convertHexColorsToComponents(msg));
-		Matcher matcher = Pattern.compile("§2(/[^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		Matcher matcher = Pattern.compile("§2(/[^§\n]+?)(?:(?:"+msgC+")|\n)").matcher(msg);
 		boolean foundMatch = false;
 		while(matcher.find()){
 			foundMatch = true;
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, matcher.group(1))));
 		}
-		matcher = Pattern.compile("§d@([^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		matcher = Pattern.compile("§d@([^§\n]+?)(?:(?:"+msgC+")|\n)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, "/warp "+matcher.group(1))));
 		}
-		matcher = Pattern.compile("§9([^§\n]+?)(?:"+msgC+"|\n)").matcher(msg);
+		matcher = Pattern.compile("§9([^§\n]+?)(?:(?:"+msgC+")|\n)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.SUGGEST_COMMAND, matcher.group(1))));
 		}
-		matcher = Pattern.compile("(§b[^§\n]+?)(?:=>(.+?))?("+msgC+"|\n)").matcher(msg);
+		matcher = Pattern.compile("(§b[^§\n]+?)(?:=>(.+?))?((?:"+msgC+")|\n)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
 			String link = matcher.group(2) != null && !matcher.group(2).isEmpty() ? matcher.group(2) : matcher.group(1);
@@ -265,7 +253,7 @@ public final class Scheduler{
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextClickAction(ClickEvent.OPEN_URL, link)));
 		}
-		matcher = Pattern.compile("(§a[^§\n]+?)=>(.+?)("+msgC+"|\n)").matcher(msg);
+		matcher = Pattern.compile("(§a[^§\n]+?)=>(.+?)((?:"+msgC+")|\n)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
