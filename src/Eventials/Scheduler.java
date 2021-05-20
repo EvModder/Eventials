@@ -226,26 +226,26 @@ public final class Scheduler{
 		ListComponent comp = new ListComponent(
 				new RawTextComponent(/*text=*/"", /*insert=*/null, /*click=*/null, /*hover=*/null, /*color=*/getColorName(msgC), /*formats=*/null),
 				TellrawUtils.convertHexColorsToComponents(msg));
-		Matcher matcher = Pattern.compile("§2(/[^§\n]+?)(?:(?:"+msgC+")|\n)").matcher(msg);
+		Matcher matcher = Pattern.compile("§2(/[^§\n]+?)(?:(?:"+msgC+")|\n|$)").matcher(msg);
 		boolean foundMatch = false;
 		while(matcher.find()){
 			foundMatch = true;
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, matcher.group(1))));
 		}
-		matcher = Pattern.compile("§d@([^§\n]+?)(?:(?:"+msgC+")|\n)").matcher(msg);
+		matcher = Pattern.compile("§d@([^§\n]+?)(?:(?:"+msgC+")|\n|$)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, "/warp "+matcher.group(1))));
 		}
-		matcher = Pattern.compile("§9([^§\n]+?)(?:(?:"+msgC+")|\n)").matcher(msg);
+		matcher = Pattern.compile("§9([^§\n]+?)(?:(?:"+msgC+")|\n|$)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.SUGGEST_COMMAND, matcher.group(1))));
 		}
-		matcher = Pattern.compile("(§b[^§\n]+?)(?:=>(.+?))?((?:"+msgC+")|\n)").matcher(msg);
+		matcher = Pattern.compile("(§b[^§\n]+?)(?:=>(.+?))?((?:"+msgC+")|\n|$)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
 			String link = matcher.group(2) != null && !matcher.group(2).isEmpty() ? matcher.group(2) : matcher.group(1);
@@ -253,7 +253,7 @@ public final class Scheduler{
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextClickAction(ClickEvent.OPEN_URL, link)));
 		}
-		matcher = Pattern.compile("(§a[^§\n]+?)=>(.+?)((?:"+msgC+")|\n)").matcher(msg);
+		matcher = Pattern.compile("(§a[^§\n]+?)=>(.+?)((?:"+msgC+")|\n|$)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
 			comp.replaceRawDisplayTextWithComponent(matcher.group(),
