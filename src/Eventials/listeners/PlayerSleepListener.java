@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
+import net.evmodder.EvLib.extras.TellrawUtils;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
@@ -50,8 +51,8 @@ public class PlayerSleepListener implements Listener{
 
 	String getSkipNightTellrawMsg(int numSleeping, int numToCount, World world){
 		int numInWorld = world.getPlayers().size();
-		String sleepingPlayers = world.getPlayers().stream().filter(p -> p.isSleeping())
-				.map(p -> p.getDisplayName()).collect(Collectors.joining("§7, §r"));
+		ListComponent sleepingPlayers = TellrawUtils.convertHexColorsToComponents(world.getPlayers().stream().filter(p -> p.isSleeping())
+				.map(p -> p.getDisplayName()).collect(Collectors.joining("§7, §r")));
 		pl.getLogger().info("Sleeping players: "+sleepingPlayers);
 		RawTextComponent sleepingPlayersComp = new RawTextComponent("§7"+numSleeping, new TextHoverAction(HoverEvent.SHOW_TEXT, sleepingPlayers));
 		ListComponent blob = new ListComponent();
@@ -85,7 +86,7 @@ public class PlayerSleepListener implements Listener{
 		int numSleeping = includeTrigger ? 1 : 0;
 		int numInWorld = world.getPlayers().size();
 		for(Player player : world.getPlayers()){
-			if(player.getUniqueId().equals(triggerPlayer)) continue;
+			if(player.getUniqueId().equals(triggerPlayer)){if(!includeTrigger) --numInWorld; continue;}
 			if(player.isSleeping()) ++numSleeping;
 			if(!INCLUDE_GM3 && player.getGameMode() == GameMode.SPECTATOR) --numInWorld;
 			else if(!INCLUDE_GM1 && player.getGameMode() == GameMode.CREATIVE) --numInWorld;
@@ -114,7 +115,29 @@ public class PlayerSleepListener implements Listener{
 		if(SKIP_IF_DAYLIGHT_CYCLE_IS_OFF || world.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE)){
 			if(includeTrigger){
 				Player player = pl.getServer().getPlayer(triggerPlayer);
-				if(player != null) player.sendMessage("§b"+CUR_SLEEPERS+" §7of§6 "+numToSkipNight+" §8|§7 "+MAX_SLEEPERS);
+				if(player != null){
+					RawTextComponent curSleepersComp = new RawTextComponent("§b"+CUR_SLEEPERS,
+						new TextHoverAction(HoverEvent.SHOW_TEXT,
+							TellrawUtils.convertHexColorsToComponents(
+								"§7Currently in bed: " +
+								world.getPlayers().stream().filter(p -> includeTrigger
+										? (p.isSleeping() || p.getUniqueId().equals(triggerPlayer))
+										: (p.isSleeping() && !p.getUniqueId().equals(triggerPlayer))
+								)
+								.map(p -> p.getDisplayName()).collect(Collectors.joining("§7, §r"))
+							)
+						)
+					);
+					RawTextComponent numToSkipComp = new RawTextComponent("§6"+numToSkipNight,
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "§7Number required to skip the night")
+					);
+					RawTextComponent maxSleepersComp = new RawTextComponent("§7"+MAX_SLEEPERS,
+						new TextHoverAction(HoverEvent.SHOW_TEXT, "§7Number of considered players in the overworld")
+					);
+					pl.sendTellraw(player.getName(), new ListComponent(
+							curSleepersComp, new RawTextComponent("§7 of "), numToSkipComp, new RawTextComponent("§8 | "), maxSleepersComp
+					).toString());
+				}
 			}
 			if(CUR_SLEEPERS >= numToSkipNight){
 				if(skipNightWorlds.add(world.getUID())) {

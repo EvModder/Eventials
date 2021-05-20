@@ -71,7 +71,7 @@ public class AC_Hardcore implements Listener{
 			engraveComp, forgeComp, blessComp, curseComp, saluteComp, removeComp
 		).toString();
 		//-----------------------------------------------------------------
-		pl.getLogger().info("Loaded Hardcore-specific things (/pl, /engrave, /votes)");
+		//pl.getLogger().info("Loaded Hardcore-specific things (/pl, /engrave, /votes)");
 	}
 
 	ChatColor enableTest(String pluginName){
