@@ -17,12 +17,14 @@ import net.evmodder.EvLib.extras.TextUtils;
 public class CommandVote extends EvCommand{
 	final EvVoter voteManager;
 	final String websiteLink, tellrawStringLinks;
+	final List<String> voteCommandTriggeredCommands;
 
 	public CommandVote(EvPlugin pl, EvVoter v){this(pl, v, true);}
 	public CommandVote(EvPlugin pl, EvVoter v, boolean enabled){
 		super(pl, enabled);
 		voteManager = EvVoter.getVoteManager();
 		List<String> confLinks = pl.getConfig().getStringList("vote-links");
+		voteCommandTriggeredCommands = pl.getConfig().getStringList("vote-command-triggered-commands");
 		websiteLink = pl.getConfig().getString("vote-site-page", null);
 		final String[] links, hyper;
 		if(confLinks == null/* || confLinks.isEmpty()*/){// What if they don't want voting links?
@@ -87,6 +89,14 @@ public class CommandVote extends EvCommand{
 		int votes = voteManager.getTotalVotes(player.getUniqueId());
 		if(votes > 0){
 			int streak = voteManager.getStreak(player.getUniqueId());
+
+			for(String cmd : voteCommandTriggeredCommands){
+				cmd = cmd.replace("%uuid%", player.getUniqueId().toString())
+						.replace("%name%", player.getName()).replace("%display_name%", player.getDisplayName())
+						.replace("%votes%", ""+votes).replace("%streak%", ""+streak);
+				Eventials.getPlugin().runCommand(cmd);
+			}
+
 			player.sendMessage(ChatColor.GRAY+"Total votes: "+ChatColor.GOLD+votes);
 			ChatColor c = (streak > 0 ? streak > voteManager.streakMax ? ChatColor.GREEN : ChatColor.AQUA : ChatColor.YELLOW);
 //			player.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+streak);

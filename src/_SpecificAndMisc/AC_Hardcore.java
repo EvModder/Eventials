@@ -163,12 +163,6 @@ public class AC_Hardcore implements Listener{
 			catch(IOException e){e.printStackTrace();}
 			evt.getPlayer().sendMessage("Added: "+p.getName()+" ("+p.getUniqueId()+")");
 		}*/
-		if(command.equals("vote") || command.equals("votes")){
-			pl.runCommand("minecraft:tellraw "+player.getName()+" ["
-					+ "{\"text\":\"You currently have \",\"color\":\"gray\"},"
-					+ "{\"score\":{\"name\":\""+player.getUniqueId().toString()+"\",\"objective\":\"votes-by-uuid\"},\"color\":\"dark_green\"},"
-					+ "{\"text\":\" unused votes.\",\"color\":\"gray\"}]");
-		}
 		if(command.equals("engrave") || command.equals("embellish")){
 			evt.setCancelled(true);
 			ItemStack item = player.getInventory().getItemInMainHand();
