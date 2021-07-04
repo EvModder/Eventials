@@ -111,7 +111,7 @@ public class PlayerSleepListener implements Listener{
 				: needToSkipStorm + (!PERCENT_INCLUSIVE && needToSkipStorm < MAX_SLEEPERS ? 1 : 0));
 		int numToSkipThunder = (int)(Math.ceil(needToSkipThunder) > needToSkipThunder ? Math.ceil(needToSkipThunder)
 				: needToSkipThunder + (!PERCENT_INCLUSIVE && needToSkipThunder < MAX_SLEEPERS ? 1 : 0));
-		pl.getLogger().info("cur_sleepers: "+CUR_SLEEPERS+", max_sleepers: "+MAX_SLEEPERS+", num_to_skip_night: "+numToSkipNight);
+		//pl.getLogger().info("cur_sleepers: "+CUR_SLEEPERS+", max_sleepers: "+MAX_SLEEPERS+", num_to_skip_night: "+numToSkipNight);
 		if(SKIP_IF_DAYLIGHT_CYCLE_IS_OFF || world.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE)){
 			if(includeTrigger){
 				Player player = pl.getServer().getPlayer(triggerPlayer);

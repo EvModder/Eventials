@@ -72,15 +72,20 @@ public final class SplitWorldUtils{
 	//Reflection
 	static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
 	static final RefClass classCraftWorld = ReflectionUtils.getRefClass("{cb}.CraftWorld");
-	static final RefClass classWorldServer = ReflectionUtils.getRefClass("{nms}.WorldServer");
-	static final RefClass classEntity = ReflectionUtils.getRefClass("{nms}.Entity");
+	static final RefClass classWorldServer = ReflectionUtils.getRefClass("{nms}.WorldServer", "{nms}.level.WorldServer");
+	static final RefClass classEntity = ReflectionUtils.getRefClass("{nms}.Entity", "{nm}.world.entity.Entity");
 	static RefMethod methodGetPlayerHandle = classCraftPlayer.getMethod("getHandle");
 	static RefMethod methodGetWorldHandle = classCraftWorld.getMethod("getHandle");
-	static RefMethod methodUnregisterEntity = classWorldServer.getMethod("unregisterEntity", classEntity);
+	static RefMethod methodUnregisterEntity;// = classWorldServer.getMethod("unregisterEntity", classEntity);
 	private static void untrackPlayer(Player player, org.bukkit.World world){
+		try{methodUnregisterEntity = classWorldServer.getMethod("unregisterEntity", classEntity);}
+		catch(Exception e){
+			try{methodUnregisterEntity = classWorldServer.getMethod("f", classEntity);}
+			catch(Exception e2){methodUnregisterEntity = null;}
+		}
 		Object playerHandle = methodGetPlayerHandle.of(player).call();
 		Object worldHandle = methodGetWorldHandle.of(world).call();
-		methodUnregisterEntity.of(worldHandle).call(playerHandle);
+		if(methodUnregisterEntity != null) methodUnregisterEntity.of(worldHandle).call(playerHandle);
 	}
 	private static void retrackPlayer(Player player, org.bukkit.World world){
 		//((CraftWorld)destination.getWorld()).getHandle().addEntity(playerHandle);
