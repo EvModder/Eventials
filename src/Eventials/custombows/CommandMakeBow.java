@@ -20,7 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.custombows.CustomBows.BowType;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.extras.NBTTagUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTag;
+import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandMakeBow extends EvCommand{
@@ -53,11 +53,11 @@ public class CommandMakeBow extends EvCommand{
 
 	ItemStack makeBow(BowType type){
 		ItemStack item = new ItemStack(Material.BOW);
-		RefNBTTag tag = new RefNBTTag();
+		RefNBTTagCompound tag = new RefNBTTagCompound();
 		tag.setString("BowType", type.name().toUpperCase());
 //		tag.setInt("Unbreakable", 1);
 		tag.setInt("Age", -32768); // prevent item despawning
-		RefNBTTag mailTag = new RefNBTTag(); mailTag.setInt("Eventials:mailable", 42); tag.set("PublicBukkitValues", mailTag);
+		RefNBTTagCompound mailTag = new RefNBTTagCompound(); mailTag.setInt("Eventials:mailable", 42); tag.set("PublicBukkitValues", mailTag);
 		item = NBTTagUtils.setTag(item, tag);
 		ItemMeta meta = item.getItemMeta();
 		switch(type){

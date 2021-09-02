@@ -31,7 +31,7 @@ import Eventials.Eventials;
 import Eventials.economy.EvEconomy;
 import Evil_Code_EvKits.EvKits;
 import net.evmodder.EvLib.extras.NBTTagUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTag;
+import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
 import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagList;
 
 public class AC_Old implements Listener {
@@ -152,10 +152,10 @@ public class AC_Old implements Listener {
 		}
 	}
 	private ItemStack makeOpEgg(){
-		RefNBTTag tag = new RefNBTTag();
+		RefNBTTagCompound tag = new RefNBTTagCompound();
 		RefNBTTagList attributeModifiers = new RefNBTTagList();
 		//----------------------- Attack attribute -----------------------
-		RefNBTTag attribute = new RefNBTTag();
+		RefNBTTagCompound attribute = new RefNBTTagCompound();
 //		atributeModifiers.setString("Slot", "mainhand");
 		attribute.setString("AttributeName", "generic.attackDamage");
 		attribute.setString("Name", "generic.attackDamage");

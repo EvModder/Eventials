@@ -27,7 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.NBTTagUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTag;
+import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
 
 public class CustomBows implements Listener{
 	public enum BowType{FLINT, FINDER, FOLLOWER, GANDIVA, ICHAIVAL, DETERMINED, RAPIDFIRE, FORCE, TARGETFIRE, ICARUS, NONE};
@@ -58,7 +58,7 @@ public class CustomBows implements Listener{
 
 	public BowType getBowType(ItemStack bow){
 		if(bow == null || (bow.getType() != Material.BOW && bow.getType() != Material.CROSSBOW)) return BowType.NONE;
-		RefNBTTag tag = NBTTagUtils.getTag(bow);
+		RefNBTTagCompound tag = NBTTagUtils.getTag(bow);
 		if(tag == null) return BowType.NONE;
 		String bowTypeName = tag.getString("BowType");
 		if(bowTypeName == null || bowTypeName.isEmpty()) return BowType.NONE;

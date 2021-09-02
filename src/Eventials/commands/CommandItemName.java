@@ -14,14 +14,14 @@ import net.evmodder.EvLib.extras.NBTTagUtils;
 import net.evmodder.EvLib.extras.TellrawUtils;
 import net.evmodder.EvLib.extras.TellrawUtils.Component;
 import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTag;
+import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
 
 public class CommandItemName extends EvCommand{
 	public CommandItemName(EvPlugin p){super(p);}
 
 	public final static ItemStack setDisplayName(@Nonnull ItemStack item, @Nonnull Component name){
-		RefNBTTag tag = NBTTagUtils.getTag(item);
-		RefNBTTag display = tag.hasKey("display") ? (RefNBTTag)tag.get("display") : new RefNBTTag();
+		RefNBTTagCompound tag = NBTTagUtils.getTag(item);
+		RefNBTTagCompound display = tag.hasKey("display") ? (RefNBTTagCompound)tag.get("display") : new RefNBTTagCompound();
 		display.setString("Name", name.toString());
 		tag.set("display", display);
 		return NBTTagUtils.setTag(item, tag);
