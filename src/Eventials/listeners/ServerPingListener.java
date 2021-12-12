@@ -42,7 +42,7 @@ public class ServerPingListener implements Listener{
 		pingMsgs = new String[msgs.size()];
 		int i=-1;
 		//String pingMsgColorAndFormat = TextUtils.getCurrentColorAndFormat(pingPrefix);//TODO: update for 1.16 hex colors
-		char pingMsgColor = TextUtils.getCurrentColor(pingPrefix).getChar();
+		String pingMsgColor = TextUtils.getCurrentColor(pingPrefix);
 		for(String msg : msgs) pingMsgs[++i] = TextUtils.translateAlternateColorCodes('&', msg, pingMsgColor);
 
 		blacklistIPs = new HashSet<String>();

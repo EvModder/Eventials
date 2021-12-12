@@ -32,7 +32,7 @@ public final class EvBridgeHost implements MessageReceiver{
 		connectedClients = new HashMap<UUID, MessageSender>();
 		clientNames = new HashMap<MessageSender, String>();
 		this.logger = logger;
-		conn = new ServerMain(this, port, MAX_SERVERS);
+		conn = new ServerMain(this, port, MAX_SERVERS, logger);
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask(){@Override public void run(){heartbeat();}}, 45000, 45000);
 	}

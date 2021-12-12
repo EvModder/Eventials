@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class ServerMain extends Connection{
 	//=========== Added main function =============================================
@@ -17,7 +18,7 @@ public class ServerMain extends Connection{
 		ServerMain server = new ServerMain(new MessageReceiver(){
 		@Override public void receiveMessage(MessageSender client, String message) {
 			System.out.println("Received from client: "+message);
-		}}, 42374, 2);
+		}}, 42374, 2, Logger.getLogger(ServerMain.class.getName()));
 
 		Scanner scan = new Scanner(System.in);
 		while(scan.hasNextLine()){
@@ -28,6 +29,7 @@ public class ServerMain extends Connection{
 	//=============================================================================
 
 	final int PORT, MAX_CLIENTS;
+	final Logger logger;
 	ServerSocket socket;
 	List<Client> clients;
 	Thread connectionWaitThread, ioThread;
@@ -52,9 +54,10 @@ public class ServerMain extends Connection{
 		}
 	}
 
-	public ServerMain(MessageReceiver recv, int port, int maxClients){
+	public ServerMain(MessageReceiver recv, int port, int maxClients, Logger logger){
 		PORT = port;
 		MAX_CLIENTS = maxClients;
+		this.logger = logger;
 		receiver = recv;
 		try{socket = new ServerSocket(port);}
 		catch(IOException e){e.printStackTrace();return;}
@@ -75,7 +78,7 @@ public class ServerMain extends Connection{
 						synchronized(clients){
 							clients.add(new Client(connection));
 						}
-						System.out.println("Got a connection to a client");
+						if(logger != null) logger.info("Got a connection to a client");
 					}
 				}
 				catch(IOException e){e.printStackTrace();}
@@ -92,7 +95,7 @@ public class ServerMain extends Connection{
 		};
 		ioThread.start();
 
-		System.out.println("Server opened on port "+port);
+		if(logger != null) logger.info("Server opened on port "+port);
 	}
 
 	void loop(){
@@ -103,7 +106,7 @@ public class ServerMain extends Connection{
 				try{
 					if(client.socket.isClosed()){
 						it.remove();
-						System.out.println("A client left the server");
+						if(logger != null) logger.info("A client left the server");
 					}
 					else{
 						if(client.in.ready()){

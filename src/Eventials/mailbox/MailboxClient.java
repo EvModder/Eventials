@@ -9,7 +9,7 @@ import Eventials.bridge.EvBridgeClient;
 import Eventials.bridge.basics.Connection.ChannelReceiver;
 import net.evmodder.EvLib.FileIO;
 
-public final class MailboxClient implements ChannelReceiver{
+public class MailboxClient implements ChannelReceiver{
 	final long TEN_MIN_IN_MILLIS = 600000;
 	public interface MailListener{
 		public abstract void playerMailboxLoaded(UUID playerUUID, File mailbox, String message);
@@ -44,14 +44,20 @@ public final class MailboxClient implements ChannelReceiver{
 			callback.playerMailboxLoaded(playerUUID, null, "failed");
 		}
 		waitingCallbacks.put(playerUUID, callback);
-		bridge.sendMessage(this, "load "+(lock ? "lock " : "")+playerUUID);
+		String loadMailDataMsg = "load "+(lock ? "lock " : "")+playerUUID;
+		bridge.sendMessage(this, loadMailDataMsg);
 		logger.info("[DEBUG] mailbox load request sent to mail server");
 	}
 	public void saveMailbox(UUID playerUUID, File mailboxFile, MailListener callback, boolean lock){
 		String mailFileData = MailboxUtils.readBinaryFileAsString(mailboxFile);
 		if(mailFileData != null){
 			waitingCallbacks.put(playerUUID, callback);
-			bridge.sendMessage(this, "save "+(lock ? "lock " : "")+playerUUID+"|"+mailFileData);
+			////////////////////////////////////////////
+			// TODO: Interesting bug!! If I replace the below two lines with the 3rd (commented) line below, we get a ClassNotFoundError
+			String saveMailDataMsg = "save "+(lock ? "lock " : "")+playerUUID+"|"+mailFileData;
+			bridge.sendMessage(this, saveMailDataMsg);
+			//bridge.sendMessage(this, "save "+(lock ? "lock " : "")+playerUUID+"|"+mailFileData);
+			////////////////////////////////////////////
 			logger.info("[DEBUG] mailbox save request sent to server");
 		}
 		else{

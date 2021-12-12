@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.logging.Logger;
 import Eventials.bridge.basics.Connection.MessageSender;
 
 public class ClientMain extends Connection implements MessageSender{
@@ -18,7 +19,7 @@ public class ClientMain extends Connection implements MessageSender{
 			}
 		};
 		//Connect to server
-		ClientMain connection = new ClientMain(receiver, "localhost", 42374);
+		ClientMain connection = new ClientMain(receiver, "localhost", 42374, Logger.getLogger(ClientMain.class.getName()));
 		
 		Scanner scan = new Scanner(System.in);
 		while(scan.hasNextLine()){
@@ -42,7 +43,7 @@ public class ClientMain extends Connection implements MessageSender{
 		out.flush();
 	}
 
-	public ClientMain(MessageReceiver recv, String host, int port){
+	public ClientMain(MessageReceiver recv, String host, int port, Logger logger){
 		HOST_ADDRESS = host;
 		PORT = port;
 		receiver = recv;
@@ -50,10 +51,10 @@ public class ClientMain extends Connection implements MessageSender{
 			socket = new Socket(host, port);
 			out = new PrintWriter(socket.getOutputStream());
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			System.out.println("Connected to server "+host+":"+port);
+			logger.info("Connected to server "+host+":"+port);
 		}
 		catch(IOException e){
-			System.out.println("Unable to connect to server! (address="+host+":"+port+")");
+			logger.info("Unable to connect to server! (address="+host+":"+port+")");
 			socket = null;
 			return;
 		}
@@ -71,7 +72,7 @@ public class ClientMain extends Connection implements MessageSender{
 					}
 					catch(IOException e){e.printStackTrace();}
 				}
-				System.out.print("Connection closed.");
+				logger.info("Connection closed.");
 			}
 		}.start();
 	}

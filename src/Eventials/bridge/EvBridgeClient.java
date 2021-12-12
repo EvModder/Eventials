@@ -23,13 +23,12 @@ public final class EvBridgeClient implements MessageReceiver{
 		activeChannels = new HashMap<String, ChannelReceiver>();
 		channelNameLookup = new HashMap<ChannelReceiver, String>();
 		this.logger = logger;
-		conn = new ClientMain(this, HOST, PORT);
-		if(!conn.isClosed()) conn.sendMessage(this,
-				"name:"+Eventials.getPlugin().getConfig().getString("server-name", "xxx"));
+		conn = new ClientMain(this, HOST, PORT, logger);
+		if(!conn.isClosed()) conn.sendMessage(this, "name:"+Eventials.getPlugin().getConfig().getString("server-name", "xxx"));
 	}
 
 	public ChannelReceiver registerChannel(ChannelReceiver channel, String channelName){
-		logger.info("Registering channel: "+channelName);
+		logger.fine("Registering channel: "+channelName);
 		channelNameLookup.put(channel, channelName);
 		return activeChannels.put(channelName, channel);
 	}

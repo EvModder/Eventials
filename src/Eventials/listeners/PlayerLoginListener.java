@@ -1,5 +1,6 @@
 package Eventials.listeners;
 
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,7 +60,8 @@ public class PlayerLoginListener implements Listener{
 		if(showRecentJoins){
 			String joinsFile = FileIO.loadFile("recent-joins.txt", "");
 			if(!joinsFile.isEmpty()){
-				recentJoins = TextUtils.toListFromString(joinsFile);
+				recentJoins = new LinkedList<String>();
+				recentJoins.addAll(Arrays.asList(joinsFile.substring(1, joinsFile.lastIndexOf(']')).split(", ")));
 				recentJoins.remove("");
 				int maxLength = plugin.getConfig().getInt("max-recent-joins-stored", 50);
 				while(recentJoins.size() > maxLength) recentJoins.removeFirst();

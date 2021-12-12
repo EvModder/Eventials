@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Logger;
-import org.apache.logging.log4j.util.Strings;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -80,7 +79,7 @@ public final class SplitWorlds{
 				else if(pKey1 == null && primaryKeys2.contains(s)) pKey2 = s;
 			}
 			String primaryWorld = pKey1 != null ? pKey1 : pKey2 != null ? pKey2 : group.get(0);
-			logger.info("SharedInvGroup: [" + primaryWorld + "]->(" + Strings.join(group, ',') + ")");
+			logger.info("SharedInvGroup: [" + primaryWorld + "]->(" + String.join(",", group.toArray(new String[0])) + ")");
 			++numGroups;
 			for(String s : group)
 				sharedInvWorlds.put(s, primaryWorld);
@@ -131,6 +130,7 @@ public final class SplitWorlds{
 	public static boolean inSharedInvGroup(String world1, String world2){
 		return getInvGroup(world1).equals(getInvGroup(world2));
 	}
+	@SuppressWarnings("deprecation")
 	public static String getCurrentInvGroup(UUID playerUUID){
 		File currentGroup = new File(DEFAULT_PLAYERDATA + playerUUID + ".group");
 		if(currentGroup == null || !currentGroup.exists()) return DEFAULT_WORLD;
@@ -155,6 +155,7 @@ public final class SplitWorlds{
 						((inDefaultWorld && SINGLE_INV_GROUP) ? "_tmp.dat" : ".dat"));
 	}
 
+	@SuppressWarnings("deprecation")
 	static public boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld,
 			boolean useShared, boolean useCurrent, boolean copy){
 		if(useCurrent && handler.getUniqueId().equals(fromPlayer) && inSharedInvGroup(handler.getWorld().getName(), fromWorld)) {
@@ -207,6 +208,7 @@ public final class SplitWorlds{
 		catch(IOException e){e.printStackTrace(); return false;}
 		return true;
 	}
+	@SuppressWarnings("deprecation")
 	static public boolean loadProfile(Player handler, File fromFile){
 		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
 		if(fromFile == null || !fromFile.exists() || currentFile == null){

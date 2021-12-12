@@ -24,7 +24,7 @@ import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TextUtils;
 
-public class EvEconomy extends ServerEconomy{
+public final class EvEconomy extends ServerEconomy{
 	final boolean useCurItem, updateBalsOnPayment;
 
 	private static EvEconomy eco; public static EvEconomy getEconomy(){return eco;}
