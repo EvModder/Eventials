@@ -2,6 +2,7 @@ package Eventials.books;
 
 import java.util.List;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -54,8 +55,9 @@ public class CommandUnsignBook extends EvCommand{
 			return true;
 		}
 		ItemStack openBook = new ItemStack(Material.WRITABLE_BOOK);
+		openBook.setItemMeta(meta);
 		p.getInventory().setItemInMainHand(openBook);
-		if(bookItem.getAmount() > 1){
+		if(bookItem.getAmount() > 1 && p.getGameMode() != GameMode.CREATIVE){
 			for(int i=1; i<bookItem.getAmount(); ++i)
 				if(!p.getInventory().addItem(openBook).isEmpty())
 					p.getWorld().dropItem(p.getLocation(), openBook);
