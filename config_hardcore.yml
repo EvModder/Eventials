@@ -378,7 +378,7 @@ auto-messages:
   - 'Suggestions are always welcome!'
   - 'Please check &2/rules&r periodically for updates'
   - 'Sharing server IPs is fine, but &nno soliciting&r please'
-  - 'Staff are here to help, so ask away!'
+#  - 'Staff are here to help, so ask away!'
   - 'Use &2/hm claim&r to add your horse to the contest scores!'
   - 'Killing stuff is fun, so why not start a head collection? ;)'
   - |
@@ -398,7 +398,7 @@ auto-messages:
 #  - |
 #      Some ugly base in your way that needs to be taken down?
 #      Please ask a staff member to get the thumbs up!
-  - '(disabled) Want to see an epic world map? Visit Dynmap!'
+#  - '(disabled) Want to see an epic world map? Visit Dynmap!'
   - 'Event schedule (irregularly) posted on the &bwebsite=>http://www.altcraft.net/events/schedule'
 #  - |
 #       Have something important to tell? Looking for ways

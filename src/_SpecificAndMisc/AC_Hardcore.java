@@ -49,20 +49,20 @@ public class AC_Hardcore implements Listener{
 		), /*mono=*/false, /*flexFill=*/false, /*tabs=*/new int[]{62, 62}).split("\\n");
 		ListComponent engraveComp = new ListComponent(
 			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish forge")),
-			TellrawUtils.convertHexColorsToComponents(engravings[0]+"\n"));
+			TellrawUtils.convertHexColorsToComponentsWithReset(engravings[0]+"\n"));
 		ListComponent forgeComp = new ListComponent(
 			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish bless")),
-			TellrawUtils.convertHexColorsToComponents(engravings[1]+"\n"));
+			TellrawUtils.convertHexColorsToComponentsWithReset(engravings[1]+"\n"));
 		ListComponent blessComp = new ListComponent(
 			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish curse")),
-			TellrawUtils.convertHexColorsToComponents(engravings[2]+"\n"));
+			TellrawUtils.convertHexColorsToComponentsWithReset(engravings[2]+"\n"));
 		ListComponent curseComp = new ListComponent(
 			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish salute")),
-			TellrawUtils.convertHexColorsToComponents(engravings[3]+"\n"));
+			TellrawUtils.convertHexColorsToComponentsWithReset(engravings[3]+"\n"));
 		ListComponent saluteComp = new ListComponent(
 			new RawTextComponent(/*text=*/"", new TextClickAction(ClickEvent.RUN_COMMAND, "/embellish engrave")),
-			TellrawUtils.convertHexColorsToComponents(engravings[4]+"\n"));
-		ListComponent removeComp = TellrawUtils.convertHexColorsToComponents(engravings[5]);
+			TellrawUtils.convertHexColorsToComponentsWithReset(engravings[4]+"\n"));
+		ListComponent removeComp = TellrawUtils.convertHexColorsToComponentsWithReset(engravings[5]);
 		engravingsTellraw = new ListComponent(
 			new RawTextComponent(ChatColor.GRAY
 					+ "To embellish an item with your name using votes, hold the item\n"

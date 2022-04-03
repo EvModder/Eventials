@@ -225,7 +225,7 @@ public final class Scheduler{
 	private Component parseComponentFromAutomsg(String msg, String msgC){
 		ListComponent comp = new ListComponent(
 				new RawTextComponent(/*text=*/"", /*insert=*/null, /*click=*/null, /*hover=*/null, /*color=*/getColorName(msgC), /*formats=*/null),
-				TellrawUtils.convertHexColorsToComponents(msg));
+				TellrawUtils.convertHexColorsToComponentsWithReset(msg));
 		Matcher matcher = Pattern.compile("§2(/[^§\n]+?)(?:(?:"+msgC+")|\n|$)").matcher(msg);
 		boolean foundMatch = false;
 		while(matcher.find()){

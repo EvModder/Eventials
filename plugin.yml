@@ -177,25 +177,25 @@ commands:
       permission: eventials.insight
       permission-message: You do not have permission to do this.
 
-   itemname:
+   setitemname:
       description: Name the item being held
       usage: /name <text>
-      aliases: [nameitem,iname,name,setname]
-      permission: eventials.itemname
+      aliases: [itemname,nameitem,iname,name,setname]
+      permission: eventials.setitemname
       permission-message: You do not have permission to do this.
 
    itemprefix:
       description: Add a prefix to the name the item being held
       usage: /prefix <text>
       aliases: [iprefix,prefix]
-      permission: eventials.itemname
+      permission: eventials.setitemname
       permission-message: You do not have permission to do this.
 
    itemsuffix:
       description: Add a suffix to the name the item being held
       usage: /suffix <text>
       aliases: [isuffix,suffix]
-      permission: eventials.itemname
+      permission: eventials.setitemname
       permission-message: You do not have permission to do this.
 
    particles:
@@ -239,10 +239,11 @@ commands:
       permission: eventials.regiontp
       permission-message: You do not have permission to do this.
 
-   setlore:
+   setitemlore:
       description: Set an item's lore
       usage: /setlore <lore>
-      permission: eventials.setlore
+      aliases: [setlore,ilore,itemlore,loreitem]
+      permission: eventials.setitemlore
       permission-message: You do not have permission to do this.
 
    signtool:
@@ -490,10 +491,6 @@ permissions:
       description: Permission to use /insight
       default: op
 
-   eventials.itemname:
-      description: Permission to use /itemname, /itemprefix, and /itemsuffix
-      default: op
-
    eventials.particles:
       description: Permission to use /particles
       default: op
@@ -522,8 +519,12 @@ permissions:
       description: Permission to use /regiontp
       default: op
 
-   eventials.setlore:
+   eventials.setitemlore:
       description: Permission to use /setlore
+      default: op
+
+   eventials.setitemname:
+      description: Permission to use /itemname, /itemprefix, and /itemsuffix
       default: op
 
    eventials.signtool:

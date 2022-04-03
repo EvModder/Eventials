@@ -16,8 +16,8 @@ import net.evmodder.EvLib.extras.TellrawUtils.Component;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
 
-public class CommandItemName extends EvCommand{
-	public CommandItemName(EvPlugin p){super(p);}
+public class CommandSetItemName extends EvCommand{
+	public CommandSetItemName(EvPlugin p){super(p);}
 
 	public final static ItemStack setDisplayName(@Nonnull ItemStack item, @Nonnull Component name){
 		RefNBTTagCompound tag = NBTTagUtils.getTag(item);
@@ -42,7 +42,7 @@ public class CommandItemName extends EvCommand{
 
 		String nameStr = TextUtils.translateAlternateColorCodes('&', String.join(" ", args));
 		Component comp = TellrawUtils.parseComponentFromString(nameStr);
-		if(comp == null) comp = TellrawUtils.convertHexColorsToComponents(nameStr);
+		if(comp == null) comp = TellrawUtils.convertHexColorsToComponentsWithReset(nameStr);
 
 		if(comp.toPlainText().isEmpty()){
 			ItemMeta meta = item.getItemMeta();

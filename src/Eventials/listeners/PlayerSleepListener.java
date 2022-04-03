@@ -51,7 +51,7 @@ public class PlayerSleepListener implements Listener{
 
 	String getSkipNightTellrawMsg(int numSleeping, int numToCount, World world){
 		int numInWorld = world.getPlayers().size();
-		ListComponent sleepingPlayers = TellrawUtils.convertHexColorsToComponents(world.getPlayers().stream().filter(p -> p.isSleeping())
+		ListComponent sleepingPlayers = TellrawUtils.convertHexColorsToComponentsWithReset(world.getPlayers().stream().filter(p -> p.isSleeping())
 				.map(p -> p.getDisplayName()).collect(Collectors.joining("§7, §r")));
 		pl.getLogger().info("Sleeping players: "+sleepingPlayers);
 		RawTextComponent sleepingPlayersComp = new RawTextComponent("§7"+numSleeping, new TextHoverAction(HoverEvent.SHOW_TEXT, sleepingPlayers));
@@ -118,7 +118,7 @@ public class PlayerSleepListener implements Listener{
 				if(player != null){
 					RawTextComponent curSleepersComp = new RawTextComponent("§b"+CUR_SLEEPERS,
 						new TextHoverAction(HoverEvent.SHOW_TEXT,
-							TellrawUtils.convertHexColorsToComponents(
+							TellrawUtils.convertHexColorsToComponentsWithReset(
 								"§7Currently in bed: " +
 								world.getPlayers().stream().filter(p -> includeTrigger
 										? (p.isSleeping() || p.getUniqueId().equals(triggerPlayer))

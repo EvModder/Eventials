@@ -93,7 +93,7 @@ public class Eventials extends EvPlugin {
 		new CommandFloatingText(this);
 		new CommandGhost(this);
 		new CommandInsight(this);
-		new CommandItemName(this);
+		new CommandSetItemName(this);
 		new CommandItemPrefix(this);
 		new CommandItemSuffix(this);
 		new CommandParticles(this);
@@ -102,7 +102,7 @@ public class Eventials extends EvPlugin {
 		new CommandRegionDelete(this);
 		new CommandRegionPos(this);
 		new CommandRegionTp(this);
-		new CommandSetLore(this);
+		new CommandSetItemLore(this);
 		new CommandSigntool(this, config.getBoolean("enable-signtools", true));
 		new CommandStatsClear(this);
 		new CommandStatsRestore(this);
