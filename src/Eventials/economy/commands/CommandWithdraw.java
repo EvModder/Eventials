@@ -37,7 +37,7 @@ public class CommandWithdraw extends EvCommand{
 		if(args.length == 1 && sender instanceof Player && label.equalsIgnoreCase(cmd.getName())){
 			int bal = (int) EssEcoHook.getBalance((Player)sender);
 			if(bal > 0){
-				final List<String> tabCompletes = new ArrayList<String>();
+				final List<String> tabCompletes = new ArrayList<>();
 				args[0] = args[0].toLowerCase();
 				if(bal >= 64 && "64".startsWith(args[0])) tabCompletes.add("64");
 				if((""+bal).startsWith(args[0])) tabCompletes.add(""+bal);

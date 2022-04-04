@@ -22,7 +22,7 @@ public class MailboxClient implements ChannelReceiver{
 	final CommandMailbox mailboxCommand;
 
 	public MailboxClient(Eventials pl){
-		waitingCallbacks = new HashMap<UUID, MailListener>();
+		waitingCallbacks = new HashMap<>();
 		bridge = pl.bridge;
 		logger = pl.getLogger();
 		bridge.registerChannel(this, "mailbox");

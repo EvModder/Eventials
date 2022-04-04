@@ -21,7 +21,7 @@ public class CommandClearEntities extends EvCommand {
 	}
 
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
-		final List<String> tabCompletes = new ArrayList<String>();
+		final List<String> tabCompletes = new ArrayList<>();
 		String arg = args[args.length-1].toLowerCase();
 		if("animals".startsWith(arg)) tabCompletes.add("animals");
 		if("tiles".startsWith(arg)) tabCompletes.add("tiles");
@@ -36,7 +36,7 @@ public class CommandClearEntities extends EvCommand {
 		World world = null;
 		if(sender instanceof Player)world = ((Player) sender).getWorld();
 		boolean badWorld = false;
-		HashMap<KillFlag, Boolean> flags = new HashMap<KillFlag, Boolean>();
+		HashMap<KillFlag, Boolean> flags = new HashMap<>();
 
 		for(String arg : args){
 			arg = arg.toLowerCase();

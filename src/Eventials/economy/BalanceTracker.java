@@ -51,8 +51,8 @@ public abstract class BalanceTracker{
 
 	public void loadPlayerBalances(){
 		String[] lines = FileIO.loadFile("baltops.txt", "").split("\n");
-		bals = new Vector<PlayerBalance>(lines.length);
-		donators = new Vector<PlayerBalance>();
+		bals = new Vector<>(lines.length);
+		donators = new Vector<>();
 		for(String line : lines){
 			String[] parts = line.split(":");
 			if(parts.length >= 2){
@@ -81,8 +81,8 @@ public abstract class BalanceTracker{
 	}
 
 	public Collection<PlayerBalance> getBalances(int start, int end){
-		if(start >= end || start >= bals.size()) return new Vector<PlayerBalance>(0);
-		Vector<PlayerBalance> target = new Vector<PlayerBalance>(end - start);
+		if(start >= end || start >= bals.size()) return new Vector<>(0);
+		Vector<PlayerBalance> target = new Vector<>(end - start);
 
 		if(end > bals.size()) end = bals.size();
 		for(int i = start; i < end; ++i) target.add(bals.get(i));
@@ -90,8 +90,8 @@ public abstract class BalanceTracker{
 	}
 
 	public Collection<PlayerBalance> getDonations(int start, int end){
-		if(start >= end || start >= donators.size()) return new Vector<PlayerBalance>(0);
-		Vector<PlayerBalance> target = new Vector<PlayerBalance>(end - start);
+		if(start >= end || start >= donators.size()) return new Vector<>(0);
+		Vector<PlayerBalance> target = new Vector<>(end - start);
 
 		if(end > donators.size()) end = donators.size();
 		for(int i = start; i < end; ++i) target.add(donators.get(i));

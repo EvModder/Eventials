@@ -28,8 +28,8 @@ public class ServerPingListener implements Listener{
 	private String customMOTD = "";
 	public String getMOTD(){return customMOTD;} public void setMOTD(String newMotd){customMOTD = newMotd;}
 
-	private Map<HolidayDate, String> holidays = new HashMap<HolidayDate, String>();
-	private Map<String, Short> ping_idxs = new HashMap<String, Short>();
+	private Map<HolidayDate, String> holidays = new HashMap<>();
+	private Map<String, Short> ping_idxs = new HashMap<>();
 	private String[] pingMsgs;
 	private Set<String> blacklistIPs;
 	final String pingPrefix;
@@ -45,7 +45,7 @@ public class ServerPingListener implements Listener{
 		String pingMsgColor = TextUtils.getCurrentColor(pingPrefix);
 		for(String msg : msgs) pingMsgs[++i] = TextUtils.translateAlternateColorCodes('&', msg, pingMsgColor);
 
-		blacklistIPs = new HashSet<String>();
+		blacklistIPs = new HashSet<>();
 		blacklistIPs.addAll(plugin.getConfig().getStringList("blacklisted-ips"));
 
 		try{

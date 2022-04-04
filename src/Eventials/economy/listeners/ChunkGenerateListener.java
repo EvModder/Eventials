@@ -26,7 +26,7 @@ public class ChunkGenerateListener implements Listener{
 	public ChunkGenerateListener(){
 		pl = Eventials.getPlugin();
 		DEFAULT_COST = pl.getConfig().getDouble("default-chunk-generate-cost", 0.25);
-		chunkGenCosts = new HashMap<String, Double>();
+		chunkGenCosts = new HashMap<>();
 		ConfigurationSection costConfig = pl.getConfig().getConfigurationSection("chunk-generate-cost");
 		if(costConfig != null) for(String worldName : costConfig.getKeys(false)){
 			World w = pl.getServer().getWorld(worldName);
@@ -36,8 +36,8 @@ public class ChunkGenerateListener implements Listener{
 			}
 		}
 		result = FailureResult.valueOf(pl.getConfig().getString("chunk-generate-failure", "TP_SPAWN"));
-		currentDebt = new HashMap<UUID, Double>();
-		noSpam = new HashSet<UUID>();
+		currentDebt = new HashMap<>();
+		noSpam = new HashSet<>();
 	}
 
 	double trimZeros(double x){

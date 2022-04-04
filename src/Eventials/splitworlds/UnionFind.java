@@ -10,7 +10,7 @@ public class UnionFind<T>{
 	HashMap<T, T> parent;
 
 	public UnionFind(){
-		parent = new HashMap<T, T>();
+		parent = new HashMap<>();
 	}
 
 	public T add(final T t){
@@ -53,7 +53,7 @@ public class UnionFind<T>{
 	}
 
 	public Collection<List<T>> getSets(){
-		HashMap<T, List<T>> sets = new HashMap<T, List<T>>();
+		HashMap<T, List<T>> sets = new HashMap<>();
 		for(T t : parent.keySet()){
 			T k = find(t);
 			if(!sets.containsKey(k)) sets.put(k, new ArrayList<T>());
@@ -63,7 +63,7 @@ public class UnionFind<T>{
 	}
 
 	public HashMap<T, T> getSets2(){
-		HashMap<T, T> sets = new HashMap<T, T>();
+		HashMap<T, T> sets = new HashMap<>();
 		for(T t : parent.keySet()){
 			T k = find(t);
 			if(!sets.containsKey(k)) sets.put(k, k);

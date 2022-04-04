@@ -32,8 +32,8 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 	public CommandBreakPhysics(EvPlugin p) {
 		super(p);
 		pl = p;
-		breakPhysics = new HashSet<UUID>();
-		teleports = new PriorityQueue<UUID>();
+		breakPhysics = new HashSet<>();
+		teleports = new PriorityQueue<>();
 		RADIUS = pl.getConfig().getInt("default-nophysics-radius", 32);
 		RADIUS_SQ = RADIUS*RADIUS;
 	}

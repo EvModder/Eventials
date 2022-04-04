@@ -62,7 +62,7 @@ public class ServerMain extends Connection{
 		try{socket = new ServerSocket(port);}
 		catch(IOException e){e.printStackTrace();return;}
 
-		clients = new ArrayList<Client>();
+		clients = new ArrayList<>();
 		connectionWaitThread = new Thread(){
 			@Override public void run(){
 				try{

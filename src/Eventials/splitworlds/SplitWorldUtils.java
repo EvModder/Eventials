@@ -21,8 +21,8 @@ public final class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
 	public static Collection<List<String>> findMatchGroups(List<String> strs, List<String> search){
 		HashSet<String> validSubs = null;
-		final List<String> staticTerms = new ArrayList<String>();
-		final List<String> complexTerms = new ArrayList<String>();
+		final List<String> staticTerms = new ArrayList<>();
+		final List<String> complexTerms = new ArrayList<>();
 
 		for(String m : search){
 			int wild = m.indexOf('*');
@@ -36,7 +36,7 @@ public final class SplitWorldUtils{
 			else{
 				complexTerms.add(m);
 				String preM = m.substring(0, wild), postM = m.substring(wild+1);
-				final HashSet<String> encounteredSubs = new HashSet<String>();
+				final HashSet<String> encounteredSubs = new HashSet<>();
 				for(String s : strs){
 					if(s.startsWith(preM) && s.endsWith(postM)){
 						String sub = s.substring(preM.length(), s.length()-postM.length());
@@ -48,9 +48,9 @@ public final class SplitWorldUtils{
 			}
 		}
 		if(validSubs == null) return Arrays.asList(staticTerms);
-		final List<List<String>> matchGroups = new ArrayList<List<String>>();
+		final List<List<String>> matchGroups = new ArrayList<>();
 		for(String sub : validSubs){
-			final List<String> mGroup = new ArrayList<String>(staticTerms);
+			final List<String> mGroup = new ArrayList<>(staticTerms);
 			for(String term : complexTerms) mGroup.add(term.replace("*", sub));
 			matchGroups.add(mGroup);
 		}

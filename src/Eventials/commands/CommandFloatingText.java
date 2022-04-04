@@ -32,19 +32,19 @@ public class CommandFloatingText extends EvCommand{
 	static final String nearbyChoicesPrompt =
 			ChatColor.translateAlternateColorCodes('&', " &7Run &2/ftxt list&7 to view nearby choices");
 	public CommandFloatingText(EvPlugin p) { super(p); }
-	HashMap<UUID, Vector<ArmorStand>> listResults = new HashMap<UUID, Vector<ArmorStand>>();
+	HashMap<UUID, Vector<ArmorStand>> listResults = new HashMap<>();
 
 	final String[] COMMANDS = new String[]{"help","place","remove","edit","move","list"};
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
 		if(sender instanceof Player && args.length > 0){
 			args[0] = args[0].toLowerCase();
 			if(args.length == 1){
-				final List<String> tabCompletes = new ArrayList<String>();
+				final List<String> tabCompletes = new ArrayList<>();
 				for(String c : COMMANDS) if(c.startsWith(args[0])) tabCompletes.add(c);
 				return tabCompletes;
 			}
 			if(args.length == 2 && (args[0].equals("remove") || args[0].equals("edit") || args[0].equals("move"))){
-				final List<String> tabCompletes = new ArrayList<String>();
+				final List<String> tabCompletes = new ArrayList<>();
 				args[1] = args[1].toLowerCase();
 				for(int i=0; i<listResults.get(((Player)sender).getUniqueId()).size(); ++i)
 						if((""+i).startsWith(args[1])) tabCompletes.add(""+i);
@@ -127,7 +127,7 @@ public class CommandFloatingText extends EvCommand{
 
 	public static Vector<ArmorStand> getNearbyFloaters(Location loc){
 		Collection<Entity> nearbyEntities = loc.getWorld().getNearbyEntities(loc, 6, 5, 6);
-		Vector<ArmorStand> floaters = new Vector<ArmorStand>();
+		Vector<ArmorStand> floaters = new Vector<>();
 		if(nearbyEntities == null) return floaters;
 		for(Entity e : nearbyEntities){
 			if(e instanceof ArmorStand && isFloater((ArmorStand)e)){

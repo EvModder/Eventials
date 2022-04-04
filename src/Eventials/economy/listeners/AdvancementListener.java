@@ -26,7 +26,7 @@ public class AdvancementListener implements Listener{
 		BASE = pl.getConfig().getDouble("advancement-exponential-base");
 		MIN_ADV = pl.getConfig().getInt("advancement-min-before-reward");//min
 		MAX_PRIZE = pl.getConfig().getInt("advancement-max-reward");
-		included = new HashSet<String>();
+		included = new HashSet<>();
 		included.addAll(pl.getConfig().getStringList("advancements-included"));
 	}
 

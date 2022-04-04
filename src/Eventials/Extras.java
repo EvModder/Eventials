@@ -185,7 +185,7 @@ public class Extras{
 
 	@SuppressWarnings("deprecation")
 	public static void displayHyperWarps(Player player){
-		Vector<String> warps = new Vector<String>();
+		Vector<String> warps = new Vector<>();
 
 //		warps.addAll(Arrays.asList("AdminShop","Commands","Creative",/*"Donor_perks",*/
 //				"Downtown","Forest","Freebuild","Market",/*"minis_tirith",*/"Parkour",

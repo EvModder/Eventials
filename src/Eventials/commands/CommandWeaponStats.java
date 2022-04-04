@@ -119,7 +119,7 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 		if(enabled) pl.getServer().getPluginManager().registerEvents(this, pl);
 
 		WSTATS_TAG = ChatColor.translateAlternateColorCodes('&', "&7&lWeaponStats");
-		WSTATS = new HashMap<WeaponStat, Object>();
+		WSTATS = new HashMap<>();
 		WSTATS.put(WeaponStat.PLAYER_KILLS, 0);
 		WSTATS.put(WeaponStat.MONSTER_KILLS, 0);
 		WSTATS.put(WeaponStat.ANIMAL_KILLS, 0);
@@ -136,14 +136,14 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
 		if(args.length > 0 && sender instanceof Player){
-			HashSet<WeaponStat> alreadyAdded = new HashSet<WeaponStat>();
+			HashSet<WeaponStat> alreadyAdded = new HashSet<>();
 			String lastArg = args[args.length-1];
 			for(String arg : args){
 				try{alreadyAdded.add(WeaponStat.valueOf(arg.toUpperCase()));}
 				catch(IllegalArgumentException ex){if(!arg.equals(lastArg)) return null;}
 			}
 			lastArg = lastArg.toUpperCase();
-			final List<String> tabCompletes = new ArrayList<String>();
+			final List<String> tabCompletes = new ArrayList<>();
 			for(WeaponStat stat : WSTATS.keySet()){
 				if(!alreadyAdded.contains(stat) && stat.name().startsWith(lastArg)){
 					tabCompletes.add(stat.name());
@@ -176,7 +176,7 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 					Arrays.asList(WeaponStat.MONSTER_KILLS, WeaponStat.PLAYER_KILLS);
 		}
 		else{
-			statsToAdd = new ArrayList<WeaponStat>();
+			statsToAdd = new ArrayList<>();
 			for(String arg : args){
 				try{statsToAdd.add(WeaponStat.valueOf(arg.toUpperCase()));}
 				catch(IllegalArgumentException ex){

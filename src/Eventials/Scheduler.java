@@ -85,7 +85,7 @@ public final class Scheduler{
 					&& !PMC_LOGIN_TOKEN.isEmpty() && !PMC_RESOURCE_ID.equals("0");
 
 		//TODO: load from config file
-		butcherFlags = new HashMap<KillFlag, Boolean>();
+		butcherFlags = new HashMap<>();
 		butcherFlags.put(KillFlag.ANIMALS, false);
 		butcherFlags.put(KillFlag.EQUIPPED, false);
 		butcherFlags.put(KillFlag.NAMED, false);
@@ -122,7 +122,7 @@ public final class Scheduler{
 
 			// Pay daily money
 			long ticksSinceNewDay = (now % MILLIS_PER_DAY)/MILLIS_PER_TICK;
-			List<Player> sendTo = new ArrayList<Player>();
+			List<Player> sendTo = new ArrayList<>();
 			for(Player p : plugin.getServer().getOnlinePlayers())
 				if(p.getStatistic(Statistic.PLAY_ONE_MINUTE)*60*20 > ticksSinceNewDay) sendTo.add(p);
 			if(!sendTo.isEmpty()) payDailyMoney(sendTo);
@@ -187,7 +187,7 @@ public final class Scheduler{
 		if(cAutomsg != 0 && cycleCount % cAutomsg == 0 && !(cSkipAutomsg && event)
 				&& autoMsgs.length != 0 && !serverIsSilent){
 			IEssentials ess = (IEssentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
-			List<Player> sendTo = new ArrayList<Player>();
+			List<Player> sendTo = new ArrayList<>();
 
 			for(Player p : plugin.getServer().getOnlinePlayers()) if(!ess.getUser(p).isAfk()) sendTo.add(p);
 			if(!sendTo.isEmpty()){

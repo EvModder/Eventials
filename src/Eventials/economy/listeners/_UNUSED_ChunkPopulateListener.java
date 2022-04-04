@@ -21,9 +21,9 @@ public class _UNUSED_ChunkPopulateListener implements Listener {
 	public _UNUSED_ChunkPopulateListener(){
 		currency = EvEconomy.getEconomy().getCurrency();
 		plugin = Eventials.getPlugin();
-		chunkX = new LinkedList<Integer>();
-		chunkZ = new LinkedList<Integer>();
-		world = new LinkedList<UUID>();
+		chunkX = new LinkedList<>();
+		chunkZ = new LinkedList<>();
+		world = new LinkedList<>();
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

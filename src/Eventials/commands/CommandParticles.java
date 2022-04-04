@@ -25,7 +25,7 @@ import net.evmodder.EvLib.EvPlugin;
 import com.earth2me.essentials.User;
 
 public class CommandParticles extends EvCommand {
-	Map<UUID, List<CustomParticleEffect>> particlePpl = new HashMap<UUID, List<CustomParticleEffect>>();
+	Map<UUID, List<CustomParticleEffect>> particlePpl = new HashMap<>();
 	private Listener teleportListener;
 	Eventials pl;
 
@@ -69,7 +69,7 @@ public class CommandParticles extends EvCommand {
 
 			List<CustomParticleEffect> effects = particlePpl.get(p.getUniqueId());
 			if(effects == null){
-				effects = new ArrayList<CustomParticleEffect>();
+				effects = new ArrayList<>();
 				particlePpl.put(p.getUniqueId(), effects);
 			}
 
@@ -84,7 +84,7 @@ public class CommandParticles extends EvCommand {
 				if(effects.isEmpty() && particlePpl.size() == 1){
 					new EffectDisplayer().runTaskTimer(pl, 1, 1);
 					pl.getServer().getPluginManager().registerEvents(teleportListener = new Listener(){
-						LinkedList<UUID> teleports = new LinkedList<UUID>();
+						LinkedList<UUID> teleports = new LinkedList<>();
 						IEssentials essentials = (IEssentials)pl.getServer().getPluginManager().getPlugin("Essentials");
 						
 						@EventHandler(priority = EventPriority.MONITOR)

@@ -259,8 +259,8 @@ public class AC_Old implements Listener {
 		}
 	}
 
-	List<int[]> chunksToClean = new ArrayList<int[]>();
-	List<String> cleanWorldNames = new ArrayList<String>();
+	List<int[]> chunksToClean = new ArrayList<>();
+	List<String> cleanWorldNames = new ArrayList<>();
 	@EventHandler public void onChunkUnload(ChunkUnloadEvent evt){
 		if(evt.getChunk() == null || chunksToClean.contains(new int[]{evt.getChunk().getX(), evt.getChunk().getZ()})) return;
 		

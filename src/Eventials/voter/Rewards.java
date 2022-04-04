@@ -34,7 +34,7 @@ public class Rewards {
 
 		Type type = Type.values()[rand.nextInt(5)];
 
-		ArrayList<Color> color = new ArrayList<Color>(), fade = new ArrayList<Color>();
+		ArrayList<Color> color = new ArrayList<>(), fade = new ArrayList<>();
 		int randColors = rand.nextInt(6)+1, randFades = rand.nextInt(3);
 		for(int i = 0; i < randColors; ++i) color.add(Color.fromRGB(rand.nextInt(16777216)));
 		for(int i = 0; i < randFades; ++i) fade.add(Color.fromRGB(rand.nextInt(16777216)));

@@ -37,18 +37,18 @@ public class PreCommandListener implements Listener {
 		fancyHelp = plugin.getConfig().getBoolean("fancy-help", true);
 		cmdHelp = plugin.getConfig().getBoolean("detailed-command-help", true);
 		commandAliases = plugin.getConfig().getBoolean("command-aliases", true);
-		quickWarps = new HashSet<String>();
+		quickWarps = new HashSet<>();
 		quickWarps.addAll(plugin.getConfig().getStringList("quick-warps"));
 		customBaltop = plugin.getConfig().getBoolean("custom-baltop", true);
 		watchBalances = plugin.getConfig().getBoolean("update-balance-watch", false);
 
-		balanceWatchCommands = new HashSet<String>();
+		balanceWatchCommands = new HashSet<>();
 		if(watchBalances) balanceWatchCommands.addAll(plugin.getConfig().getStringList("update-balance-commands"));
 
 		curSymbol = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
-		getCommandFromAlias = new HashMap<String, String>();
-		cooldownCommands = new HashMap<String, Integer>();
-		recentCooldownCommands = new HashMap<String, Long>();
+		getCommandFromAlias = new HashMap<>();
+		cooldownCommands = new HashMap<>();
+		recentCooldownCommands = new HashMap<>();
 		ConfigurationSection commandCooldowns = plugin.getConfig().getConfigurationSection("global-command-cooldowns");
 		if(commandCooldowns != null) for(Entry<String, Object> e : commandCooldowns.getValues(false).entrySet()){
 			PluginCommand cmd = plugin.getServer().getPluginCommand(e.getKey());

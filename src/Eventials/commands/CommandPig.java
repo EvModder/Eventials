@@ -36,9 +36,9 @@ public class CommandPig extends EvCommand implements Listener{
 	public CommandPig(EvPlugin p) {
 		super(p);
 		pl = p;
-		piggyPigs = new HashSet<UUID>();
-		teleports = new PriorityQueue<UUID>();
-		justAte = new LinkedList<UUID>();
+		piggyPigs = new HashSet<>();
+		teleports = new PriorityQueue<>();
+		justAte = new LinkedList<>();
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}

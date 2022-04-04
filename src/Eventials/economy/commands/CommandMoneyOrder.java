@@ -36,7 +36,7 @@ public class CommandMoneyOrder extends EvCommand implements Listener{
 
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
 		if(args.length == 1 && sender instanceof Player){
-			final List<String> tabCompletes = new ArrayList<String>();
+			final List<String> tabCompletes = new ArrayList<>();
 			args[0] = args[0].toLowerCase();
 			if((""+MIN_MO).startsWith(args[0])) tabCompletes.add(""+MIN_MO);
 			int bal = (int) EssEcoHook.getBalance((Player)sender);

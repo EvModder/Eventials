@@ -53,7 +53,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 
 		ItemMeta meta = item.getItemMeta();
 
-		ArrayList<String> lore = new ArrayList<String>();
+		ArrayList<String> lore = new ArrayList<>();
 		lore.add(ChatColor.BLUE+"Sign Setter");
 		if(!signText.isEmpty()){
 			signText = signText.replaceAll("(?<=(?:^|[^\\\\]))(\\\\{2})*\\\\n", "$1\n");

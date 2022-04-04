@@ -43,9 +43,9 @@ public class PlayerSleepListener implements Listener{
 		ONLY_SKIP_IF_NIGHT = pl.getConfig().getBoolean("only-skip-if-nighttime", true);
 		BROADCAST_VANILLA_SKIPS = pl.getConfig().getBoolean("skip-night-notify-if-natural", false);
 		SKIP_IF_DAYLIGHT_CYCLE_IS_OFF = false;//TODO: config
-		skipNightWorlds = new HashSet<UUID>();
-		skipStormWorlds = new HashSet<UUID>();
-		skipThunderWorlds = new HashSet<UUID>();
+		skipNightWorlds = new HashSet<>();
+		skipStormWorlds = new HashSet<>();
+		skipThunderWorlds = new HashSet<>();
 		SKIP_NIGHT_PERCENT_STR = (int)(SKIP_NIGHT_PERCENT*100)+"%";
 	}
 

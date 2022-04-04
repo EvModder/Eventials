@@ -44,7 +44,7 @@ public class AC_New implements Listener{
 		renewableAPI = ((Renewable)pl.getServer().getPluginManager().getPlugin("Renewable")).getAPI();
 		fancyPl = pl.getConfig().getBoolean("fancy-pl", true);
 		pl.getServer().getPluginManager().registerEvents(this, pl);
-		modChunks = new HashSet<Pair<Integer, Integer>>();
+		modChunks = new HashSet<>();
 		loadModChunks();
 	}
 
@@ -55,7 +55,7 @@ public class AC_New implements Listener{
 			if(i != -1){
 				try{
 					int x = Integer.parseInt(chunk.substring(0, i)), y = Integer.parseInt(chunk.substring(i+1));
-					modChunks.add(new Pair<Integer, Integer>(x, y));
+					modChunks.add(new Pair<>(x, y));
 				}
 				catch(NumberFormatException ex){}
 			}
@@ -71,7 +71,7 @@ public class AC_New implements Listener{
 
 	private boolean updateFile = false;
 	public void addModChunk(Chunk c){
-		if(modChunks.add(new Pair<Integer, Integer>(c.getX(), c.getZ()))){
+		if(modChunks.add(new Pair<>(c.getX(), c.getZ()))){
 			if(!updateFile){
 				updateFile = true;
 				new BukkitRunnable(){
@@ -87,7 +87,7 @@ public class AC_New implements Listener{
 	public void onLeafDecay(LeavesDecayEvent evt){
 		if(!evt.isCancelled()){
 			int x = evt.getBlock().getChunk().getX(), z = evt.getBlock().getChunk().getZ();
-			if(!modChunks.contains(new Pair<Integer, Integer>(x, z))) evt.setCancelled(true);
+			if(!modChunks.contains(new Pair<>(x, z))) evt.setCancelled(true);
 		}
 	}
 
@@ -221,7 +221,7 @@ public class AC_New implements Listener{
 		for(ItemStack item : evt.getDrops()){
 			if(renewableAPI.isUnrenewable(item)){
 				evt.setKeepInventory(true);
-				ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+				ArrayList<ItemStack> drops = new ArrayList<>();
 
 				// Regular inventory
 				for(ItemStack i : evt.getEntity().getInventory().getContents()){

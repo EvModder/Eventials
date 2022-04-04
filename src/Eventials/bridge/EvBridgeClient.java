@@ -20,8 +20,8 @@ public final class EvBridgeClient implements MessageReceiver{
 
 	public EvBridgeClient(Logger logger, String HOST, int PORT){
 		CLIENT_UUID = UUID.randomUUID();
-		activeChannels = new HashMap<String, ChannelReceiver>();
-		channelNameLookup = new HashMap<ChannelReceiver, String>();
+		activeChannels = new HashMap<>();
+		channelNameLookup = new HashMap<>();
 		this.logger = logger;
 		conn = new ClientMain(this, HOST, PORT, logger);
 		if(!conn.isClosed()) conn.sendMessage(this, "name:"+Eventials.getPlugin().getConfig().getString("server-name", "xxx"));

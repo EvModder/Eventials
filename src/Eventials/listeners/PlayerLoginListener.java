@@ -60,16 +60,16 @@ public class PlayerLoginListener implements Listener{
 		if(showRecentJoins){
 			String joinsFile = FileIO.loadFile("recent-joins.txt", "");
 			if(!joinsFile.isEmpty()){
-				recentJoins = new LinkedList<String>();
+				recentJoins = new LinkedList<>();
 				recentJoins.addAll(Arrays.asList(joinsFile.substring(1, joinsFile.lastIndexOf(']')).split(", ")));
 				recentJoins.remove("");
 				int maxLength = plugin.getConfig().getInt("max-recent-joins-stored", 50);
 				while(recentJoins.size() > maxLength) recentJoins.removeFirst();
 			}
-			else recentJoins = new LinkedList<String>();
+			else recentJoins = new LinkedList<>();
 		}
 		if(saveIps){
-			addressMap = new HashMap<String, UUID>();
+			addressMap = new HashMap<>();
 			String addressFile = FileIO.loadFile("player-addresses.txt", "");
 			if(!addressFile.isEmpty()){
 				int maxLength = plugin.getConfig().getInt("max-saved-ips", 200);
@@ -88,7 +88,7 @@ public class PlayerLoginListener implements Listener{
 	}
 
 	public List<String> getRecentJoins(int num){//last element is oldest
-		List<String> joins = new LinkedList<String>();
+		List<String> joins = new LinkedList<>();
 		Iterator<String> iterator = recentJoins.descendingIterator();
 		while(joins.size() < num && iterator.hasNext()) joins.add(iterator.next());
 		return joins;

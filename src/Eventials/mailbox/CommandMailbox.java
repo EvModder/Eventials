@@ -80,7 +80,7 @@ public class CommandMailbox extends EvCommand implements MailListener{
 				plugin.getLogger().warning("Invalid number cost in line: "+fees[i]);
 				continue;
 			}
-			mailFees.put(type, new Pair<Double, Double>(sendCost, receiveCost));
+			mailFees.put(type, new Pair<>(sendCost, receiveCost));
 		}
 	}
 
@@ -88,12 +88,12 @@ public class CommandMailbox extends EvCommand implements MailListener{
 		super(pl, true);
 		plugin = pl;
 		mailFetcher = mailboxHook;
-		viewerByTarget = new HashMap<UUID, UUID>();
-		targetByViewer = new HashMap<UUID, UUID>();
-		fileByTarget = new HashMap<UUID, File>();
-		mailboxByViewer = new HashMap<UUID, Inventory>();
+		viewerByTarget = new HashMap<>();
+		targetByViewer = new HashMap<>();
+		fileByTarget = new HashMap<>();
+		mailboxByViewer = new HashMap<>();
 		MAIL_ITEM_FLAG = new NamespacedKey(plugin, "mailable");
-		mailFees = new HashMap<Material, Pair<Double, Double>>();
+		mailFees = new HashMap<>();
 		DEFAULT_ADD_FEE = plugin.getConfig().getDouble("default-sending-fee", -1D);
 		DEFAULT_REMOVE_FEE = plugin.getConfig().getDouble("default-receiving-fee", -1D);
 		CONTAINER_ITEMS_FEE = plugin.getConfig().getBoolean("container-fee-includes-contents", true);
@@ -355,8 +355,8 @@ public class CommandMailbox extends EvCommand implements MailListener{
 		double currentCost = 0D;
 		MailboxInventoryListener(UUID viewer){
 			viewerUUID = viewer;
-			itemsToAdd = new HashMap<ItemStack, Integer>();
-			itemsToRemove = new HashMap<ItemStack, Integer>();
+			itemsToAdd = new HashMap<>();
+			itemsToRemove = new HashMap<>();
 		}
 
 		void chargeFeesAndCloseMailbox(Player player){
@@ -424,8 +424,8 @@ public class CommandMailbox extends EvCommand implements MailListener{
 			Double costToAdd = costToAdd(singleAmtItem);
 			Double costToRemove = costToRemove(singleAmtItem);
 			double costDelta = 0D;
-			HashMap<ItemStack, Integer> itemsToAddDelta = new HashMap<ItemStack, Integer>();
-			HashMap<ItemStack, Integer> itemsToRemoveDelta = new HashMap<ItemStack, Integer>();
+			HashMap<ItemStack, Integer> itemsToAddDelta = new HashMap<>();
+			HashMap<ItemStack, Integer> itemsToRemoveDelta = new HashMap<>();
 			for(int slot : evt.getNewItems().keySet()){
 				if(slot < 27){/*putIn*/
 					if(!cursorItemIsFromMailbox){

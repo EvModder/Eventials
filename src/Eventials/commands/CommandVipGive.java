@@ -55,7 +55,7 @@ public class CommandVipGive extends EvCommand {
 			ItemStack donationslip = new ItemStack(Material.PAPER);
 			ItemMeta meta = donationslip.getItemMeta();
 			meta.setDisplayName(ChatColor.GRAY+args[0]);
-			ArrayList<String> lore = new ArrayList<String>(); lore.add(ChatColor.BLUE+"> 32 diamonds");
+			ArrayList<String> lore = new ArrayList<>(); lore.add(ChatColor.BLUE+"> 32 diamonds");
 			meta.setLore(lore);
 			donationslip.setItemMeta(meta);
 			

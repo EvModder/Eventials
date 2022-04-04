@@ -112,7 +112,7 @@ public class CommandMakeBow extends EvCommand{
 
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String Label, String[] args){
 		if(args.length == 1 && sender instanceof Player){
-			final List<String> tabCompletes = new ArrayList<String>();
+			final List<String> tabCompletes = new ArrayList<>();
 			args[0] = args[0].toLowerCase();
 			for(BowType bow : BowType.values()){
 				if(bow.name().toLowerCase().startsWith(args[0])) tabCompletes.add(bow.name().toLowerCase());

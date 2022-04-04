@@ -30,7 +30,7 @@ public class CommandServerBal extends EvCommand{
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
 		if(args.length == 0) return null;
 		args[0] = args[0].toLowerCase();
-		final List<String> tabCompletes = new ArrayList<String>();
+		final List<String> tabCompletes = new ArrayList<>();
 		if(args.length == 1){
 			if(sender.hasPermission("eventials.serverbal.transfer") && "send".startsWith(args[0]))
 				tabCompletes.add("send");

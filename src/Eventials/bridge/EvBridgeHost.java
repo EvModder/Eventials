@@ -27,10 +27,10 @@ public final class EvBridgeHost implements MessageReceiver{
 
 	public EvBridgeHost(Logger logger, int port, int MAX_SERVERS){
 		HOST_UUID = UUID.randomUUID();
-		activeChannels = new HashMap<String, ChannelReceiver>();
-		channelNameLookup = new HashMap<ChannelReceiver, String>();
-		connectedClients = new HashMap<UUID, MessageSender>();
-		clientNames = new HashMap<MessageSender, String>();
+		activeChannels = new HashMap<>();
+		channelNameLookup = new HashMap<>();
+		connectedClients = new HashMap<>();
+		clientNames = new HashMap<>();
 		this.logger = logger;
 		conn = new ServerMain(this, port, MAX_SERVERS, logger);
 		Timer timer = new Timer();
@@ -53,7 +53,7 @@ public final class EvBridgeHost implements MessageReceiver{
 		new MailboxHoster(evHost, evHost.logger, null, null);
 	}
 
-	private List<String> hbResponses = new ArrayList<String>();
+	private List<String> hbResponses = new ArrayList<>();
 	void heartbeat(){
 		if(conn.numClients() != 0){
 			logger.info("Heartbeat clients: ["+hbResponses.stream().collect(Collectors.joining(", "))+"]");

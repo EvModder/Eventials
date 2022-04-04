@@ -44,17 +44,17 @@ public final class SplitWorlds{
 		return properties.getProperty("level-name");
 	}
 	public static void loadSharedInvMap(ConfigurationSection worldSettings, Logger logger){
-		sharedInvWorlds = new HashMap<String, String>();
-		List<String> worldNames = new ArrayList<String>();
+		sharedInvWorlds = new HashMap<>();
+		List<String> worldNames = new ArrayList<>();
 		org.bukkit.Bukkit.getWorlds().forEach(w -> worldNames.add(w.getName()));// yay lambdas!
-		final HashSet<String> primaryKeys1 = new HashSet<String>();
+		final HashSet<String> primaryKeys1 = new HashSet<>();
 		for(String w : worldNames){
 			File playerdataFolder = new File("./" + w + "/playerdata/");
 			if(playerdataFolder.exists() && playerdataFolder.list().length > 0) primaryKeys1.add(w);
 		}
-		final UnionFind<String> ufind = new UnionFind<String>();
+		final UnionFind<String> ufind = new UnionFind<>();
 
-		final HashSet<String> primaryKeys2 = new HashSet<String>();
+		final HashSet<String> primaryKeys2 = new HashSet<>();
 		for(String groupName : worldSettings.getKeys(false)){
 			List<String> groupWorlds = worldSettings.getStringList(groupName);
 			logger.fine("World group primary (in config): " + groupWorlds.get(0));

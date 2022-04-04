@@ -20,7 +20,7 @@ public final class MailboxHoster implements ChannelReceiver{
 	final Logger logger;
 
 	public MailboxHoster(EvBridgeHost host, Logger logger, String emptyPdataFile, String mailDir){
-		currentLocks = new HashMap<UUID, UUID>();
+		currentLocks = new HashMap<>();
 		this.logger = logger;
 		MAIL_DIR = mailDir == null ? "./mailbox/" : mailDir;
 		if(!new File(MAIL_DIR).exists()){new File(MAIL_DIR).mkdir(); logger.info("Setting up mailbox: "+MAIL_DIR);}
