@@ -37,8 +37,10 @@ public class CommandSetItemName extends EvCommand{
 		}
 		Player player = (Player) sender;
 		ItemStack item = player.getInventory().getItemInMainHand();
-
-		if(item == null) return false;
+		if(item == null || item.getItemMeta() == null){
+			sender.sendMessage(ChatColor.RED+"Invalid item in hand");
+			return true;
+		}
 
 		String nameStr = TextUtils.translateAlternateColorCodes('&', String.join(" ", args));
 		Component comp = TellrawUtils.parseComponentFromString(nameStr);
