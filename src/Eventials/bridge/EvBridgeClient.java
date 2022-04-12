@@ -23,8 +23,7 @@ public final class EvBridgeClient implements MessageReceiver{
 		activeChannels = new HashMap<>();
 		channelNameLookup = new HashMap<>();
 		this.logger = logger;
-		conn = new ClientMain(this, HOST, PORT, logger);
-		if(!conn.isClosed()) conn.sendMessage(this, "name:"+Eventials.getPlugin().getConfig().getString("server-name", "xxx"));
+		conn = new ClientMain(this, HOST, PORT);
 	}
 
 	public ChannelReceiver registerChannel(ChannelReceiver channel, String channelName){
@@ -33,6 +32,13 @@ public final class EvBridgeClient implements MessageReceiver{
 		return activeChannels.put(channelName, channel);
 	}
 
+	@Override public void clientConnected(MessageSender conn){
+		logger.info("Sucessfully connected to EvBridge (mail server)");
+		conn.sendMessage(this, "name:"+Eventials.getPlugin().getConfig().getString("server-name", "xxx"));
+	}
+	@Override public void failedToConnect(){
+		logger.info("Failed to connected to EvBridge (mail server)");
+	}
 	@Override public void receiveMessage(MessageSender conn, String message){
 		if(message.equals("hb")){
 //			logger.info("received heartbeat");

@@ -13,21 +13,24 @@ public class ClientMain extends Connection implements MessageSender{
 	//=========== Added main function =============================================
 	public static void main(String[] args){
 		MessageReceiver receiver = new MessageReceiver(){
-			@Override
-			public void receiveMessage(MessageSender server, String message) {
-				System.out.println("Received: "+message);
-			}
+			Logger logger = Logger.getLogger(ClientMain.class.getName());
+
+			@Override public void receiveMessage(MessageSender server, String message){logger.info("Received: "+message);}
+			@Override public void failedToConnect(){logger.info("Unable to connect to server!");}
+			@Override public void clientConnected(MessageSender client){logger.info("Connected to server");}
+			@Override public void clientDisconnected(MessageSender client){logger.info("Connection closed");}
 		};
 		//Connect to server
-		ClientMain connection = new ClientMain(receiver, "localhost", 42374, Logger.getLogger(ClientMain.class.getName()));
+		ClientMain connection = new ClientMain(receiver, "localhost", 42374);
 		
 		Scanner scan = new Scanner(System.in);
-		while(scan.hasNextLine()){
-			String message = scan.nextLine();
+		String message;
+		while(scan.hasNextLine() && !(message=scan.nextLine()).isBlank()){
 			connection.sendMessage(receiver, message);
 			System.out.println("Sent: "+message);
 		}
 		scan.close();
+		connection.close();
 	}
 	//=============================================================================
 
@@ -43,7 +46,7 @@ public class ClientMain extends Connection implements MessageSender{
 		out.flush();
 	}
 
-	public ClientMain(MessageReceiver recv, String host, int port, Logger logger){
+	public ClientMain(MessageReceiver recv, String host, int port){
 		HOST_ADDRESS = host;
 		PORT = port;
 		receiver = recv;
@@ -51,10 +54,9 @@ public class ClientMain extends Connection implements MessageSender{
 			socket = new Socket(host, port);
 			out = new PrintWriter(socket.getOutputStream());
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			logger.info("Connected to server "+host+":"+port);
 		}
 		catch(IOException e){
-			logger.info("Unable to connect to server! (address="+host+":"+port+")");
+			recv.failedToConnect();
 			socket = null;
 			return;
 		}
@@ -62,19 +64,23 @@ public class ClientMain extends Connection implements MessageSender{
 		//ioThread
 		new Thread(){
 			@Override public void run(){
-				while(!socket.isClosed()){
+				while(!isClosed()){
 					try{
 						if(in.ready()){
 							StringBuilder builder = new StringBuilder("");
 							for(char c = (char)in.read(); c != '\n'; c = (char)in.read()) builder.append(c);
-							receiver.receiveMessage(ClientMain.this, builder.toString());
+							final String message = builder.toString();
+							if(message.equals(DISCONNECT_KEYWORD)) close();
+							else receiver.receiveMessage(ClientMain.this, message);
 						}
 					}
 					catch(IOException e){e.printStackTrace();}
 				}
-				logger.info("Connection closed.");
+				receiver.clientDisconnected(ClientMain.this);
 			}
 		}.start();
+
+		recv.clientConnected(this);
 	}
 
 	@Override
@@ -84,7 +90,11 @@ public class ClientMain extends Connection implements MessageSender{
 
 	@Override
 	public void close(){
-		if(socket != null) try{socket.close();}
-		catch(IOException e){e.printStackTrace();}
+		if(socket != null){
+			sendMessage(null, DISCONNECT_KEYWORD);
+			try{socket.close();}
+			catch(IOException e){e.printStackTrace();}
+		}
+		socket = null;
 	}
 }

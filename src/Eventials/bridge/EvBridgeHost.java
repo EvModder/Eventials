@@ -25,14 +25,14 @@ public final class EvBridgeHost implements MessageReceiver{
 	final HashMap<UUID, MessageSender> connectedClients;
 	final HashMap<MessageSender, String> clientNames;
 
-	public EvBridgeHost(Logger logger, int port, int MAX_SERVERS){
+	public EvBridgeHost(Logger logger, int port, int MAX_CLIENTS){
 		HOST_UUID = UUID.randomUUID();
 		activeChannels = new HashMap<>();
 		channelNameLookup = new HashMap<>();
 		connectedClients = new HashMap<>();
 		clientNames = new HashMap<>();
 		this.logger = logger;
-		conn = new ServerMain(this, port, MAX_SERVERS, logger);
+		conn = new ServerMain(this, port, MAX_CLIENTS);
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask(){@Override public void run(){heartbeat();}}, 45000, 45000);
 	}
@@ -68,6 +68,8 @@ public final class EvBridgeHost implements MessageReceiver{
 		channelNameLookup.put(channel, channelName);
 		return activeChannels.put(channelName, channel);
 	}
+
+	@Override public void serverStarted(){logger.info("Mail server opened");}
 
 	@Override public void receiveMessage(MessageSender conn, String message){
 		String originalMsg = message;

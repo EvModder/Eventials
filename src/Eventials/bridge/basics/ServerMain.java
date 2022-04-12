@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,23 +17,29 @@ public class ServerMain extends Connection{
 	//=========== Added main function =============================================
 	public static void main(String[] args){
 		ServerMain server = new ServerMain(new MessageReceiver(){
-		@Override public void receiveMessage(MessageSender client, String message) {
-			System.out.println("Received from client: "+message);
-		}}, 42374, 2, Logger.getLogger(ServerMain.class.getName()));
+			Logger logger = Logger.getLogger(ServerMain.class.getName());
+
+			@Override public void receiveMessage(MessageSender client, String message){logger.info("Received from client: "+message);}
+			@Override public void serverStarted(){logger.info("Server opened");}
+			@Override public void clientConnected(MessageSender client){logger.info("Got a connection to a client");}
+			@Override public void clientDisconnected(MessageSender client){logger.info("A client left the server");}
+		}, /*port=*/42374, /*MAX_CLIENTS=*/2);
 
 		Scanner scan = new Scanner(System.in);
-		while(scan.hasNextLine()){
-			server.sendToAll(scan.nextLine());
+		String message;
+		while(scan.hasNextLine() && !(message=scan.nextLine()).isBlank()){
+			server.sendToAll(message);
+			System.out.println("Sent: "+message);
 		}
 		scan.close();
+		server.close();
 	}
 	//=============================================================================
 
 	final int PORT, MAX_CLIENTS;
-	final Logger logger;
 	ServerSocket socket;
 	List<Client> clients;
-	Thread connectionWaitThread, ioThread;
+//	Thread connectionWaitThread;
 	StringBuilder outgoing;
 
 	class Client implements MessageSender{
@@ -54,19 +61,19 @@ public class ServerMain extends Connection{
 		}
 	}
 
-	public ServerMain(MessageReceiver recv, int port, int maxClients, Logger logger){
+	public ServerMain(MessageReceiver recv, int port, int maxClients){
 		PORT = port;
 		MAX_CLIENTS = maxClients;
-		this.logger = logger;
 		receiver = recv;
 		try{socket = new ServerSocket(port);}
 		catch(IOException e){e.printStackTrace();return;}
 
 		clients = new ArrayList<>();
-		connectionWaitThread = new Thread(){
+		//connectionWaitThread
+		new Thread(){
 			@Override public void run(){
 				try{
-					while(true){
+					while(!isClosed()){
 						Socket connection = socket.accept();
 						if(clients.size() == MAX_CLIENTS){
 							PrintWriter temp = new PrintWriter(connection.getOutputStream());
@@ -76,58 +83,57 @@ public class ServerMain extends Connection{
 							continue;
 						}
 						synchronized(clients){
-							clients.add(new Client(connection));
+							Client client = new Client(connection);
+							clients.add(client);
+							recv.clientConnected(client);
 						}
-						if(logger != null) logger.info("Got a connection to a client");
 					}
 				}
+				catch(SocketException e){/*server closed*/}
 				catch(IOException e){e.printStackTrace();}
 			}
-		};
-		connectionWaitThread.start();
+		}.start();
 
-		ioThread = new Thread(){
+		//ioThread
+		new Thread(){
 			@Override public void run(){
-				while(!socket.isClosed()){
-					loop();
-				}
-			}
-		};
-		ioThread.start();
-
-		if(logger != null) logger.info("Server opened on port "+port);
-	}
-
-	void loop(){
-		synchronized(clients){
-			Iterator<Client> it = clients.iterator();
-			while(it.hasNext()){
-				Client client = it.next();
-				try{
-					if(client.socket.isClosed()){
-						it.remove();
-						if(logger != null) logger.info("A client left the server");
-					}
-					else{
-						if(client.in.ready()){
-							StringBuilder builder = new StringBuilder("");
-							boolean windums = false;
-							for(char c = (char)client.in.read(); c != '\n'; c = (char)client.in.read()){
-								if(windums) builder.append('\r');
-								if(!(windums = (c == '\r'))) builder.append(c);
+				while(!isClosed()){
+					synchronized(clients){
+						Iterator<Client> it = clients.iterator();
+						while(it.hasNext()){
+							Client client = it.next();
+							try{
+								if(client.socket.isClosed()){
+									it.remove();
+									receiver.clientDisconnected(client);
+								}
+								else{
+									if(client.in.ready()){
+										StringBuilder builder = new StringBuilder("");
+										boolean windums = false;
+										for(char c = (char)client.in.read(); c != '\n'; c = (char)client.in.read()){
+											if(windums) builder.append('\r');
+											if(!(windums = (c == '\r'))) builder.append(c);
+										}
+										final String message = builder.toString();
+										if(message.equals(DISCONNECT_KEYWORD)) client.socket.close();
+										else receiver.receiveMessage(client, message);
+									}
+									if(outgoing != null){
+										client.out.print(outgoing.toString());
+										client.out.flush();
+									}
+								}
 							}
-							receiver.receiveMessage(client, builder.toString());
+							catch(IOException e){e.printStackTrace();}
 						}
-						if(outgoing != null){
-							client.out.print(outgoing.toString());
-							client.out.flush();
-						}
+						outgoing = null;
 					}
 				}
-				catch(IOException e){e.printStackTrace();}
 			}
-			outgoing = null;
-		}
+		}.start();
+
+		recv.serverStarted();
 	}
 
 	public int numClients(){
@@ -139,14 +145,16 @@ public class ServerMain extends Connection{
 		else outgoing.append(message).append('\n');
 	}
 
-	@Override @SuppressWarnings("deprecation")
+	@Override
 	public void close(){
-		connectionWaitThread.stop();
+//		connectionWaitThread.stop();
+		sendToAll(DISCONNECT_KEYWORD);
 		if(socket != null) try{socket.close();} catch(IOException e){}
+		for(Client client : clients) try{client.socket.close();} catch(IOException e){}
 	}
 
 	@Override
 	public boolean isClosed(){
-		return socket == null || socket.isClosed() || clients == null || clients.isEmpty();
+		return socket == null || socket.isClosed() || clients == null;
 	}
 }
