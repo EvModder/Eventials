@@ -37,7 +37,7 @@ public final class EvBridgeClient implements MessageReceiver{
 		conn.sendMessage(this, "name:"+Eventials.getPlugin().getConfig().getString("server-name", "xxx"));
 	}
 	@Override public void failedToConnect(){
-		logger.info("Failed to connected to EvBridge (mail server)");
+		logger.info("Failed to connect to EvBridge (mail server)");
 	}
 	@Override public void receiveMessage(MessageSender conn, String message){
 		if(message.equals("hb")){

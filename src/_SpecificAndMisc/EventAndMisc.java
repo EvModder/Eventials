@@ -45,18 +45,18 @@ public class EventAndMisc{
 	public EventAndMisc(final Eventials pl){
 		this.pl = pl;
 		if(pl.getServer().getWorld("VictoryHills") != null){
-			pl.getLogger().info("Loading AC_Alternate(Old) config");
+			pl.getLogger().info("Loading AC_Alternate(Old)-specific config");
 			loadCustomConfig("config_oldworld.yml");
 			new AC_Old();
 			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
 		}
 		else if(pl.getServer().getWorld("Reliquist") != null){
-			pl.getLogger().info("Loading Hardcore config");
+			pl.getLogger().info("Loading Hardcore-specific config");
 			loadCustomConfig("config_hardcore.yml");
 			new AC_Hardcore();
 		}
 		else if(pl.getServer().getWorld("MysteryPeaks") != null){
-			pl.getLogger().info("Loading NewWorld config");
+			pl.getLogger().info("Loading NewWorld-specific config");
 			loadCustomConfig("config_newworld.yml");
 			new AC_New();
 			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
