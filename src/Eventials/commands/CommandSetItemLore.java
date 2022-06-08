@@ -1,7 +1,6 @@
 package Eventials.commands;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,7 +20,7 @@ import net.evmodder.EvLib.extras.TellrawUtils.Component;
 public class CommandSetItemLore extends EvCommand {
 	public CommandSetItemLore(Eventials pl){super(pl);}
 
-	public final static ItemStack setLore(@Nonnull ItemStack item, @Nonnull Component... lore){
+	public final static ItemStack setLore(ItemStack item, Component... lore){
 		RefNBTTagCompound tag = NBTTagUtils.getTag(item);
 		RefNBTTagCompound display = tag.hasKey("display") ? (RefNBTTagCompound)tag.get("display") : new RefNBTTagCompound();
 		RefNBTTagList loreList = new RefNBTTagList();

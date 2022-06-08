@@ -17,7 +17,7 @@
 #--------------------------------------#
 #           Eventials config           #
 #--------------------------------------#
-server-name: Testcraft
+server-name: urmom
 
 #Horse armor, Saddles, Nametags, CrackedBricks, DoubleSlabs, PackedIce
 add-recipes: false
@@ -34,17 +34,19 @@ log-death-coords: true
 enable-signtools: true
 enable-weaponstats: true
 
+scoreboards-for-all-statistics: true
+
 discord-link: 'https://discord.gg/DMcxR5D'
 
 enable-custom-bows: false
-prevent-arrow-invulnerability: true
+prevent-arrow-invulnerability: false
 shift-click-to-ride-in-gm1: true
-click-to-remove-eyes-of-ender: true
+click-to-remove-eyes-of-ender: false
 remove-eye-of-ender-shatter-chance: 0.2
 
 login-noteblock: true
 login-show-recent-joins: true
-max-recent-joins-shown: 25
+max-recent-joins-shown: 0
 max-recent-joins-stored: 50
 record-player-addresses: true
 
@@ -56,9 +58,9 @@ max-capacity-allowing-new-players:
 default-nophysics-radius: 32
 
 # range (0-1], set to 1 (for 100%) to disable
-skip-night-sleep-percent-required: 0.5
-skip-storm-sleep-percent-required: 0.5
-skip-thunder-sleep-percent-required: 0.5
+skip-night-sleep-percent-required: 1
+skip-storm-sleep-percent-required: 1
+skip-thunder-sleep-percent-required: 1
 skip-percent-inclusive-bound: true
 count-gm3-in-sleep-required: false
 count-gm1-in-sleep-required: false
@@ -82,7 +84,7 @@ global-command-cooldowns:
 #--------------------------------------#
 #           EvEconomy config           #
 #--------------------------------------#
-economy-enabled: true
+economy-enabled: false
 
 #Set track-server-balance to false for an infinite server balance
 track-server-balance: true
@@ -175,7 +177,7 @@ chunk-generate-failure: TP_SPAWN
 #           Messenger config           #
 #--------------------------------------#
 #Frequency of the clock in seconds
-scheduler-enabled: true
+scheduler-enabled: false
 clock-period: 60 #Default 60s per cycle
 
 #To disable a task, set its frequency to 0
@@ -217,10 +219,10 @@ prevent-multicraft-list-console-spam: false
 #--------------------------------------#
 #           EvSpawner config           #
 #--------------------------------------#
-evspawner-enabled: true
+evspawner-enabled: false
 require-silktouch: true
 stackable-spawners: false
-drop-monsteregg-blocks: true
+drop-monsteregg-blocks: false
 allow-nbt-container-placement: true
 allow-nbt-commandblock-placement: true
 allow-colorcodes-in-commandblock: true #TODO
@@ -232,22 +234,22 @@ army-size-mean: 100
 army-size-standard-deviation: 100
 army-spawn-likelyhood: .002
 army-enable-recursive-spawning: true
-feed-slimes: true
+feed-slimes: false
 dye-shulkers: true
 
 #--------------------------------------#
 #            EvVoter config            #
 #--------------------------------------#
-evvoter-enabled: false
+evvoter-enabled: true
 
 # NOTE: This is not automatically given to a player! Enter a vote-triggered
 # command below for your preferred economy plugin, using %reward_amount%.
-player-cash-reward: 2
+player-cash-reward: 0
 
 # Voting streaks can be used to modify the player-cash-reward amount.
 # To disable voting streaks, set 'op' and 'amount' to 0.
 vote-streak-op: 0 #op 0=add, 1=multiply, 2=tbd
-vote-streak-amount: 1
+vote-streak-amount: 0
 vote-streak-max-days: 10
 #How much time before a vote streak is lost?
 vote-streak-grace-hours: 48
@@ -281,14 +283,16 @@ book-editor-enabled: true
 splitworlds-enabled: false
 vaccinate-players: false
 
-# Groups of worlds that share the inventories. World inventories are separate by default
+# Groups of worlds that share the inventories. World inventories are separate by default.
 # Groups can be named whatever you like, but be precise with world names. * is wild.
 # WARNING: Decide how to group worlds before they are opened; when two or more worlds are
 # joined, only one of them will retain it's playerdata information
 shared-inv-worlds:
-  default_group:
+  pair_with_nether:
     - '*'
     - '*_nether'
+  pair_with_the_end:
+    - '*'
     - '*_the_end'
 
 #--------------------------------------#
@@ -319,10 +323,7 @@ world-borders:
 #Legend: &e = text, &b = link/download, &d = @Location, &2 = command, &a = $money/event/world, 
 #Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
 auto-messages:
-  - |
-       Hardcore server died and i'm out of town so
-       i can't access the backups until i get back in February.
-  - This is a temp server, the Hardcore map will be back soon!
+  - Meow
 
 ping-messages:
   - ''

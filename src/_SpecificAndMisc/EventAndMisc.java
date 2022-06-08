@@ -68,6 +68,7 @@ public class EventAndMisc{
 
 		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();
 		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
+		if(pl.getConfig().getBoolean("scoreboards-for-all-statistics", false)) addScoreboardsForAllStats();
 		pl.getServer().getPluginManager().registerEvents(new Listener(){
 			@EventHandler public void onPlayerQuit(PlayerQuitEvent evt){evt.setQuitMessage("");}
 		}, pl);
@@ -101,7 +102,7 @@ public class EventAndMisc{
 		}
 	}
 
-	public void loadRecipes(){
+	void loadRecipes(){
 		try{
 			// Add saddles
 			ShapedRecipe Saddle = (new ShapedRecipe(new NamespacedKey(pl, "saddle"),
@@ -179,6 +180,10 @@ public class EventAndMisc{
 //		Chiseled bricks
 //		ItemStack chiseledBricks = new ItemStack(Material.BRICK, 1, (byte)3);
 //		pl.getServer().addRecipe((new ShapedRecipe(chiseledBricks)));
+	}
+
+	void addScoreboardsForAllStats(){
+		pl.runCommand("scoreboard objectives add zombies_killed minecraft.killed:minecraft.zombie \"Zombies Killed\"");
 	}
 
 	public static Component getPluginDisplay(String pluginName){//TODO: this beautiful function is currently unused!

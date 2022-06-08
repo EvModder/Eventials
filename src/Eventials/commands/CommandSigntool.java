@@ -2,7 +2,6 @@ package Eventials.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -49,7 +48,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 		String signText;
 		
 		if(args.length < 1) signText = "";
-		else signText = TextUtils.translateAlternateColorCodes('&', StringUtils.join(args, ' '));
+		else signText = TextUtils.translateAlternateColorCodes('&', String.join(" ", args));
 
 		ItemMeta meta = item.getItemMeta();
 

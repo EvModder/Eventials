@@ -1,7 +1,6 @@
 package Eventials.commands;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,7 +18,7 @@ import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
 public class CommandSetItemName extends EvCommand{
 	public CommandSetItemName(EvPlugin p){super(p);}
 
-	public final static ItemStack setDisplayName(@Nonnull ItemStack item, @Nonnull Component name){
+	public final static ItemStack setDisplayName(ItemStack item, Component name){
 		RefNBTTagCompound tag = NBTTagUtils.getTag(item);
 		RefNBTTagCompound display = tag.hasKey("display") ? (RefNBTTagCompound)tag.get("display") : new RefNBTTagCompound();
 		display.setString("Name", name.toString());

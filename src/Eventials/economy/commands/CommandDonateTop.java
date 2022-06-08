@@ -2,7 +2,6 @@ package Eventials.economy.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,7 +34,7 @@ public class CommandDonateTop extends EvCommand{
 
 		int page = -1;
 		if(args.length != 0){
-			if(StringUtils.isNumeric(args[0])) page = Integer.parseInt(args[0]);
+			try{page = Integer.parseInt(args[0]);} catch(NumberFormatException ex){}
 		}
 		economy.showDonatetop(sender, page);
 		return true;

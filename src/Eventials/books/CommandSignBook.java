@@ -1,7 +1,6 @@
 package Eventials.books;
 
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -38,7 +37,7 @@ public class CommandSignBook extends EvCommand{
 			sender.sendMessage(ChatColor.RED+"Please provide a title");
 			return true;
 		}
-		String title = TextUtils.translateAlternateColorCodes('&', StringUtils.join(args, ' '));
+		String title = TextUtils.translateAlternateColorCodes('&', String.join(" ", args));
 		String author = sender.getName();
 		if(sender.hasPermission("eventials.books.sign.other")){
 			int i = title.toLowerCase().indexOf("author:");

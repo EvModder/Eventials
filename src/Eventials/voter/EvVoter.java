@@ -4,7 +4,6 @@ import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
 import java.util.List;
 import java.util.UUID;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -55,9 +54,10 @@ public class EvVoter implements Listener{
 		ConfigurationSection offlineVotes = voters.getConfigurationSection(uuid+".offline");
 		if(offlineVotes == null) return;
 		for(String streakVote : offlineVotes.getKeys(false)){
-			if(!StringUtils.isNumeric(streakVote)) continue;
-			int streak = Integer.parseInt(streakVote), votes = offlineVotes.getInt(streakVote);
-			for(int i=0; i<votes; ++i) rewardOnlinePlayer(evt.getPlayer(), streak);
+			try{
+				int streak = Integer.parseInt(streakVote), votes = offlineVotes.getInt(streakVote);
+				for(int i=0; i<votes; ++i) rewardOnlinePlayer(evt.getPlayer(), streak);
+			}catch(NumberFormatException ex){};
 		}
 		voters.set(uuid+".offline", null);
 		anyEvent = true;

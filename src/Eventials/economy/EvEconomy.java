@@ -3,7 +3,6 @@ package Eventials.economy;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map.Entry;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -103,7 +102,7 @@ public final class EvEconomy extends ServerEconomy{
 									+". To "+ChatColor.BOLD+"CONFIRM"+ChatColor.GRAY
 									+" this charge,\n"+ChatColor.GRAY+"run ";
 							String cmdValue = "/"+label;
-							if(args.length != 0) cmdValue += " "+StringUtils.join(args, " ");
+							if(args.length != 0) cmdValue += " "+String.join(" ", args);
 							cmdValue += " confirm";
 							String hyperMsg = ChatColor.DARK_GREEN+cmdValue;
 							

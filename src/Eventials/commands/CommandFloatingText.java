@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import net.evmodder.EvLib.EvCommand;
@@ -115,7 +114,7 @@ public class CommandFloatingText extends EvCommand{
 	}
 
 	public static String implodeAndFormat(String[] args, int start, int end){
-		String txt = StringUtils.join(args, ' ', start, end);
+		String txt = String.join(" ", Arrays.copyOfRange(args, start, end));
 		txt = TextUtils.translateAlternateColorCodes('&', txt);
 		txt = txt.replaceAll("(?<=(?:^|[^\\\\]))(\\\\{2})*\\\\n", "$1\n");
 		txt = txt.replaceAll("(?<=(?:^|[^\\\\]))(\\\\{2})*>", "$1\n");

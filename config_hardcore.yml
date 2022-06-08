@@ -252,17 +252,19 @@ book-editor-enabled: true
 #--------------------------------------#
 #             Split Worlds             #
 #--------------------------------------#
-splitworlds-enabled: true
+splitworlds-enabled: false
 vaccinate-players: true
 
-# Groups of worlds that share the inventories. World inventories are separate by default
+# Groups of worlds that share the inventories. World inventories are separate by default.
 # Groups can be named whatever you like, but be precise with world names. * is wild.
 # WARNING: Decide how to group worlds before they are opened; when two or more worlds are
 # joined, only one of them will retain it's playerdata information
 shared-inv-worlds:
-  default_group:
+  pair_with_nether:
     - '*'
     - '*_nether'
+  pair_with_the_end:
+    - '*'
     - '*_the_end'
 
 #--------------------------------------#

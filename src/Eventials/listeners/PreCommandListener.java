@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import net.evmodder.EvLib.extras.CommandUtils;
 import net.evmodder.EvLib.extras.TextUtils;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -188,7 +187,7 @@ public class PreCommandListener implements Listener {
 			int page = -1;
 			if(message.contains(" ")){
 				String arg = message.split(" ")[1];
-				if(StringUtils.isNumeric(arg)) page = Integer.parseInt(arg);
+				try{page = Integer.parseInt(arg);}catch(NumberFormatException ex){}
 			}
 			EvEconomy.getEconomy().showBaltop(evt.getPlayer(), page);
 			evt.setCancelled(true);

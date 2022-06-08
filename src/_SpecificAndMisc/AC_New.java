@@ -133,7 +133,7 @@ public class AC_New implements Listener{
 	}
 
 	ChatColor enableTest(String pluginName){
-		Plugin plugin = Eventials.getPlugin().getServer().getPluginManager().getPlugin(pluginName);
+		final Plugin plugin = Eventials.getPlugin().getServer().getPluginManager().getPlugin(pluginName);
 		return (plugin != null && plugin.isEnabled()) ? ChatColor.GREEN : ChatColor.RED;
 	}
 	void showFancyPlugins(Player player){

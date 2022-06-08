@@ -1,6 +1,5 @@
 package Eventials.economy.listeners;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -60,9 +59,9 @@ public class EconomySignListener implements Listener {
 				}//if not a disable-click
 			}//if clicked an enabled adminshop sign
 			else if(evt.getPlayer().isSneaking() && evt.getPlayer().hasPermission("eventials.setadminshop")) {
-				if(StringUtils.isNumeric(lines[1]) && Material.getMaterial(lines[2].toUpperCase()) != null
-						&& StringUtils.isNumeric(lines[3].replace(symbol, "")))
+				if(lines[1].matches("^[0-9.]+$") && Material.getMaterial(lines[2].toUpperCase()) != null && lines[3].replace(symbol, "").matches("^[0-9.]+$")){
 					Extras.setAdminShop(evt.getClickedBlock(), true);
+				}
 				evt.getPlayer().sendMessage(ChatColor.GRAY + "Activated AdminShop sign");
 			}
 		}//if first line contains "adminshop"

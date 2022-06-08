@@ -88,6 +88,7 @@ public class PlayerLoginListener implements Listener{
 	}
 
 	public List<String> getRecentJoins(int num){//last element is oldest
+		if(!showRecentJoins) return Arrays.asList("showRecentJoins=false");
 		List<String> joins = new LinkedList<>();
 		Iterator<String> iterator = recentJoins.descendingIterator();
 		while(joins.size() < num && iterator.hasNext()) joins.add(iterator.next());
@@ -138,33 +139,29 @@ public class PlayerLoginListener implements Listener{
 			}
 			else if(!recentJoins.peekLast().equals(name)){
 				Iterator<String> iterator = recentJoins.descendingIterator();
-//				StringBuilder builder = new StringBuilder("")
-//						.append(ChatColor.BLUE).append("Players since last join: ")
-//						.append(ChatColor.GRAY).append(iterator.next());
-
-				ListComponent listComp = new ListComponent(new RawTextComponent(new StringBuilder()
-						.append(ChatColor.BLUE).append("Players since last join: ").toString()));
 				String pName = iterator.next();
-				listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
-	
-				int numShown = 1;
-				while(iterator.hasNext() && !name.equals(pName=iterator.next())){
-					if(numShown == MAX_RECENT_JOINS_SHOWN) break;
-//					builder.append(ChatColor.BLUE).append(", ").append(ChatColor.GRAY).append(pName);
-					listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "));
-					listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
-					++numShown;
-				}
-				if(name.equals(pName)){
-					iterator.remove();
-					listComp.addComponent(new RawTextComponent(ChatColor.BLUE+"."));
-				}
-				else listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "+ChatColor.GRAY+"..."));
-//					builder.append(", ").append(ChatColor.GRAY).append("...");
-	
-				final String message = listComp.toString();//builder.toString();
-				new BukkitRunnable(){@Override public void run(){plugin.sendTellraw(name, message);}}.runTaskLater(plugin, 5); //5 ticks
 
+				if(showRecentJoins){
+					ListComponent listComp = new ListComponent(new RawTextComponent(new StringBuilder()
+							.append(ChatColor.BLUE).append("Players since last join: ").toString()));
+					listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
+		
+					int numShown = 1;
+					while(iterator.hasNext() && !name.equals(pName=iterator.next())){
+						if(numShown == MAX_RECENT_JOINS_SHOWN) break;
+						listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "));
+						listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
+						++numShown;
+					}
+					if(name.equals(pName)){
+						iterator.remove();
+						listComp.addComponent(new RawTextComponent(ChatColor.BLUE+"."));
+					}
+					else listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "+ChatColor.GRAY+"..."));
+		
+					final String message = listComp.toString();
+					new BukkitRunnable(){@Override public void run(){plugin.sendTellraw(name, message);}}.runTaskLater(plugin, 5); //5 ticks
+				}
 				// Remove lingering duplicates
 				while(iterator.hasNext()){
 					pName = iterator.next();

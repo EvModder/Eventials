@@ -19,12 +19,12 @@ import net.evmodder.EvLib.extras.ReflectionUtils.RefMethod;
 
 public final class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
-	public static Collection<List<String>> findMatchGroups(List<String> strs, List<String> search){
+	public static Collection<List<String>> findMatchGroups(List<String> strs, List<String> group_members){
 		HashSet<String> validSubs = null;
 		final List<String> staticTerms = new ArrayList<>();
 		final List<String> complexTerms = new ArrayList<>();
 
-		for(String m : search){
+		for(String m : group_members){
 			int wild = m.indexOf('*');
 			if(wild == -1){
 				if(!strs.contains(m)){
