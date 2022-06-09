@@ -31,8 +31,8 @@ public class PlayerLoginListener implements Listener{
 	private EvEconomy eco;
 	public static HashMap<String, UUID> addressMap;
 	private LinkedList<String> recentJoins;
-	final boolean playNote, showRecentJoins, saveIps, serverFundsNoobs, trackGlobalBal, announceDailyMoney;
-	final int DAILY_LOGIN_MONEY, MAX_RECENT_JOINS_SHOWN;
+	final boolean playNote, SHOW_RECENT_JOINS_ON_LOGIN, saveIps, serverFundsNoobs, trackGlobalBal, announceDailyMoney;
+	final int DAILY_LOGIN_MONEY, MAX_RECENT_JOINS_SAVED/*, MAX_RECENT_JOINS_SHOW_ON_LOGIN*/;
 	final double startingBal;
 	final String curSymbol;
 
@@ -41,8 +41,9 @@ public class PlayerLoginListener implements Listener{
 		boolean ecoEnabled = plugin.getConfig().getBoolean("economy-enabled", true);
 		eco = EvEconomy.getEconomy();
 		playNote = plugin.getConfig().getBoolean("login-noteblock");
-		showRecentJoins = plugin.getConfig().getBoolean("login-show-recent-joins", true);
-		MAX_RECENT_JOINS_SHOWN = plugin.getConfig().getInt("max-recent-joins-shown", 25);
+		SHOW_RECENT_JOINS_ON_LOGIN = plugin.getConfig().getBoolean("login-show-recent-joins", true);
+		MAX_RECENT_JOINS_SAVED = plugin.getConfig().getInt("max-recent-joins-shown", 25);
+		//MAX_RECENT_JOINS_SHOW_ON_LOGIN = MAX_RECENT_JOINS_SAVED;
 		saveIps = plugin.getConfig().getBoolean("save-ips", true);
 		curSymbol = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
 		trackGlobalBal = plugin.getConfig().getBoolean("track-global-balance", true);
@@ -57,7 +58,7 @@ public class PlayerLoginListener implements Listener{
 			startingBal = 0;
 			serverFundsNoobs = false;
 		}
-		if(showRecentJoins){
+		if(MAX_RECENT_JOINS_SAVED > 0){
 			String joinsFile = FileIO.loadFile("recent-joins.txt", "");
 			if(!joinsFile.isEmpty()){
 				recentJoins = new LinkedList<>();
@@ -83,12 +84,12 @@ public class PlayerLoginListener implements Listener{
 	}
 
 	public void onDisable(){
-		if(showRecentJoins) FileIO.saveFile("recent-joins.txt", recentJoins.toString());
+		if(MAX_RECENT_JOINS_SAVED > 0) FileIO.saveFile("recent-joins.txt", recentJoins.toString());
 		if(saveIps) FileIO.saveFile("player-addresses.txt", addressMap.toString());
 	}
 
 	public List<String> getRecentJoins(int num){//last element is oldest
-		if(!showRecentJoins) return Arrays.asList("showRecentJoins=false");
+		if(MAX_RECENT_JOINS_SAVED > 0) return Arrays.asList("showRecentJoins=false");
 		List<String> joins = new LinkedList<>();
 		Iterator<String> iterator = recentJoins.descendingIterator();
 		while(joins.size() < num && iterator.hasNext()) joins.add(iterator.next());
@@ -133,25 +134,25 @@ public class PlayerLoginListener implements Listener{
 		else if(playNote) for(Player p : plugin.getServer().getOnlinePlayers())
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
 
-		if(showRecentJoins){
+		if(MAX_RECENT_JOINS_SAVED > 0){
 			if(recentJoins.isEmpty() || !offP.hasPlayedBefore()){
 				if(!recentJoins.contains(name)) recentJoins.add(name);
 			}
 			else if(!recentJoins.peekLast().equals(name)){
-				Iterator<String> iterator = recentJoins.descendingIterator();
-				String pName = iterator.next();
+				if(SHOW_RECENT_JOINS_ON_LOGIN){
+					Iterator<String> iterator = recentJoins.descendingIterator();
+					String pName = iterator.next();
 
-				if(showRecentJoins){
 					ListComponent listComp = new ListComponent(new RawTextComponent(new StringBuilder()
 							.append(ChatColor.BLUE).append("Players since last join: ").toString()));
 					listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
 		
-					int numShown = 1;
+//					int numShown = 1;
 					while(iterator.hasNext() && !name.equals(pName=iterator.next())){
-						if(numShown == MAX_RECENT_JOINS_SHOWN) break;
+//						if(numShown == MAX_RECENT_JOINS_SHOWN_ON_LOGIN) break;
 						listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "));
 						listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
-						++numShown;
+//						++numShown;
 					}
 					if(name.equals(pName)){
 						iterator.remove();
@@ -161,12 +162,8 @@ public class PlayerLoginListener implements Listener{
 		
 					final String message = listComp.toString();
 					new BukkitRunnable(){@Override public void run(){plugin.sendTellraw(name, message);}}.runTaskLater(plugin, 5); //5 ticks
-				}
-				// Remove lingering duplicates
-				while(iterator.hasNext()){
-					pName = iterator.next();
-					if(name.equals(pName)) iterator.remove();
-				}
+				}//SHOW_RECENT_JOINS_ON_LOGIN
+				else recentJoins.removeLastOccurrence(name);
 				// Add to very end
 				recentJoins.addLast(name);
 			}
