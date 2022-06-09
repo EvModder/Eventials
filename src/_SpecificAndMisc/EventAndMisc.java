@@ -2,6 +2,7 @@ package _SpecificAndMisc;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,6 +10,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -16,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.Scoreboard;
 import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
@@ -182,8 +185,77 @@ public class EventAndMisc{
 //		pl.getServer().addRecipe((new ShapedRecipe(chiseledBricks)));
 	}
 
+	private String capitalizeAndSpacify(String str){
+		StringBuilder builder = new StringBuilder("");
+		boolean wordStart = true;
+		for(final char c : str.toCharArray()){
+			final char upperC = Character.toUpperCase(c);
+			if(wordStart){builder.append(upperC); wordStart = false;}
+			else if(c == upperC) builder.append(' ').append(c);
+			else if(upperC < 'A' || upperC > 'Z') wordStart = true;
+			builder.append(c);
+		}
+		return builder.toString();
+	}
 	void addScoreboardsForAllStats(){
-		pl.runCommand("scoreboard objectives add zombies_killed minecraft.killed:minecraft.zombie \"Zombies Killed\"");
+		Scoreboard board = pl.getServer().getScoreboardManager().getMainScoreboard();
+		//board.registerNewObjective(/*name=*/"zstats-", /*criteria=*/"dummy", /*displayName=*/"name"/*, RenderType.INTEGER*/);
+
+		try{board.registerNewObjective("zstats-dummy", "dummy", "Zstats Test");}
+		catch(IllegalArgumentException ex){return;}
+
+		// Simple stats (excluding trigger & dummy)
+		for(String simpleStat : Arrays.asList("air", "armor", "deathCount", "food", "health", "level", "playerKillCount", "totalKillCount", "xp")){
+			board.registerNewObjective("zstats-"+simpleStat, simpleStat, capitalizeAndSpacify(simpleStat));
+		}
+		// "minecraft.custom:minecraft.<custom_stat>"
+		for(String customStat : Arrays.asList(
+				"animals_bred", "aviate_one_cm", "bell_ring", "boat_one_cm", "clean_armor", "clean_banner", "clean_shulker_box",
+				"climb_one_cm", "crouch_one_cm", "damage_absorbed", "damage_blocked_by_shield", "damage_dealt", "damage_dealt_absorbed",
+				"damage_dealt_resisted", "damage_resisted", "damage_taken", "deaths", "drop", "eat_cake_slice", "enchant_item",
+				"fall_one_cm", "fill_cauldron", "fish_caught", "fly_one_cm", "horse_one_cm", "inspect_dispenser", "inspect_dropper",
+				"inspect_hoppers", "interact_with_anvil", "interact_with_beacon", "interact_with_blast_furnace", "interact_with_brewingstand",
+				"interact_with_campfire", "interact_with_cartography_table", "interact_with_crafting_table", "interact_with_furnace",
+				"interact_with_grindstone", "interact_with_lectern", "interact_with_loom", "interact_with_smithing_table", "interact_with_smoker",
+				"interact_with_stonecutter", "jump", "leave_game", "minecart_one_cm", "mob_kills", "open_barrel", "open_chest", "open_enderchest",
+				"open_shulker_box", "pig_one_cm", "play_noteblock", "play_record", "play_time", "player_kills", "pot_flower", "raid_trigger",
+				"raid_win", "sleep_in_bed", "sneak_time", "sprint_one_cm", "strider_one_cm", "swim_one_cm", "talked_to_villager", "target_hit",
+				"time_since_death", "time_since_rest", "total_world_time", "traded_with_villager", "trigger_trapped_chest", "tune_noteblock",
+				"use_cauldron", "walk_on_water_one_cm", "walk_one_cm", "walk_under_water_one_cm"
+		)){
+			board.registerNewObjective("zstats-"+customStat, "minecraft.custom:minecraft."+customStat, capitalizeAndSpacify(customStat));
+		}
+		// "killedByTeam.<color>", "teamKill.<color>"
+		for(ChatColor color : ChatColor.values()){
+			final String criteria1 = "killedByTeam."+color.getChar();
+			board.registerNewObjective("zstats-"+criteria1, criteria1, criteria1);
+			final String criteria2 = "teamKill."+color.getChar();
+			board.registerNewObjective("zstats-"+criteria2, criteria2, criteria2);
+		}
+		for(Material mat : Material.values()){
+			final String matNameL = mat.name().toLowerCase();
+			if(mat.getMaxDurability() > 0){
+				final String criteria = "minecraft.broken:minecraft."+matNameL;
+				board.registerNewObjective("zstats-"+criteria, criteria, capitalizeAndSpacify("Broken "+matNameL));
+			}
+			board.registerNewObjective("zstats-dropped_"+matNameL, "minecraft.dropped:minecraft."+matNameL, capitalizeAndSpacify("Dropped "+matNameL));
+			board.registerNewObjective("zstats-pick_up_"+matNameL, "minecraft.picked_up:minecraft."+matNameL, capitalizeAndSpacify("Picked up "+matNameL));
+			board.registerNewObjective("zstats-used_"+matNameL, "minecraft.used:minecraft."+matNameL, capitalizeAndSpacify("Used "+matNameL));
+			if(mat.isBlock()){
+				board.registerNewObjective("zstats-mined_"+matNameL, "minecraft.mined:minecraft."+matNameL, capitalizeAndSpacify("Mined "+matNameL));
+			}
+		}
+		for(EntityType e : EntityType.values()){
+			final String entNameL = e.name().toLowerCase();
+			board.registerNewObjective("zstats-killed_"+entNameL, "minecraft.killed:minecraft."+entNameL, capitalizeAndSpacify("Killed "+entNameL));
+			board.registerNewObjective("zstats-killed_by_"+entNameL, "minecraft.killed_by:minecraft."+entNameL, capitalizeAndSpacify("Killed by "+entNameL));
+		}
+		pl.getServer().recipeIterator().forEachRemaining(r -> {
+			final String matNameLower = r.getResult().getType().name().toLowerCase();
+			final String criteria = "minecraft.crafted:minecraft."+matNameLower;
+			try{board.registerNewObjective("zstats-crafted_"+matNameLower, criteria, capitalizeAndSpacify("Crafted "+matNameLower));}
+			catch(IllegalArgumentException ex){}
+		});
 	}
 
 	public static Component getPluginDisplay(String pluginName){//TODO: this beautiful function is currently unused!
