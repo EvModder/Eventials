@@ -533,7 +533,7 @@ permissions:
 
    eventials.sneakjoin:
       description: Permission to sneak on join to cancel login message
-      default: op
+      default: false
 
    eventials.givevip:
       description: Permission to give/take vip status

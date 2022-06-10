@@ -35,6 +35,7 @@ enable-signtools: true
 enable-weaponstats: true
 
 scoreboards-for-all-statistics: true
+scoreboards-for-items-destroyed: true
 
 discord-link: 'https://discord.gg/DMcxR5D'
 
@@ -45,7 +46,7 @@ click-to-remove-eyes-of-ender: false
 remove-eye-of-ender-shatter-chance: 0.2
 
 login-noteblock: true
-login-show-recent-joins: true
+login-show-recent-joins: false
 max-recent-joins-shown: 0
 max-recent-joins-stored: 50
 record-player-addresses: true
@@ -264,8 +265,9 @@ vote-links:
 
 # Available params: %uuid%, %name%, %display_name%, %site_name%, %site_url%, %votes%, %streak%
 vote-triggered-commands:
-  - 'minecraft:tellraw @p[name=!%name%] ["",{"text":"[","color":"gold"},{"text":"AC","color":"yellow"},{"text":"]","color":"gold"},{"text":" %display_name% up-voted the server on ","color":"gray"},{"text":"%site_name%","clickEvent":{"action":"open_url","value":"%site_url%"}}]'
-  - 'minecraft:tellraw @p[name=%name%] ["",{"text":"[","color":"gold"},{"text":"AC","color":"yellow"},{"text":" ->","color":"gold"},{"text":" Me","color":"aqua"},{"text":"]","color":"gold"},{"text":" Thanks for voting for us on ","color":"gray"},"%site_name%",{"text":"!","color":"gray"}]'
+  - 'minecraft:scoreboard players add %name% votes 1'
+  - 'minecraft:tellraw @p[name=!%name%] ["",{"text":"[","color":"gold"},{"text":"Leaf","color":"green"},{"text":"]","color":"gold"},{"text":" %display_name% up-voted the server on ","color":"gray"},{"text":"%site_name%","clickEvent":{"action":"open_url","value":"%site_url%"}}]'
+  - 'minecraft:tellraw @p[name=%name%] ["",{"text":"[","color":"gold"},{"text":"Leaf","color":"green"},{"text":" ->","color":"gold"},{"text":" Me","color":"aqua"},{"text":"]","color":"gold"},{"text":" Thanks for voting for us on ","color":"gray"},"%site_name%",{"text":"!","color":"gray"}]'
 
 # Available params: %uuid%, %name%, %display_name%, %votes%, %streak%, %reward_amount%, %reward_amount_int%
 vote-triggered-commands-once-online:

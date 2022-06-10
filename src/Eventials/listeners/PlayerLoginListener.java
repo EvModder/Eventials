@@ -32,7 +32,7 @@ public class PlayerLoginListener implements Listener{
 	public static HashMap<String, UUID> addressMap;
 	private LinkedList<String> recentJoins;
 	final boolean playNote, SHOW_RECENT_JOINS_ON_LOGIN, saveIps, serverFundsNoobs, trackGlobalBal, announceDailyMoney;
-	final int DAILY_LOGIN_MONEY, MAX_RECENT_JOINS_SAVED/*, MAX_RECENT_JOINS_SHOW_ON_LOGIN*/;
+	final int DAILY_LOGIN_MONEY, MAX_RECENT_JOINS_SAVED, MAX_RECENT_JOINS_SHOWN_ON_LOGIN;
 	final double startingBal;
 	final String curSymbol;
 
@@ -42,8 +42,8 @@ public class PlayerLoginListener implements Listener{
 		eco = EvEconomy.getEconomy();
 		playNote = plugin.getConfig().getBoolean("login-noteblock");
 		SHOW_RECENT_JOINS_ON_LOGIN = plugin.getConfig().getBoolean("login-show-recent-joins", true);
-		MAX_RECENT_JOINS_SAVED = plugin.getConfig().getInt("max-recent-joins-shown", 25);
-		//MAX_RECENT_JOINS_SHOW_ON_LOGIN = MAX_RECENT_JOINS_SAVED;
+		MAX_RECENT_JOINS_SAVED = plugin.getConfig().getInt("max-recent-joins-stored", 25);
+		MAX_RECENT_JOINS_SHOWN_ON_LOGIN  = plugin.getConfig().getInt("max-recent-joins-shown", 25);
 		saveIps = plugin.getConfig().getBoolean("save-ips", true);
 		curSymbol = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
 		trackGlobalBal = plugin.getConfig().getBoolean("track-global-balance", true);
@@ -60,14 +60,13 @@ public class PlayerLoginListener implements Listener{
 		}
 		if(MAX_RECENT_JOINS_SAVED > 0){
 			String joinsFile = FileIO.loadFile("recent-joins.txt", "");
+			recentJoins = new LinkedList<>();
 			if(!joinsFile.isEmpty()){
-				recentJoins = new LinkedList<>();
 				recentJoins.addAll(Arrays.asList(joinsFile.substring(1, joinsFile.lastIndexOf(']')).split(", ")));
 				recentJoins.remove("");
 				int maxLength = plugin.getConfig().getInt("max-recent-joins-stored", 50);
 				while(recentJoins.size() > maxLength) recentJoins.removeFirst();
 			}
-			else recentJoins = new LinkedList<>();
 		}
 		if(saveIps){
 			addressMap = new HashMap<>();
@@ -89,7 +88,7 @@ public class PlayerLoginListener implements Listener{
 	}
 
 	public List<String> getRecentJoins(int num){//last element is oldest
-		if(MAX_RECENT_JOINS_SAVED > 0) return Arrays.asList("showRecentJoins=false");
+		if(MAX_RECENT_JOINS_SAVED <= 0) return Arrays.asList("showRecentJoins=false");
 		List<String> joins = new LinkedList<>();
 		Iterator<String> iterator = recentJoins.descendingIterator();
 		while(joins.size() < num && iterator.hasNext()) joins.add(iterator.next());
@@ -147,12 +146,12 @@ public class PlayerLoginListener implements Listener{
 							.append(ChatColor.BLUE).append("Players since last join: ").toString()));
 					listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
 		
-//					int numShown = 1;
+					int numShown = 1;
 					while(iterator.hasNext() && !name.equals(pName=iterator.next())){
-//						if(numShown == MAX_RECENT_JOINS_SHOWN_ON_LOGIN) break;
+						if(numShown == MAX_RECENT_JOINS_SHOWN_ON_LOGIN) break;
 						listComp.addComponent(new RawTextComponent(ChatColor.BLUE+", "));
 						listComp.addComponent(new RawTextComponent(ChatColor.GRAY+pName, new TextHoverAction(HoverEvent.SHOW_TEXT, getTimeOffline(pName))));
-//						++numShown;
+						++numShown;
 					}
 					if(name.equals(pName)){
 						iterator.remove();
