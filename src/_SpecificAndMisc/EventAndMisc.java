@@ -9,21 +9,33 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import Eventials.Eventials;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.extras.NBTTagUtils;
 import net.evmodder.EvLib.extras.TellrawUtils.Component;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
@@ -74,6 +86,7 @@ public class EventAndMisc{
 		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();
 		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
 		if(pl.getConfig().getBoolean("scoreboards-for-all-statistics", false)) addScoreboardsForAllStats();
+		if(pl.getConfig().getBoolean("scoreboards-for-items-destroyed", false)) addScoreboardsForItemsDestroyedAndRegisterListeners();
 		pl.getServer().getPluginManager().registerEvents(new Listener(){
 			@EventHandler public void onPlayerQuit(PlayerQuitEvent evt){evt.setQuitMessage("");}
 		}, pl);
@@ -271,6 +284,80 @@ public class EventAndMisc{
 			});
 			pl.getLogger().info("Zstats scoreboards registered");
 		}}.runTaskLater(pl, 20*5);
+	}
+
+	void addScoreboardsForItemsDestroyedAndRegisterListeners(){
+		Scoreboard board = pl.getServer().getScoreboardManager().getMainScoreboard();
+		try{
+			board.registerNewObjective("istats-fire", "dummy", "Items lost to fire");
+			board.registerNewObjective("istats-lava", "dummy", "Items lost to lava");
+			board.registerNewObjective("istats-void", "dummy", "Items lost to void");
+			board.registerNewObjective("istats-cactus", "dummy", "Items lost to cactus");
+			board.registerNewObjective("istats-despawn", "dummy", "Items lost to despawn");
+			board.registerNewObjective("istats-explosion", "dummy", "Items lost to explosion");
+			board.registerNewObjective("istats-lightning", "dummy", "Items lost to lightning");
+			board.registerNewObjective("istats-anvil", "dummy", "Items lost to anvil smush");
+		}
+		catch(IllegalArgumentException ex){}
+		
+		pl.getServer().getPluginManager().registerEvents(new Listener(){
+			void incrDeathScore(String statName, ItemStack item){
+				final String matNameL = item.getType().name().toLowerCase();
+				Score newScoreObject = board.getObjective(statName).getScore(matNameL);
+				newScoreObject.setScore(item.getAmount() + (newScoreObject.isScoreSet() ? newScoreObject.getScore() : 0));
+			}
+			String getStatNameFromDamageCause(DamageCause cause){
+				switch(cause){
+					case CONTACT: return "istats-cactus";
+					//NOTE: Sadly, items < y -63 instantly get deleted without any damage event
+					//https://www.spigotmc.org/threads/detection-of-item-falls-into-the-void.282496/
+					case VOID: return "istats-void";
+					case LAVA: return "istats-lava";
+					case FIRE: case FIRE_TICK: return "istats-fire";
+					case ENTITY_EXPLOSION: case BLOCK_EXPLOSION: return "istats-explosion";
+					case LIGHTNING: return "istats-lightning";
+					case FALLING_BLOCK: return "istats-anvil";
+					default: {
+						pl.getLogger().severe("Unexpected damage cause for item entity: "+cause.name());
+						return "istats-unknown";
+					}
+				}
+			}
+			{//"constructor"
+				try{
+					@SuppressWarnings("unchecked")
+					Class<? extends Event> clazz = (Class<? extends Event>)
+						Class.forName("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent");
+					pl.getServer().getPluginManager().registerEvent(clazz, this, EventPriority.MONITOR, new EventExecutor(){
+						@Override public void execute(Listener listener, Event event){
+							Entity entity = ((EntityEvent)event).getEntity();
+							if(entity instanceof Item && entity.getLocation().getY() < (entity.getWorld().getEnvironment() == Environment.NORMAL ? -127 : -63)){
+								incrDeathScore("istats-void", ((Item)entity).getItemStack());
+							}
+						}
+					}, pl);
+				}
+				catch(ClassNotFoundException e){}
+			}
+			@EventHandler(priority = EventPriority.MONITOR)
+			public void itemDespawnEvent(ItemDespawnEvent evt){
+				if(!evt.isCancelled()){
+					pl.getLogger().info("Item Despawn: "+evt.getEntity().getLocation().toString());
+					incrDeathScore("istats-despawn", evt.getEntity().getItemStack());
+					evt.getEntity().remove();
+				}
+			}
+			@EventHandler(priority = EventPriority.MONITOR)
+			public void onItemMiscDamage(EntityDamageEvent evt){
+				if(!evt.isCancelled() && evt.getEntity() instanceof Item){
+					//pl.getLogger().info("Item damage event: "+evt.getCause().name()+" (item cur health: "+NBTTagUtils.getTag(evt.getEntity()).getShort("Health")+")");
+					if(NBTTagUtils.getTag(evt.getEntity()).getShort("Health") <= evt.getFinalDamage()){
+						incrDeathScore(getStatNameFromDamageCause(evt.getCause()), ((Item)evt.getEntity()).getItemStack());
+						evt.getEntity().remove();
+					}
+				}
+			}
+		}, pl);
 	}
 
 	public static Component getPluginDisplay(String pluginName){//TODO: this beautiful function is currently unused!
