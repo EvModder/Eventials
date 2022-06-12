@@ -22,6 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -29,6 +30,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import Eventials.Eventials;
@@ -219,9 +221,10 @@ public class EventAndMisc{
 		Scoreboard board = pl.getServer().getScoreboardManager().getMainScoreboard();
 		//registerZstatObjective(/*name=*/"zstats-", /*criteria=*/"dummy", /*displayName=*/"name"/*, RenderType.INTEGER*/);
 
+		boolean needToRegister = true;
 		try{board.registerNewObjective("zstats-dummy", "dummy", "Zstats Test");}
-		catch(IllegalArgumentException ex){return;}
-		new BukkitRunnable(){@Override public void run(){
+		catch(IllegalArgumentException ex){needToRegister = false;}
+		if(needToRegister) new BukkitRunnable(){@Override public void run(){
 			pl.getLogger().info("Registering all statistics as scoreboards (may take a minute)...");
 	
 			// Simple stats (excluding trigger & dummy)
@@ -278,8 +281,20 @@ public class EventAndMisc{
 					registerZstatObjective("zstats-crafted_"+matNameLower, criteria, capitalizeAndSpacify("Crafted "+matNameLower));
 				}
 			});
-			pl.getLogger().info("Zstats scoreboards registered");
+			pl.getLogger().info("Vanilla Zstats scoreboards registered");
+
+			registerZstatObjective("zstats-chats", "dummy", "Chats Sent");
+			pl.getLogger().info("Non-Vanilla Zstats scoreboards registered");
 		}}.runTaskLater(pl, 20*5);
+
+		// Non-vanilla stats tracking:
+		pl.getServer().getPluginManager().registerEvents(new Listener(){
+			final Objective chatsStat = board.getObjective("zstats-chats");
+			@EventHandler public void onPlayerChat(AsyncPlayerChatEvent evt){
+				final Score score = chatsStat.getScore(evt.getPlayer().getName());
+				score.setScore((score.isScoreSet() ? score.getScore() : 0) + 1);
+			}
+		}, pl);
 	}
 
 	void addScoreboardsForItemsDestroyedAndRegisterListeners(){
@@ -300,7 +315,7 @@ public class EventAndMisc{
 			void incrDeathScore(String statName, ItemStack item){
 				final String matNameL = item.getType().name().toLowerCase();
 				Score newScoreObject = board.getObjective(statName).getScore(matNameL);
-				newScoreObject.setScore(item.getAmount() + (newScoreObject.isScoreSet() ? newScoreObject.getScore() : 0));
+				newScoreObject.setScore((newScoreObject.isScoreSet() ? newScoreObject.getScore() : 0) + item.getAmount());
 			}
 			String getStatNameFromDamageCause(DamageCause cause){
 				switch(cause){
