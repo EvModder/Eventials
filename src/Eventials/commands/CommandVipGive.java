@@ -13,6 +13,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
 import org.bukkit.ChatColor;
@@ -25,7 +26,9 @@ public class CommandVipGive extends EvCommand {
 		plugin = pl;
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		return args.length <= 1 ? null : ImmutableList.of();
+	}
 
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

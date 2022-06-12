@@ -7,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
 import Eventials.Extras;
 import net.evmodder.EvLib.EvCommand;
@@ -21,11 +22,12 @@ public class CommandStatsClear extends EvCommand {
 		super(p);
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		return args.length <= 1 ? null : ImmutableList.of();
+	}
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		if(args.length == 0) return false;//TODO: Use this from now on, not sendMessage("too few args");
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
+		if(args.length == 0) return false;
 
 		@SuppressWarnings("deprecation")
 		OfflinePlayer target = Eventials.getPlugin().getServer().getOfflinePlayer(args[0]);

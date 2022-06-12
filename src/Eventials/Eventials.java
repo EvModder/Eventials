@@ -98,6 +98,7 @@ public class Eventials extends EvPlugin {
 		new CommandItemSuffix(this);
 		new CommandParticles(this);
 		new CommandPig(this);
+		new CommandPing(this);
 		new CommandRecentJoins(this);
 		new CommandRegionDelete(this);
 		new CommandRegionPos(this);

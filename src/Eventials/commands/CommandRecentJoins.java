@@ -2,10 +2,13 @@ package Eventials.commands;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
@@ -23,7 +26,12 @@ public class CommandRecentJoins extends EvCommand {
 		MAX_RECENTS = pl.getConfig().getInt("max-recent-joins-stored", 50);
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		return args.length == 1
+			? IntStream.rangeClosed(1, MAX_RECENTS).mapToObj(i -> ""+i)
+					.filter(iStr -> iStr.startsWith(args[0])).collect(Collectors.toList())
+			: ImmutableList.of();
+	}
 
 	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		int num = DEFAULT_RECENTS_SHOWN;

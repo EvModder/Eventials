@@ -21,11 +21,12 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
 
 public class CommandBreakPhysics extends EvCommand implements Listener{
-	private EvPlugin pl;
-	private Set<UUID> breakPhysics;
+	private final EvPlugin pl;
+	private final Set<UUID> breakPhysics;
 	final int RADIUS, RADIUS_SQ;
 	private boolean GLOBAL = false;
 
@@ -38,8 +39,9 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 		RADIUS_SQ = RADIUS*RADIUS;
 	}
 
-	@Override
-	public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		return args.length <= 1 ? null : ImmutableList.of();
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -58,10 +60,16 @@ public class CommandBreakPhysics extends EvCommand implements Listener{
 		else{
 			if(remove(p.getUniqueId())){
 				p.sendMessage(ChatColor.YELLOW+"Toggled break-physics: off");
+				if(!p.getName().equals(sender.getName())){
+					sender.sendMessage(ChatColor.YELLOW+"Toggled break-physics for "+p.getDisplayName()+": off");
+				}
 			}
 			else{
 				add(p.getUniqueId());
 				p.sendMessage(ChatColor.YELLOW+"Toggled break-physics: on");
+				if(!p.getName().equals(sender.getName())){
+					sender.sendMessage(ChatColor.YELLOW+"Toggled break-physics for "+p.getDisplayName()+": on");
+				}
 			}
 		}
 		return true;

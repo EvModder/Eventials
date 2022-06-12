@@ -14,7 +14,10 @@ public class CommandRegionTp extends EvCommand {
 		super(pl);
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		//TODO: tab complete (available regions?)
+		return null;
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

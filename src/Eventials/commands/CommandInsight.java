@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
@@ -17,7 +18,9 @@ public class CommandInsight extends EvCommand{
 		super(p);
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		return args.length <= 1 ? null : ImmutableList.of();
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

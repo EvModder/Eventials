@@ -23,7 +23,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ItemDespawnEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -87,9 +86,6 @@ public class EventAndMisc{
 		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
 		if(pl.getConfig().getBoolean("scoreboards-for-all-statistics", false)) addScoreboardsForAllStats();
 		if(pl.getConfig().getBoolean("scoreboards-for-items-destroyed", false)) addScoreboardsForItemsDestroyedAndRegisterListeners();
-		pl.getServer().getPluginManager().registerEvents(new Listener(){
-			@EventHandler public void onPlayerQuit(PlayerQuitEvent evt){evt.setQuitMessage("");}
-		}, pl);
 	}
 
 	void loadWorldBorders(){

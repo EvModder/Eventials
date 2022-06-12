@@ -17,7 +17,10 @@ public class CommandRegionDelete extends EvCommand {
 		super(pl);
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		//TODO: tab complete
+		return null;
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -40,7 +43,8 @@ public class CommandRegionDelete extends EvCommand {
 			try{
 				localX = Integer.parseInt(args[0]);
 				localZ = Integer.parseInt(args[1]);
-			}catch(NumberFormatException ex){
+			}
+			catch(NumberFormatException ex){
 				sender.sendMessage(ChatColor.RED+"Invalid coordinates! Please check for typos");
 				return false;
 			}

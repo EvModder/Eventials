@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
 import org.bukkit.ChatColor;
@@ -18,7 +19,9 @@ public class CommandVipTake extends EvCommand {
 		plugin = pl;
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		return args.length <= 1 ? null : ImmutableList.of();
+	}
 
 	@SuppressWarnings("deprecation") @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){

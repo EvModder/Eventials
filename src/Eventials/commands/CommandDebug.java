@@ -6,16 +6,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import com.google.common.collect.ImmutableList;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
 public class CommandDebug extends EvCommand{
 	public CommandDebug(EvPlugin p){super(p);}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return ImmutableList.of();}
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		if(sender instanceof Player == false){
 			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players!");
 			return true;

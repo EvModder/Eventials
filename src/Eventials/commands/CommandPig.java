@@ -27,7 +27,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.earth2me.essentials.User;
-import Eventials.Eventials;
+import com.google.common.collect.ImmutableList;
 
 public class CommandPig extends EvCommand implements Listener{
 	private EvPlugin pl;
@@ -41,12 +41,14 @@ public class CommandPig extends EvCommand implements Listener{
 		justAte = new LinkedList<>();
 	}
 
-	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return null;}
+	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){
+		return args.length <= 1 ? null : ImmutableList.of();
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		Player p;
-		if(args.length > 0) p = Eventials.getPlugin().getServer().getPlayer(args[0]);
+		if(args.length > 0) p = pl.getServer().getPlayer(args[0]);
 		else if(sender instanceof Player) p = (Player) sender;
 		else{
 			sender.sendMessage(ChatColor.RED+"Too few arguments!");
@@ -56,11 +58,17 @@ public class CommandPig extends EvCommand implements Listener{
 		else{
 			if(remove(p.getUniqueId())){
 				p.sendMessage(ChatColor.GOLD+"PiggyPig disabled");
+				if(!p.getName().equals(sender.getName())){
+					sender.sendMessage(ChatColor.GOLD+"PiggyPig disabled for "+p.getDisplayName());
+				}
 			}
 			else{
 				add(p.getUniqueId());
 				if(p.getFoodLevel() == 20) p.setFoodLevel(19);
 				p.sendMessage(ChatColor.GOLD+"PiggyPig enabled");
+				if(!p.getName().equals(sender.getName())){
+					sender.sendMessage(ChatColor.GOLD+"PiggyPig enabled for "+p.getDisplayName());
+				}
 			}
 		}
 		return true;

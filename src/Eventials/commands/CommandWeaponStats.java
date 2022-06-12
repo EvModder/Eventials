@@ -29,11 +29,11 @@ import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.EvLib.extras.TypeUtils;
 
 public class CommandWeaponStats extends EvCommand implements Listener{
-	final String WSTATS_TAG;
-	final HashMap<WeaponStat, Object> WSTATS;
-	final String[] DEFAULT_WSTATS;
+	private final String WSTATS_TAG;
+	private final HashMap<WeaponStat, Object> WSTATS;
+//	private final String[] DEFAULT_WSTATS;
 
-	enum WeaponStat{
+	private enum WeaponStat{
 		PLAYER_KILLS{
 			@Override public String toString(){return "Player Kills";}
 		},
@@ -58,14 +58,14 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 		@Override abstract public String toString();
 	}
 
-	public String getLoreForStat(WeaponStat stat){
+	private String getLoreForStat(WeaponStat stat){
 		return ChatColor.translateAlternateColorCodes('&', "&a * &7"+stat+":&6 "+WSTATS.get(stat));
 	}
-	public String getLoreForStat(WeaponStat stat, Object value){
+	private String getLoreForStat(WeaponStat stat, Object value){
 		return ChatColor.translateAlternateColorCodes('&', "&a * &7"+stat+":&6 "+value);
 	}
 
-	public WeaponStat getStatFromLore(String lore){
+	private WeaponStat getStatFromLore(String lore){
 		int sep = lore.indexOf(':');
 		if(sep > 0) lore = lore.substring(0, sep);
 		String statName = ChatColor.stripColor(lore).replaceAll("[\\s*]", "").toUpperCase();
@@ -73,12 +73,12 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 		catch(IllegalArgumentException ex){return null;}
 	}
 
-	public boolean hasWeaponStats(ItemStack item){
+	private boolean hasWeaponStats(ItemStack item){
 		return (item != null && item.hasItemMeta() && item.getItemMeta().hasLore()
 				&& item.getItemMeta().getLore().contains(WSTATS_TAG));
 	}
 
-	public boolean incrementWeaponStat(ItemStack item, WeaponStat statToChange, int delta){
+	private boolean incrementWeaponStat(ItemStack item, WeaponStat statToChange, int delta){
 		if(hasWeaponStats(item)){
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = meta.getLore();
@@ -96,7 +96,7 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 		}
 		return false;
 	}
-	public boolean setWeaponStat(ItemStack item, WeaponStat statToChange, Object value){
+	private boolean setWeaponStat(ItemStack item, WeaponStat statToChange, Object value){
 		if(hasWeaponStats(item)){
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = meta.getLore();
@@ -127,11 +127,11 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 		WSTATS.put(WeaponStat.BLOCKS_MINED, 0);
 //		WSTATS.put(WeaponStat.CHANGED_HANDS, 0);
 		WSTATS.put(WeaponStat.LAST_VICTIM, "");
-		DEFAULT_WSTATS = new String[]{
-			WSTATS_TAG,
-			getLoreForStat(WeaponStat.PLAYER_KILLS),
-			getLoreForStat(WeaponStat.MONSTER_KILLS)
-		};
+//		DEFAULT_WSTATS = new String[]{
+//			WSTATS_TAG,
+//			getLoreForStat(WeaponStat.PLAYER_KILLS),
+//			getLoreForStat(WeaponStat.MONSTER_KILLS)
+//		};
 	}
 
 	@Override public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
