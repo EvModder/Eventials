@@ -23,8 +23,6 @@ server-name: urmom
 add-recipes: false
 
 pre-command: true #Required for a lot of features/functionality
-fancy-help: true
-detailed-command-help: true
 fancy-pl: true
 command-aliases: true
 use-hyperwarps: true

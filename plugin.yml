@@ -170,6 +170,12 @@ commands:
       permission: eventials.ghost
       permission-message: You do not have permission to do this.
 
+   help:
+      description: Access to a more useable /help
+      usage: /help [page/plugin/command]
+      permission: eventials.help
+      permission-message: You do not have permission to do this.
+
    insight:
       description: View information about a player via UUID or name.
       usage: /insight <UUID/name>
@@ -491,6 +497,23 @@ permissions:
    eventials.skipcooldown:
       description: Permission to bypass global command cool-downs
       default: op
+
+   eventials.help:
+      description: Permission to use /help
+      default: true
+
+   eventials.help:
+      description: Permission to use /help
+      default: true
+      children:
+         eventials.help.plugin: true
+         eventials.help.command: true
+
+   eventials.help.plugin:
+      description: Permission to use /help <plugin>
+
+   eventials.help.command:
+      description: Permission to use /help <command>
 
    eventials.insight:
       description: Permission to use /insight

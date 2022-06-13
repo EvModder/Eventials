@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import net.evmodder.EvLib.extras.CommandUtils;
 import net.evmodder.EvLib.extras.TextUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -22,8 +20,7 @@ import Eventials.economy.EvEconomy;
 
 public class PreCommandListener implements Listener {
 	final Eventials plugin;
-	final boolean fancyHelp, cmdHelp, commandAliases,
-					customBaltop, watchBalances, hyperWarps;
+	final boolean commandAliases, customBaltop, watchBalances, hyperWarps;
 	final HashSet<String> balanceWatchCommands, quickWarps;
 	final HashMap<String, Integer> cooldownCommands;
 	final HashMap<String, String> getCommandFromAlias;
@@ -33,8 +30,6 @@ public class PreCommandListener implements Listener {
 	public PreCommandListener(){
 		plugin = Eventials.getPlugin();
 
-		fancyHelp = plugin.getConfig().getBoolean("fancy-help", true);
-		cmdHelp = plugin.getConfig().getBoolean("detailed-command-help", true);
 		commandAliases = plugin.getConfig().getBoolean("command-aliases", true);
 		quickWarps = new HashSet<>();
 		quickWarps.addAll(plugin.getConfig().getStringList("quick-warps"));
@@ -162,25 +157,6 @@ public class PreCommandListener implements Listener {
 		}
 		else if(command.equals("/butcher2")){
 			evt.setMessage(message.replace(command, "/butcher"));
-		}
-		else if(command.equals("/help") || command.equals("/?")){
-			int space = message.indexOf(' ');
-			if(space != -1 && cmdHelp){
-				Command cmd = plugin.getServer().getPluginCommand(message.substring(space+1));
-				if(cmd != null){
-					evt.setCancelled(true);
-					CommandUtils.showCommandHelp(evt.getPlayer(), cmd);
-				}
-			}
-			if(fancyHelp){
-				int pageNum = 1;
-				if(space != -1){
-					try{pageNum = Math.max(Integer.parseInt(message.substring(space+1)), 1);}
-					catch(IllegalArgumentException ex){return;}
-				}
-				evt.setCancelled(true);
-				CommandUtils.showFancyHelp(evt.getPlayer(), pageNum);
-			}
 		}
 		else if(customBaltop && ((message=message.replaceFirst(" top", "top")).startsWith("/baltop") ||
 								message.startsWith("/balancetop") || message.startsWith("/moneytop"))){

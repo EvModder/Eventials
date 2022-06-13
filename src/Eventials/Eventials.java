@@ -92,6 +92,7 @@ public class Eventials extends EvPlugin {
 		new CommandEventials(this);
 		new CommandFloatingText(this);
 		new CommandGhost(this);
+		new CommandHelp(this);
 		new CommandInsight(this);
 		new CommandSetItemName(this);
 		new CommandItemPrefix(this);
