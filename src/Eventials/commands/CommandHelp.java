@@ -81,15 +81,15 @@ public class CommandHelp extends EvCommand{
 		if(args.length == 1){
 			try{targetPage = Math.max(Integer.parseInt(args[0]), 1);}
 			catch(IllegalArgumentException ex){
-				targetCmd = findCommand(args[0]);
-				if(targetCmd == null) targetPlugin = pl.getServer().getPluginManager().getPlugin(args[0]);
+				targetPlugin = pl.getServer().getPluginManager().getPlugin(args[0]);
+				if(targetPlugin == null) targetCmd = findCommand(args[0]);
 			}
 		}
 		if(targetCmd != null){
 			CommandUtils.showCommandHelp(sender, targetCmd);
 		}
 		else if(targetPlugin != null){
-			//TODO: show "about" & commands for a plugin
+			CommandUtils.showPluginHelp(sender, targetPlugin);
 		}
 		else{
 			CommandUtils.showFancyHelp(sender, targetPage);

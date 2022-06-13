@@ -1,7 +1,8 @@
 name: Eventials
 main: Eventials.Eventials
-author: EvModder/EvDoc
-description: Large bundle of miscellaneous features
+author: EvModder
+website: https://github.com/EvModder/Eventials
+description: Bundle of miscellaneous custom features.
 version: 1.3.4 # .3=mailbox, ..4=tab completes, ping cmd
 softdepend: [Votifier, Essentials]
 api-version: 1.13
