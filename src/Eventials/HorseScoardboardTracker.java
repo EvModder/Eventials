@@ -49,8 +49,8 @@ class HorseScoardboardTracker implements Listener{
 			board.registerNewObjective("llama-speed", "dummy", "§9§m  §a Llama Speed §9§m  ");
 			board.registerNewObjective("llama-health", "dummy", "§9§m  §a Llama Health §9§m  ");
 			board.registerNewObjective("llama-jump", "dummy", "§9§m  §a Llama Jump §9§m  ");
-			board.registerNewObjective("trader_llama-h", "dummy", "§9§m  §a TraderLlama Health §9§m  ");
-			board.registerNewObjective("skeleton_horse-j", "dummy", "§9§m  §a SkeleHorse Jump §9§m  ");
+			board.registerNewObjective("trader_llama-health", "dummy", "§9§m  §a TraderLlama Health §9§m  ");
+			board.registerNewObjective("skeleton_horse-jump", "dummy", "§9§m  §a SkeleHorse Jump §9§m  ");
 		}
 		catch(IllegalArgumentException ex){}
 		// Display all different equine stats in a loop
