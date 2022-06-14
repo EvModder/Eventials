@@ -32,9 +32,6 @@ log-death-coords: true
 enable-signtools: true
 enable-weaponstats: true
 
-scoreboards-for-all-statistics: true
-scoreboards-for-items-destroyed: true
-
 discord-link: 'https://discord.gg/DMcxR5D'
 
 enable-custom-bows: false
@@ -79,6 +76,17 @@ keep-if-op: true
 #To bypass a specific command, use 'eventials.bypass.waitcommands.cmd'
 global-command-cooldowns:
   weather: 1200
+
+
+#--------------------------------------#
+#          Custom Scoarboards          #
+#--------------------------------------#
+add-scoreboards-for-vanilla-statistics: true
+add-scoreboards-for-items-destroyed: true
+add-scoreboards-for-horse-attributes: true
+add-scoreboard-for-chats: true
+add-scoreboard-for-advancements: true
+advancements-counted: [story, adventure, nether, end, husbandry]
 
 #--------------------------------------#
 #           EvEconomy config           #
