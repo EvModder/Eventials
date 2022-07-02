@@ -86,12 +86,11 @@ public class CommandVote extends EvCommand{
 		}
 		if(tellrawStringLinks.length() > 2) Eventials.getPlugin().sendTellraw(player.getName(), tellrawStringLinks);
 
-		int votes = voteManager.getTotalVotes(player.getUniqueId());
+		final int votes = voteManager.getTotalVotes(player.getUniqueId());
 		if(votes > 0){
-			int streak = voteManager.getStreak(player.getUniqueId());
-
+			final int streak = voteManager.getStreak(player.getUniqueId());
 			for(String cmd : voteCommandTriggeredCommands){
-				cmd = cmd.replace("%uuid%", player.getUniqueId().toString())
+				cmd = cmd.replace("%uuid%", player.getUniqueId().toString().toLowerCase())
 						.replace("%name%", player.getName()).replace("%display_name%", player.getDisplayName())
 						.replace("%votes%", ""+votes).replace("%streak%", ""+streak);
 				Eventials.getPlugin().runCommand(cmd);
@@ -101,10 +100,10 @@ public class CommandVote extends EvCommand{
 			ChatColor c = (streak > 0 ? streak > voteManager.streakMax ? ChatColor.GREEN : ChatColor.AQUA : ChatColor.YELLOW);
 //			player.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+streak);
 			if(streak > 0){
-				long now = System.currentTimeMillis();
-				long lastVote = voteManager.getLastVote(player.getUniqueId());
-				long timeSinceVote = now - lastVote;
-				long timeLeft = (voteManager.dayInMillis + voteManager.graceInMillis) - timeSinceVote;
+				final long now = System.currentTimeMillis();
+				final long lastVote = voteManager.getLastVote(player.getUniqueId());
+				final long timeSinceVote = now - lastVote;
+				final long timeLeft = (voteManager.dayInMillis + voteManager.graceInMillis) - timeSinceVote;
 				player.sendMessage(ChatColor.GRAY+"Your voting streak: "+c+streak+ChatColor.GRAY+", time left: "
 						+TextUtils.formatTime(timeLeft, false, ChatColor.GOLD, ChatColor.GRAY));
 	
