@@ -152,7 +152,7 @@ commands:
       permission-message: You do not have permission to do this.
 
    discord:
-      description: A link to join the discord server
+      description: Get invite link for the discord server
       usage: /discord
       permission: eventials.discord
       permission-message: You do not have permission to do this.
@@ -178,7 +178,7 @@ commands:
       permission-message: You do not have permission to do this.
 
    help:
-      description: Access to a more useable /help
+      description: Get info on plugins and commands
       usage: /help [page/plugin/command]
       permission: eventials.help
       permission-message: You do not have permission to do this.
