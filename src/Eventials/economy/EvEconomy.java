@@ -2,14 +2,19 @@ package Eventials.economy;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
@@ -24,7 +29,8 @@ import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TextUtils;
 
 public final class EvEconomy extends ServerEconomy{
-	final boolean useCurItem, updateBalsOnPayment;
+	private final boolean useCurItem, balanceWatchForPaidCommands;
+	private final HashSet<String> balanceWatchCommands;
 
 	private static EvEconomy eco; public static EvEconomy getEconomy(){return eco;}
 	private static Material currencyType; public Material getCurrency(){return currencyType;}
@@ -41,30 +47,52 @@ public final class EvEconomy extends ServerEconomy{
 		if(serverBal.compareTo(globalBal) > 0) globalBal = serverBal;
 		setIfZero(serverBal, globalBal);
 
+		//Now for the custom Economy stuff
 		useCurItem = pl.getConfig().getBoolean("use-item-as-currency", true);
-		updateBalsOnPayment = pl.getConfig().getBoolean("update-balance-on-paid-commands", true);
-		currencyType = Material.getMaterial(pl.getConfig().getString("currency-item", "LILY_PAD").toUpperCase());
-		if(useCurItem && currencyType == null) pl.getLogger().severe("Unknown currency item: "
-				+ pl.getConfig().getString("currency-item", "LILY_PAD"));
+		balanceWatchForPaidCommands = pl.getConfig().getBoolean("update-balance-on-paid-commands", true);
+		final String currencyTypeName = pl.getConfig().getString("currency-item", "LILY_PAD");
+		currencyType = Material.getMaterial(currencyTypeName.toUpperCase());
+		if(useCurItem && currencyType == null) pl.getLogger().severe("Unknown currency item: "+currencyTypeName);
 
-		//Now into the custom Economy stuff
+		balanceWatchCommands = new HashSet<>(pl.getConfig().getStringList("update-balance-commands"));
+		for(String cmdName : balanceWatchCommands){
+			PluginCommand cmd = plugin.getServer().getPluginCommand(cmdName);
+			if(cmd != null) balanceWatchCommands.addAll(cmd.getAliases());
+		}
 		eco = this;
 
 		if(pl.getConfig().getBoolean("economy-signs"))
 			pl.getServer().getPluginManager().registerEvents(new EconomySignListener(), pl);
 //		if(trackGlobalBal){
-//			plugin.getServer().getPluginManager().registerEvents(new _UNUSED_ChunkPopulateListener(), plugin);
-//			plugin.getServer().getPluginManager().registerEvents(new _UNUSED_PlayerFishingListener(), plugin);
-//			plugin.getServer().getPluginManager().registerEvents(new _UNUSED_CurrencyLoseGainListener(), plugin);
+//			plugin.getServer().getPluginManager().registerEvents(new _UNUSED_ChunkPopulateListener(), pl);
+//			plugin.getServer().getPluginManager().registerEvents(new _UNUSED_PlayerFishingListener(), pl);
+//			plugin.getServer().getPluginManager().registerEvents(new _UNUSED_CurrencyLoseGainListener(), pl);
 //		}
 		if(pl.getConfig().getBoolean("advancement-reward")){
-			pl.getServer().getPluginManager().registerEvents(new AdvancementListener(), plugin);
+			pl.getServer().getPluginManager().registerEvents(new AdvancementListener(), pl);
 		}
 		if(pl.getConfig().getDouble("chunk-generate-cost", 0) != 0){
-			pl.getServer().getPluginManager().registerEvents(new ChunkGenerateListener(), plugin);
+			pl.getServer().getPluginManager().registerEvents(new ChunkGenerateListener(), pl);
+		}
+		if(!balanceWatchCommands.isEmpty()){
+			pl.getServer().getPluginManager().registerEvents(new Listener(){
+				@EventHandler public void onPreCommand(PlayerCommandPreprocessEvent evt){
+					final String cmdNoSlash = evt.getMessage().substring(1).toLowerCase();
+					if(balanceWatchCommands.contains(cmdNoSlash)){
+						new BukkitRunnable(){@Override public void run(){
+						updateBalance(evt.getPlayer().getUniqueId(), /*isOnline=*/true);
+							for(String arg : cmdNoSlash.split(" ")){
+								@SuppressWarnings("deprecation") OfflinePlayer p = plugin.getServer().getOfflinePlayer(arg);
+								if(p != null && p.hasPlayedBefore()) EvEconomy.getEconomy().updateBalance(p.getUniqueId(), /*isOnline=*/false);
+							}
+						}}.runTaskLater(pl, 1);
+					}
+				}
+			}, pl);
 		}
 
 		new CommandAdvertise(pl, this);
+		new CommandBaltop(pl, this, pl.getConfig().getBoolean("custom-baltop", true));
 		new CommandDeposit(pl, this, useCurItem);
 		new CommandDonateTop(pl, this);
 		new CommandMoneyOrder(pl, this, pl.getConfig().getBoolean("enable-moneyorders", false));
@@ -74,13 +102,16 @@ public final class EvEconomy extends ServerEconomy{
 	}
 
 	void loadPaidCommands(){
-		for(final Entry<String, Object> e : plugin.getConfig().getConfigurationSection("paid-commands")
-				.getValues(false).entrySet()){
+		for(Entry<String, Object> e : plugin.getConfig().getConfigurationSection("paid-commands").getValues(false).entrySet()){
 			final PluginCommand cmd = plugin.getServer().getPluginCommand(e.getKey());
 			if(cmd == null){
 				plugin.getLogger().info("Unknown priced command: "+e.getKey());
 				continue;
 			}
+//			if(balanceWatchForPaidCommands){
+//				balanceWatchCommands.add(cmd.getName());
+//				balanceWatchCommands.addAll(cmd.getAliases());
+//			}
 			final CommandExecutor executor = cmd.getExecutor();
 			cmd.setExecutor(new CommandExecutor(){
 				final double cmdPrice = (double)(e.getValue() instanceof Integer ? ((int)e.getValue())*1D : e.getValue());
@@ -97,7 +128,7 @@ public final class EvEconomy extends ServerEconomy{
 						if(args.length == 0 || (!args[args.length-1].equalsIgnoreCase("confirm")
 								&& !args[args.length-1].equalsIgnoreCase("c")))
 						{
-							String preMsg = ChatColor.GRAY+"This command costs "
+							final String preMsg = ChatColor.GRAY+"This command costs "
 									+ChatColor.YELLOW+cmdPrice+CUR_SYMBOL+ChatColor.GRAY
 									+". To "+ChatColor.BOLD+"CONFIRM"+ChatColor.GRAY
 									+" this charge,\n"+ChatColor.GRAY+"run ";
@@ -118,7 +149,7 @@ public final class EvEconomy extends ServerEconomy{
 								playerToServer(((Player)sender).getUniqueId(), cmdPrice);
 								sender.sendMessage(ChatColor.GRAY+"You paid "+ChatColor.YELLOW+cmdPrice
 										+ChatColor.DARK_GREEN+'L'+ChatColor.GRAY+" to run "+ChatColor.WHITE+label);
-								if(updateBalsOnPayment) updateBalance(((Player)sender).getUniqueId(), true);
+								if(balanceWatchForPaidCommands) updateBalance(((Player)sender).getUniqueId(), /*isOnline=*/true);
 							}
 							else plugin.getLogger().info("Unsuccessful :C ");
 							return true;

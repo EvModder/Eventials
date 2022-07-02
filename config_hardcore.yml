@@ -228,7 +228,7 @@ vote-links:
 # - 'MC Index, https://www.minecraft-index.com/31471-alternatecraft/vote'
 
 vote-command-triggered-commands:
-  - 'minecraft:tellraw %name%  [{"text":"You currently have ","color":"gray"},{"score":{"name":"%uuid%","objective":"votes-by-uuid"},"color":"dark_green"}," unused votes."]'
+  - 'minecraft:tellraw %name% [{"text":"You currently have ","color":"gray"},{"score":{"name":"%name%","objective":"votes-by-name"},"color":"dark_green"}," unused votes."]'
 
 # Available params: %uuid%, %name%, %display_name%, %site_name%, %site_url%, %votes%, %streak%
 vote-triggered-commands:

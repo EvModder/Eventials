@@ -16,12 +16,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import com.earth2me.essentials.Essentials;
 import Eventials.Eventials;
 import Eventials.Extras;
-import Eventials.economy.EvEconomy;
 
 public class PreCommandListener implements Listener {
 	final Eventials plugin;
-	final boolean commandAliases, customBaltop, watchBalances, hyperWarps;
-	final HashSet<String> balanceWatchCommands, quickWarps;
+	final boolean commandAliases, hyperWarps;
+	final HashSet<String> quickWarps;
 	final HashMap<String, Integer> cooldownCommands;
 	final HashMap<String, String> getCommandFromAlias;
 	final HashMap<String, Long> recentCooldownCommands;
@@ -33,11 +32,6 @@ public class PreCommandListener implements Listener {
 		commandAliases = plugin.getConfig().getBoolean("command-aliases", true);
 		quickWarps = new HashSet<>();
 		quickWarps.addAll(plugin.getConfig().getStringList("quick-warps"));
-		customBaltop = plugin.getConfig().getBoolean("custom-baltop", true);
-		watchBalances = plugin.getConfig().getBoolean("update-balance-watch", false);
-
-		balanceWatchCommands = new HashSet<>();
-		if(watchBalances) balanceWatchCommands.addAll(plugin.getConfig().getStringList("update-balance-commands"));
 
 		curSymbol = TextUtils.translateAlternateColorCodes('&', plugin.getConfig().getString("currency-symbol", "&2L"));
 		getCommandFromAlias = new HashMap<>();
@@ -65,16 +59,16 @@ public class PreCommandListener implements Listener {
 		if(evt.isAsynchronous() || evt.isCancelled()) return;
 
 		String message = evt.getMessage().toLowerCase();
-		String command = message.split(" ")[0];//.replace("-", "");
-		String noSlash = command.substring(1);
+		final String command = message.split(" ")[0];//.replace("-", "");
+		final String noSlash = command.substring(1);
 
 		if(cooldownCommands.containsKey(noSlash) &&
 				!evt.getPlayer().hasPermission("eventials.bypass.waitcommands")){
 			String cmd = getCommandFromAlias.get(noSlash);
-			long timeInSeconds = System.currentTimeMillis()/1000;
+			final long timeInSeconds = System.currentTimeMillis()/1000;
 			if(recentCooldownCommands.containsKey(cmd) &&
 					!evt.getPlayer().hasPermission("eventials.bypass.waitcommands."+cmd)){
-				long timeSince = timeInSeconds - recentCooldownCommands.get(cmd);
+				final long timeSince = timeInSeconds - recentCooldownCommands.get(cmd);
 				if(timeSince < cooldownCommands.get(cmd)){
 					evt.getPlayer().sendMessage(ChatColor.RED
 							+"Sorry, the cooldown for that command has not yet ended.");
@@ -85,14 +79,6 @@ public class PreCommandListener implements Listener {
 				}
 			}
 			else recentCooldownCommands.put(cmd, timeInSeconds);
-		}
-
-		if(watchBalances && balanceWatchCommands.contains(noSlash)){
-			EvEconomy.getEconomy().updateBalance(evt.getPlayer().getUniqueId(), true);
-			for(String arg : message.split(" ")){
-				OfflinePlayer p = plugin.getServer().getOfflinePlayer(arg);
-				if(p != null && p.hasPlayedBefore()) EvEconomy.getEconomy().updateBalance(p.getUniqueId(), true);
-			}
 		}
 
 		if(commandAliases){
@@ -157,16 +143,6 @@ public class PreCommandListener implements Listener {
 		}
 		else if(command.equals("/butcher2")){
 			evt.setMessage(message.replace(command, "/butcher"));
-		}
-		else if(customBaltop && ((message=message.replaceFirst(" top", "top")).startsWith("/baltop") ||
-								message.startsWith("/balancetop") || message.startsWith("/moneytop"))){
-			int page = -1;
-			if(message.contains(" ")){
-				String arg = message.split(" ")[1];
-				try{page = Integer.parseInt(arg);}catch(NumberFormatException ex){}
-			}
-			EvEconomy.getEconomy().showBaltop(evt.getPlayer(), page);
-			evt.setCancelled(true);
 		}
 	}
 }

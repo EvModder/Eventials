@@ -95,11 +95,6 @@ public class Extras{
 			// Extract money directly from server bal
 			try{EvEconomy.getEconomy().chargeServer(EssEcoHook.getBalance(player));}
 			catch(Exception e){e.printStackTrace();}
-			
-//			//send money from server to player after restoring profile
-//			try{Economy.getEconomy().serverToPlayer(uuid, VaultHook.getBalance(player));}
-//			catch(UserDoesNotExistException e1){}
-			
 			EvEconomy.getEconomy().updateBalance(uuid, player.isOnline());
 		}
 		else returnMsg.append(ChatColor.RED).append("Unable to find ").append(playerName)

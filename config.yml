@@ -120,7 +120,7 @@ paid-commands:
 #  'factions claim': 3
 #  home: 0.1
 
-update-balance-watch: false
+# If true, 'paid-commands' will be included in 'update-balance-commands'
 update-balance-on-paid-commands: true
 update-balance-commands:
   - pay

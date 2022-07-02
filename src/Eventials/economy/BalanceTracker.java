@@ -124,7 +124,7 @@ public abstract class BalanceTracker{
 		});
 	}
 
-	public void updateBalance(final UUID pUUID, boolean isOnline){
+	public void updateBalance(final UUID pUUID, boolean isOnline){//TODO: protected vs public
 		OfflinePlayer p = org.bukkit.Bukkit.getServer().getOfflinePlayer(pUUID);
 		long currentBal;
 		try{currentBal = (long) EssEcoHook.getBalance(p);}
@@ -145,7 +145,7 @@ public abstract class BalanceTracker{
 		}
 	}
 
-	public void removeBalance(final UUID pUUID){
+	public void removeBalance(final UUID pUUID){//TODO: protected vs public
 		bals.removeIf(new Predicate<PlayerBalance>(){
 			@Override public boolean test(PlayerBalance pb){return pUUID.equals(pb.uuid);}});
 	}

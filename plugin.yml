@@ -20,6 +20,12 @@ commands:
       permission-message: You do not have permission to do this.
 
    deposit:
+      description: View the richest accounts in the bank
+      usage: /baltop [page]
+      permission: eventials.baltop
+      permission-message: You do not have permission to do this.
+
+   deposit:
       description: Deposit item-money in the bank
       usage: /deposit [amount]
       aliases: [d]
@@ -81,7 +87,7 @@ commands:
    vote:
       description: Display voting links
       usage: /vote
-      aliases: [votelinks]
+      aliases: [votelinks,votes]
       permission: eventials.vote
       permission-message: You do not have permission to do this.
 
@@ -303,6 +309,10 @@ permissions:
 #======== Economy
    eventials.advertise:
       description: Permission to use /advertise
+      default: true
+
+   eventials.baltop:
+      description: Permission to use /baltop
       default: true
 
    eventials.deposit:
