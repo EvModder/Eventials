@@ -30,7 +30,7 @@ public class CommandPing extends EvCommand{
 			sender.sendMessage(ChatColor.RED+"Too few arguments!");
 			return false;
 		}
-		if(pl == null) sender.sendMessage(ChatColor.RED+"Could not find the specified player!");
+		if(target == null) sender.sendMessage(ChatColor.RED+"Could not find the specified player!");
 		else if(sender.getName().equals(target.getName())) sender.sendMessage(ChatColor.GOLD+"Your ping: "+ChatColor.GREEN+target.getPing());
 		else sender.sendMessage(target.getDisplayName()+ChatColor.GOLD+"'s ping: "+ChatColor.GREEN+target.getPing());
 		return true;
