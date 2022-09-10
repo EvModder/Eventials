@@ -182,11 +182,11 @@ class ScoreboardTracker{
 						Class.forName("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent");
 					pl.getServer().getPluginManager().registerEvent(clazz, this, EventPriority.MONITOR, new EventExecutor(){
 						@Override public void execute(Listener listener, Event event){
-							pl.getLogger().info("entity remove from world event");
+							//pl.getLogger().info("entity remove from world event");
 							Entity entity = ((EntityEvent)event).getEntity();
 							if(entity instanceof Item && entity.getLocation().getY() <
 									 (entity.getWorld().getEnvironment() == Environment.NORMAL ? -127 : -63)){
-								pl.getLogger().info("item < critical y lvl");
+								pl.getLogger().info("item < critical y lvl: "+((Item)entity).getItemStack().getType());
 								incrDeathScore("istats-void", ((Item)entity).getItemStack());
 							}
 						}

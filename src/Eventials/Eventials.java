@@ -28,6 +28,7 @@ import net.evmodder.EvLib.FileIO;
 //TODO: ride mobs with shift-click in gm1 or somesuch
 //TODO: proper command classes for /help and /engrave
 //TODO: Invulnerable:1b for custom items (set flag when item is dropped)
+//TODO: Fancy /plugins command similar to /help (not just the per-server preprocess..)
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;
@@ -48,6 +49,7 @@ public class Eventials extends EvPlugin {
 		//new Updater(/*plugin=*/this, /*id=*/000, getFile(), Updater.UpdateType.NO_DOWNLOAD, /*announce=*/false);
 		plugin = this;
 		new EventAndMisc(this);//TODO: Temporary?
+		new ScoreboardTracker(this);
 
 		String bridge_host = config.getString("bridge-host", "localhost");
 		int bridge_port = config.getInt("bridge-port", 42374);
@@ -106,6 +108,7 @@ public class Eventials extends EvPlugin {
 		new CommandRegionTp(this);
 		new CommandSetItemLore(this);
 		new CommandSigntool(this, config.getBoolean("enable-signtools", true));
+		new CommandStat(this);
 		new CommandStatsClear(this);
 		new CommandStatsRestore(this);
 		new CommandVipGive(this);
