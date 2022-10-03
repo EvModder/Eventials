@@ -7,12 +7,14 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bukkit.ChatColor;
 import Eventials.Eventials;
@@ -34,14 +36,14 @@ public class CommandHelp extends EvCommand{
 	
 	private HashMap<String, Set<Command>> getCommandsByNameMap(){
 		if(commandsByName == null){
-		RefClass classCraftServer = ReflectionUtils.getRefClass("{cb}.CraftServer");
-		RefMethod methodGetCommandMap = classCraftServer.getMethod("getCommandMap");
-		commandsByName = new HashMap<>();
-		((SimpleCommandMap)methodGetCommandMap.of(pl.getServer()).call()).getCommands().forEach(cmd -> {
-			Set<Command> sameNameCmds = commandsByName.get(cmd.getName());
-			if(sameNameCmds != null) sameNameCmds.add(cmd);
-			else commandsByName.put(cmd.getName().toLowerCase(), new HashSet<>(Arrays.asList(cmd)));
-		});
+			RefClass classCraftServer = ReflectionUtils.getRefClass("{cb}.CraftServer");
+			RefMethod methodGetCommandMap = classCraftServer.getMethod("getCommandMap");
+			commandsByName = new HashMap<>();
+			((SimpleCommandMap)methodGetCommandMap.of(pl.getServer()).call()).getCommands().forEach(cmd -> {
+				Set<Command> sameNameCmds = commandsByName.get(cmd.getName());
+				if(sameNameCmds != null) sameNameCmds.add(cmd);
+				else commandsByName.put(cmd.getName().toLowerCase(), new HashSet<>(Arrays.asList(cmd)));
+			});
 		}
 		return commandsByName;
 	}
@@ -190,7 +192,7 @@ public class CommandHelp extends EvCommand{
 
 	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		int targetPage = 1;
-		List<Command> targetCmds = null;
+		Set<Command> targetCmds = null;
 		Plugin targetPlugin = null;
 		if(args.length > 1){
 			sender.sendMessage(ChatColor.RED+"Too many arguments");
@@ -201,17 +203,17 @@ public class CommandHelp extends EvCommand{
 			catch(IllegalArgumentException ex){
 				targetPlugin = pl.getServer().getPluginManager().getPlugin(args[0]);
 				if(targetPlugin == null){
-					targetCmds = new ArrayList<>(getCommandsByNameMap().get(args[0].toLowerCase()));
+					targetCmds = getCommandsByNameMap().get(args[0].toLowerCase());
 					if(targetCmds == null || targetCmds.isEmpty()){
 						Command targetCmd = pl.getServer().getPluginCommand(label);
 						if(targetCmd == null){
 							sender.sendMessage(ChatColor.RED+"Unknown Plugin/Command/Page#: "+args[0]);
 							return false;
 						}
-						targetCmds = Arrays.asList(targetCmd);
+						targetCmds = ImmutableSet.of(targetCmd);
 					}
 					else{
-						List<Command> filteredCmds = targetCmds.stream().filter(cmd -> canAccess(sender, cmd)).toList();
+						Set<Command> filteredCmds = targetCmds.stream().filter(cmd -> canAccess(sender, cmd)).collect(Collectors.toSet());
 						if(!filteredCmds.isEmpty()) targetCmds = filteredCmds;
 					}
 				}

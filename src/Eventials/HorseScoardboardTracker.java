@@ -116,15 +116,15 @@ class HorseScoardboardTracker implements Listener{
 		}
 	}
 
-	@EventHandler public void onHorseClaim(HorseClaimEvent evt){
+	@EventHandler(ignoreCancelled=true) public void onHorseClaim(HorseClaimEvent evt){
 		if(evt.getEntity() instanceof AbstractHorse){
 			updateHorseScoreboard((AbstractHorse) evt.getEntity(), evt.getClaimName());
 		}
 	}
-	@EventHandler public void onHorseRename(HorseRenameEvent evt){
+	@EventHandler(ignoreCancelled=true) public void onHorseRename(HorseRenameEvent evt){
 		renameHorseScoreboard(evt.getOldFullName(), evt.getNewFullName());
 	}
-	@EventHandler public void onHorseDeath(HorseDeathEvent evt){
+	@EventHandler(ignoreCancelled=true) public void onHorseDeath(HorseDeathEvent evt){
 		renameHorseScoreboard(evt.getEntity().getCustomName(), null);
 	}
 }

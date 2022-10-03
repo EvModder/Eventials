@@ -186,6 +186,7 @@ class ScoreboardTracker{
 							Entity entity = ((EntityEvent)event).getEntity();
 							if(entity instanceof Item && entity.getLocation().getY() <
 									 (entity.getWorld().getEnvironment() == Environment.NORMAL ? -127 : -63)){
+								//TODO: && !event.isCancelled()?
 								pl.getLogger().info("item < critical y lvl: "+((Item)entity).getItemStack().getType());
 								incrDeathScore("istats-void", ((Item)entity).getItemStack());
 							}
@@ -194,7 +195,7 @@ class ScoreboardTracker{
 				}
 				catch(ClassNotFoundException e){}
 			}
-			@EventHandler(priority = EventPriority.MONITOR)
+			@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 			public void itemDespawnEvent(ItemDespawnEvent evt){
 				if(!evt.isCancelled()){
 					pl.getLogger().info("Item Despawn: "+evt.getEntity().getLocation().toString());
@@ -202,10 +203,11 @@ class ScoreboardTracker{
 					evt.getEntity().remove();
 				}
 			}
-			@EventHandler(priority = EventPriority.MONITOR)
+			@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 			public void onItemMiscDamage(EntityDamageEvent evt){
 				if(!evt.isCancelled() && evt.getEntity() instanceof Item){
-					//pl.getLogger().info("Item damage event: "+evt.getCause().name()+" (item cur health: "+NBTTagUtils.getTag(evt.getEntity()).getShort("Health")+")");
+					//pl.getLogger().info("Item damage event: "+evt.getCause().name()
+					//+" (item cur health: "+NBTTagUtils.getTag(evt.getEntity()).getShort("Health")+")");
 					if(NBTTagUtils.getTag(evt.getEntity()).getShort("Health") <= evt.getFinalDamage()){
 						incrDeathScore(getStatNameFromDamageCause(evt.getCause()), ((Item)evt.getEntity()).getItemStack());
 						evt.getEntity().remove();
@@ -222,7 +224,7 @@ class ScoreboardTracker{
 		// Needs a custom listener:
 		pl.getServer().getPluginManager().registerEvents(new Listener(){
 			final Objective chatObjective = pl.getServer().getScoreboardManager().getMainScoreboard().getObjective("zstats-chats");
-			@EventHandler public void onPlayerChat(AsyncPlayerChatEvent evt){
+			@EventHandler(ignoreCancelled = true) public void onPlayerChat(AsyncPlayerChatEvent evt){
 				final Score score = chatObjective.getScore(evt.getPlayer().getName());
 				score.setScore((score.isScoreSet() ? score.getScore() : 0) + 1);
 			}
