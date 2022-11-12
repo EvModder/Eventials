@@ -205,7 +205,7 @@ public class CommandHelp extends EvCommand{
 				if(targetPlugin == null){
 					targetCmds = getCommandsByNameMap().get(args[0].toLowerCase());
 					if(targetCmds == null || targetCmds.isEmpty()){
-						Command targetCmd = pl.getServer().getPluginCommand(label);
+						Command targetCmd = pl.getServer().getPluginCommand(args[0]);
 						if(targetCmd == null){
 							sender.sendMessage(ChatColor.RED+"Unknown Plugin/Command/Page#: "+args[0]);
 							return false;
@@ -213,8 +213,13 @@ public class CommandHelp extends EvCommand{
 						targetCmds = ImmutableSet.of(targetCmd);
 					}
 					else{
+						pl.getLogger().warning("found cmds: "+targetCmds.size());
 						Set<Command> filteredCmds = targetCmds.stream().filter(cmd -> canAccess(sender, cmd)).collect(Collectors.toSet());
 						if(!filteredCmds.isEmpty()) targetCmds = filteredCmds;
+						else{
+							sender.sendMessage(ChatColor.RED+"Missing permission to view help for that command");
+							return false;
+						}
 					}
 				}
 			}

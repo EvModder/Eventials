@@ -121,12 +121,15 @@ public class PlayerLoginListener implements Listener{
 				else if(hider.isSneaking())
 					hider.sendMessage(ChatColor.AQUA+"Login message cancelled");
 				else{
+					final String joinMsg = ChatColor.GOLD + hider.getName() + " joined the game";
 					for(Player p : plugin.getServer().getOnlinePlayers()){
 						if(!p.getUniqueId().equals(uuid)){
-							p.sendMessage(ChatColor.GOLD + hider.getName() + " joined the game");
+							p.sendMessage(joinMsg);
 							if(playNote) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
 						}
 					}
+					//TODO: Call EssentialsDiscord.sendJoinQuitMessage()
+					//https://github.com/EssentialsX/Essentials/blob/2.x/EssentialsDiscord/src/main/java/net/essentialsx/discord/listeners/BukkitListener.java
 				}
 			}}.runTaskLater(plugin, 100);//5 seconds
 		}

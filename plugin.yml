@@ -137,6 +137,13 @@ commands:
       permission-message: You do not have permission to do this.
 
 #======== Extras (Admin Tools & Game Modifying)
+   repaircost:
+      description: View the repair cost of a hand-held item
+      usage: /rc
+      aliases: [rc]
+      permission: eventials.repaircost
+      permission-message: You do not have permission to do this.
+
    breakphysics:
       description: Prevent all nearby block physics updates
       usage: /nophysics [name]
@@ -480,6 +487,10 @@ permissions:
       default: op
 
 #======== Extras (Admin Tools & Game Modifying)
+   eventials.repaircost:
+      description: Permission to use /rc
+      default: true
+
    eventials.breakphysics:
       description: Permission to use /breakphysics
       default: op

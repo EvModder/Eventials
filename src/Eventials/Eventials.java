@@ -106,6 +106,7 @@ public class Eventials extends EvPlugin {
 		new CommandRegionDelete(this);
 		new CommandRegionPos(this);
 		new CommandRegionTp(this);
+		new CommandRepairCost(this);
 		new CommandSetItemLore(this);
 		new CommandSigntool(this, config.getBoolean("enable-signtools", true));
 		new CommandStat(this);
