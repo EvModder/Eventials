@@ -77,6 +77,8 @@ keep-if-op: true
 global-command-cooldowns:
   weather: 1200
 
+fix-paper-rng-manip: true
+fix-paper-gravity-dupe: true
 
 #--------------------------------------#
 #          Custom Scoarboards          #
