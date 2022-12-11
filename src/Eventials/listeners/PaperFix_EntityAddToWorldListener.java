@@ -55,6 +55,7 @@ public class PaperFix_EntityAddToWorldListener{
 				}
 			}, pl);
 		}
-		catch(RuntimeException | IllegalAccessException | ClassNotFoundException | NoSuchFieldException e){e.printStackTrace();}
+		catch(NoSuchFieldException e){/*no SHARED_RANDOM => not running paper*/}
+		catch(RuntimeException | IllegalAccessException | ClassNotFoundException e){e.printStackTrace();}
 	}
 }
