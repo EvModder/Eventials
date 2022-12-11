@@ -49,7 +49,6 @@ public class Eventials extends EvPlugin {
 		//new Updater(/*plugin=*/this, /*id=*/000, getFile(), Updater.UpdateType.NO_DOWNLOAD, /*announce=*/false);
 		plugin = this;
 		new EventAndMisc(this);//TODO: Temporary?
-		new ScoreboardTracker(this);
 
 		String bridge_host = config.getString("bridge-host", "localhost");
 		int bridge_port = config.getInt("bridge-port", 42374);
@@ -109,7 +108,6 @@ public class Eventials extends EvPlugin {
 		new CommandRepairCost(this);
 		new CommandSetItemLore(this);
 		new CommandSigntool(this, config.getBoolean("enable-signtools", true));
-		new CommandStat(this);
 		new CommandStatsClear(this);
 		new CommandStatsRestore(this);
 		new CommandVipGive(this);
