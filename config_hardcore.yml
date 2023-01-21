@@ -316,7 +316,7 @@ auto-messages:
   - 'Remember, anyone can join- be careful around others!'
   - |
        Are you okay with everyone being able to spectate you?
-       If not, try out &2/spectate blacklist [name]
+       If not, try out &2/spectate mode whitelist&r or &2/blacklist
 #  - |
 #       For the opening of Hardcore, we're hosting an Event!
 #       Top players in each of 3 objectives win a &aprize=>&750USD and a unique in-game reward!&r!

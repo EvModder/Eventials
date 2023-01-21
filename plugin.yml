@@ -3,7 +3,7 @@ main: Eventials.Eventials
 author: EvModder
 website: https://github.com/EvModder/Eventials
 description: Bundle of miscellaneous custom features.
-version: 1.3.4 # .3=mailbox, ..4=tab completes, ping cmd
+version: 1.3.5 # .3=mailbox, ..5=editsign cmd
 softdepend: [Votifier, Essentials]
 api-version: 1.13
 
@@ -164,6 +164,12 @@ commands:
       permission: eventials.discord
       permission-message: You do not have permission to do this.
 
+   editsign:
+      description: Permission to edit placed signs with /editsign
+      usage: /editsign
+      permission: eventials.editsign
+      permission-message: You do not have permission to do this.
+
    eventials:
       description: Unregister and reregister the Eventials plugin
       usage: /eventials reload
@@ -275,13 +281,6 @@ commands:
       description: Build a sign-editing item
       usage: /signtool [sign text, use \n and \s]
       permission: eventials.signtool
-      permission-message: You do not have permission to do this.
-
-   stat:
-      description: Display a given statistic on the scoreboard
-      usage: /stat <stat> [on/off/delay(default=5s)]
-      aliases: [stats,statistic,statistics]
-      permission: eventials.statistics
       permission-message: You do not have permission to do this.
 
    statsclear:
@@ -507,6 +506,10 @@ permissions:
       description: Permission to use /discord
       default: true
 
+   eventials.editsign:
+      description: Permission to use /editsign
+      default: true
+
    eventials.commandblockcolor:
       description: Permission to use '&' to format command blocks
       default: op
@@ -599,10 +602,6 @@ permissions:
    eventials.givevip:
       description: Permission to give/take vip status
       default: op
-
-   eventials.statistics:
-      description: Permission to use /stat
-      default: true
 
    eventials.weaponstats:
       description: Permission to use /weaponstats

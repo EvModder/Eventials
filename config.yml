@@ -290,7 +290,7 @@ book-editor-enabled: true
 #--------------------------------------#
 #             Split Worlds             #
 #--------------------------------------#
-splitworlds-enabled: false
+splitworlds-enabled: true
 vaccinate-players: false
 
 # Groups of worlds that share the inventories. World inventories are separate by default.
@@ -304,6 +304,11 @@ shared-inv-worlds:
   pair_with_the_end:
     - '*'
     - '*_the_end'
+## Simpler alternative:
+#  default_group:
+#    - '*'
+#    - '*_nether'
+#    - '*_the_end'
 
 #--------------------------------------#
 #             Mail Service             #
