@@ -21,10 +21,13 @@ import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.extras.TellrawUtils.Component;
 import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
 import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.extras.TellrawUtils.SelectorComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.extras.TellrawUtils.TranslationComponent;
 
 public class PlayerLoginListener implements Listener{
 	private Eventials plugin;
@@ -103,6 +106,17 @@ public class PlayerLoginListener implements Listener{
 		return TextUtils.formatTime(timeSinceLastJoin, /*show0s=*/false, /*timeColor=*/ChatColor.WHITE, /*unitColor=*/ChatColor.GRAY, /*sigUnits=*/2);
 	}
 
+	private void sendJoinMsgAndMaybeDing(UUID uuid){
+		final String joinMsg = new TranslationComponent("multiplayer.player.joined", new Component[]{new SelectorComponent(uuid)},
+				/*insert=*/null, /*click=*/null, /*hover=*/null, /*color=*/"yellow", /*formats=*/null).toString();
+		for(Player p : plugin.getServer().getOnlinePlayers()){
+			if(!p.getUniqueId().equals(uuid)){
+				plugin.sendTellraw(p.getName(), joinMsg);
+				if(playNote) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
+			}
+		}
+	}
+
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerLoginEvent login){
@@ -113,29 +127,24 @@ public class PlayerLoginListener implements Listener{
 		//--- Messenger -----------------------------------------------
 		if(saveIps) addressMap.put(login.getAddress().toString(), uuid);
 
-		//--- Misc ----------------------------------------------------
-		if(login.getPlayer().hasPermission("eventials.sneakjoin")){
+		//--- SneakJoin -----------------------------------------------
+		if(!login.getPlayer().hasPermission("eventials.sneakjoin")){
+			new BukkitRunnable(){@Override public void run(){sendJoinMsgAndMaybeDing(uuid);}}.runTaskLater(plugin, 1);//1ms
+		}
+		else{
 			new BukkitRunnable(){@Override public void run(){
 				Player hider = plugin.getServer().getPlayer(uuid);
 				if(hider == null) return;
-				else if(hider.isSneaking())
-					hider.sendMessage(ChatColor.AQUA+"Login message cancelled");
+				else if(hider.isSneaking()) hider.sendMessage(ChatColor.AQUA+"Login message cancelled");
 				else{
-					final String joinMsg = ChatColor.GOLD + hider.getName() + " joined the game";
-					for(Player p : plugin.getServer().getOnlinePlayers()){
-						if(!p.getUniqueId().equals(uuid)){
-							p.sendMessage(joinMsg);
-							if(playNote) p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
-						}
-					}
+					sendJoinMsgAndMaybeDing(uuid);
 					//TODO: Call EssentialsDiscord.sendJoinQuitMessage()
 					//https://github.com/EssentialsX/Essentials/blob/2.x/EssentialsDiscord/src/main/java/net/essentialsx/discord/listeners/BukkitListener.java
 				}
 			}}.runTaskLater(plugin, 100);//5 seconds
 		}
-		else if(playNote) for(Player p : plugin.getServer().getOnlinePlayers())
-			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 50.0F, 0.75F);
 
+		//--- Misc ----------------------------------------------------
 		if(MAX_RECENT_JOINS_SAVED > 0){
 			if(recentJoins.isEmpty() || !offP.hasPlayedBefore()){
 				if(!recentJoins.contains(name)) recentJoins.add(name);
