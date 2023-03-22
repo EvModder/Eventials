@@ -3,7 +3,10 @@ package Eventials.splitworlds;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +24,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import net.evmodder.EvLib.EvPlugin;
-import com.google.common.io.Files;
 import Eventials.Eventials;
 
 public final class SplitWorlds{
@@ -78,11 +80,12 @@ public final class SplitWorlds{
 				}
 				else if(pKey1 == null && primaryKeys2.contains(s)) pKey2 = s;
 			}
-			String primaryWorld = pKey1 != null ? pKey1 : pKey2 != null ? pKey2 : group.get(0);
-			logger.info("SharedInvGroup: [" + primaryWorld + "]->(" + String.join(",", group.toArray(new String[0])) + ")");
+			final String primaryWorld = pKey1 != null ? pKey1 : pKey2 != null ? pKey2 : group.get(0);
+			//if(group.size() == worldNames.size()) logger.info("SplitWorlds: All worlds using same inventory");//also implies SINGLE_INV_GROUP=true
+			//else
+				logger.info("SharedInvGroup: [" + primaryWorld + "]->(" + String.join(",", group.toArray(new String[0])) + ")");
 			++numGroups;
-			for(String s : group)
-				sharedInvWorlds.put(s, primaryWorld);
+			for(String s : group) sharedInvWorlds.put(s, primaryWorld);
 		}
 		for(String world : worldNames){
 			if(sharedInvWorlds.putIfAbsent(world, world) == null){
@@ -98,6 +101,7 @@ public final class SplitWorlds{
 
 		DEFAULT_WORLD = loadDefaultWorldName(pl.getLogger());
 		DEFAULT_PLAYERDATA = "./"+DEFAULT_WORLD+"/playerdata/";
+		pl.getLogger().fine("Default playerdata location: "+DEFAULT_PLAYERDATA);
 
 		if(pl.getConfig().isConfigurationSection("shared-inv-worlds")){
 			loadSharedInvMap(pl.getConfig().getConfigurationSection("shared-inv-worlds"), pl.getLogger());
@@ -111,7 +115,7 @@ public final class SplitWorlds{
 			File default_world_temp_data = new File("./"+DEFAULT_WORLD+"/playerdata_"+DEFAULT_WORLD+"/");
 			if(!default_world_temp_data.exists()) default_world_temp_data.mkdir();
 		}
-		else pl.getLogger().info("Only one inv group found, using 'simple settings'");
+		else pl.getLogger().fine("Only one inv group found, using 'simple settings'");
 	}
 	public SplitWorlds(EvPlugin pl){
 		plugin = pl;
@@ -124,146 +128,119 @@ public final class SplitWorlds{
 	}
 
 	public static String getInvGroup(String worldName){
-		String mainWorldName = sharedInvWorlds.get(worldName);
-		return mainWorldName != null ? mainWorldName : worldName;
+		return sharedInvWorlds.getOrDefault(worldName, worldName);
 	}
 	public static boolean inSharedInvGroup(String world1, String world2){
 		return getInvGroup(world1).equals(getInvGroup(world2));
 	}
-	@SuppressWarnings("deprecation")
 	public static String getCurrentInvGroup(UUID playerUUID){
-		File currentGroup = new File(DEFAULT_PLAYERDATA + playerUUID + ".group");
-		if(currentGroup == null || !currentGroup.exists()) return DEFAULT_WORLD;
-		try{return sharedInvWorlds.get(Files.readFirstLine(currentGroup, Charset.defaultCharset()));}
-		catch(IOException e){e.printStackTrace(); return null;}
+		final Path currentGroup = Paths.get(DEFAULT_PLAYERDATA + playerUUID + ".group");
+		if(!currentGroup.toFile().exists()) return DEFAULT_WORLD;//'simple settings'
+		try{return getInvGroup(Files.readString(currentGroup));}
+		catch(IOException e){e.printStackTrace(); return "FAILURE VERY BAD OOF";}
 	}
 
 	public static File getCurrentPlayerdata(UUID playerUUID){
-		File dataFile = new File(DEFAULT_PLAYERDATA + playerUUID + ".dat");
-		return dataFile;
+		return new File(DEFAULT_PLAYERDATA + playerUUID + ".dat");
 	}
 	public static File getPlayerdata(UUID playerUUID, String worldName, boolean useShared, boolean useCurrent){
-		String useWorld = useShared ? sharedInvWorlds.get(worldName) : worldName;
-		if(useWorld == null) useWorld = worldName;
-
-		boolean inDefaultWorld = useWorld.equals(DEFAULT_WORLD);
+		final String useWorld = useShared ? getInvGroup(worldName) : worldName;
+		final boolean inDefaultWorld = useWorld.equals(DEFAULT_WORLD);
 		return (useCurrent && inSharedInvGroup(useWorld, getCurrentInvGroup(playerUUID)))
 				? getCurrentPlayerdata(playerUUID)
 				: new File("./" + useWorld +
-						((inDefaultWorld && !SINGLE_INV_GROUP) ? "/playerdata_"+DEFAULT_WORLD+"/" : "/playerdata/")
+						((!SINGLE_INV_GROUP && inDefaultWorld) ? "/playerdata_"+DEFAULT_WORLD+"/" : "/playerdata/")
 						+ playerUUID +
-						((inDefaultWorld && SINGLE_INV_GROUP) ? "_tmp.dat" : ".dat"));
+						// So we can save/load file temporarily for /invsee and /echest in 'simple settings'
+						(SINGLE_INV_GROUP ? "_tmp.dat" : ".dat"));
 	}
 
-	@SuppressWarnings("deprecation")
-	static public boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld,
-			boolean useShared, boolean useCurrent, boolean copy){
-		if(useCurrent && handler.getUniqueId().equals(fromPlayer) && inSharedInvGroup(handler.getWorld().getName(), fromWorld)) {
+	static public boolean loadProfile(Player handler, UUID fromPlayer, String fromWorld, boolean useShared, boolean useCurrent, boolean copy){
+		if(useCurrent && handler.getUniqueId().equals(fromPlayer) && inSharedInvGroup(handler.getWorld().getName(), fromWorld)){
 			return false;
 		}
 		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
-		File sourceFile = getPlayerdata(fromPlayer, fromWorld, useShared, useCurrent);
+		final File sourceFile = getPlayerdata(fromPlayer, fromWorld, useShared, useCurrent);
 		if(sourceFile == null || !sourceFile.exists() || currentFile == null){
-			Eventials.getPlugin().getLogger().warning("Unable to load profile from world: "+fromWorld);
-			Eventials.getPlugin().getLogger().warning("Source file: "+sourceFile.getPath()+
-					", Current file: "+currentFile.getPath());
+			Eventials.getPlugin().getLogger().warning("Unable to load source profile: "+sourceFile.getPath());
+			Eventials.getPlugin().getLogger().warning("Into current profile: "+currentFile.getPath());
 			return false;
 		}
-
 		try{
-			if(copy) Files.copy(sourceFile, currentFile);
-			else Files.move(sourceFile, currentFile);
+			if(copy) Files.copy(sourceFile.toPath(), currentFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			else Files.move(sourceFile.toPath(), currentFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}
 		catch(IOException e){e.printStackTrace(); return false;}
 
+		SplitWorldUtils.resetPlayer(handler);
 		handler.loadData();
-		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler); // Remove disease AFTER loading data (treat infected file)
+		if(TREAT_DISEASE) SplitWorldUtils.vaccinatePlayer(handler); // Remove disease AFTER loading data (treat infected file)
 
-		// This file provides a means to figure out what sharedInv group an OfflinePlayer is in
-		File currentInv = new File(DEFAULT_PLAYERDATA + handler.getUniqueId() + ".group");
-		try{Files.write(sharedInvWorlds.get(fromWorld)+" "+fromPlayer, currentInv, Charset.defaultCharset());}
-		catch(IOException e){e.printStackTrace();}
+		if(!SINGLE_INV_GROUP){
+			// This file provides a means to figure out what sharedInv group an OfflinePlayer is in
+			final Path groupFile = Paths.get(DEFAULT_PLAYERDATA + handler.getUniqueId() + ".group");
+			try{Files.writeString(groupFile, getInvGroup(fromWorld));}
+			catch(IOException e){e.printStackTrace();}
+		}
 		return true;
 	}
-	static public boolean saveProfile(Player handler, UUID toPlayer, String toWorld,
-			boolean useShared, boolean useCurrent, boolean copy){
+	static public boolean saveProfile(Player handler, UUID toPlayer, String toWorld, boolean useShared, boolean useCurrent, boolean copy){
 		if(useCurrent && handler.getUniqueId().equals(toPlayer) && !inSharedInvGroup(handler.getWorld().getName(), toWorld)){
 			return false;
 		}
-		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
-		File destFile = getPlayerdata(toPlayer, toWorld, useShared, useCurrent);
+		final File currentFile = getCurrentPlayerdata(handler.getUniqueId());
+		final File destFile = getPlayerdata(toPlayer, toWorld, useShared, useCurrent);
 		if(currentFile == null || !currentFile.exists() || destFile == null){
-			Eventials.getPlugin().getLogger().warning("Unable to save profile to world: "+toWorld);
-			Eventials.getPlugin().getLogger().warning("Desination file: "+destFile.getPath()+
-					", Current file: "+currentFile.getPath());
+			Eventials.getPlugin().getLogger().warning("Unable to save current profile: "+currentFile.getPath());
+			Eventials.getPlugin().getLogger().warning("Into destination profile: "+destFile.getPath());
 			return false;
 		}
-		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
+		if(TREAT_DISEASE) SplitWorldUtils.vaccinatePlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
 		handler.saveData();
 
 		try{
-			if(copy) Files.copy(currentFile, destFile);
-			else Files.move(currentFile, destFile);
+			if(copy) Files.copy(currentFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			else Files.move(currentFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}
 		catch(IOException e){e.printStackTrace(); return false;}
 		return true;
 	}
-	@SuppressWarnings("deprecation")
-	static public boolean loadProfile(Player handler, File fromFile){
-		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
-		if(fromFile == null || !fromFile.exists() || currentFile == null){
-			Eventials.getPlugin().getLogger().warning("Unable to load profile from file: "+fromFile.getAbsolutePath());
+
+	static public boolean loadProfile(Player handler, File sourceFile){
+		if(sourceFile == null || !sourceFile.exists()){
+			Eventials.getPlugin().getLogger().warning("Unable to load profile from file: "+sourceFile.getPath());
 			return false;
 		}
+		final File currentFile = getCurrentPlayerdata(handler.getUniqueId());
 
-		Eventials.getPlugin().getLogger().info("[DEBUG] source file: "+fromFile.getAbsolutePath());
-		try{Files.copy(fromFile, currentFile);}
+		try{Files.copy(sourceFile.toPath(), currentFile.toPath(), StandardCopyOption.REPLACE_EXISTING);}
 		catch(IOException e){e.printStackTrace(); return false;}
 
-		Eventials.getPlugin().getLogger().info("[DEBUG] Calling loadData()");
+		SplitWorldUtils.resetPlayer(handler);
 		handler.loadData();
-		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler); // Remove disease AFTER loading data (treat infected file)
-		Eventials.getPlugin().getLogger().info("[DEBUG] loadData() called, disease treated, saving .group file now");
+		if(TREAT_DISEASE) SplitWorldUtils.vaccinatePlayer(handler); // Remove disease AFTER loading data (treat infected file)
 
-		// This file provides a means to figure out what sharedInv group an OfflinePlayer is in
-		File currentInv = new File(DEFAULT_PLAYERDATA + handler.getUniqueId() + ".group");
-		try{Files.write("CUSTOM_FILE "+fromFile.getPath(), currentInv, Charset.defaultCharset());}
-		catch(IOException e){e.printStackTrace();}
 		return true;
 	}
 	static public boolean saveProfile(Player handler, File toFile){
-		File currentFile = getCurrentPlayerdata(handler.getUniqueId());
-		if(currentFile == null || !currentFile.exists() || toFile == null){
-			Eventials.getPlugin().getLogger().warning("Unable to save profile to file: "+toFile.getAbsolutePath());
+		final File currentFile = getCurrentPlayerdata(handler.getUniqueId());
+		if(toFile == null || !currentFile.exists()){
+			Eventials.getPlugin().getLogger().warning("Unable to save profile to file: "+toFile.getPath());
 			return false;
 		}
-		if(TREAT_DISEASE) SplitWorldUtils.resetPlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
+		if(TREAT_DISEASE) SplitWorldUtils.vaccinatePlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
 		handler.saveData();
 
-		try{Files.copy(currentFile, toFile);}
+		try{Files.copy(currentFile.toPath(), toFile.toPath(), StandardCopyOption.REPLACE_EXISTING);}
 		catch(IOException e){e.printStackTrace(); return false;}
 		return true;
 	}
+
 	static public boolean loadCurrentProfile(Player player){
-		return loadProfile(player, player.getUniqueId(), player.getWorld().getName(), true, false, false);
+		return loadProfile(player, player.getUniqueId(), player.getWorld().getName(), /*useShared=*/true, /*useCurrent=*/false, /*copy=*/false);
 	}
 	static public boolean saveCurrentProfile(Player player){
-		return saveProfile(player, player.getUniqueId(), player.getWorld().getName(), true, false, true);
-	}
-
-	@Deprecated boolean switchToInv(Player player, String worldFrom, String worldTo){
-		if(inSharedInvGroup(worldFrom, worldTo)) return true;
-
-		if(saveProfile(player, player.getUniqueId(), worldFrom, true, false, true)){
-			if(loadProfile(player, player.getUniqueId(), worldTo, true, false, true)){
-				//TODO: test if this is actually a thing
-				GameMode gm = player.getGameMode();// fix gamemode glitch
-				player.setGameMode(GameMode.SPECTATOR);
-				player.setGameMode(gm);
-				return true;
-			}
-		}
-		return false;
+		return saveProfile(player, player.getUniqueId(), player.getWorld().getName(), /*useShared=*/true, /*useCurrent=*/false, /*copy=*/true);
 	}
 
 	public boolean transInvWorldTp(final Player player, final Location from, final Location to){

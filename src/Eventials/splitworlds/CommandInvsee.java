@@ -137,20 +137,23 @@ public class CommandInvsee extends EvCommand{
 		// Save my current profile
 		GameMode gm = player.getGameMode();
 		boolean isFlying = player.isFlying();
+		//pl.getLogger().severe("saving inv: "+player.getName());
 		if(!SplitWorlds.saveCurrentProfile(player)){
 			sender.sendMessage(ChatColor.RED+"Encounter error while saving your current inventory!");
 			return true;
 		}
 
 		// Load the target's profile data
-		if(!SplitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, true,
-				!player.getUniqueId().equals(targetPlayer.getUniqueId()))){
+		//pl.getLogger().severe("loading inv: "+targetPlayer.getName());
+		if(!SplitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, /*useShared=*/true, /*useCurrent=*/true,
+				/*copy=*/!player.getUniqueId().equals(targetPlayer.getUniqueId()))){
 			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
 			return true;
 		}
 		ItemStack[] contents = player.getInventory().getContents();
 
 		// Reload my profile
+		//pl.getLogger().severe("loading inv: "+player.getName());
 		SplitWorlds.loadCurrentProfile(player);
 		player.setGameMode(gm); // In case I'm in creative and they're not and I don't want to fall out of the sky
 		player.setFlying(isFlying);
@@ -176,11 +179,15 @@ public class CommandInvsee extends EvCommand{
 
 				GameMode gm = player.getGameMode();
 				boolean isFlying = player.isFlying();
+				//pl.getLogger().severe("saving inv: "+player.getName());
 				SplitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
+				//pl.getLogger().severe("loading inv: "+fTargetPlayer.getName());
 				SplitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true,
 						!player.getUniqueId().equals(fTargetPlayer.getUniqueId()));
 				player.getInventory().setContents(evt.getInventory().getContents());
+				//pl.getLogger().severe("saving inv: "+fTargetPlayer.getName());
 				SplitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true, true);
+				//pl.getLogger().severe("loading inv: "+player.getName());
 				SplitWorlds.loadCurrentProfile(player);
 				player.setGameMode(gm);
 				player.setFlying(isFlying);

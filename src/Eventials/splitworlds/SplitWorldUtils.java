@@ -8,9 +8,11 @@ import java.util.List;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.ReflectionUtils;
@@ -102,47 +104,42 @@ public final class SplitWorldUtils{
 		return success;
 	}
 
-	public static void resetPlayer(Player player){
+	public static void vaccinatePlayer(Player player){
 		player.setGameMode(GameMode.SURVIVAL);
-//		player.setHealth(20D);
-
-//		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20D);
 		for(AttributeModifier modifier : player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getModifiers()){
 			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(modifier);
 		}
-//		player.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(0);
 		for(AttributeModifier modifier : player.getAttribute(Attribute.GENERIC_ARMOR).getModifiers()){
 			player.getAttribute(Attribute.GENERIC_ARMOR).removeModifier(modifier);
 		}
-//		player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(0);
-//		for(AttributeModifier modifier : player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getModifiers()){
-//			player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).removeModifier(modifier);
-//		}
 		for(AttributeModifier modifier : player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getModifiers()){
 			player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).removeModifier(modifier);
 		}
 
-//		player.setFoodLevel(20);
-//		player.setExhaustion(0F);
-//		player.setLevel(0);
-//		player.setExp(0F);
-//		for(PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
 		player.removePotionEffect(PotionEffectType.INVISIBILITY);
-//		player.getInventory().clear();
-//		player.getEnderChest().clear();
-		
-//		player.removePotionEffect(PotionEffectType.HEALTH_BOOST);
-//		for(ItemStack item : player.getInventory().getArmorContents()){
-//			if(item == null || item.getType() == Material.AIR){
-//				item.setType(Material.DIAMOND_CHESTPLATE);
-//				item.setType(Material.AIR);
-//			}
-//		}
-//		ItemStack[] armor = player.getInventory().getArmorContents();
+		player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+	}
+
+	public static void resetPlayer(Player player){
+		player.setGameMode(GameMode.SURVIVAL);
+		player.setHealth(20D);
+		player.setFoodLevel(20);
+		player.setExhaustion(0F);
+		player.setLevel(0);
+		player.setExp(0F);
+		player.resetTitle();
+		player.getInventory().clear();
+		player.getEnderChest().clear();
 //		player.getInventory().setHelmet(new ItemStack(Material.AIR));
 //		player.getInventory().setChestplate(new ItemStack(Material.AIR));
 //		player.getInventory().setLeggings(new ItemStack(Material.AIR));
 //		player.getInventory().setBoots(new ItemStack(Material.AIR));
-//		player.getInventory().setArmorContents(armor);
+		for(PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
+		for(Attribute attribute : Attribute.values()){
+			AttributeInstance inst = player.getAttribute(attribute);
+			if(inst != null) for(AttributeModifier modifier : inst.getModifiers()){
+				player.getAttribute(attribute).removeModifier(modifier);
+			}
+		}
 	}
 }
