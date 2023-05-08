@@ -25,6 +25,7 @@ import net.evmodder.EvLib.FileIO;
 //TODO: chat "ping/tick" sound (toggleable) and name mention sound?
 //TODO: Eye-of-ender popping
 //TODO: splitworlds option to also separate stats/advancements per-world
+//TODO: do not suggest /invsee and /echest when splitworlds is disabled
 //TODO: ride mobs with shift-click in gm1 or somesuch
 //TODO: proper command classes for /help and /engrave
 //TODO: Invulnerable:1b for custom items (set flag when item is dropped)

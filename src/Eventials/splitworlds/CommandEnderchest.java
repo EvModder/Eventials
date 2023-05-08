@@ -3,7 +3,6 @@ package Eventials.splitworlds;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -14,8 +13,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import Eventials.splitworlds.SplitWorldUtils.PlayerState;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
@@ -134,14 +135,13 @@ public class CommandEnderchest extends EvCommand{
 		}
 
 		// Save my current profile
-		GameMode gm = player.getGameMode();
-		boolean isFlying = player.isFlying();
 		if(!SplitWorlds.saveCurrentProfile(player)){
-			sender.sendMessage(ChatColor.RED+"Encounter error while saving your current inventory!");
+			sender.sendMessage(ChatColor.RED+"Error occurred while saving your current inventory!");
 			return true;
 		}
 
 		// Load the target's profile data
+		PlayerState myState = SplitWorldUtils.getPlayerState(player);
 		if(!SplitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, true, true,
 				!player.getUniqueId().equals(targetPlayer.getUniqueId()))){
 			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
@@ -150,12 +150,8 @@ public class CommandEnderchest extends EvCommand{
 		ItemStack[] contents = player.getEnderChest().getContents();
 
 		// Reload my profile
+		PlayerState targetState = SplitWorldUtils.loadPlayerState(player, myState);
 		SplitWorlds.loadCurrentProfile(player);
-		player.setGameMode(gm); // In case I'm in creative and they're not and I don't want to fall out of the sky
-		player.setFlying(isFlying);
-		if(player.getEnderChest().getContents().equals(contents)){
-			pl.getLogger().warning("/enderchest match, might be an issue..");
-		}
 
 		// Create and display an inventory using the enderchest ItemStack[]
 		final String invName = "> "+targetPlayer.getName()+" - "+SplitWorlds.getInvGroup(targetWorld);
@@ -176,18 +172,25 @@ public class CommandEnderchest extends EvCommand{
 
 				pl.getLogger().info("Updating inventory: "+fTargetWorld+" > "+fTargetPlayer.getName());
 
-				GameMode gm = player.getGameMode();
-				boolean isFlying = player.isFlying();
 				SplitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
-				SplitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true,
-						!player.getUniqueId().equals(fTargetPlayer.getUniqueId()));
+				SplitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true, !player.getUniqueId().equals(fTargetPlayer.getUniqueId()));
 				player.getEnderChest().setContents(evt.getInventory().getContents());
+				SplitWorldUtils.loadPlayerState(player, targetState);
 				SplitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true, true);
 				SplitWorlds.loadCurrentProfile(player);
-				player.setGameMode(gm);
-				player.setFlying(isFlying);
-
+				SplitWorldUtils.loadPlayerState(player, myState);
 				HandlerList.unregisterAll(this);
+			}
+			// Listener in case they log on while their echest is being edited
+			@EventHandler public void onPlayerJoin(PlayerJoinEvent evt){
+				if(!evt.getPlayer().getUniqueId().equals(fTargetPlayer.getUniqueId()) ||
+						!SplitWorlds.inSharedInvGroup(evt.getPlayer().getWorld().getName(), fTargetWorld)) return;
+
+				//TODO: handle player teleporting to a shared inv world same as logging in on it
+				HandlerList.unregisterAll(this);
+				evt.getPlayer().getEnderChest().setContents(player.getOpenInventory().getTopInventory().getContents());
+				player.closeInventory();
+				player.openInventory(evt.getPlayer().getEnderChest());
 			}
 		}, pl);
 		return true;

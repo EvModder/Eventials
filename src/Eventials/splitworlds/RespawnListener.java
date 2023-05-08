@@ -15,8 +15,8 @@ class RespawnListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onRespawn(final PlayerRespawnEvent evt){
-		String deathWorld = evt.getPlayer().getWorld().getName();
-		String respawnWorld = evt.getRespawnLocation().getWorld().getName();
+		final String deathWorld = evt.getPlayer().getWorld().getName();
+		final String respawnWorld = evt.getRespawnLocation().getWorld().getName();
 		if(SplitWorlds.inSharedInvGroup(deathWorld, respawnWorld)) return;
 		plugin.getLogger().info("Died in: "+deathWorld+", Respawning in: "+respawnWorld);
 

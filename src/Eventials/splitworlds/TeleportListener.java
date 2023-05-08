@@ -19,8 +19,8 @@ class TeleportListener implements Listener {
 		}
 		if(evt.isCancelled() || evt.getPlayer().hasPermission("eventials.inventory.universal")) return;
 
-		String toWorldName = evt.getTo().getWorld().getName();
-		String fromWorldName = evt.getFrom().getWorld().getName();
+		final String toWorldName = evt.getTo().getWorld().getName();
+		final String fromWorldName = evt.getFrom().getWorld().getName();
 		if(SplitWorlds.inSharedInvGroup(toWorldName, fromWorldName)) return;
 
 		//otherwise, update to the new world's inventory

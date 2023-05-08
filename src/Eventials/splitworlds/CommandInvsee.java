@@ -3,7 +3,6 @@ package Eventials.splitworlds;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -14,8 +13,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import Eventials.splitworlds.SplitWorldUtils.PlayerState;
 import net.evmodder.EvLib.EvCommand;
 import net.evmodder.EvLib.EvPlugin;
 
@@ -135,16 +136,15 @@ public class CommandInvsee extends EvCommand{
 		}
 
 		// Save my current profile
-		GameMode gm = player.getGameMode();
-		boolean isFlying = player.isFlying();
-		//pl.getLogger().severe("saving inv: "+player.getName());
+//		pl.getLogger().severe("saving inv: "+player.getName());
 		if(!SplitWorlds.saveCurrentProfile(player)){
-			sender.sendMessage(ChatColor.RED+"Encounter error while saving your current inventory!");
+			sender.sendMessage(ChatColor.RED+"Error occurred while saving your current inventory!");
 			return true;
 		}
 
 		// Load the target's profile data
-		//pl.getLogger().severe("loading inv: "+targetPlayer.getName());
+//		pl.getLogger().severe("loading target inv: "+targetPlayer.getName());
+		final PlayerState myState = SplitWorldUtils.getPlayerState(player);
 		if(!SplitWorlds.loadProfile(player, targetPlayer.getUniqueId(), targetWorld, /*useShared=*/true, /*useCurrent=*/true,
 				/*copy=*/!player.getUniqueId().equals(targetPlayer.getUniqueId()))){
 			sender.sendMessage("Unable to find data files for "+targetPlayer.getName()+" in world "+targetWorld);
@@ -153,17 +153,16 @@ public class CommandInvsee extends EvCommand{
 		ItemStack[] contents = player.getInventory().getContents();
 
 		// Reload my profile
-		//pl.getLogger().severe("loading inv: "+player.getName());
+//		pl.getLogger().severe("reloading my inv: "+player.getName());
+		final PlayerState targetState = SplitWorldUtils.loadPlayerState(player, myState);
 		SplitWorlds.loadCurrentProfile(player);
-		player.setGameMode(gm); // In case I'm in creative and they're not and I don't want to fall out of the sky
-		player.setFlying(isFlying);
 
 		// Create and display an inventory using the ItemStack[]
 		final String invName = "> "+targetPlayer.getName()+" - "+SplitWorlds.getInvGroup(targetWorld);
 		Inventory targetInv = pl.getServer().createInventory(player, InventoryType.PLAYER, invName);
 		targetInv.setContents(contents);
 		player.openInventory(targetInv);
-		pl.getLogger().info(player.getName()+" viewing inventory of: "+targetPlayer.getName());
+//		pl.getLogger().info(player.getName()+" viewing inventory of: "+targetPlayer.getName());
 
 		// Listener to write back to disk the inventory being viewed once it is closed
 		final String fTargetWorld = targetWorld;
@@ -177,22 +176,30 @@ public class CommandInvsee extends EvCommand{
 
 				pl.getLogger().info("Updating inventory: "+fTargetWorld+" > "+fTargetPlayer.getName());
 
-				GameMode gm = player.getGameMode();
-				boolean isFlying = player.isFlying();
 				//pl.getLogger().severe("saving inv: "+player.getName());
 				SplitWorlds.saveCurrentProfile(player);// Any changes I made in my own inv
 				//pl.getLogger().severe("loading inv: "+fTargetPlayer.getName());
-				SplitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true,
-						!player.getUniqueId().equals(fTargetPlayer.getUniqueId()));
+				SplitWorlds.loadProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, /*useShared=*/true, /*useCurrent=*/true,
+						/*copy=*/!player.getUniqueId().equals(fTargetPlayer.getUniqueId()));
 				player.getInventory().setContents(evt.getInventory().getContents());
+				SplitWorldUtils.loadPlayerState(player, targetState);
 				//pl.getLogger().severe("saving inv: "+fTargetPlayer.getName());
 				SplitWorlds.saveProfile(player, fTargetPlayer.getUniqueId(), fTargetWorld, true, true, true);
 				//pl.getLogger().severe("loading inv: "+player.getName());
 				SplitWorlds.loadCurrentProfile(player);
-				player.setGameMode(gm);
-				player.setFlying(isFlying);
-
+				SplitWorldUtils.loadPlayerState(player, myState);
 				HandlerList.unregisterAll(this);
+			}
+			// Listener in case they log on while their offline inventory is being edited
+			@EventHandler public void onPlayerJoin(PlayerJoinEvent evt){
+				if(!evt.getPlayer().getUniqueId().equals(fTargetPlayer.getUniqueId()) ||
+						!SplitWorlds.inSharedInvGroup(evt.getPlayer().getWorld().getName(), fTargetWorld)) return;
+
+				//TODO: handle player teleporting to a shared inv world same as logging in on it
+				HandlerList.unregisterAll(this);
+				evt.getPlayer().getInventory().setContents(player.getOpenInventory().getTopInventory().getContents());
+				player.closeInventory();
+				player.openInventory(evt.getPlayer().getInventory());
 			}
 		}, pl);
 		return true;

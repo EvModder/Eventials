@@ -3,6 +3,7 @@ package Eventials.splitworlds;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import org.bukkit.GameMode;
@@ -11,9 +12,9 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import Eventials.Eventials;
 import net.evmodder.EvLib.extras.ReflectionUtils;
 import net.evmodder.EvLib.extras.ReflectionUtils.RefClass;
@@ -104,42 +105,73 @@ public final class SplitWorldUtils{
 		return success;
 	}
 
-	public static void vaccinatePlayer(Player player){
-		player.setGameMode(GameMode.SURVIVAL);
-		for(AttributeModifier modifier : player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getModifiers()){
-			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).removeModifier(modifier);
+	// List of things that get lost / messed up when switching player data file
+	public static class PlayerState{
+		GameMode gm;
+		ItemStack helm, chest, leg, boot;
+		List<PotionEffect> effects = new ArrayList<>();
+		// TODO: handle attributes gained/lost from armor/handheld item(s) added/removed in /invsee
+		HashMap<Attribute, Double> attributeBaseValues = new HashMap<>();
+		HashMap<Attribute, Collection<AttributeModifier>> attributeModifiers = new HashMap<>();
+	};
+	public static PlayerState getPlayerState(Player player){
+		PlayerState state = new PlayerState();
+		state.gm = player.getGameMode();
+		state.helm = player.getInventory().getHelmet();
+		state.chest = player.getInventory().getChestplate();
+		state.leg = player.getInventory().getLeggings();
+		state.boot = player.getInventory().getBoots();
+		state.effects.addAll(player.getActivePotionEffects());
+		for(Attribute attribute : Attribute.values()){
+			AttributeInstance inst = player.getAttribute(attribute);
+			if(inst != null){
+				state.attributeBaseValues.put(attribute, inst.getBaseValue());
+				state.attributeModifiers.put(attribute, inst.getModifiers());
+			}
 		}
-		for(AttributeModifier modifier : player.getAttribute(Attribute.GENERIC_ARMOR).getModifiers()){
-			player.getAttribute(Attribute.GENERIC_ARMOR).removeModifier(modifier);
-		}
-		for(AttributeModifier modifier : player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getModifiers()){
-			player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).removeModifier(modifier);
-		}
-
-		player.removePotionEffect(PotionEffectType.INVISIBILITY);
-		player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+		return state;
 	}
+	public static void resetPlayerState(Player player){
+		player.setGameMode(player.getServer().getDefaultGameMode());// TODO: something more elegant (per-world) like Multiverse API?
+//		player.setHealth(20D);
+//		player.setFoodLevel(20);
+//		player.setExhaustion(0F);
+//		player.setLevel(0);
+//		player.setExp(0F);
+//		player.resetTitle();
+//		player.getInventory().clear();
+//		player.getEnderChest().clear();
+		player.getInventory().setHelmet(null);
+		player.getInventory().setChestplate(null);
+		player.getInventory().setLeggings(null);
+		player.getInventory().setBoots(null);
 
-	public static void resetPlayer(Player player){
-		player.setGameMode(GameMode.SURVIVAL);
-		player.setHealth(20D);
-		player.setFoodLevel(20);
-		player.setExhaustion(0F);
-		player.setLevel(0);
-		player.setExp(0F);
-		player.resetTitle();
-		player.getInventory().clear();
-		player.getEnderChest().clear();
-//		player.getInventory().setHelmet(new ItemStack(Material.AIR));
-//		player.getInventory().setChestplate(new ItemStack(Material.AIR));
-//		player.getInventory().setLeggings(new ItemStack(Material.AIR));
-//		player.getInventory().setBoots(new ItemStack(Material.AIR));
+//		player.getActivePotionEffects().clear();
 		for(PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
 		for(Attribute attribute : Attribute.values()){
 			AttributeInstance inst = player.getAttribute(attribute);
-			if(inst != null) for(AttributeModifier modifier : inst.getModifiers()){
-				player.getAttribute(attribute).removeModifier(modifier);
+			if(inst != null){
+				inst.setBaseValue(inst.getDefaultValue());
+//				inst.getModifiers().clear();
+				for(AttributeModifier modifier : inst.getModifiers()) inst.removeModifier(modifier);
 			}
 		}
+	}
+	public static PlayerState loadPlayerState(Player player, PlayerState newState){
+		PlayerState oldState = getPlayerState(player);
+		resetPlayerState(player);
+
+		if(newState != null){
+			newState.attributeBaseValues.forEach((attribute, value) -> player.getAttribute(attribute).setBaseValue(value));
+//			newState.attributeModifiers.forEach((attribute, list) -> player.getAttribute(attribute).addAll(list));
+			newState.attributeModifiers.forEach((attribute, list) -> list.forEach(modifier -> player.getAttribute(attribute).addModifier(modifier)));
+			player.addPotionEffects(newState.effects);
+			player.getInventory().setHelmet(newState.helm);
+			player.getInventory().setChestplate(newState.chest);
+			player.getInventory().setLeggings(newState.leg);
+			player.getInventory().setBoots(newState.boot);
+			player.setGameMode(newState.gm);
+		}
+		return oldState;
 	}
 }

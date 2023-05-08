@@ -291,7 +291,6 @@ book-editor-enabled: true
 #             Split Worlds             #
 #--------------------------------------#
 splitworlds-enabled: true
-vaccinate-players: false
 
 # Groups of worlds that share the inventories. World inventories are separate by default.
 # Groups can be named whatever you like, but be precise with world names. * is wild.

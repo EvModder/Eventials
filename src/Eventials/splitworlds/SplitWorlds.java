@@ -31,7 +31,7 @@ public final class SplitWorlds{
 	private static HashMap<String, String> sharedInvWorlds;
 	private static String DEFAULT_WORLD, DEFAULT_PLAYERDATA;
 	public static String getDefaultWorld(){return DEFAULT_WORLD;}
-	private static boolean TREAT_DISEASE, SINGLE_INV_GROUP;
+	private static boolean SINGLE_INV_GROUP;
 	final static String SKIP_TP_INV_CHECK_TAG = "skipTeleportInvCheck";
 
 	static String loadDefaultWorldName(Logger logger){
@@ -97,8 +97,6 @@ public final class SplitWorlds{
 	}
 
 	public static void minimal_init(EvPlugin pl){
-		TREAT_DISEASE = pl.getConfig().getBoolean("vaccinate-players", true);
-
 		DEFAULT_WORLD = loadDefaultWorldName(pl.getLogger());
 		DEFAULT_PLAYERDATA = "./"+DEFAULT_WORLD+"/playerdata/";
 		pl.getLogger().fine("Default playerdata location: "+DEFAULT_PLAYERDATA);
@@ -127,8 +125,9 @@ public final class SplitWorlds{
 		new CommandInvsee(plugin);
 	}
 
+	// If no group defined, group with the default world. TODO: config setting with alternative: getOrDefault(worldName, worldName)
 	public static String getInvGroup(String worldName){
-		return sharedInvWorlds.getOrDefault(worldName, worldName);
+		return sharedInvWorlds.getOrDefault(worldName, DEFAULT_WORLD);
 	}
 	public static boolean inSharedInvGroup(String world1, String world2){
 		return getInvGroup(world1).equals(getInvGroup(world2));
@@ -172,9 +171,8 @@ public final class SplitWorlds{
 		}
 		catch(IOException e){e.printStackTrace(); return false;}
 
-		SplitWorldUtils.resetPlayer(handler);
+		SplitWorldUtils.resetPlayerState(handler);
 		handler.loadData();
-		if(TREAT_DISEASE) SplitWorldUtils.vaccinatePlayer(handler); // Remove disease AFTER loading data (treat infected file)
 
 		if(!SINGLE_INV_GROUP){
 			// This file provides a means to figure out what sharedInv group an OfflinePlayer is in
@@ -195,7 +193,6 @@ public final class SplitWorlds{
 			Eventials.getPlugin().getLogger().warning("Into destination profile: "+destFile.getPath());
 			return false;
 		}
-		if(TREAT_DISEASE) SplitWorldUtils.vaccinatePlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
 		handler.saveData();
 
 		try{
@@ -216,9 +213,8 @@ public final class SplitWorlds{
 		try{Files.copy(sourceFile.toPath(), currentFile.toPath(), StandardCopyOption.REPLACE_EXISTING);}
 		catch(IOException e){e.printStackTrace(); return false;}
 
-		SplitWorldUtils.resetPlayer(handler);
+		SplitWorldUtils.resetPlayerState(handler);
 		handler.loadData();
-		if(TREAT_DISEASE) SplitWorldUtils.vaccinatePlayer(handler); // Remove disease AFTER loading data (treat infected file)
 
 		return true;
 	}
@@ -228,7 +224,6 @@ public final class SplitWorlds{
 			Eventials.getPlugin().getLogger().warning("Unable to save profile to file: "+toFile.getPath());
 			return false;
 		}
-		if(TREAT_DISEASE) SplitWorldUtils.vaccinatePlayer(handler);// Remove disease BEFORE saving data (vaccinate the file)
 		handler.saveData();
 
 		try{Files.copy(currentFile.toPath(), toFile.toPath(), StandardCopyOption.REPLACE_EXISTING);}
@@ -244,8 +239,8 @@ public final class SplitWorlds{
 	}
 
 	public boolean transInvWorldTp(final Player player, final Location from, final Location to){
-		String worldFrom = from.getWorld().getName();
-		String worldTo = to.getWorld().getName();
+		final String worldFrom = from.getWorld().getName();
+		final String worldTo = to.getWorld().getName();
 		if(inSharedInvGroup(worldFrom, worldTo)) return true;
 
 		// Save inventory from current world
