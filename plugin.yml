@@ -194,6 +194,7 @@ commands:
       description: Get info on plugins and commands
       usage: /help [page/plugin/command]
       permission: eventials.help
+      aliases: [?]
       permission-message: You do not have permission to do this.
 
    insight:

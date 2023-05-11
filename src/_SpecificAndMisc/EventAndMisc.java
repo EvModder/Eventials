@@ -62,7 +62,7 @@ public class EventAndMisc{
 		}
 		else{
 			// Testcraft? Other?
-			pl.getLogger().info("Empty EventAndMisc (Testcraft)");
+			pl.getLogger().info("Empty EventAndMisc (Testcraft/Leafcraft v0)");
 		}
 
 		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();
@@ -166,17 +166,6 @@ public class EventAndMisc{
 				.addIngredient(Material.STONE_PLATE)
 				.addIngredient(Material.STONE_PLATE);
 		pl.getServer().addRecipe(doubleSlab);*///TODO: figure out what Material type double slabs are these days
-
-//		// Packed Ice
-//		ShapelessRecipe packedIce = (new ShapelessRecipe(new NamespacedKey(pl, "packed_ice"),
-//				new ItemStack(Material.PACKED_ICE)))
-//				.addIngredient(Material.ICE).addIngredient(Material.ICE)
-//				.addIngredient(Material.ICE).addIngredient(Material.ICE);
-//		pl.getServer().addRecipe(packedIce);
-
-//		Chiseled bricks
-//		ItemStack chiseledBricks = new ItemStack(Material.BRICK, 1, (byte)3);
-//		pl.getServer().addRecipe((new ShapedRecipe(chiseledBricks)));
 	}
 
 	public static Component getPluginDisplay(String pluginName){//TODO: this beautiful function is currently unused!
