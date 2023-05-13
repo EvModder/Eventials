@@ -27,31 +27,71 @@ import Eventials.Eventials;
 public class PlayerClickBlockListener implements Listener{
 	final double SHATTER_CHANCE, STRONGHOLD_DENSITY;
 	final boolean REMOVE_EYES_FROM_PORTAL, ADD_EXTRA_STRONGHOLDS;
+	final long MIN_EXTRA_SH_R, MIN_EXTRA_SH_R_SQ;
 	private Random rand;
 
-	// Magic constants:
-	final double ONLY_USE_VANILLA_SH_R_SQ = 20_000*20_000;
-	final double ONLY_USE_CUSTOM_SH_R_SQ = 40_000*40_000;
+	// Computed constants:
+	final long MAX_VANILLA_SH_R = 24_320; // From the Minecraft wiki
+	final long MAX_WORLD_SIZE = 30_000_000;
 	final long GRID_WIDTH, GRID_MAX_OFFSET, GRID_CHECK_OFFSET, MULT_X_FOR_RNG;
+	final long ONLY_EXTRA_SH_MIN_R, ONLY_VANILLA_SH_MAX_R = 22509;
+
+	// Main API
+	public Location nearestCustomStronghold(Location loc){
+		final long x = loc.getBlockX() / GRID_WIDTH;
+		final long z = loc.getBlockZ() / GRID_WIDTH;
+		Location closestLoc = null;
+		final Location WORLD_ORIGIN = new Location(loc.getWorld(), 0, 0, 0);
+		double minDistSq = Double.MAX_VALUE;
+		for(long xi = x-GRID_CHECK_OFFSET; xi<=x+GRID_CHECK_OFFSET+1; ++xi){
+			for(long zi = z-GRID_CHECK_OFFSET; zi<=z+GRID_CHECK_OFFSET+1; ++zi){
+				final long seed = (xi*MULT_X_FOR_RNG + zi) * loc.getWorld().getSeed();
+				final Random rand = new Random(seed);
+				final long offX = rand.nextLong(GRID_MAX_OFFSET);
+				final long y = loc.getWorld().getMinHeight() + rand.nextLong(loc.getWorld().getSeaLevel() - loc.getWorld().getMinHeight());
+				final long offZ = rand.nextLong(GRID_MAX_OFFSET);
+				final Location shLoc = new Location(loc.getWorld(), xi*GRID_WIDTH + offX, y, zi*GRID_WIDTH + offZ);
+				final double distSq = shLoc.distanceSquared(loc);
+				if(distSq < minDistSq && shLoc.distanceSquared(WORLD_ORIGIN) > MIN_EXTRA_SH_R_SQ){
+					minDistSq = distSq;
+					closestLoc = shLoc;
+				}
+			}
+		}
+		return closestLoc;
+	}
 
 	public PlayerClickBlockListener(){
 		final Eventials pl = Eventials.getPlugin();
 		final FileConfiguration config = pl.getConfig();
 		REMOVE_EYES_FROM_PORTAL = config.getBoolean("click-to-remove-eyes-of-ender", true);
 		SHATTER_CHANCE = config.getDouble("remove-eye-of-ender-shatter-chance", .2d);
+
+		// Config constants
 		ADD_EXTRA_STRONGHOLDS = config.getBoolean("add-extra-strongholds", false);
-		STRONGHOLD_DENSITY = config.getDouble("extra-stronghold-density-in-km2", .1d);
+		STRONGHOLD_DENSITY = config.getDouble("extra-stronghold-density-in-km2", 0.1);
+		GRID_MAX_OFFSET = config.getLong("extra-stronghold-max-random-offset", 6075);
+		MIN_EXTRA_SH_R = config.getLong("extra-stronghold-min-distance-to-origin", 25856);
+		if(MIN_EXTRA_SH_R <= MAX_VANILLA_SH_R){
+			pl.getLogger().warning("Extra stronghold distance ("+MIN_EXTRA_SH_R+") is <= max vanilla distance ("
+							+MAX_VANILLA_SH_R+"), this may cause overlap errors and incorrect eye of ender trajectories");
+		}
+
+		// Computed constants
+		MIN_EXTRA_SH_R_SQ = MIN_EXTRA_SH_R * MIN_EXTRA_SH_R;
 		GRID_WIDTH = (long)(1000d / Math.sqrt(STRONGHOLD_DENSITY));
-		GRID_MAX_OFFSET = config.getLong("extra-stronghold-max-random-offset", 5000l);
 		GRID_CHECK_OFFSET = GRID_MAX_OFFSET/GRID_WIDTH + (GRID_MAX_OFFSET%GRID_WIDTH >= GRID_WIDTH/2 ? 1 : 0);
-		MULT_X_FOR_RNG = 30_000_000 / GRID_WIDTH;
+		pl.getLogger().info("GRID_CHECK_OFFSET: "+GRID_CHECK_OFFSET);
+		MULT_X_FOR_RNG = MAX_WORLD_SIZE / GRID_WIDTH;
+
+		ONLY_EXTRA_SH_MIN_R = (long)Math.sqrt((768d/Math.sqrt(2) + (GRID_MAX_OFFSET/GRID_WIDTH + 1)*GRID_WIDTH));
 
 		if(ADD_EXTRA_STRONGHOLDS){
 			pl.getServer().getPluginManager().registerEvents(new Listener(){
 				@EventHandler public void onBlockClicked(ChunkLoadEvent evt){
 					if(!evt.isNewChunk()) return;
 					final Location chunkCenter = evt.getChunk().getBlock(7, evt.getChunk().getWorld().getSeaLevel(), 7).getLocation();
-					if(chunkCenter.distanceSquared(new Location(chunkCenter.getWorld(), 0, 0, 0)) < ONLY_USE_VANILLA_SH_R_SQ) return;
+					if(chunkCenter.distanceSquared(new Location(chunkCenter.getWorld(), 0, 0, 0)) < MIN_EXTRA_SH_R_SQ) return;
 
 					final Location shLoc = nearestCustomStronghold(chunkCenter);
 					if(shLoc != null && shLoc.getBlockX()/16 == evt.getChunk().getX() && shLoc.getBlockZ()/16 == evt.getChunk().getZ()){
@@ -84,38 +124,14 @@ public class PlayerClickBlockListener implements Listener{
 		}
 	}
 
-	private Location nearestCustomStronghold(Location loc){
-		long x = loc.getBlockX() / GRID_WIDTH;
-		long z = loc.getBlockZ() / GRID_WIDTH;
-		Location closestLoc = null;
-		final Location WORLD_ORIGIN = new Location(loc.getWorld(), 0, 0, 0);
-		double minDistSq = Double.MAX_VALUE;
-		for(long xi = x-GRID_CHECK_OFFSET; xi<=x+GRID_CHECK_OFFSET+1; ++xi){
-			for(long zi = z-GRID_CHECK_OFFSET; zi<=z+GRID_CHECK_OFFSET+1; ++zi){
-				long seed = (xi*MULT_X_FOR_RNG + zi) * loc.getWorld().getSeed();
-				Random rand = new Random(seed);
-				long offX = rand.nextLong(GRID_MAX_OFFSET);
-				long y = loc.getWorld().getMinHeight() + rand.nextLong(loc.getWorld().getSeaLevel() - loc.getWorld().getMinHeight());
-				long offZ = rand.nextLong(GRID_MAX_OFFSET);
-				Location shLoc = new Location(loc.getWorld(), xi*GRID_WIDTH + offX, y, zi*GRID_WIDTH + offZ);
-				double distSq = shLoc.distanceSquared(loc);
-				if(distSq < minDistSq && shLoc.distanceSquared(WORLD_ORIGIN) > 25_000d*25_000d){// Don't generate extra strongholds <25k
-					minDistSq = distSq;
-					closestLoc = shLoc;
-				}
-			}
-		}
-		return closestLoc;
-	}
-
 	private Location getEyeTarget(Location from){
 		final double dToOriginSq = from.distanceSquared(new Location(from.getWorld(), 0, 0, 0));
-		if(dToOriginSq < ONLY_USE_VANILLA_SH_R_SQ){
-			Bukkit.getLogger().info("<20k, only using vanilla SHs");
+		if(dToOriginSq < ONLY_VANILLA_SH_MAX_R){
+			Bukkit.getLogger().info("only using vanilla SHs");
 			return null;
 		}
 		Location vanillaSH = null;
-		if(dToOriginSq < ONLY_USE_CUSTOM_SH_R_SQ){
+		if(dToOriginSq < ONLY_EXTRA_SH_MIN_R){
 			vanillaSH = from.getWorld().locateNearestStructure(from, StructureType.STRONGHOLD, 9000, false).getLocation();
 		}
 		else Bukkit.getLogger().info(">40k, only using extra SHs");
@@ -154,7 +170,8 @@ public class PlayerClickBlockListener implements Listener{
 					evt.setCancelled(true);
 					final EnderSignal es = (EnderSignal)evt.getPlayer().getWorld().spawnEntity(evt.getPlayer().getEyeLocation(), EntityType.ENDER_SIGNAL);
 					es.setTargetLocation(eyeTarget);
-					evt.getPlayer().getServer().broadcastMessage(evt.getPlayer().getName()+": "+eyeTarget.getBlockX()+", "+eyeTarget.getBlockY()+", "+eyeTarget.getBlockZ());
+					evt.getPlayer().getServer().broadcastMessage(evt.getPlayer().getName()+": "
+								+eyeTarget.getBlockX()+", "+eyeTarget.getBlockY()+", "+eyeTarget.getBlockZ());
 				}
 			}
 		}

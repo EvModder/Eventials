@@ -41,8 +41,13 @@ shift-click-to-ride-in-gm1: true
 click-to-remove-eyes-of-ender: true
 remove-eye-of-ender-shatter-chance: 0.2
 add-extra-strongholds: true
-extra-stronghold-density-in-km2: 0.0688863
-extra-stronghold-max-random-offset: 5000
+
+# Do not set this lower than 24320
+extra-stronghold-min-distance-to-origin: 25856
+
+# This will space strongholds roughly ~4050 blocks apart
+extra-stronghold-density-in-km2: 0.06094490701
+extra-stronghold-max-random-offset: 6075
 
 login-noteblock: true
 login-show-recent-joins: false
