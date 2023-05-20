@@ -9,6 +9,10 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -69,6 +73,15 @@ public class EventAndMisc{
 		if(pl.getConfig().getBoolean("add-recipes", true)) loadRecipes();
 		if(pl.getConfig().getBoolean("fix-paper-rng-manip", true)) new PaperFix_EntityAddToWorldListener(pl);
 		if(pl.getConfig().getBoolean("fix-paper-gravity-dupe", true)) new PaperFix_EntityChangeBlockListener(pl);
+		if(pl.getConfig().getBoolean("set-new-chunks-to-max-local-difficulty", false)){
+			pl.getServer().getPluginManager().registerEvents(new Listener(){
+				@EventHandler(priority = EventPriority.HIGHEST)
+				public void onChunkLoad(ChunkLoadEvent evt){
+					if(!evt.isNewChunk()) return;
+					evt.getChunk().setInhabitedTime(3_600_000);
+				}
+			}, pl);
+		}
 	}
 
 	void loadWorldBorders(){

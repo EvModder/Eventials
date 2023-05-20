@@ -25,6 +25,7 @@ add-recipes: false
 pre-command: true #Required for a lot of features/functionality
 fancy-pl: true
 command-aliases: true
+show-permissionless-commands-in-plugin-help: true
 use-hyperwarps: true
 quick-warps: [adminshop, market]
 tell-death-coords: false
@@ -88,6 +89,7 @@ global-command-cooldowns:
 
 fix-paper-rng-manip: true
 fix-paper-gravity-dupe: true
+set-new-chunks-to-max-local-difficulty: false
 
 #--------------------------------------#
 #          Custom Scoarboards          #
