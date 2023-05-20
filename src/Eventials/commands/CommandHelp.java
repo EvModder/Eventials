@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,11 +29,13 @@ import net.evmodder.EvLib.extras.ReflectionUtils.RefMethod;
 public class CommandHelp extends EvCommand{
 	private final EvPlugin pl;
 	private final boolean SHOW_ALIASES_IN_TAB_COMPLETE = true;
+	private static boolean SHOW_PERMISSIONLESS_CMDS = true;
 	private HashMap<String, Set<Command>> commandsByName;
 
 	public CommandHelp(Eventials p){
 		super(p);
 		pl = p;
+		SHOW_PERMISSIONLESS_CMDS = p.getConfig().getBoolean("show-permissionless-commands-in-plugin-help", true);
 	}
 	
 	private HashMap<String, Set<Command>> getCommandsByNameMap(){
@@ -176,6 +180,7 @@ public class CommandHelp extends EvCommand{
 	}
 
 	private static void showPluginHelp(CommandSender sender, Plugin pl){
+		pl.getLogger().info("yee");
 		PluginDescriptionFile desc = pl.getDescription();
 		StringBuilder builder = new StringBuilder(helpHeader)
 			.append(ChatColor.GOLD).append("Plugin ").append(pl.isEnabled() ? ChatColor.GREEN : ChatColor.RED).append(pl.getName())
@@ -184,9 +189,17 @@ public class CommandHelp extends EvCommand{
 		if(desc.getWebsite() != null && !desc.getWebsite().isEmpty())
 			builder.append("\nWebsite: ").append(ChatColor.AQUA).append(desc.getWebsite()).append(ChatColor.GOLD);
 		builder.append("\nDescription: ").append(ChatColor.WHITE).append(desc.getDescription()).append(ChatColor.GOLD);
-		if(desc.getCommands() != null && !desc.getCommands().isEmpty())
-			builder.append("\nCommands: ").append(ChatColor.GRAY).append('/')
-			.append(String.join(graySep+'/', desc.getCommands().keySet())).append(ChatColor.GOLD);
+		if(desc.getCommands() != null && !desc.getCommands().isEmpty()){
+			builder.append("\nCommands: ");
+			boolean not1st = false;
+			for(Entry<String, Map<String, Object>> entry : desc.getCommands().entrySet()){
+				final boolean hasPerm = sender.hasPermission((String)entry.getValue().getOrDefault("permission", "*"));
+				if(!SHOW_PERMISSIONLESS_CMDS && !hasPerm) continue;
+				if(not1st) builder.append(graySep);
+				else not1st = true;
+				builder.append(hasPerm ? ChatColor.GRAY : ChatColor.RED).append('/').append(entry.getKey());
+			};
+		}
 		sender.sendMessage(builder.toString());
 	}
 
