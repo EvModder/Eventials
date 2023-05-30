@@ -67,26 +67,26 @@ public class PlayerClickBlockListener implements Listener{
 		REMOVE_EYES_FROM_PORTAL = config.getBoolean("click-to-remove-eyes-of-ender", true);
 		SHATTER_CHANCE = config.getDouble("remove-eye-of-ender-shatter-chance", .2d);
 
-		// Config constants
-		ADD_EXTRA_STRONGHOLDS = config.getBoolean("add-extra-strongholds", false);
-		STRONGHOLD_DENSITY = config.getDouble("extra-stronghold-density-in-km2", 0.1);
-		GRID_MAX_OFFSET = config.getLong("extra-stronghold-max-random-offset", 6075);
-		MIN_EXTRA_SH_R = config.getLong("extra-stronghold-min-distance-to-origin", 25856);
-		if(MIN_EXTRA_SH_R <= MAX_VANILLA_SH_R){
-			pl.getLogger().warning("Extra stronghold distance ("+MIN_EXTRA_SH_R+") is <= max vanilla distance ("
-							+MAX_VANILLA_SH_R+"), this may cause overlap errors and incorrect eye of ender trajectories");
-		}
+		if(ADD_EXTRA_STRONGHOLDS = config.getBoolean("add-extra-strongholds", false)){
+			// Config constants
+			STRONGHOLD_DENSITY = config.getDouble("extra-stronghold-density-in-km2", 0.1);
+			GRID_MAX_OFFSET = config.getLong("extra-stronghold-max-random-offset", 6075);
+			MIN_EXTRA_SH_R = config.getLong("extra-stronghold-min-distance-to-origin", 25856);
+			if(MIN_EXTRA_SH_R <= MAX_VANILLA_SH_R){
+				pl.getLogger().warning("Extra stronghold distance ("+MIN_EXTRA_SH_R+") is <= max vanilla distance ("
+								+MAX_VANILLA_SH_R+"), this may cause overlap errors and incorrect eye of ender trajectories");
+			}
 
-		// Computed constants
-		MIN_EXTRA_SH_R_SQ = MIN_EXTRA_SH_R * MIN_EXTRA_SH_R;
-		GRID_WIDTH = (long)(1000d / Math.sqrt(STRONGHOLD_DENSITY));
-		GRID_CHECK_OFFSET = GRID_MAX_OFFSET/GRID_WIDTH + (GRID_MAX_OFFSET%GRID_WIDTH >= GRID_WIDTH/2 ? 1 : 0);
-		pl.getLogger().info("GRID_CHECK_OFFSET: "+GRID_CHECK_OFFSET);
-		MULT_X_FOR_RNG = MAX_WORLD_SIZE / GRID_WIDTH;
+			// Computed constants
+			MIN_EXTRA_SH_R_SQ = MIN_EXTRA_SH_R * MIN_EXTRA_SH_R;
+			GRID_WIDTH = (long)(1000d / Math.sqrt(STRONGHOLD_DENSITY));
+			GRID_CHECK_OFFSET = GRID_MAX_OFFSET/GRID_WIDTH + (GRID_MAX_OFFSET%GRID_WIDTH >= GRID_WIDTH/2 ? 1 : 0);
+			pl.getLogger().info("GRID_WIDTH: "+GRID_WIDTH);
+			pl.getLogger().info("GRID_CHECK_OFFSET: "+GRID_CHECK_OFFSET);
+			MULT_X_FOR_RNG = MAX_WORLD_SIZE / GRID_WIDTH;
 
-		ONLY_EXTRA_SH_MIN_R = (long)Math.sqrt((768d/Math.sqrt(2) + (GRID_MAX_OFFSET/GRID_WIDTH + 1)*GRID_WIDTH));
+			ONLY_EXTRA_SH_MIN_R = (long)Math.sqrt((768d/Math.sqrt(2) + (GRID_MAX_OFFSET/GRID_WIDTH + 1)*GRID_WIDTH));
 
-		if(ADD_EXTRA_STRONGHOLDS){
 			pl.getServer().getPluginManager().registerEvents(new Listener(){
 				@EventHandler public void onBlockClicked(ChunkLoadEvent evt){
 					if(!evt.isNewChunk()) return;
@@ -100,6 +100,8 @@ public class PlayerClickBlockListener implements Listener{
 				}
 			}, pl);
 		}
+		else STRONGHOLD_DENSITY = GRID_WIDTH = GRID_MAX_OFFSET = GRID_CHECK_OFFSET =
+				MIN_EXTRA_SH_R = MIN_EXTRA_SH_R_SQ = MULT_X_FOR_RNG = ONLY_EXTRA_SH_MIN_R = -1;
 	}
 
 	final int SH_LOAD_CHUNK_R = 8;
