@@ -37,7 +37,7 @@ public class ServerPingListener implements Listener{
 	public ServerPingListener(){
 		plugin = Eventials.getPlugin();
 
-		pingPrefix = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ping-prefix"));
+		pingPrefix = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ping-prefix", "&9&l&m  &7 "));
 		List<String> msgs = plugin.getConfig().getStringList("ping-messages");
 		pingMsgs = new String[msgs.size()];
 		int i=-1;

@@ -118,7 +118,7 @@ vote-triggered-commands:
 
 # Available params: %uuid%, %name%, %display_name%, %votes%, %streak%, %reward_amount%, %reward_amount_int%
 vote-triggered-commands-once-online:
-  - 'minecraft:give EvDoc lily_pad{display:{Name:\'{"text":"Vote Token","color":"#008800","italic":false}\',Lore:[\'{"text":"Unplacing","color":"gray","italic":false}\',\'{"text":"Soul Bound","color":"gray","italic":false}\']},Enchantments:[{id:lure,lvl:1}],HideFlags:1}'
+  - 'minecraft:give EvDoc lily_pad{display:{Name:''{"text":"Vote Token","color":"#008800","italic":false}'',Lore:[''{"text":"Unplacing","color":"gray","italic":false}'',''{"text":"Soul Bound","color":"gray","italic":false}'']},Enchantments:[{id:lure,lvl:1}],HideFlags:1}'
 #  - 'minecraft:tellraw @p[name=%name%] {"text":"Your offline votes were added, thanks!","color":"gray"}'
 
 #--------------------------------------#
@@ -157,10 +157,18 @@ container-fee-includes-contents: true
 #              More Stuff              #
 #--------------------------------------#
 world-borders:
-  Lilyland:
+  DaWorld:
     center-x: 0.5
     center-z: 0.5
     radius: 300000
+  DaWorld_nether:
+    center-x: 0.5
+    center-z: 0.5
+    radius: 37500
+  DaWorld_the_end:
+    center-x: 0.5
+    center-z: 0.5
+    radius: 37500
 
 ping-messages:
   - ''

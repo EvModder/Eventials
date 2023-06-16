@@ -64,7 +64,7 @@ public class EventAndMisc{
 			new AC_NewWorld();
 			pl.getServer().getPluginManager().registerEvents(new FactionsProtectPatch(pl), pl);
 		}
-		else if(pl.getServer().getWorld("Leafpad") != null){
+		else if(pl.getServer().getWorld("DaWorld") != null){
 			pl.getLogger().info("Loading AC_Leafcraft config");
 			loadCustomConfig("config_leafcraft.yml");
 //			new AC_Leafcraft();
