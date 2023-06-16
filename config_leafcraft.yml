@@ -102,13 +102,9 @@ vote-streak-amount: 0
 vote-streak-max-days: 10
 vote-streak-grace-hours: 48
 
-vote-site-page: 'http://www.altcraft.net/voting'
+vote-site-page: ''
 vote-links:
-  - 'PMC, https://www.planetminecraft.com/server/alternatecraft-2724346/vote/'
-  - 'MMP, http://minecraft-mp.com/server/109051/vote/'
-  - 'MC Servers, http://minecraftservers.org/vote/280048'
-  - 'MCSL, http://minecraft-server-list.com/server/254265/vote/'
-  - 'MC biz, https://minecraftservers.biz/servers/2600/vote/'
+  - 'MMP, http://minecraft-mp.com/server/320576/vote/'
 
 # Available params: %uuid%, %name%, %display_name%, %site_name%, %site_url%, %votes%, %streak%
 vote-triggered-commands:
@@ -118,7 +114,7 @@ vote-triggered-commands:
 
 # Available params: %uuid%, %name%, %display_name%, %votes%, %streak%, %reward_amount%, %reward_amount_int%
 vote-triggered-commands-once-online:
-  - 'minecraft:give EvDoc lily_pad{display:{Name:''{"text":"Vote Token","color":"#008800","italic":false}'',Lore:[''{"text":"Unplacing","color":"gray","italic":false}'',''{"text":"Soul Bound","color":"gray","italic":false}'']},Enchantments:[{id:lure,lvl:1}],HideFlags:1}'
+  - 'minecraft:give EvDoc lily_pad{display:{Name:''{"text":"Vote Token","color":"#008800","italic":false}'',Lore:[''{"text":"Unplacing","color":"gray","italic":false}'',''{"text":"Soul Bound","color":"gray","italic":false}'']},Enchantments:[{id:lure,lvl:1}],HideFlags:1,CustomModelData:1}'
 #  - 'minecraft:tellraw @p[name=%name%] {"text":"Your offline votes were added, thanks!","color":"gray"}'
 
 #--------------------------------------#

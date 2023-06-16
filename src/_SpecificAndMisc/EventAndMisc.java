@@ -2,21 +2,34 @@ package _SpecificAndMisc;
 
 import java.io.File;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import Eventials.listeners.PaperFix_EntityAddToWorldListener;
 import Eventials.listeners.PaperFix_EntityChangeBlockListener;
@@ -67,7 +80,74 @@ public class EventAndMisc{
 		else if(pl.getServer().getWorld("DaWorld") != null){
 			pl.getLogger().info("Loading AC_Leafcraft config");
 			loadCustomConfig("config_leafcraft.yml");
-//			new AC_Leafcraft();
+//			new AC_Leafcraft(){
+			final String TAG_PREFIX = "came_from_";
+			final String SPAWN_WORLD = "CherrySpawn";
+			new BukkitRunnable(){
+//				Location spawnPoint = spawnWorld.getSpawnLocation();
+				final double tpDistSq = 50d*50d;
+				@Override public void run(){
+					World spawnWorld = pl.getServer().getWorld(SPAWN_WORLD);
+					//pl.getLogger().info("cherry spawn: "+TextUtils.locationToString(spawnWorld.getSpawnLocation()));
+					for(Player p : spawnWorld.getPlayers()){
+						//pl.getLogger().info(p.getName()+"'s dist: "+p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()));
+						if(p.getGameMode() != GameMode.CREATIVE && p.getGameMode() != GameMode.SPECTATOR
+								&& p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()) > tpDistSq){
+							//pl.getLogger().info("they've left the cherry spawn zone");
+							Location returnLoc = null;
+							for(String tag : p.getScoreboardTags()){
+								if(tag.startsWith(TAG_PREFIX)){
+									//pl.getLogger().info("found came_from tag");
+									String[] data = tag.substring(TAG_PREFIX.length()).split("_");
+									returnLoc = new Location(pl.getServer().getWorld(data[0]),
+											Double.parseDouble(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]));
+									p.setFallDistance(Float.parseFloat(data[4]));
+								}
+							}
+							if(returnLoc == null){
+								p.setFallDistance(0);
+								if(!p.getBedSpawnLocation().getWorld().getName().equals(SPAWN_WORLD)) returnLoc = p.getBedSpawnLocation();
+								if(returnLoc == null) returnLoc = pl.getServer().getWorld("DaWorld").getSpawnLocation();
+							}
+							p.teleport(returnLoc, TeleportCause.PLUGIN);
+						}
+					}
+				}
+			}.runTaskTimer(pl, 20L, 20L);
+			pl.getServer().getPluginManager().registerEvents(new Listener(){
+				@EventHandler(priority = EventPriority.HIGHEST)
+				public void onPreCommand(PlayerCommandPreprocessEvent evt){
+					if(evt.getMessage().toLowerCase().startsWith("/spawn") && !evt.getPlayer().getWorld().getName().equals(SPAWN_WORLD)){
+						evt.getPlayer().getScoreboardTags().removeIf(t -> t.startsWith(TAG_PREFIX));
+						Location loc = evt.getPlayer().getLocation();
+						evt.getPlayer().addScoreboardTag(TAG_PREFIX+loc.getWorld().getName()+"_"+loc.getX()+"_"+loc.getY()+"_"+loc.getZ()+"_"+evt.getPlayer().getFallDistance());
+						//pl.getLogger().info("saved came_from tag");
+					}
+				}
+				@EventHandler public void onEntityDeathEvent(EntityDeathEvent evt){
+					if(evt.getEntityType() == EntityType.ENDER_DRAGON){
+						ItemStack unplacingEgg = new ItemStack(Material.DRAGON_EGG);
+						ItemMeta meta = unplacingEgg.getItemMeta();
+						meta.setLore(Arrays.asList(ChatColor.GRAY+"Unplacing"));
+						unplacingEgg.setItemMeta(meta);
+						evt.getEntity().getWorld().dropItem(evt.getEntity().getLocation(), unplacingEgg);
+					}
+				}
+				@EventHandler public void onPlayerJoin(PlayerJoinEvent evt){
+					if(!evt.getPlayer().getScoreboardTags().contains("joined")){
+						evt.getPlayer().addScoreboardTag("joined");
+						final String name = evt.getPlayer().getName();
+						final String date = new SimpleDateFormat("yyy-MM-dd").format(new Date());
+						pl.getLogger().info("Minting new player token: "+name);
+						pl.runCommand("minecraft:give "+name+" structure_void{CustomModelData:1,display:{"
+								+ "Name:'{\"text\":\"Sigil of "+name+"\",\"color\":\"#33bbaf\",\"italic\":false}',"
+								+ "Lore:['{\"text\":\""+date+"\",\"italic\":false,\"bold\":true,\"color\":\"#aaaa77\"}',"
+								+ "'{\"text\":\"Unplacing\",\"italic\":false,\"color\":\"gray\"}',"
+								+ "'{\"text\":\"Soul Bound\",\"italic\":false,\"color\":\"gray\"}']}}");
+					}
+				}
+			}, pl);
+//			};
 		}
 		else{
 			// Testcraft? Other?
