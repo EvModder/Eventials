@@ -34,7 +34,7 @@ import net.evmodder.EvLib.extras.NBTTagUtils;
 import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
 import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagList;
 
-public class AC_Old implements Listener {
+public class AC_Flatlands implements Listener {
 	Eventials pl;
 	Random rand;
 
@@ -57,7 +57,7 @@ public class AC_Old implements Listener {
 			"/freebuild,/fb"
 	};
 
-	public AC_Old(){
+	public AC_Flatlands(){
 		rand = new Random();
 		pl = Eventials.getPlugin();
 		pl.getServer().getPluginManager().registerEvents(this, pl);

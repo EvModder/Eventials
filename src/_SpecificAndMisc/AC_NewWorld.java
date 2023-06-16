@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
-import org.bukkit.TreeType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,13 +32,13 @@ import net.evmodder.Renewable.RenewableAPI;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 
-public class AC_New implements Listener{
+public class AC_NewWorld implements Listener{
 	private final HashSet<Pair<Integer,Integer>> modChunks;
 	private final Eventials pl;
 	private final RenewableAPI renewableAPI;
 	final boolean fancyPl;
 
-	public AC_New(){
+	public AC_NewWorld(){
 		pl = Eventials.getPlugin();
 		renewableAPI = ((Renewable)pl.getServer().getPluginManager().getPlugin("Renewable")).getAPI();
 		fancyPl = pl.getConfig().getBoolean("fancy-pl", true);
@@ -93,26 +92,13 @@ public class AC_New implements Listener{
 
 	@EventHandler
 	public void onTreeGrow(StructureGrowEvent evt){
-		if(isWoodTree(evt.getSpecies())){
-			addModChunk(evt.getBlocks().iterator().next().getChunk());
-		}
+		addModChunk(evt.getBlocks().iterator().next().getChunk());
 	}
 
 	@EventHandler
 	public void onVinePlant(BlockPlaceEvent evt){
 		if(evt.getBlockPlaced().getType() == Material.VINE){
 			addModChunk(evt.getBlockPlaced().getChunk());
-		}
-	}
-
-	public boolean isWoodTree(TreeType tree){
-		switch(tree){
-			case CHORUS_PLANT:
-			case BROWN_MUSHROOM:
-			case RED_MUSHROOM:
-				return false;
-			default:
-				return true;
 		}
 	}
 

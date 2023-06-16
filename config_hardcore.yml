@@ -156,11 +156,7 @@ cycles-per-holiday-action: 5
 skip-automessage-if-other-event: false
 skip-automessage-if-no-chats: true
 
-pmc-auto-bump: true
-pmc-resource-id: 4368271
-pmc-login-token: "a61f2bd3aa2d3ecdc0f3e26e51d0ca406b17e998712949380a35e1d\
-                  44de5239588cbacc64b185c48126bf9800ab4c4ea16016c13a8fc38\
-                  0de18621abb64a2fd95e43c884847641db247273f5eb1ccb0ed63a77"
+pmc-auto-bump: false
 
 #Remember usernames for personalized automsgs
 save-ips: true
@@ -206,10 +202,6 @@ dye-shulkers: true
 #--------------------------------------#
 evvoter-enabled: true
 
-# NOTE: This is not automatically given to a player! Enter a vote-triggered
-# command below for your preferred economy plugin, using %reward_amount%.
-player-cash-reward: 2
-
 # Voting streaks can be used to modify the player-cash-reward amount.
 # To disable voting streaks, set 'op' and 'amount' to 0.
 vote-streak-op: 0 #op 0=add, 1=multiply, 2=tbd
@@ -244,26 +236,16 @@ vote-triggered-commands-once-online:
 #  - 'minecraft:scoreboard players add %uuid% votes-by-uuid %reward_amount_int%'
   - 'minecraft:tellraw %name% [{"text":"Available votes: ","color":"gray"},{"text":"%votes%","color":"green"}]'
 
-#--------------------------------------#
-#          BookEditor config           #
-#--------------------------------------#
-book-editor-enabled: true
 
 #--------------------------------------#
 #             Split Worlds             #
 #--------------------------------------#
 splitworlds-enabled: true
 
-# Groups of worlds that share the inventories. World inventories are separate by default.
-# Groups can be named whatever you like, but be precise with world names. * is wild.
-# WARNING: Decide how to group worlds before they are opened; when two or more worlds are
-# joined, only one of them will retain it's playerdata information
 shared-inv-worlds:
-  pair_with_nether:
+  default_group:
     - '*'
     - '*_nether'
-  pair_with_the_end:
-    - '*'
     - '*_the_end'
 
 #--------------------------------------#
@@ -285,7 +267,6 @@ container-fee-includes-contents: true
 #--------------------------------------#
 #              More Stuff              #
 #--------------------------------------#
-world-borders:
 
 #Legend: &e = text, &b = link/download, &d = @Location, &2 = command, &a = $money/event/world, 
 #Legend: &9 = suggest_command, &n = other location, &c = plugin, &6 = rss pack, &r = end special block
