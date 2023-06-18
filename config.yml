@@ -89,7 +89,6 @@ global-command-cooldowns:
 
 fix-paper-rng-manip: true
 fix-paper-gravity-dupe: true
-set-new-chunks-to-max-local-difficulty: false
 
 #--------------------------------------#
 #           EvEconomy config           #

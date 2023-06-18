@@ -114,8 +114,8 @@ public class EvVoter implements Listener{
 	}
 
 	public void rewardOnlinePlayer(Player p, int streak){
-		Rewards.give(p);
-		Rewards.giveFirework(p);
+//		Rewards.give(p);
+//		Rewards.giveFirework(p);
 		
 		int limitedStreak = Math.min(streak, streakMax);
 		double payout = cashReward;

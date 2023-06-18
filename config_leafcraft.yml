@@ -56,7 +56,6 @@ global-command-cooldowns:
 
 fix-paper-rng-manip: true
 fix-paper-gravity-dupe: true
-set-new-chunks-to-max-local-difficulty: true
 
 #--------------------------------------#
 #           EvEconomy config           #
@@ -105,6 +104,8 @@ vote-streak-grace-hours: 48
 vote-site-page: ''
 vote-links:
   - 'MMP, http://minecraft-mp.com/server/320576/vote/'
+  - 'MCS, https://minecraftservers.org/vote/651717'
+  - 'PMC, https://www.planetminecraft.com/server/hardcore-4368271/vote/'
 
 # Available params: %uuid%, %name%, %display_name%, %site_name%, %site_url%, %votes%, %streak%
 vote-triggered-commands:
@@ -114,7 +115,7 @@ vote-triggered-commands:
 
 # Available params: %uuid%, %name%, %display_name%, %votes%, %streak%, %reward_amount%, %reward_amount_int%
 vote-triggered-commands-once-online:
-  - 'minecraft:give EvDoc lily_pad{display:{Name:''{"text":"Vote Token","color":"#008800","italic":false}'',Lore:[''{"text":"Unplacing","color":"gray","italic":false}'',''{"text":"Soul Bound","color":"gray","italic":false}'']},Enchantments:[{id:lure,lvl:1}],HideFlags:1,CustomModelData:1}'
+  - 'minecraft:give %name% lily_pad{display:{Name:''{"text":"Vote Token","color":"#008800","italic":false}'',Lore:[''{"text":"Unplacing","color":"gray","italic":false}'',''{"text":"Soul Bound","color":"gray","italic":false}'']},Enchantments:[{id:lure,lvl:1}],HideFlags:1,CustomModelData:1}'
 #  - 'minecraft:tellraw @p[name=%name%] {"text":"Your offline votes were added, thanks!","color":"gray"}'
 
 #--------------------------------------#

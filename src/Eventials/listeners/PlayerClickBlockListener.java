@@ -81,8 +81,8 @@ public class PlayerClickBlockListener implements Listener{
 			MIN_EXTRA_SH_R_SQ = MIN_EXTRA_SH_R * MIN_EXTRA_SH_R;
 			GRID_WIDTH = (long)(1000d / Math.sqrt(STRONGHOLD_DENSITY));
 			GRID_CHECK_OFFSET = GRID_MAX_OFFSET/GRID_WIDTH + (GRID_MAX_OFFSET%GRID_WIDTH >= GRID_WIDTH/2 ? 1 : 0);
-			pl.getLogger().info("GRID_WIDTH: "+GRID_WIDTH);
-			pl.getLogger().info("GRID_CHECK_OFFSET: "+GRID_CHECK_OFFSET);
+//			pl.getLogger().info("GRID_WIDTH: "+GRID_WIDTH);
+//			pl.getLogger().info("GRID_CHECK_OFFSET: "+GRID_CHECK_OFFSET);
 			MULT_X_FOR_RNG = MAX_WORLD_SIZE / GRID_WIDTH;
 
 			ONLY_EXTRA_SH_MIN_R = (long)Math.sqrt((768d/Math.sqrt(2) + (GRID_MAX_OFFSET/GRID_WIDTH + 1)*GRID_WIDTH));
@@ -172,8 +172,8 @@ public class PlayerClickBlockListener implements Listener{
 					evt.setCancelled(true);
 					final EnderSignal es = (EnderSignal)evt.getPlayer().getWorld().spawnEntity(evt.getPlayer().getEyeLocation(), EntityType.ENDER_SIGNAL);
 					es.setTargetLocation(eyeTarget);
-					evt.getPlayer().getServer().broadcastMessage(evt.getPlayer().getName()+": "
-								+eyeTarget.getBlockX()+", "+eyeTarget.getBlockY()+", "+eyeTarget.getBlockZ());
+//					evt.getPlayer().getServer().broadcastMessage(evt.getPlayer().getName()+": "
+//								+eyeTarget.getBlockX()+", "+eyeTarget.getBlockY()+", "+eyeTarget.getBlockZ());
 				}
 			}
 		}
