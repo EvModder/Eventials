@@ -1,10 +1,8 @@
 package _SpecificAndMisc;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -15,28 +13,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.EvUtils;
 import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.Renewable.Renewable;
 import net.evmodder.Renewable.RenewableAPI;
-import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.FPlayers;
 
 public class AC_Leafcraft implements Listener{
 	private final Eventials pl;
@@ -144,5 +136,34 @@ public class AC_Leafcraft implements Listener{
 					+ "'{\"text\":\"Soul Bound\",\"italic\":false,\"color\":\"gray\"}']},"
 					+ "Enchantments:[{id:lure,lvl:1}],HideFlags:1}");
 		}
+	}
+
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent evt){
+		final Scoreboard mainBoard = evt.getEntity().getServer().getScoreboardManager().getMainScoreboard();
+		final Score score = mainBoard.getObjective("pstats-unrenewables_destroyed").getScore(evt.getEntity().getName());
+		if(score.isScoreSet() && score.getScore() > 0) return;
+		evt.setKeepInventory(true);
+		evt.getDrops().clear();
+
+		// Regular inventory
+		ItemStack[] contents = evt.getEntity().getInventory().getContents();
+		for(int i=0; i<contents.length; ++i){
+			if(contents[i] != null && !renewableAPI.isUnrenewable(contents[i])){
+				//getLogger().info("dropping: "+contents[i].getType());
+				EvUtils.dropItemNaturally(evt.getEntity().getLocation(), contents[i], null);
+				contents[i] = null;
+			}
+		}
+		evt.getEntity().getInventory().setContents(contents);
+//		// Armor contents
+//		contents = evt.getEntity().getInventory().getArmorContents();
+//		for(int i=0; i<contents.length; ++i){
+//			if(contents[i] != null && !IsSoulBound(contents[i])){
+//				evt.getEntity().getWorld().dropItem(evt.getEntity().getLocation(), contents[i]);
+//				contents[i] = null;
+//			}
+//		}
+//		evt.getEntity().getInventory().setArmorContents(contents);
 	}
 }
