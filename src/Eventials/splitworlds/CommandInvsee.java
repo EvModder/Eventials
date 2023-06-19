@@ -154,8 +154,9 @@ public class CommandInvsee extends EvCommand{
 
 		// Reload my profile
 //		pl.getLogger().severe("reloading my inv: "+player.getName());
-		final PlayerState targetState = SplitWorldUtils.loadPlayerState(player, myState);
+		final PlayerState targetState = SplitWorldUtils.getPlayerState(player);
 		SplitWorlds.loadCurrentProfile(player);
+		SplitWorldUtils.loadPlayerState(player, myState);
 
 		// Create and display an inventory using the ItemStack[]
 		final String invName = "> "+targetPlayer.getName()+" - "+SplitWorlds.getInvGroup(targetWorld);

@@ -150,8 +150,9 @@ public class CommandEnderchest extends EvCommand{
 		ItemStack[] contents = player.getEnderChest().getContents();
 
 		// Reload my profile
-		PlayerState targetState = SplitWorldUtils.loadPlayerState(player, myState);
+		PlayerState targetState = SplitWorldUtils.getPlayerState(player);
 		SplitWorlds.loadCurrentProfile(player);
+		SplitWorldUtils.loadPlayerState(player, myState);
 
 		// Create and display an inventory using the enderchest ItemStack[]
 		final String invName = "> "+targetPlayer.getName()+" - "+SplitWorlds.getInvGroup(targetWorld);
