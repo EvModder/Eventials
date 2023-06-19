@@ -49,17 +49,18 @@ public class AC_Leafcraft implements Listener{
 		}
 		if(returnLoc == null){
 			p.setFallDistance(0);
-			if(p.getBedSpawnLocation() != null
-					&& p.getBedLocation() != null
-					&& !p.getBedSpawnLocation().getWorld().getName().equals(SPAWN_WORLD)
-					&& p.getBedLocation().getBlock().getType().name().endsWith("_BED")){
-				p.sendMessage(TextUtils.translateAlternateColorCodes('&', "&#fddReturning to your bed"));
-				returnLoc = p.getBedSpawnLocation();
-			}
-			else{
-				p.sendMessage(TextUtils.translateAlternateColorCodes('&', "&#ffddddBed obstructed, sending you to worldspawn"));
+//			if(p.getBedSpawnLocation() != null
+//					&& !p.getBedSpawnLocation().getWorld().getName().equals(SPAWN_WORLD)
+////					&& p.getBedLocation() != null
+////					&& p.getBedLocation().getBlock().getType().name().endsWith("_BED")
+//			){
+//				p.sendMessage(TextUtils.translateAlternateColorCodes('&', "&#fddReturning to your bed"));
+//				returnLoc = p.getBedSpawnLocation();
+//			}
+//			else{
+				p.sendMessage(TextUtils.translateAlternateColorCodes('&', "&#ffddddBed missing or obstructed, sending you to worldspawn"));
 				returnLoc = pl.getServer().getWorld("DaWorld").getSpawnLocation();
-			}
+//			}
 		}
 		else{
 			p.sendMessage(TextUtils.translateAlternateColorCodes('&', "&#fddReturning to your previous location"));
@@ -83,7 +84,7 @@ public class AC_Leafcraft implements Listener{
 					//pl.getLogger().info(p.getName()+"'s dist: "+p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()));
 					if(p.getGameMode() != GameMode.CREATIVE && p.getGameMode() != GameMode.SPECTATOR
 							&& p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()) > tpDistSq){
-						//pl.getLogger().info("they've left the cherry spawn zone");
+						pl.getLogger().info(p.getName()+" left the cherry spawn zone");
 						leaveSpawn(p);
 					}
 				}
