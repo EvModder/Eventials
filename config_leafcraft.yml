@@ -109,7 +109,7 @@ vote-links:
 
 # Available params: %uuid%, %name%, %display_name%, %site_name%, %site_url%, %votes%, %streak%
 vote-triggered-commands:
-  - 'minecraft:scoreboard players add %name% votes 1'
+  - 'minecraft:scoreboard players add %name% pstats-votes 1'
   - 'minecraft:tellraw @p[name=!%name%] ["",{"text":"[","color":"gold"},{"text":"Leaf","color":"green"},{"text":"]","color":"gold"},{"text":" %display_name% up-voted the server on ","color":"gray"},{"text":"%site_name%","clickEvent":{"action":"open_url","value":"%site_url%"}}]'
   - 'minecraft:tellraw @p[name=%name%] ["",{"text":"[","color":"gold"},{"text":"Leaf","color":"green"},{"text":" ->","color":"gold"},{"text":" Me","color":"aqua"},{"text":"]","color":"gold"},{"text":" Thanks for voting for us on ","color":"gray"},"%site_name%",{"text":"!","color":"gray"}]'
 

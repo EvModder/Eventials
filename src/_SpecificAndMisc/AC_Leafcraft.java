@@ -41,7 +41,7 @@ public class AC_Leafcraft implements Listener{
 		for(String tag : p.getScoreboardTags()){
 			if(tag.startsWith(TAG_PREFIX)){
 				//pl.getLogger().info("found came_from tag");
-				String[] data = tag.substring(TAG_PREFIX.length()).split("_");
+				String[] data = tag.substring(TAG_PREFIX.length()).split("\\+");
 				returnLoc = new Location(pl.getServer().getWorld(data[0]),
 						Double.parseDouble(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]));
 				p.setFallDistance(Float.parseFloat(data[4]));
@@ -100,11 +100,12 @@ public class AC_Leafcraft implements Listener{
 			evt.getPlayer().getScoreboardTags().removeIf(t -> t.startsWith(TAG_PREFIX));
 			Location loc = evt.getPlayer().getLocation();
 			evt.getPlayer().addScoreboardTag(TAG_PREFIX+loc.getWorld().getName()
-					+"_"+loc.getX()+"_"+loc.getY()+"_"+loc.getZ()+"_"+evt.getPlayer().getFallDistance());
+					+"+"+loc.getX()+"+"+loc.getY()+"+"+loc.getZ()+"+"+evt.getPlayer().getFallDistance());
 			//pl.getLogger().info("saved came_from tag");
 		}
 		if((cmd.endsWith("back") || cmd.endsWith("return")) && evt.getPlayer().getWorld().getName().equals(SPAWN_WORLD)){
 			leaveSpawn(evt.getPlayer());
+			evt.setCancelled(true);
 		}
 	}
 
