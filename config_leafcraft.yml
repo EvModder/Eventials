@@ -5,7 +5,7 @@ server-name: Leafcraft
 
 add-recipes: false
 
-pre-command: tru
+pre-command: true
 fancy-pl: true
 command-aliases: true
 show-permissionless-commands-in-plugin-help: true
@@ -104,7 +104,8 @@ vote-streak-grace-hours: 48
 vote-site-page: ''
 vote-links:
   - 'MMP, http://minecraft-mp.com/server/320576/vote/'
-  - 'MCS, https://minecraftservers.org/vote/651717'
+# - 'MCS, https://minecraftservers.org/vote/651717'
+  - 'MCS, https://minecraftservers.org/vote/280048'
   - 'PMC, https://www.planetminecraft.com/server/hardcore-4368271/vote/'
 
 # Available params: %uuid%, %name%, %display_name%, %site_name%, %site_url%, %votes%, %streak%

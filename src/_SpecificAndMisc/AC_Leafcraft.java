@@ -28,11 +28,10 @@ import Eventials.Eventials;
 import net.evmodder.EvLib.EvUtils;
 import net.evmodder.EvLib.extras.TextUtils;
 import net.evmodder.Renewable.Renewable;
-import net.evmodder.Renewable.RenewableAPI;
 
 public class AC_Leafcraft implements Listener{
 	private final Eventials pl;
-	private final RenewableAPI renewableAPI;
+	private final Renewable renewablePl;
 	private final String TAG_PREFIX = "came_from_";
 	private final String SPAWN_WORLD = "CherrySpawn";
 
@@ -71,19 +70,20 @@ public class AC_Leafcraft implements Listener{
 
 	public AC_Leafcraft(){
 		pl = Eventials.getPlugin();
-		renewableAPI = ((Renewable)pl.getServer().getPluginManager().getPlugin("Renewable")).getAPI();
+		renewablePl = ((Renewable)pl.getServer().getPluginManager().getPlugin("Renewable"));
 		pl.getServer().getPluginManager().registerEvents(this, pl);
-		
+
 		new BukkitRunnable(){
-//			Location spawnPoint = spawnWorld.getSpawnLocation();
-			final double tpDistSq = 40d*40d;
 			@Override public void run(){
-				World spawnWorld = pl.getServer().getWorld(SPAWN_WORLD);
+				final World spawnWorld = pl.getServer().getWorld(SPAWN_WORLD);
 				//pl.getLogger().info("cherry spawn: "+TextUtils.locationToString(spawnWorld.getSpawnLocation()));
 				for(Player p : spawnWorld.getPlayers()){
 					//pl.getLogger().info(p.getName()+"'s dist: "+p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()));
 					if(p.getGameMode() != GameMode.CREATIVE && p.getGameMode() != GameMode.SPECTATOR
-							&& p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()) > tpDistSq){
+							&& p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()) > 1600d//40
+							&& p.getLocation().distanceSquared(new Location(spawnWorld, 2988, 88, -2743)) > 1024d//32
+							&& p.getLocation().distanceSquared(new Location(spawnWorld, 8, 320, -31)) > 51984d//228
+					){
 						pl.getLogger().info(p.getName()+" left the cherry spawn zone");
 						leaveSpawn(p);
 					}
@@ -131,7 +131,9 @@ public class AC_Leafcraft implements Listener{
 			final String name = evt.getPlayer().getName();
 			final String date = new SimpleDateFormat("yyy-MM-dd").format(new Date());
 			pl.getLogger().info("Minting new player token: "+name);
-			pl.runCommand("minecraft:give "+name+" structure_void{CustomModelData:1,display:{"
+//			pl.runCommand("minecraft:give "+name+" "
+			pl.runCommand("minecraft:item replace entity "+name+" enderchest.0 with "
+					+ "structure_void{CustomModelData:1,display:{"
 					+ "Name:'{\"text\":\"Sigil of "+name+"\",\"color\":\"#33bbaf\",\"italic\":false}',"
 					+ "Lore:['{\"text\":\""+date+"\",\"italic\":false,\"bold\":true,\"color\":\"#aaaa77\"}',"
 					+ "'{\"text\":\"Unplacing\",\"italic\":false,\"color\":\"gray\"}',"
@@ -151,7 +153,7 @@ public class AC_Leafcraft implements Listener{
 		// Regular inventory
 		ItemStack[] contents = evt.getEntity().getInventory().getContents();
 		for(int i=0; i<contents.length; ++i){
-			if(contents[i] != null && !renewableAPI.isUnrenewable(contents[i])){
+			if(contents[i] != null && !renewablePl.getAPI().isUnrenewable(contents[i])){
 				//getLogger().info("dropping: "+contents[i].getType());
 				EvUtils.dropItemNaturally(evt.getEntity().getLocation(), contents[i], null);
 				contents[i] = null;

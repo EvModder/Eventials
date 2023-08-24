@@ -29,6 +29,7 @@ public class EconomySignListener implements Listener {
 		Material type = evt.getClickedBlock().getType();
 		if(!TypeUtils.isSign(type) && !TypeUtils.isWallSign(type)) return;
 
+		@SuppressWarnings("deprecation")
 		String[] lines = ((Sign)evt.getClickedBlock().getState()).getLines();
 		if(ChatColor.stripColor(lines[0]).toLowerCase().contains("adminshop")) {
 			if(Extras.isAdminShop(evt.getClickedBlock())) {
