@@ -38,7 +38,7 @@ public class PaperFix_EntityAddToWorldListener{
 			catch(RuntimeException e){rdmSrcClass = null; makeRdmSrc = null;}
 			final RefClass rdmClass = rdmSrcClass == null ? ReflectionUtils.getRefClass(Random.class) : rdmSrcClass;
 			methodSetSeed = rdmClass.findMethod(/*isStatic=*/false, Void.TYPE, long.class);
-			rdmField = entityClass.findField(rdmClass, /*isStatic=*/false, /*isPublic=*/false).getRealField();
+			rdmField = entityClass.findField(rdmClass, /*isStatic=*/false, /*isPublic=*/true).getRealField();
 			rdmField.setAccessible(true);
 
 			pl.getServer().getPluginManager().registerEvent(clazz, new Listener(){}, EventPriority.MONITOR, new EventExecutor(){
@@ -46,7 +46,9 @@ public class PaperFix_EntityAddToWorldListener{
 					final Entity entity = ((EntityEvent)event).getEntity();
 					final Object nmsEntity = methodGetHandle.of(entity).call();
 					try{
-						if(rdmField.get(nmsEntity) != SHARED_RANDOM) return;
+						if(rdmField.get(nmsEntity) != SHARED_RANDOM
+								|| (entity.getType() != EntityType.PLAYER && entity.getType() != EntityType.SQUID)
+						) return;
 						final Object rdmObj = (rdmSrcClass == null ? new Random() : makeRdmSrc.call());
 						if(entity.getType() == EntityType.SQUID) methodSetSeed.of(rdmObj).call((long)entity.getEntityId());
 						rdmField.set(nmsEntity, rdmObj);

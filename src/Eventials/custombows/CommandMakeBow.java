@@ -41,6 +41,9 @@ public class CommandMakeBow extends EvCommand{
 			case GENERIC_MOVEMENT_SPEED: return "generic.movement_speed";
 			case HORSE_JUMP_STRENGTH: return "horse.jump_strength";
 			case ZOMBIE_SPAWN_REINFORCEMENTS: return "zombie.spawn_reinforcements";
+			case GENERIC_MAX_ABSORPTION: return "generic.max_absorption";
+			default:
+				break;
 		}
 		return null;
 	}

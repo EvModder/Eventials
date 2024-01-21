@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.Statistic;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -176,7 +177,8 @@ public final class Scheduler{
 			for(Player p : plugin.getServer().getOnlinePlayers()){
 				ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
 				EnchantmentStorageMeta bookmeta = (EnchantmentStorageMeta)book.getItemMeta();
-				Enchantment enchant = Enchantment.values()[Enchantment.values().length];
+				Enchantment[] enchants = Registry.ENCHANTMENT.stream().toArray(Enchantment[]::new);
+				Enchantment enchant = enchants[rand.nextInt(enchants.length)];
 				bookmeta.addStoredEnchant(enchant, rand.nextInt(enchant.getMaxLevel())+1, false);
 				p.getInventory().addItem(book);
 			}

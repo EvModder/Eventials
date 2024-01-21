@@ -50,7 +50,7 @@ public class CommandEditSign extends EvCommand{
 			return true;
 		}
 		final Sign sign = (Sign)block.getState();
-		sign.setEditable(true);
+		//sign.setWaxed(false);//sign.setEditable(true)
 		sign.update();
 		pl.getServer().getScheduler().runTaskLater(pl, () -> player.openSign(sign), 1);
 		return true;

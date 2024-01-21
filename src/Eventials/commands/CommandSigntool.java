@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -89,10 +90,11 @@ public class CommandSigntool extends EvCommand implements Listener{
 				plugin.getLogger().info(evt.getPlayer().getName()+" tried to use a SignTool, but failed BlockPlaceEvent");
 			}
 			else{
+				Side side = Side.FRONT;//TODO: detect if the player clicked the front or the back of the sign, and use that
 				List<String> lore = evt.getItem().getItemMeta().getLore();
 				if(lore.size() == 1){
-					Sign sign = (Sign) evt.getClickedBlock().getState();
-					for(String line : sign.getLines()) lore.add(ChatColor.RESET+"Line: "+line);
+					Sign sign = (Sign)evt.getClickedBlock().getState();
+					for(String line : sign.getSide(side).getLines()) lore.add(ChatColor.RESET+"Line: "+line);
 					ItemMeta meta = evt.getItem().getItemMeta();
 					meta.setLore(lore);
 					evt.getItem().setItemMeta(meta);
@@ -105,7 +107,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 						if(prefixI != -1) lines[li++] = lore.get(i).substring(prefixI+6);
 					}
 
-					SignChangeEvent updateEvent = new SignChangeEvent(evt.getClickedBlock(), evt.getPlayer(), lines);
+					SignChangeEvent updateEvent = new SignChangeEvent(evt.getClickedBlock(), evt.getPlayer(), lines, side);
 					plugin.getServer().getPluginManager().callEvent(updateEvent);
 					if(updateEvent.isCancelled()){
 						plugin.getLogger().info(evt.getPlayer().getName()+" tried to use a SignTool, but failed SignChangeEvent");
@@ -113,7 +115,7 @@ public class CommandSigntool extends EvCommand implements Listener{
 					else{
 						plugin.getLogger().info(evt.getPlayer().getName()+" used a SignTool: "+String.join(">", lines));
 						Sign sign = (Sign) evt.getClickedBlock().getState();
-						for(int i=0; i<4; ++i) if(!lines[i].isEmpty()) sign.setLine(i, lines[i]);
+						for(int i=0; i<4; ++i) if(!lines[i].isEmpty()) sign.getSide(side).setLine(i, lines[i]);
 						sign.update();
 						evt.setUseItemInHand(Result.DENY);
 						evt.setUseInteractedBlock(Result.DENY);

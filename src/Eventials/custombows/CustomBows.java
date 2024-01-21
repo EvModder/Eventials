@@ -124,8 +124,9 @@ public class CustomBows implements Listener{
 				for(int i=0; i<extraArrows; ++i){
 					Vector variance = new Vector(rand.nextFloat()*.1F-.05F, rand.nextFloat()*.1F-.05F, rand.nextFloat()*.1F-.05F);
 					Vector velocity = evt.getProjectile().getVelocity().clone().add(evt.getProjectile().getVelocity().multiply(variance));
-					Arrow e = evt.getEntity().launchProjectile(Arrow.class, velocity);
-					e.setBounce(false);
+					//Arrow e = 
+							evt.getEntity().launchProjectile(Arrow.class, velocity);
+					//e.setBounce(false);
 				}
 				evt.getEntity().removeScoreboardTag("temp_ignore_arrows");
 				return;

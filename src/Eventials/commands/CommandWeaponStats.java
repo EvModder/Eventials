@@ -168,12 +168,12 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 		}
 		List<WeaponStat> statsToAdd;
 		if(args.length == 0){
-			if(TypeUtils.isAxe(item.getType())) statsToAdd =
-					Arrays.asList(WeaponStat.MONSTER_KILLS, WeaponStat.PLAYER_KILLS, WeaponStat.BLOCKS_MINED);
-			else if(TypeUtils.isPickaxe(item.getType()) || TypeUtils.isShovel(item.getType())) statsToAdd =
-					Arrays.asList(WeaponStat.BLOCKS_MINED);
-			else statsToAdd =
-					Arrays.asList(WeaponStat.MONSTER_KILLS, WeaponStat.PLAYER_KILLS);
+			if(TypeUtils.isAxe(item.getType()))
+				statsToAdd = Arrays.asList(WeaponStat.MONSTER_KILLS, WeaponStat.PLAYER_KILLS, WeaponStat.BLOCKS_MINED);
+			else if(TypeUtils.isPickaxe(item.getType()) || TypeUtils.isShovel(item.getType()) || TypeUtils.isHoe(item.getType()))
+				statsToAdd = Arrays.asList(WeaponStat.BLOCKS_MINED);
+			else
+				statsToAdd = Arrays.asList(WeaponStat.MONSTER_KILLS, WeaponStat.PLAYER_KILLS);
 		}
 		else{
 			statsToAdd = new ArrayList<>();
