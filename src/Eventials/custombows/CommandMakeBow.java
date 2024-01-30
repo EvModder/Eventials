@@ -25,30 +25,8 @@ import net.evmodder.EvLib.extras.TextUtils;
 
 public class CommandMakeBow extends EvCommand{
 	public CommandMakeBow(JavaPlugin pl){super(pl);}
-
-	String getAttributeName(Attribute attribute){ // Uses 1.16+ names
-		switch(attribute){
-			case GENERIC_ARMOR: return "generic.armor";
-			case GENERIC_ARMOR_TOUGHNESS: return "generic.armor_toughness";
-			case GENERIC_ATTACK_DAMAGE: return "generic.attack_damage";
-			case GENERIC_ATTACK_KNOCKBACK: return "generic.attack_knockback";
-			case GENERIC_ATTACK_SPEED: return "generic.attack_speed";
-			case GENERIC_FLYING_SPEED: return "generic.flying_speed";
-			case GENERIC_FOLLOW_RANGE: return "generic.follow_range";
-			case GENERIC_KNOCKBACK_RESISTANCE: return "generic.knockback_resistance";
-			case GENERIC_LUCK: return "generic.luck";
-			case GENERIC_MAX_HEALTH: return "generic.max_health";
-			case GENERIC_MOVEMENT_SPEED: return "generic.movement_speed";
-			case HORSE_JUMP_STRENGTH: return "horse.jump_strength";
-			case ZOMBIE_SPAWN_REINFORCEMENTS: return "zombie.spawn_reinforcements";
-			case GENERIC_MAX_ABSORPTION: return "generic.max_absorption";
-			default:
-				break;
-		}
-		return null;
-	}
 	void addAttribute(ItemMeta meta, Attribute attribute, double amount, Operation operation, boolean randUUID){
-		String attributeName = getAttributeName(attribute);
+		String attributeName = attribute.getKey().getKey();
 		UUID uuid = randUUID ? UUID.randomUUID() : UUID.fromString(attributeName);
 		AttributeModifier modifer = new AttributeModifier(uuid, attributeName, amount, operation);
 		meta.addAttributeModifier(attribute, modifer);
