@@ -232,19 +232,19 @@ public final class Scheduler{
 		boolean foundMatch = false;
 		while(matcher.find()){
 			foundMatch = true;
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+			comp.replaceRawTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, matcher.group(1))));
 		}
 		matcher = Pattern.compile("§d@([^§\n]+?)(?:(?:"+msgC+")|\n|$)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+			comp.replaceRawTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.RUN_COMMAND, "/warp "+matcher.group(1))));
 		}
 		matcher = Pattern.compile("§9([^§\n]+?)(?:(?:"+msgC+")|\n|$)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+			comp.replaceRawTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(), new TextClickAction(ClickEvent.SUGGEST_COMMAND, matcher.group(1))));
 		}
 		matcher = Pattern.compile("(§b[^§\n]+?)(?:=>(.+?))?((?:"+msgC+")|\n|$)").matcher(msg);
@@ -252,13 +252,13 @@ public final class Scheduler{
 			foundMatch = true;
 			String link = matcher.group(2) != null && !matcher.group(2).isEmpty() ? matcher.group(2) : matcher.group(1);
 			//plugin.getLogger().info("group: "+matcher.group()+", g1+g3: "+matcher.group(1)+matcher.group(3)+", link: "+link);
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+			comp.replaceRawTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextClickAction(ClickEvent.OPEN_URL, link)));
 		}
 		matcher = Pattern.compile("(§a[^§\n]+?)=>(.+?)((?:"+msgC+")|\n|$)").matcher(msg);
 		while(matcher.find()){
 			foundMatch = true;
-			comp.replaceRawDisplayTextWithComponent(matcher.group(),
+			comp.replaceRawTextWithComponent(matcher.group(),
 					new RawTextComponent(matcher.group(1)+matcher.group(3), new TextHoverAction(HoverEvent.SHOW_TEXT, matcher.group(2))));
 		}
 		return foundMatch ? comp : new RawTextComponent(msg);

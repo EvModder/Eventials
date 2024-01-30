@@ -30,6 +30,8 @@ import net.evmodder.EvLib.FileIO;
 //TODO: proper command classes for /help and /engrave
 //TODO: Invulnerable:1b for custom items (set flag when item is dropped)
 //TODO: Fancy /plugins command similar to /help (not just the per-server preprocess..)
+
+// All JavaDoc tags: @author @version @param @return @deprecated @since @throws @exception @see @serial @serialField @serialData {@link}
 public class Eventials extends EvPlugin {
 	private static Eventials plugin; public static Eventials getPlugin(){return plugin;}
 	public PlayerLoginListener loginListener;
@@ -93,6 +95,7 @@ public class Eventials extends EvPlugin {
 		new CommandDiscord(this);
 		new CommandEditSign(this);
 		new CommandEventials(this);
+		new CommandEvTellraw(this);
 		new CommandFloatingText(this);
 		new CommandGhost(this);
 		new CommandHelp(this);

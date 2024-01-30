@@ -177,6 +177,12 @@ commands:
       permission: eventials.reload
       permission-message: You do not have permission to do this.
 
+   evtellraw:
+      description: Trigger EvLib's JSON/tellraw parser
+      usage: /tellraw <json>
+      permission: eventials.tellraw
+      permission-message: You do not have permission to do this.
+
    floatingtext:
       description: Place floating text
       usage: /ftxt <place/remove/list/edit/move/help>
@@ -510,6 +516,10 @@ permissions:
    eventials.editsign:
       description: Permission to use /editsign
       default: true
+
+   eventials.tellraw:
+      description: Permission to use /evtellraw
+      default: op
 
    eventials.commandblockcolor:
       description: Permission to use '&' to format command blocks

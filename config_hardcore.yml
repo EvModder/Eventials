@@ -146,7 +146,7 @@ clock-period: 60 #Default 60s per cycle
 
 #To disable a task, set its frequency to 0
 cycles-per-eventials-data-save: 12
-cycles-per-automessage: 3
+cycles-per-automessage: 15
 cycles-per-mob-clear: 0
 cycles-per-worldsave: 5
 cycles-per-player-delete: 0
