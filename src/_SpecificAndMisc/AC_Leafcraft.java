@@ -33,21 +33,22 @@ public class AC_Leafcraft implements Listener{
 	private final Eventials pl;
 	private final Renewable renewablePl;
 	private final String TAG_PREFIX = "came_from_";
-	private final String SPAWN_WORLD = "CherrySpawn";
+	private final String SPAWN_WORLD = "Skyland";
+	private final String MAIN_WORLD = "DaWorld";
 
 	private void leaveSpawn(Player p){
 		Location returnLoc = null;
+		float fallDistance = 0;
 		for(String tag : p.getScoreboardTags()){
 			if(tag.startsWith(TAG_PREFIX)){
 				//pl.getLogger().info("found came_from tag");
 				String[] data = tag.substring(TAG_PREFIX.length()).split("\\+");
 				returnLoc = new Location(pl.getServer().getWorld(data[0]),
 						Double.parseDouble(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]));
-				p.setFallDistance(Float.parseFloat(data[4]));
+				fallDistance = Float.parseFloat(data[4]);
 			}
 		}
 		if(returnLoc == null){
-			p.setFallDistance(0);
 //			if(p.getBedSpawnLocation() != null
 //					&& !p.getBedSpawnLocation().getWorld().getName().equals(SPAWN_WORLD)
 ////					&& p.getBedLocation() != null
@@ -58,14 +59,16 @@ public class AC_Leafcraft implements Listener{
 //			}
 //			else{
 				p.sendMessage(TextUtils.translateAlternateColorCodes('&', "&#ffddddBed missing or obstructed, sending you to worldspawn"));
-				returnLoc = pl.getServer().getWorld("DaWorld").getSpawnLocation();
+				returnLoc = pl.getServer().getWorld(MAIN_WORLD).getSpawnLocation();
 //			}
 		}
 		else{
 			p.sendMessage(TextUtils.translateAlternateColorCodes('&', "&#fddReturning to your previous location"));
 			p.getScoreboardTags().removeIf(t -> t.startsWith(TAG_PREFIX));
 		}
+		p.setFallDistance(0);
 		p.teleport(returnLoc, TeleportCause.PLUGIN);
+		p.setFallDistance(fallDistance);
 	}
 
 	public AC_Leafcraft(){
@@ -76,13 +79,15 @@ public class AC_Leafcraft implements Listener{
 		new BukkitRunnable(){
 			@Override public void run(){
 				final World spawnWorld = pl.getServer().getWorld(SPAWN_WORLD);
+				if(spawnWorld == null) cancel();
 				//pl.getLogger().info("cherry spawn: "+TextUtils.locationToString(spawnWorld.getSpawnLocation()));
 				for(Player p : spawnWorld.getPlayers()){
 					//pl.getLogger().info(p.getName()+"'s dist: "+p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()));
 					if(p.getGameMode() != GameMode.CREATIVE && p.getGameMode() != GameMode.SPECTATOR
-							&& p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()) > 1600d//40
-							&& p.getLocation().distanceSquared(new Location(spawnWorld, 2988, 88, -2743)) > 1024d//32
-							&& p.getLocation().distanceSquared(new Location(spawnWorld, 8, 320, -31)) > 51984d//228
+							&& p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()) > 100*100//100
+//							&& p.getLocation().distanceSquared(spawnWorld.getSpawnLocation()) > 1600d//40
+//							&& p.getLocation().distanceSquared(new Location(spawnWorld, 2988, 88, -2743)) > 1024d//32
+//							&& p.getLocation().distanceSquared(new Location(spawnWorld, 8, 320, -31)) > 51984d//228
 					){
 						pl.getLogger().info(p.getName()+" left the cherry spawn zone");
 						leaveSpawn(p);
@@ -96,14 +101,25 @@ public class AC_Leafcraft implements Listener{
 	public void onPreCommand(PlayerCommandPreprocessEvent evt){
 		final int space = evt.getMessage().indexOf(' ');
 		final String cmd = evt.getMessage().substring(1, space == -1 ? evt.getMessage().length() : space).toLowerCase();
-		if(cmd.endsWith("spawn") && !evt.getPlayer().getWorld().getName().equals(SPAWN_WORLD)){
-			evt.getPlayer().getScoreboardTags().removeIf(t -> t.startsWith(TAG_PREFIX));
-			Location loc = evt.getPlayer().getLocation();
-			evt.getPlayer().addScoreboardTag(TAG_PREFIX+loc.getWorld().getName()
-					+"+"+loc.getX()+"+"+loc.getY()+"+"+loc.getZ()+"+"+evt.getPlayer().getFallDistance());
-			//pl.getLogger().info("saved came_from tag");
+		if(!evt.getPlayer().getWorld().getName().equals(SPAWN_WORLD)){
+			if(cmd.endsWith("spawn")){
+				evt.setCancelled(true);
+				final World spawnWorld = pl.getServer().getWorld(SPAWN_WORLD);
+				if(spawnWorld == null){
+					evt.getPlayer().sendMessage(ChatColor.RED+"ERROR: spawn world unavailable");
+					return;
+				}
+				evt.getPlayer().getScoreboardTags().removeIf(t -> t.startsWith(TAG_PREFIX));
+				Location loc = evt.getPlayer().getLocation();
+				evt.getPlayer().addScoreboardTag(TAG_PREFIX+loc.getWorld().getName()
+						+"+"+loc.getX()+"+"+loc.getY()+"+"+loc.getZ()+"+"+evt.getPlayer().getFallDistance());
+				//pl.getLogger().info("saved came_from tag");
+
+				evt.getPlayer().sendMessage(TextUtils.translateAlternateColorCodes('&', "&#fddTeleporting to spawn"));
+				evt.getPlayer().teleport(spawnWorld.getSpawnLocation(), TeleportCause.COMMAND);
+			}
 		}
-		if((cmd.endsWith("back") || cmd.endsWith("return")) && evt.getPlayer().getWorld().getName().equals(SPAWN_WORLD)){
+		else if((cmd.endsWith("back") || cmd.endsWith("return") || cmd.endsWith("spawn"))){
 			leaveSpawn(evt.getPlayer());
 			evt.setCancelled(true);
 		}
