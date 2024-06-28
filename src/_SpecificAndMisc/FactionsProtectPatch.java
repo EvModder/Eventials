@@ -30,7 +30,7 @@ public class FactionsProtectPatch implements Listener{
 			case ARMOR_STAND:
 			case PAINTING:
 			case ITEM_FRAME:
-			case LEASH_HITCH:
+			case LEASH_KNOT:
 				return true;
 			default:
 				return false;

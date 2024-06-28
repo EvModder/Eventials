@@ -3,7 +3,7 @@ main: Eventials.Eventials
 author: EvModder
 website: https://github.com/EvModder/Eventials
 description: Bundle of miscellaneous custom features.
-version: 1.3.5 # .3=mailbox, ..5=editsign cmd
+version: 1.3.6 # .3=mailbox, ..6=mc1.21
 softdepend: [Votifier, Essentials, Renewable]
 api-version: 1.13
 

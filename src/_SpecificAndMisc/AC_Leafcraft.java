@@ -22,6 +22,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import Eventials.Eventials;
@@ -161,7 +162,9 @@ public class AC_Leafcraft implements Listener{
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent evt){
 		final Scoreboard mainBoard = evt.getEntity().getServer().getScoreboardManager().getMainScoreboard();
-		final Score score = mainBoard.getObjective("pstats-unrenewables_destroyed").getScore(evt.getEntity().getName());
+		final Objective unrenewObj = mainBoard.getObjective("pstats-unrenewables_destroyed");
+		if(unrenewObj == null) return;
+		final Score score = unrenewObj.getScore(evt.getEntity().getName());
 		if(score.isScoreSet() && score.getScore() > 0) return;
 		evt.setKeepInventory(true);
 		evt.getDrops().clear();

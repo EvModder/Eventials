@@ -2,7 +2,7 @@ package Eventials;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -309,7 +309,7 @@ public final class Scheduler{
 					"&module_plugin=log" +
 					"&module_plugin_task=bump" +
 					"&resource_id="+rssId;
-			HttpURLConnection conn = (HttpURLConnection)new URL(url).openConnection();
+			HttpURLConnection conn = (HttpURLConnection)URI.create(url).toURL().openConnection();
 			conn.setRequestMethod("GET");
 
 			conn.setRequestProperty("Host", "www.planetminecraft.com");

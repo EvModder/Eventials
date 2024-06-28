@@ -65,7 +65,7 @@ public class CommandMakeBow extends EvCommand{
 				addAttribute(meta, Attribute.GENERIC_KNOCKBACK_RESISTANCE, .25D, Operation.ADD_SCALAR, /*randUUID=*/false); // Knockback +25%
 				addAttribute(meta, Attribute.GENERIC_MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement -5%
 				meta.setDisplayName(ChatColor.GRAY+"Gandiva");
-				meta.addEnchant(Enchantment.ARROW_DAMAGE, 6, true);
+				meta.addEnchant(Enchantment.POWER, 6, true);
 				meta.addEnchant(Enchantment.KNOCKBACK, 2, true);
 				meta.addEnchant(Enchantment.SILK_TOUCH, 1, true);
 				meta.addItemFlags(/*ItemFlag.HIDE_UNBREAKABLE, */ItemFlag.HIDE_ATTRIBUTES);
@@ -83,7 +83,7 @@ public class CommandMakeBow extends EvCommand{
 				meta.setDisplayName(ChatColor.RESET+"Targetfire");
 				meta.setLore(Arrays.asList(TextUtils.translateAlternateColorCodes('&', "&6\u1f3f9 &#f442&#ddd0&#f442&#ddd0&#333 / 08")));
 				meta.setCustomModelData(2020);
-				meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+				meta.addEnchant(Enchantment.INFINITY, 1, true);
 				meta.addEnchant(Enchantment.MENDING, 1, true);
 				item.setItemMeta(meta);
 				return item;

@@ -170,7 +170,7 @@ public class PlayerClickBlockListener implements Listener{
 				final Location eyeTarget = getEyeTarget(evt.getPlayer().getLocation());
 				if(eyeTarget != null){
 					evt.setCancelled(true);
-					final EnderSignal es = (EnderSignal)evt.getPlayer().getWorld().spawnEntity(evt.getPlayer().getEyeLocation(), EntityType.ENDER_SIGNAL);
+					final EnderSignal es = (EnderSignal)evt.getPlayer().getWorld().spawnEntity(evt.getPlayer().getEyeLocation(), EntityType.EYE_OF_ENDER);
 					es.setTargetLocation(eyeTarget);
 //					evt.getPlayer().getServer().broadcastMessage(evt.getPlayer().getName()+": "
 //								+eyeTarget.getBlockX()+", "+eyeTarget.getBlockY()+", "+eyeTarget.getBlockZ());

@@ -55,6 +55,6 @@ public class Rewards {
 		p.playSound(p.getLocation(), voteSounds[rand.nextInt(voteSounds.length)], 5, 2);//volume, speed
 		p.giveExp(170);//10 levels when default
 		//p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2400, 0));//2 mins speed
-		p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 12000, 0));//10 mins haste
+		p.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 12000, 0));//10 mins haste
 	}
 }

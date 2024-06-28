@@ -114,7 +114,7 @@ public class CustomBows implements Listener{
 			case ICHAIVAL://shoots extra arrows
 				if(evt.getEntity().getScoreboardTags().contains("temp_ignore_arrows")) return;
 				int extraArrows = 9;
-				if(!evt.getBow().containsEnchantment(Enchantment.ARROW_INFINITE)
+				if(!evt.getBow().containsEnchantment(Enchantment.INFINITY)
 						&& evt.getEntity() instanceof Player && ((Player)evt.getEntity()).getGameMode() != GameMode.CREATIVE){
 					Iterator<ItemStack> missingArrows = ((Player)evt.getEntity()).getInventory()
 							.removeItem(new ItemStack(Material.ARROW, extraArrows)).values().iterator();

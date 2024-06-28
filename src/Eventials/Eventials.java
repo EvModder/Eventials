@@ -81,7 +81,7 @@ public class Eventials extends EvPlugin {
 		|| config.getDouble("skip-storm-sleep-percent-required", 1) < 1
 		|| config.getDouble("skip-thunder-sleep-percent-required", 1) < 1)
 			getServer().getPluginManager().registerEvents(new PlayerSleepListener(), this);
-//		if(config.getBoolean("allow-colorcodes-in-commandblock")) 
+//		if(config.getBoolean("allow-colorcodes-in-commandblock"))
 //			getServer().getPluginManager().registerEvents(new InventoryCloseListener(), this);
 		if(config.getBoolean("shift-click-to-ride-in-gm1", true))
 			getServer().getPluginManager().registerEvents(new PlayerClickEntityListener(), this);

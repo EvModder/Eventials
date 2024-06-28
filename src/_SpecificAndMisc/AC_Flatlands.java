@@ -181,7 +181,7 @@ public class AC_Flatlands implements Listener {
 	public void entityPortalEvent(EntityPortalEvent evt){
 		if(evt.getFrom().getWorld().getName().equals("Creative")){
 			evt.setCancelled(true);
-			if(evt.getEntityType() == EntityType.DROPPED_ITEM){
+			if(evt.getEntityType() == EntityType.ITEM){
 				for(Entity e : evt.getEntity().getNearbyEntities(5, 10, 5)){
 					if(e instanceof Player){
 						((Player)e).setGameMode(GameMode.SURVIVAL);
