@@ -293,7 +293,7 @@ commands:
    statsclear:
       description: Delete all data files related to a player
       usage: /statsclear <name/uuid>
-      aliases: [clearstats,statsdelete,deletestats,delete-data]
+      aliases: [clearstats]
       permission: eventials.clearstats
       permission-message: You do not have permission to do this.
 

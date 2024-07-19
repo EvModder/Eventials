@@ -1,6 +1,8 @@
 package Eventials;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Registry;
@@ -25,6 +28,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.economy.EvEconomy;
 import Eventials.economy.commands.CommandAdvertise;
@@ -40,7 +44,6 @@ import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
 import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
-import com.earth2me.essentials.IEssentials;
 
 public final class Scheduler{
 	private Eventials plugin;
@@ -54,6 +57,7 @@ public final class Scheduler{
 	final boolean cSkipAutomsg, skipAutomsgIfSilent, AUTOBUMP_PMC;
 	final String PMC_LOGIN_TOKEN, PMC_RESOURCE_ID;
 	final HashMap<KillFlag, Boolean> butcherFlags;
+	final private Method essGetUser, essIsAfk;
 	private static Scheduler sch; public static Scheduler getScheduler(){return sch;}
 
 	public Scheduler(Eventials pl){
@@ -93,6 +97,20 @@ public final class Scheduler{
 		butcherFlags.put(KillFlag.NEARBY, false);
 		butcherFlags.put(KillFlag.TILE, false);
 		butcherFlags.put(KillFlag.UNIQUE, false);
+
+		// Check if Essentials is available
+		Class<?> essPlClass;
+		try{essPlClass = Class.forName("com.earth2me.essentials.IEssentials");}
+		catch(ClassNotFoundException e){essPlClass = null;}
+		Method getUserTemp=null, isAfkTemp=null;
+		if(essPlClass != null){
+			try{
+				getUserTemp = essPlClass.getMethod("getUser", Player.class);
+				isAfkTemp = getUserTemp.getReturnType().getMethod("isAfk");
+			}
+			catch(NoSuchMethodException | SecurityException e){e.printStackTrace();}
+		}
+		essGetUser = getUserTemp; essIsAfk = isAfkTemp;
 
 		new BukkitRunnable(){@Override public void run(){
 			runCycle();
@@ -188,10 +206,23 @@ public final class Scheduler{
 		}
 		if(cAutomsg != 0 && cycleCount % cAutomsg == 0 && !(cSkipAutomsg && event)
 				&& autoMsgs.length != 0 && !serverIsSilent){
-			IEssentials ess = (IEssentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
-			List<Player> sendTo = new ArrayList<>();
+			Collection<? extends Player> sendTo;
 
-			for(Player p : plugin.getServer().getOnlinePlayers()) if(!ess.getUser(p).isAfk()) sendTo.add(p);
+			if(essIsAfk != null){
+				Plugin essPl = plugin.getServer().getPluginManager().getPlugin("Essentials");
+				sendTo = plugin.getServer().getOnlinePlayers().stream().filter(p -> {
+					try{
+						boolean isAfk = (boolean)essIsAfk.invoke(essGetUser.invoke(essPl, p));
+						return !isAfk;
+					}
+					catch(IllegalAccessException | InvocationTargetException e){
+						e.printStackTrace();
+						return true; // Add player to sendTo
+					}
+				}).collect(Collectors.toList());
+			}
+			else sendTo = plugin.getServer().getOnlinePlayers();
+
 			if(!sendTo.isEmpty()){
 				sendAutomessage(sendTo.toArray(new Player[sendTo.size()]));
 				if(skipAutomsgIfSilent){
