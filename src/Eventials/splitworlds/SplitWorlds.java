@@ -81,9 +81,11 @@ public final class SplitWorlds{
 				else if(pKey1 == null && primaryKeys2.contains(s)) pKey2 = s;
 			}
 			final String primaryWorld = pKey1 != null ? pKey1 : pKey2 != null ? pKey2 : group.get(0);
-			//if(group.size() == worldNames.size()) logger.info("SplitWorlds: All worlds using same inventory");//also implies SINGLE_INV_GROUP=true
-			//else
-				logger.info("SharedInvGroup: [" + primaryWorld + "]->(" + String.join(",", group.toArray(new String[0])) + ")");
+			if(group.size() == worldNames.size()){
+				if(group.stream().allMatch(g -> g.startsWith(primaryWorld)));// log(w -> [w, w_nether, w_the_end]);
+				else logger.info("SplitWorlds: All worlds using same inventory");// also implies SINGLE_INV_GROUP=true
+			}
+			else logger.info("SharedInvGroup: [" + primaryWorld + "]->(" + String.join(",", group.toArray(new String[0])) + ")");
 			++numGroups;
 			for(String s : group) sharedInvWorlds.put(s, primaryWorld);
 		}

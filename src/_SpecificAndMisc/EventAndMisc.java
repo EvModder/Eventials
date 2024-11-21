@@ -48,7 +48,7 @@ public class EventAndMisc{
 			loadCustomConfig("config_hardcore.yml");
 			new AC_Hardcore();
 		}
-		if(pl.getServer().getWorld("VictoryHills") != null){
+		else if(pl.getServer().getWorld("VictoryHills") != null){
 			pl.getLogger().info("Loading AC_Flatlands config");
 			loadCustomConfig("config_oldworld.yml");
 			new AC_Flatlands();
@@ -67,7 +67,7 @@ public class EventAndMisc{
 		}
 		else{
 			// Testcraft? Other?
-			pl.getLogger().info("Empty EventAndMisc (Testcraft)");
+			pl.getLogger().info("EventAndMisc could not detect server from worldname (Testcraft?)");
 		}
 
 		if(pl.getConfig().isConfigurationSection("world-borders")) loadWorldBorders();
