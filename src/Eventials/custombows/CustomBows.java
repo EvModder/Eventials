@@ -70,7 +70,7 @@ public class CustomBows implements Listener{
 		if(evt.isCancelled() || evt.getBow() == null || !evt.getBow().hasItemMeta()) return;
 		BowType customBowType = getBowType(evt.getBow());
 		if(customBowType == BowType.NONE){
-			if(evt.getBow().getItemMeta().hasCustomModelData() && evt.getBow().getItemMeta().getCustomModelData() == 2020){
+			if(evt.getBow().getItemMeta().hasCustomModelDataComponent() && evt.getBow().getItemMeta().getCustomModelDataComponent().getFloats().contains(2020f)){
 				plugin.getLogger().warning("CustomBow is missing a BowType! Shooter: "+evt.getEntity().getName());
 			}
 			return;

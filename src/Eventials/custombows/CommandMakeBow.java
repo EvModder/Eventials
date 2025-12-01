@@ -16,6 +16,7 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.custombows.CustomBows.BowType;
 import net.evmodder.EvLib.EvCommand;
@@ -26,7 +27,7 @@ import net.evmodder.EvLib.extras.TextUtils;
 public class CommandMakeBow extends EvCommand{
 	public CommandMakeBow(JavaPlugin pl){super(pl);}
 	void addAttribute(ItemMeta meta, Attribute attribute, double amount, Operation operation, boolean randUUID){
-		AttributeModifier modifer = new AttributeModifier(attribute.getKey(), amount, operation, EquipmentSlotGroup.HAND);
+		AttributeModifier modifer = new AttributeModifier(attribute.getKeyOrNull(), amount, operation, EquipmentSlotGroup.HAND);
 		meta.addAttributeModifier(attribute, modifer);
 	}
 
@@ -39,14 +40,17 @@ public class CommandMakeBow extends EvCommand{
 		RefNBTTagCompound mailTag = new RefNBTTagCompound(); mailTag.setInt("Eventials:mailable", 42); tag.set("PublicBukkitValues", mailTag);
 		item = NBTTagUtils.setTag(item, tag);
 		ItemMeta meta = item.getItemMeta();
+		CustomModelDataComponent cmdc = meta.getCustomModelDataComponent();
 		switch(type){
 			case DETERMINED:
-				meta.setCustomModelData(42);
+				cmdc.setFloats(List.of(42f));
+				meta.setCustomModelDataComponent(cmdc);
 				break;
 			case FINDER:
 				break;
 			case FLINT:
-				meta.setCustomModelData(42);
+				cmdc.setFloats(List.of(42f));
+				meta.setCustomModelDataComponent(cmdc);
 				addAttribute(meta, Attribute.ATTACK_DAMAGE, 4, Operation.ADD_NUMBER, /*randUUID=*/false); // Attack +4
 				addAttribute(meta, Attribute.MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement +5%
 				meta.setDisplayName(ChatColor.DARK_GRAY+""+ChatColor.BOLD+"Flint");
@@ -58,7 +62,8 @@ public class CommandMakeBow extends EvCommand{
 			case FORCE:
 				break;
 			case GANDIVA:
-				meta.setCustomModelData(42);
+				cmdc.setFloats(List.of(42f));
+				meta.setCustomModelDataComponent(cmdc);
 				addAttribute(meta, Attribute.ATTACK_DAMAGE, 2, Operation.ADD_NUMBER, /*randUUID=*/false); // Attack +2
 				addAttribute(meta, Attribute.KNOCKBACK_RESISTANCE, .25D, Operation.ADD_SCALAR, /*randUUID=*/false); // Knockback +25%
 				addAttribute(meta, Attribute.MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement -5%
@@ -80,7 +85,8 @@ public class CommandMakeBow extends EvCommand{
 			case TARGETFIRE:
 				meta.setDisplayName(ChatColor.RESET+"Targetfire");
 				meta.setLore(Arrays.asList(TextUtils.translateAlternateColorCodes('&', "&6\u1f3f9 &#f442&#ddd0&#f442&#ddd0&#333 / 08")));
-				meta.setCustomModelData(2020);
+				cmdc.setFloats(List.of(2020f));
+				meta.setCustomModelDataComponent(cmdc);
 				meta.addEnchant(Enchantment.INFINITY, 1, true);
 				meta.addEnchant(Enchantment.MENDING, 1, true);
 				item.setItemMeta(meta);

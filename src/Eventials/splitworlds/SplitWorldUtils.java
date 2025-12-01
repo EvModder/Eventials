@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
@@ -122,7 +123,7 @@ public final class SplitWorldUtils{
 		state.leg = player.getInventory().getLeggings();
 		state.boot = player.getInventory().getBoots();
 		state.effects.addAll(player.getActivePotionEffects());
-		for(Attribute attribute : Attribute.values()){
+		for(Attribute attribute : Registry.ATTRIBUTE){
 			AttributeInstance inst = player.getAttribute(attribute);
 			if(inst != null){
 				state.attributeBaseValues.put(attribute, inst.getBaseValue());
@@ -148,7 +149,7 @@ public final class SplitWorldUtils{
 
 //		player.getActivePotionEffects().clear();
 		for(PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
-		for(Attribute attribute : Attribute.values()){
+		for(Attribute attribute : Registry.ATTRIBUTE){
 			AttributeInstance inst = player.getAttribute(attribute);
 			if(inst != null){
 				inst.setBaseValue(inst.getDefaultValue());
