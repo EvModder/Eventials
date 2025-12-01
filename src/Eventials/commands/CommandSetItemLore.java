@@ -3,7 +3,6 @@ package Eventials.commands;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -11,33 +10,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.google.common.collect.ImmutableList;
+import Eventials.Cursed_1_21_6_stuff;
 import Eventials.Eventials;
 import net.evmodder.EvLib.bukkit.EvCommand;
 import net.evmodder.EvLib.bukkit.ReflectionUtils;
 import net.evmodder.EvLib.bukkit.TellrawUtils;
 import net.evmodder.EvLib.TextUtils;
 import net.evmodder.EvLib.bukkit.ReflectionUtils.RefField;
-import net.evmodder.EvLib.bukkit.ReflectionUtils.RefMethod;
 import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
 
 public class CommandSetItemLore extends EvCommand {
 	public CommandSetItemLore(Eventials pl){super(pl);}
 
-	//TODO: nicer way to share this with CommandSetItemName (private variables? shared interface?)
-	final static RefField displayNameField = ReflectionUtils.getRefClass("{cb}.inventory.CraftMetaItem").getField("displayName");
 	private final static RefField loreField = ReflectionUtils.getRefClass("{cb}.inventory.CraftMetaItem").getField("lore");
-//	final static RefMethod fromJsonMethod = chatSerializerClass.getMethod("fromJson", String.class, holderLookupProviderClass);
-	final static RefMethod fromJsonMethod = ReflectionUtils.getRefClass("{nm}.network.chat.IChatBaseComponent$ChatSerializer").findMethod(/*isStatic=*/true,
-			ReflectionUtils.getRefClass("{nm}.network.chat.IChatMutableComponent"), String.class,
-			ReflectionUtils.getRefClass("{nm}.core.HolderLookup$Provider", "{nm}.core.HolderLookup$a"));
-
-	//class: IRegistryCustom.Dimension
-	final static Object registryAccessObj = ReflectionUtils.getRefClass("{nm}.server.MinecraftServer").findMethod(/*isStatic=*/false,
-			ReflectionUtils.getRefClass("net.minecraft.core.IRegistryCustom$Dimension"))
-			.of(ReflectionUtils.getRefClass("{cb}.CraftServer").getMethod("getServer").of(Bukkit.getServer()).call()).call();
 
 	public final static ItemStack setLore(ItemStack item, Component... lore){
-		Object lines = Stream.of(lore).map(line -> fromJsonMethod.call(line.toString(), registryAccessObj)).collect(Collectors.toList());
+		Object lines = Stream.of(lore).map(line -> Cursed_1_21_6_stuff.jsonToChatComponent(line.toString())).collect(Collectors.toList());
 		ItemMeta meta = item.getItemMeta();
 		loreField.of(meta).set(lines);
 		item.setItemMeta(meta);

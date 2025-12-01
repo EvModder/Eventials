@@ -8,19 +8,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.google.common.collect.ImmutableList;
+import Eventials.Cursed_1_21_6_stuff;
 import net.evmodder.EvLib.bukkit.EvCommand;
 import net.evmodder.EvLib.bukkit.EvPlugin;
+import net.evmodder.EvLib.bukkit.ReflectionUtils;
 import net.evmodder.EvLib.bukkit.TellrawUtils;
+import net.evmodder.EvLib.bukkit.ReflectionUtils.RefField;
 import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
 import net.evmodder.EvLib.TextUtils;
 
 public class CommandSetItemName extends EvCommand{
 	public CommandSetItemName(EvPlugin p){super(p);}
 
+	final static RefField displayNameField = ReflectionUtils.getRefClass("{cb}.inventory.CraftMetaItem").getField("displayName");
+
 	public final static ItemStack setDisplayName(ItemStack item, Component name){
 		final ItemMeta meta = item.getItemMeta();
 		//TODO: nicer way to share this with CommandSetItemLore
-		CommandSetItemLore.displayNameField.of(meta).set(CommandSetItemLore.fromJsonMethod.call(name.toString(), CommandSetItemLore.registryAccessObj));
+		displayNameField.of(meta).set(Cursed_1_21_6_stuff.jsonToChatComponent(name.toString()));
 		item.setItemMeta(meta);
 		return item;
 	}
