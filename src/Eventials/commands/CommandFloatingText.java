@@ -16,9 +16,9 @@ import java.util.UUID;
 import java.util.Vector;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
+import net.evmodder.EvLib.TextUtils;
 
 public class CommandFloatingText extends EvCommand{
 	public static final String ICON =

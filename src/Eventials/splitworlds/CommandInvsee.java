@@ -17,8 +17,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import Eventials.splitworlds.SplitWorldUtils.PlayerState;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
 
 public class CommandInvsee extends EvCommand{
 	private EvPlugin pl;

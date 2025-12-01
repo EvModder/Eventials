@@ -7,8 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import com.google.common.collect.ImmutableList;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
 
 public class CommandDebug extends EvCommand{
 	public CommandDebug(EvPlugin p){super(p);}

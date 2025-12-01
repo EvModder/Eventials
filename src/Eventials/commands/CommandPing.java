@@ -7,8 +7,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.bukkit.ChatColor;
 import Eventials.Eventials;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
 
 public class CommandPing extends EvCommand{
 	private final EvPlugin pl;

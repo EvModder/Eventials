@@ -19,7 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.TextUtils;
 
 public class ServerPingListener implements Listener{
 	private Eventials plugin;

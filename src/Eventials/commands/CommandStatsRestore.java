@@ -10,12 +10,12 @@ import org.bukkit.entity.Player;
 import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
 import Eventials.Extras;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
-import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
+import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ListComponent;
 
 public class CommandStatsRestore extends EvCommand {
 	public CommandStatsRestore(EvPlugin p){

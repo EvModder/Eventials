@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import Eventials.Eventials;
 import Eventials.Extras;
 import Eventials.economy.EvEconomy;
-import net.evmodder.EvLib.extras.TypeUtils;
+import net.evmodder.EvLib.bukkit.TypeUtils;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 
 public class EconomySignListener implements Listener {

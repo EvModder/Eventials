@@ -20,14 +20,14 @@ import Eventials.Eventials;
 import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.hooks.EssEcoHook;
 import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.TellrawUtils.Component;
-import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.SelectorComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
-import net.evmodder.EvLib.extras.TellrawUtils.TranslationComponent;
+import net.evmodder.EvLib.TextUtils;
+import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
+import net.evmodder.EvLib.bukkit.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.SelectorComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TranslationComponent;
 
 public class PlayerLoginListener implements Listener{
 	private Eventials plugin;

@@ -18,15 +18,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
-import net.evmodder.EvLib.extras.TabText;
-import net.evmodder.EvLib.extras.TellrawUtils;
-import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
-import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.bukkit.TabText;
+import net.evmodder.EvLib.bukkit.TellrawUtils;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.TextUtils;
 
 public class AC_Hardcore implements Listener{
 	private final Eventials pl;

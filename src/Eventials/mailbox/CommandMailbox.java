@@ -35,8 +35,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.economy.EvEconomy;
 import Eventials.mailbox.MailboxClient.MailListener;
 import Eventials.splitworlds.SplitWorlds;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
 import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.util.Pair;
 

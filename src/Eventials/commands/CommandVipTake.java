@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
-import net.evmodder.EvLib.EvCommand;
+import net.evmodder.EvLib.bukkit.EvCommand;
 import org.bukkit.ChatColor;
 
 public class CommandVipTake extends EvCommand {

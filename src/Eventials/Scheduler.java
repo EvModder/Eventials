@@ -33,17 +33,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.economy.EvEconomy;
 import Eventials.economy.commands.CommandAdvertise;
 import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.ButcherUtils;
-import net.evmodder.EvLib.extras.TellrawUtils;
-import net.evmodder.EvLib.extras.ButcherUtils.KillFlag;
-import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.Component;
-import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
-import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.TextUtils;
+import net.evmodder.EvLib.bukkit.ButcherUtils;
+import net.evmodder.EvLib.bukkit.TellrawUtils;
+import net.evmodder.EvLib.bukkit.ButcherUtils.KillFlag;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
+import net.evmodder.EvLib.bukkit.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextHoverAction;
 
 public final class Scheduler{
 	private Eventials plugin;

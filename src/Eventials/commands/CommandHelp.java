@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bukkit.ChatColor;
 import Eventials.Eventials;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.extras.ReflectionUtils;
-import net.evmodder.EvLib.extras.ReflectionUtils.RefClass;
-import net.evmodder.EvLib.extras.ReflectionUtils.RefMethod;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
+import net.evmodder.EvLib.bukkit.ReflectionUtils;
+import net.evmodder.EvLib.bukkit.ReflectionUtils.RefClass;
+import net.evmodder.EvLib.bukkit.ReflectionUtils.RefMethod;
 
 public class CommandHelp extends EvCommand{
 	private final EvPlugin pl;

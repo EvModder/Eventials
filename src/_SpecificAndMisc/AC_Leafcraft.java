@@ -26,8 +26,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import Eventials.Eventials;
-import net.evmodder.EvLib.EvUtils;
-import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.bukkit.EvUtils;
+import net.evmodder.EvLib.TextUtils;
 import net.evmodder.Renewable.Renewable;
 
 public class AC_Leafcraft implements Listener{

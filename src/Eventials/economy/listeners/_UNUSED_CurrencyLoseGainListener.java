@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import Eventials.economy.EvEconomy;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.bukkit.EvPlugin;
 
 public class _UNUSED_CurrencyLoseGainListener implements Listener{
 	Material currency;

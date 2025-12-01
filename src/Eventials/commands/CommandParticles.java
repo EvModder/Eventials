@@ -20,8 +20,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.particles.CustomParticleEffect;
 import net.ess3.api.IEssentials;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
 import com.earth2me.essentials.User;
 
 public class CommandParticles extends EvCommand {

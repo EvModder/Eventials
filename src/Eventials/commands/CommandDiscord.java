@@ -8,10 +8,10 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import Eventials.Eventials;
 import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ListComponent;
 
 public class CommandDiscord extends EvCommand{
 	private final ListComponent tellrawComp;

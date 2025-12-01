@@ -13,7 +13,7 @@ import Eventials.splitworlds.SplitWorlds;
 import Eventials.economy.EvEconomy;
 import Eventials.voter.EvVoter;
 import _SpecificAndMisc.EventAndMisc;
-import net.evmodder.EvLib.EvPlugin;
+import net.evmodder.EvLib.bukkit.EvPlugin;
 import net.evmodder.EvLib.FileIO;
 
 /** Everything inside this class is very AltCraft-specific,

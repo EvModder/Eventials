@@ -47,8 +47,8 @@ public class CommandMakeBow extends EvCommand{
 				break;
 			case FLINT:
 				meta.setCustomModelData(42);
-				addAttribute(meta, Attribute.GENERIC_ATTACK_DAMAGE, 4, Operation.ADD_NUMBER, /*randUUID=*/false); // Attack +4
-				addAttribute(meta, Attribute.GENERIC_MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement +5%
+				addAttribute(meta, Attribute.ATTACK_DAMAGE, 4, Operation.ADD_NUMBER, /*randUUID=*/false); // Attack +4
+				addAttribute(meta, Attribute.MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement +5%
 				meta.setDisplayName(ChatColor.DARK_GRAY+""+ChatColor.BOLD+"Flint");
 				meta.addItemFlags(/*ItemFlag.HIDE_UNBREAKABLE, */ItemFlag.HIDE_ATTRIBUTES);
 				item.setItemMeta(meta);
@@ -59,9 +59,9 @@ public class CommandMakeBow extends EvCommand{
 				break;
 			case GANDIVA:
 				meta.setCustomModelData(42);
-				addAttribute(meta, Attribute.GENERIC_ATTACK_DAMAGE, 2, Operation.ADD_NUMBER, /*randUUID=*/false); // Attack +2
-				addAttribute(meta, Attribute.GENERIC_KNOCKBACK_RESISTANCE, .25D, Operation.ADD_SCALAR, /*randUUID=*/false); // Knockback +25%
-				addAttribute(meta, Attribute.GENERIC_MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement -5%
+				addAttribute(meta, Attribute.ATTACK_DAMAGE, 2, Operation.ADD_NUMBER, /*randUUID=*/false); // Attack +2
+				addAttribute(meta, Attribute.KNOCKBACK_RESISTANCE, .25D, Operation.ADD_SCALAR, /*randUUID=*/false); // Knockback +25%
+				addAttribute(meta, Attribute.MOVEMENT_SPEED, .05D, Operation.ADD_SCALAR, /*randUUID=*/false); // Movement -5%
 				meta.setDisplayName(ChatColor.GRAY+"Gandiva");
 				meta.addEnchant(Enchantment.POWER, 6, true);
 				meta.addEnchant(Enchantment.KNOCKBACK, 2, true);

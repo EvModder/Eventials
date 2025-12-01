@@ -16,12 +16,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.Eventials;
 import Eventials.economy.EvEconomy;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
-import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.TextUtils;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
 
 public class CommandAdvertise extends EvCommand{
 	private EvEconomy economy;

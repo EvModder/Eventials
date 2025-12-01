@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import org.bukkit.ChatColor;
 import Eventials.Eventials;
-import net.evmodder.EvLib.EvCommand;
+import net.evmodder.EvLib.bukkit.EvCommand;
 
 public class CommandRegionTp extends EvCommand {
 	public CommandRegionTp(Eventials pl){

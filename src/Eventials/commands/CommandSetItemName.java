@@ -8,23 +8,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.google.common.collect.ImmutableList;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.EvPlugin;
-import net.evmodder.EvLib.extras.NBTTagUtils;
-import net.evmodder.EvLib.extras.TellrawUtils;
-import net.evmodder.EvLib.extras.TellrawUtils.Component;
-import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.EvPlugin;
+import net.evmodder.EvLib.bukkit.TellrawUtils;
+import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
+import net.evmodder.EvLib.TextUtils;
 
 public class CommandSetItemName extends EvCommand{
 	public CommandSetItemName(EvPlugin p){super(p);}
 
 	public final static ItemStack setDisplayName(ItemStack item, Component name){
-		RefNBTTagCompound tag = NBTTagUtils.getTag(item);
-		RefNBTTagCompound display = tag.hasKey("display") ? (RefNBTTagCompound)tag.get("display") : new RefNBTTagCompound();
-		display.setString("Name", name.toString());
-		tag.set("display", display);
-		return NBTTagUtils.setTag(item, tag);
+		final ItemMeta meta = item.getItemMeta();
+		//TODO: nicer way to share this with CommandSetItemLore
+		CommandSetItemLore.displayNameField.of(meta).set(CommandSetItemLore.fromJsonMethod.call(name.toString(), CommandSetItemLore.registryAccessObj));
+		item.setItemMeta(meta);
+		return item;
 	}
 
 	@Override public List<String> onTabComplete(CommandSender s, Command c, String a, String[] args){return ImmutableList.of();}

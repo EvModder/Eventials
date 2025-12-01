@@ -21,10 +21,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.NBTTagUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
-import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.TypeUtils;
+import net.evmodder.EvLib.bukkit.NBTTagUtils;
+import net.evmodder.EvLib.bukkit.NBTTagUtils.RefNBTTagCompound;
+import net.evmodder.EvLib.TextUtils;
+import net.evmodder.EvLib.bukkit.TypeUtils;
 
 public class EvSpawner implements Listener {
 	final Random rand;

@@ -17,10 +17,10 @@ import Eventials.Eventials;
 import Eventials.listeners.PaperFix_EntityAddToWorldListener;
 import Eventials.listeners.PaperFix_EntityChangeBlockListener;
 import net.evmodder.EvLib.FileIO;
-import net.evmodder.EvLib.extras.TellrawUtils.TextHoverAction;
-import net.evmodder.EvLib.extras.TellrawUtils.Component;
-import net.evmodder.EvLib.extras.TellrawUtils.HoverEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextHoverAction;
+import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
+import net.evmodder.EvLib.bukkit.TellrawUtils.HoverEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
 
 public class EventAndMisc{
 	final Eventials pl;

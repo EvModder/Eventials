@@ -12,10 +12,10 @@ import org.bukkit.entity.Player;
 import Eventials.economy.EvEconomy;
 import net.ess3.api.IEssentials;
 import net.evmodder.EvLib.hooks.EssEcoHook;
-import net.evmodder.EvLib.extras.TellrawUtils.TextClickAction;
-import net.evmodder.EvLib.extras.TellrawUtils.ClickEvent;
-import net.evmodder.EvLib.extras.TellrawUtils.ListComponent;
-import net.evmodder.EvLib.extras.TellrawUtils.RawTextComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.TextClickAction;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.ListComponent;
+import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
 
 public class Extras{
 	public static void runPlayerDelete(){

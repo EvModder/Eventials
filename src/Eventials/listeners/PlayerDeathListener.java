@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import Eventials.Eventials;
 import Evil_Code_EvKits.EvKits;
-import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.TextUtils;
 
 public class PlayerDeathListener implements Listener{
 	private final Eventials plugin;

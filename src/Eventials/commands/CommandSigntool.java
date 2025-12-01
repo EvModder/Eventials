@@ -20,9 +20,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.google.common.collect.ImmutableList;
 import Eventials.Eventials;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.extras.TextUtils;
-import net.evmodder.EvLib.extras.TypeUtils;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.TextUtils;
+import net.evmodder.EvLib.bukkit.TypeUtils;
 
 public class CommandSigntool extends EvCommand implements Listener{
 	private final Eventials plugin;

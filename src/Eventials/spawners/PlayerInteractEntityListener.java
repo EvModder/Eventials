@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.TypeUtils;
+import net.evmodder.EvLib.bukkit.TypeUtils;
 
 public class PlayerInteractEntityListener implements Listener {
 	private Eventials plugin;
