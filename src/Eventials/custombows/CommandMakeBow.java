@@ -19,10 +19,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.custombows.CustomBows.BowType;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.extras.NBTTagUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
-import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.bukkit.NBTTagUtils;
+import net.evmodder.EvLib.bukkit.NBTTagUtils.RefNBTTagCompound;
+import net.evmodder.EvLib.TextUtils;
 
 public class CommandMakeBow extends EvCommand{
 	public CommandMakeBow(JavaPlugin pl){super(pl);}

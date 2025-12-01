@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.BookMeta.Generation;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.evmodder.EvLib.EvCommand;
+import net.evmodder.EvLib.bukkit.EvCommand;
 
 public class CommandUnsignBook extends EvCommand{
 	public CommandUnsignBook(JavaPlugin pl){super(pl);}

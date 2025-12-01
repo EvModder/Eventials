@@ -26,8 +26,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.NBTTagUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
+import net.evmodder.EvLib.bukkit.NBTTagUtils;
+import net.evmodder.EvLib.bukkit.NBTTagUtils.RefNBTTagCompound;
 
 public class CustomBows implements Listener{
 	public enum BowType{FLINT, FINDER, FOLLOWER, GANDIVA, ICHAIVAL, DETERMINED, RAPIDFIRE, FORCE, TARGETFIRE, ICARUS, NONE};

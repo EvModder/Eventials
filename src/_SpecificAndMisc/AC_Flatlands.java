@@ -30,9 +30,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import Eventials.Eventials;
 import Eventials.economy.EvEconomy;
 import Evil_Code_EvKits.EvKits;
-import net.evmodder.EvLib.extras.NBTTagUtils;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagCompound;
-import net.evmodder.EvLib.extras.NBTTagUtils.RefNBTTagList;
+import net.evmodder.EvLib.bukkit.NBTTagUtils;
+import net.evmodder.EvLib.bukkit.NBTTagUtils.RefNBTTagCompound;
+import net.evmodder.EvLib.bukkit.NBTTagUtils.RefNBTTagList;
 
 public class AC_Flatlands implements Listener {
 	Eventials pl;

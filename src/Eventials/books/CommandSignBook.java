@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.BookMeta.Generation;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.evmodder.EvLib.EvCommand;
-import net.evmodder.EvLib.extras.TextUtils;
+import net.evmodder.EvLib.bukkit.EvCommand;
+import net.evmodder.EvLib.TextUtils;
 
 public class CommandSignBook extends EvCommand{
 	public CommandSignBook(JavaPlugin pl){super(pl);}

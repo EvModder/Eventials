@@ -17,9 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import Eventials.Eventials;
-import net.evmodder.EvLib.extras.ReflectionUtils;
-import net.evmodder.EvLib.extras.ReflectionUtils.RefClass;
-import net.evmodder.EvLib.extras.ReflectionUtils.RefMethod;
+import net.evmodder.EvLib.bukkit.ReflectionUtils;
+import net.evmodder.EvLib.bukkit.ReflectionUtils.RefClass;
+import net.evmodder.EvLib.bukkit.ReflectionUtils.RefMethod;
 
 public final class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!

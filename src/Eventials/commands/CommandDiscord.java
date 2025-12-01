@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.bukkit.ChatColor;
 import Eventials.Eventials;
-import net.evmodder.EvLib.EvCommand;
+import net.evmodder.EvLib.bukkit.EvCommand;
 import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
 import net.evmodder.EvLib.bukkit.TellrawUtils.RawTextComponent;
 import net.evmodder.EvLib.bukkit.TellrawUtils.TextClickAction;
