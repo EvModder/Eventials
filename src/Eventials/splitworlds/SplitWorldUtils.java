@@ -1,5 +1,6 @@
 package Eventials.splitworlds;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,9 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import Eventials.Eventials;
-import net.evmodder.EvLib.bukkit.ReflectionUtils;
-import net.evmodder.EvLib.bukkit.ReflectionUtils.RefClass;
-import net.evmodder.EvLib.bukkit.ReflectionUtils.RefMethod;
+import net.evmodder.EvLib.util.ReflectionUtils;
 
 public final class SplitWorldUtils{
 	// WARNING: Doesn't work with multiple '*' in the same string!
@@ -74,22 +73,22 @@ public final class SplitWorldUtils{
 	}*/
 
 	//Reflection
-	static final RefClass classCraftPlayer = ReflectionUtils.getRefClass("{cb}.entity.CraftPlayer");
-	static final RefClass classCraftWorld = ReflectionUtils.getRefClass("{cb}.CraftWorld");
-	static final RefClass classWorldServer = ReflectionUtils.getRefClass("{nms}.WorldServer", "{nms}.level.WorldServer");
-	static final RefClass classEntity = ReflectionUtils.getRefClass("{nms}.Entity", "{nm}.world.entity.Entity");
-	static RefMethod methodGetPlayerHandle = classCraftPlayer.getMethod("getHandle");
-	static RefMethod methodGetWorldHandle = classCraftWorld.getMethod("getHandle");
-	static RefMethod methodUnregisterEntity;// = classWorldServer.getMethod("unregisterEntity", classEntity);
+	static final Class<?> classCraftPlayer = ReflectionUtils.getClass("{cb}.entity.CraftPlayer");
+	static final Class<?> classCraftWorld = ReflectionUtils.getClass("{cb}.CraftWorld");
+	static final Class<?> classWorldServer = ReflectionUtils.getClass("{nms}.WorldServer", "{nms}.level.WorldServer");
+	static final Class<?> classEntity = ReflectionUtils.getClass("{nms}.Entity", "{nm}.world.entity.Entity");
+	static Method methodGetPlayerHandle = ReflectionUtils.getMethod(classCraftPlayer, "getHandle");
+	static Method methodGetWorldHandle = ReflectionUtils.getMethod(classCraftWorld, "getHandle");
+	static Method methodUnregisterEntity;// = ReflectionUtils.getMethod(classWorldServer, "unregisterEntity", classEntity);
 	private static void untrackPlayer(Player player, org.bukkit.World world){
-		try{methodUnregisterEntity = classWorldServer.getMethod("unregisterEntity", classEntity);}
+		try{methodUnregisterEntity = ReflectionUtils.getMethod(classWorldServer, "unregisterEntity", classEntity);}
 		catch(Exception e){
 			try{methodUnregisterEntity = classWorldServer.getMethod("f", classEntity);}
 			catch(Exception e2){methodUnregisterEntity = null;}
 		}
-		Object playerHandle = methodGetPlayerHandle.of(player).call();
-		Object worldHandle = methodGetWorldHandle.of(world).call();
-		if(methodUnregisterEntity != null) methodUnregisterEntity.of(worldHandle).call(playerHandle);
+		Object playerHandle = ReflectionUtils.call(methodGetPlayerHandle, player);
+		Object worldHandle = ReflectionUtils.call(methodGetWorldHandle, world);
+		if(methodUnregisterEntity != null) ReflectionUtils.call(methodUnregisterEntity, worldHandle, playerHandle);
 	}
 	private static void retrackPlayer(Player player, org.bukkit.World world){
 		//((CraftWorld)destination.getWorld()).getHandle().addEntity(playerHandle);

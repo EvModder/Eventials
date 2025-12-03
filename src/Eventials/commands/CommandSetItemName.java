@@ -1,5 +1,6 @@
 package Eventials.commands;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -11,21 +12,20 @@ import com.google.common.collect.ImmutableList;
 import Eventials.Cursed_1_21_6_stuff;
 import net.evmodder.EvLib.bukkit.EvCommand;
 import net.evmodder.EvLib.bukkit.EvPlugin;
-import net.evmodder.EvLib.bukkit.ReflectionUtils;
+import net.evmodder.EvLib.util.ReflectionUtils;
 import net.evmodder.EvLib.bukkit.TellrawUtils;
-import net.evmodder.EvLib.bukkit.ReflectionUtils.RefField;
 import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
 import net.evmodder.EvLib.TextUtils;
 
 public class CommandSetItemName extends EvCommand{
 	public CommandSetItemName(EvPlugin p){super(p);}
 
-	final static RefField displayNameField = ReflectionUtils.getRefClass("{cb}.inventory.CraftMetaItem").getField("displayName");
+	final static Field displayNameField = ReflectionUtils.getField(ReflectionUtils.getClass("{cb}.inventory.CraftMetaItem"), "displayName");
 
 	public final static ItemStack setDisplayName(ItemStack item, Component name){
 		final ItemMeta meta = item.getItemMeta();
 		//TODO: nicer way to share this with CommandSetItemLore
-		displayNameField.of(meta).set(Cursed_1_21_6_stuff.jsonToChatComponent(name.toString()));
+		ReflectionUtils.set(displayNameField, meta, Cursed_1_21_6_stuff.jsonToChatComponent(name.toString()));
 		item.setItemMeta(meta);
 		return item;
 	}

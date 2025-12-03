@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,9 +23,7 @@ import org.bukkit.ChatColor;
 import Eventials.Eventials;
 import net.evmodder.EvLib.bukkit.EvCommand;
 import net.evmodder.EvLib.bukkit.EvPlugin;
-import net.evmodder.EvLib.bukkit.ReflectionUtils;
-import net.evmodder.EvLib.bukkit.ReflectionUtils.RefClass;
-import net.evmodder.EvLib.bukkit.ReflectionUtils.RefMethod;
+import net.evmodder.EvLib.util.ReflectionUtils;
 
 public class CommandHelp extends EvCommand{
 	private final EvPlugin pl;
@@ -40,10 +39,11 @@ public class CommandHelp extends EvCommand{
 	
 	private HashMap<String, Set<Command>> getCommandsByNameMap(){
 		if(commandsByName == null){
-			RefClass classCraftServer = ReflectionUtils.getRefClass("{cb}.CraftServer");
-			RefMethod methodGetCommandMap = classCraftServer.getMethod("getCommandMap");
+			Class<?> classCraftServer = ReflectionUtils.getClass("{cb}.CraftServer");
+			Method methodGetCommandMap = ReflectionUtils.getMethod(classCraftServer, "getCommandMap");
 			commandsByName = new HashMap<>();
-			((SimpleCommandMap)methodGetCommandMap.of(pl.getServer()).call()).getCommands().forEach(cmd -> {
+			SimpleCommandMap scm = (SimpleCommandMap)ReflectionUtils.call(methodGetCommandMap, pl.getServer());
+			scm.getCommands().forEach(cmd -> {
 				Set<Command> sameNameCmds = commandsByName.get(cmd.getName());
 				if(sameNameCmds != null) sameNameCmds.add(cmd);
 				else commandsByName.put(cmd.getName().toLowerCase(), new HashSet<>(Arrays.asList(cmd)));

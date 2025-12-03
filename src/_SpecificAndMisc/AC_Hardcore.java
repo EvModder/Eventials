@@ -19,7 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import net.evmodder.EvLib.bukkit.TellrawUtils.TextHoverAction;
-import net.evmodder.EvLib.bukkit.TabText;
+import net.evmodder.EvLib.util.TabText;
 import net.evmodder.EvLib.bukkit.TellrawUtils;
 import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
 import net.evmodder.EvLib.bukkit.TellrawUtils.HoverEvent;
