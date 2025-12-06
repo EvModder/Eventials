@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.google.common.collect.ImmutableList;
-import Eventials.Cursed_1_21_6_stuff;
+import Eventials.CompConverter;
 import net.evmodder.EvLib.bukkit.EvCommand;
 import net.evmodder.EvLib.bukkit.EvPlugin;
 import net.evmodder.EvLib.util.ReflectionUtils;
@@ -20,12 +20,13 @@ import net.evmodder.EvLib.TextUtils;
 public class CommandSetItemName extends EvCommand{
 	public CommandSetItemName(EvPlugin p){super(p);}
 
-	final static Field displayNameField = ReflectionUtils.getField(ReflectionUtils.getClass("{cb}.inventory.CraftMetaItem"), "displayName");
+	private static final Class<?> classCraftMetaItem = ReflectionUtils.getClass("{cb}.inventory.CraftMetaItem");
+	private static final Field displayNameField = ReflectionUtils.getField(classCraftMetaItem, "displayName");
 
-	public final static ItemStack setDisplayName(ItemStack item, Component name){
+	public static final ItemStack setDisplayName(ItemStack item, Component name){
 		final ItemMeta meta = item.getItemMeta();
 		//TODO: nicer way to share this with CommandSetItemLore
-		ReflectionUtils.set(displayNameField, meta, Cursed_1_21_6_stuff.jsonToChatComponent(name.toString()));
+		ReflectionUtils.set(displayNameField, meta, CompConverter.chatCompFromJsonStr(name.toString()));
 		item.setItemMeta(meta);
 		return item;
 	}

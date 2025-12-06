@@ -2,7 +2,6 @@ package Eventials.commands;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -11,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.google.common.collect.ImmutableList;
-import Eventials.Cursed_1_21_6_stuff;
+import Eventials.CompConverter;
 import Eventials.Eventials;
 import net.evmodder.EvLib.bukkit.EvCommand;
 import net.evmodder.EvLib.util.ReflectionUtils;
@@ -22,10 +21,11 @@ import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
 public class CommandSetItemLore extends EvCommand {
 	public CommandSetItemLore(Eventials pl){super(pl);}
 
-	private final static Field loreField = ReflectionUtils.getField(ReflectionUtils.getClass("{cb}.inventory.CraftMetaItem"), "lore");
+	private static final Class<?> classCraftMetaItem = ReflectionUtils.getClass("{cb}.inventory.CraftMetaItem");
+	private static final Field loreField = ReflectionUtils.getField(classCraftMetaItem, "lore");
 
-	public final static ItemStack setLore(ItemStack item, Component... lore){
-		Object lines = Stream.of(lore).map(line -> Cursed_1_21_6_stuff.jsonToChatComponent(line.toString())).collect(Collectors.toList());
+	public static final ItemStack setLore(ItemStack item, Component... lore){
+		Object lines = Stream.of(lore).map(line -> CompConverter.chatCompFromJsonStr(line.toString())).toList();
 		ItemMeta meta = item.getItemMeta();
 		ReflectionUtils.set(loreField, meta, lines);
 		item.setItemMeta(meta);

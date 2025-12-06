@@ -202,7 +202,7 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 		return true;
 	}
 
-	@SuppressWarnings("deprecation") @EventHandler
+	@EventHandler
 	public void onMobKill(EntityDeathEvent evt){
 		if(evt.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent
 				&& evt.getEntity() instanceof LivingEntity){
@@ -228,8 +228,9 @@ public class CommandWeaponStats extends EvCommand implements Listener{
 				else return;
 				incrementWeaponStat(weapon, stat, 1);
 
-				String victimName = evt.getEntity().getCustomName();
-				if(victimName == null) victimName = TextUtils.getNormalizedName(evt.getEntityType());
+				String customName = evt.getEntity().getCustomName();
+				@SuppressWarnings("deprecation")
+				String victimName = customName != null ? customName : TextUtils.getNormalizedName(evt.getEntityType());
 				setWeaponStat(weapon, WeaponStat.LAST_VICTIM, victimName);
 			}
 		}
