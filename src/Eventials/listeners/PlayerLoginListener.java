@@ -110,7 +110,7 @@ public class PlayerLoginListener implements Listener{
 		final OfflinePlayer joiner = plugin.getServer().getOfflinePlayer(uuid);
 		final boolean useName = !joiner.isOnline() || !joiner.getPlayer().isValid();
 		final String joinMsg = new TranslationComponent("multiplayer.player.joined",
-				new Component[]{useName ? new RawTextComponent(joiner.getName()) : new SelectorComponent(uuid)},
+				new Component[]{useName ? new RawTextComponent(""+joiner.getName()) : new SelectorComponent(uuid)},
 				/*insert=*/null, /*click=*/null, /*hover=*/null, /*color=*/"yellow", /*formats=*/null).toString();
 		for(Player p : plugin.getServer().getOnlinePlayers()){
 			if(!p.getUniqueId().equals(uuid)){
