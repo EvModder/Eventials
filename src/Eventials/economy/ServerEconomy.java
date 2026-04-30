@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.bukkit.plugin.java.JavaPlugin;
 import Eventials.economy.commands.CommandServerBal;
 import net.evmodder.EvLib.hooks.EssEcoHook;
-import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.util.FileIO;
 import Eventials.economy.commands.CommandDonateServer;
 import Eventials.economy.commands.CommandGlobalBal;
 

@@ -1,7 +1,7 @@
 package Eventials.voter;
 
 import Eventials.Eventials;
-import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.bukkit.ConfigUtils;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.OfflinePlayer;
@@ -26,7 +26,7 @@ public class EvVoter implements Listener{
 	public EvVoter(Eventials pl){
 		voter = this;
 		plugin = pl;
-		voters = FileIO.loadYaml("voters.yml", "");
+		voters = ConfigUtils.loadYaml("voters.yml", "");
 
 		boolean votifierInstalled = plugin.getServer().getPluginManager().getPlugin("Votifier") != null;
 		if(votifierInstalled) new EvVoteListener();
@@ -45,7 +45,7 @@ public class EvVoter implements Listener{
 	}
 
 	public void onDisable(){
-		if(anyEvent) FileIO.saveYaml("voters.yml", voters);
+		if(anyEvent) ConfigUtils.saveYaml("voters.yml", voters);
 	}
 
 	@EventHandler

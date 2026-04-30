@@ -37,7 +37,7 @@ import Eventials.mailbox.MailboxClient.MailListener;
 import Eventials.splitworlds.SplitWorlds;
 import net.evmodder.EvLib.bukkit.EvCommand;
 import net.evmodder.EvLib.bukkit.EvPlugin;
-import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.util.FileIO;
 import net.evmodder.EvLib.util.Pair;
 
 public class CommandMailbox extends EvCommand implements MailListener{

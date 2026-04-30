@@ -19,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.Eventials;
 import Eventials.economy.EvEconomy;
 import net.evmodder.EvLib.hooks.EssEcoHook;
-import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.util.FileIO;
 import net.evmodder.EvLib.TextUtils;
 import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
 import net.evmodder.EvLib.bukkit.TellrawUtils.HoverEvent;

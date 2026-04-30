@@ -14,7 +14,7 @@ import Eventials.economy.EvEconomy;
 import Eventials.voter.EvVoter;
 import _SpecificAndMisc.EventAndMisc;
 import net.evmodder.EvLib.bukkit.EvPlugin;
-import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.util.FileIO;
 
 /** Everything inside this class is very AltCraft-specific,
  *  and not really meant for (or useful for) public distribution.

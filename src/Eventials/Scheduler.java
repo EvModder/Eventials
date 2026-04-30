@@ -32,11 +32,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import Eventials.economy.EvEconomy;
 import Eventials.economy.commands.CommandAdvertise;
-import net.evmodder.EvLib.FileIO;
 import net.evmodder.EvLib.TextUtils;
 import net.evmodder.EvLib.bukkit.ButcherUtils;
 import net.evmodder.EvLib.bukkit.TellrawUtils;
 import net.evmodder.EvLib.bukkit.ButcherUtils.KillFlag;
+import net.evmodder.EvLib.bukkit.ConfigUtils;
 import net.evmodder.EvLib.bukkit.TellrawUtils.ClickEvent;
 import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
 import net.evmodder.EvLib.bukkit.TellrawUtils.HoverEvent;
@@ -72,7 +72,7 @@ public final class Scheduler{
 			autoMsgs[i] = TextUtils.translateAlternateColorCodes('&', autoMsgs[i].replaceAll("&r", msgC));
 		}
 		period = plugin.getConfig().getInt("clock-period", 60)*20;
-		cycleCount = FileIO.loadYaml("scheduler-data.txt", "current-cycle: 0").getInt("current-cycle");
+		cycleCount = ConfigUtils.loadYaml("scheduler-data.txt", "current-cycle: 0").getInt("current-cycle");
 
 		cAutomsg = plugin.getConfig().getInt("cycles-per-automessage", 3);
 		cButcher = plugin.getConfig().getInt("cycles-per-mob-clear", 5);

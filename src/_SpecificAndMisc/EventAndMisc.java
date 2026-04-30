@@ -16,7 +16,8 @@ import org.bukkit.plugin.Plugin;
 import Eventials.Eventials;
 import Eventials.listeners.PaperFix_EntityAddToWorldListener;
 import Eventials.listeners.PaperFix_EntityChangeBlockListener;
-import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.util.FileIO;
+import net.evmodder.EvLib.bukkit.ConfigUtils;
 import net.evmodder.EvLib.bukkit.TellrawUtils.TextHoverAction;
 import net.evmodder.EvLib.bukkit.TellrawUtils.Component;
 import net.evmodder.EvLib.bukkit.TellrawUtils.HoverEvent;
@@ -27,9 +28,9 @@ public class EventAndMisc{
 
 	void loadCustomConfig(String configName){
 		InputStream rssAC = getClass().getResourceAsStream("/"+configName);
-		YamlConfiguration hardConf = FileIO.loadConfig(pl, configName, rssAC, /*notifyIfNew=*/false);
+		YamlConfiguration hardConf = ConfigUtils.loadConfig(pl, configName, rssAC, /*notifyIfNew=*/false);
 		InputStream rssDefault = getClass().getResourceAsStream("/config.yml");
-		YamlConfiguration defaultConf = FileIO.loadConfig(pl, "config-Eventials.yml", rssDefault, /*notifyIfNew=*/true);
+		YamlConfiguration defaultConf = ConfigUtils.loadConfig(pl, "config-Eventials.yml", rssDefault, /*notifyIfNew=*/true);
 		if(pl.getConfig().toString().equals(defaultConf.toString())){
 			for(String key : pl.getConfig().getKeys(false)) pl.getConfig().set(key, null);
 			for(String key : hardConf.getKeys(false)) pl.getConfig().set(key, hardConf.get(key));

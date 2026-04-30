@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import Eventials.Eventials;
 import Eventials.bridge.EvBridgeClient;
 import Eventials.bridge.basics.Connection.ChannelReceiver;
-import net.evmodder.EvLib.FileIO;
+import net.evmodder.EvLib.util.FileIO;
 
 public class MailboxClient implements ChannelReceiver{
 	final long TEN_MIN_IN_MILLIS = 600000;
