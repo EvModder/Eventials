@@ -75,7 +75,7 @@ public final class SplitWorldUtils{
 	//Reflection
 	static final Class<?> classCraftPlayer = ReflectionUtils.getClass("{cb}.entity.CraftPlayer");
 	static final Class<?> classCraftWorld = ReflectionUtils.getClass("{cb}.CraftWorld");
-	static final Class<?> classWorldServer = ReflectionUtils.getClass("{nms}.WorldServer", "{nms}.level.WorldServer");
+	static final Class<?> classWorldServer = ReflectionUtils.getClass("{nms}.WorldServer", "{nms}.level.WorldServer", "{nm}.server.level.ServerLevel");
 	static final Class<?> classEntity = ReflectionUtils.getClass("{nms}.Entity", "{nm}.world.entity.Entity");
 	static Method methodGetPlayerHandle = ReflectionUtils.getMethod(classCraftPlayer, "getHandle");
 	static Method methodGetWorldHandle = ReflectionUtils.getMethod(classCraftWorld, "getHandle");

@@ -12,7 +12,7 @@ public class CompConverter{
 	private static Method toStrMethod, toCompMethod;
 
 	// 1.21.6+
-	// ComponentSerialization, IRegistryCustom, JsonOps
+	// ComponentSerialization, RegistryAccess, JsonOps
 	private static Object objCODEC, objIRegistryCustom, objJsonOps;
 
 	private static Method method_IRegistryCustom_createSerializationContext;
@@ -22,12 +22,12 @@ public class CompConverter{
 			if(ReflectionUtils.isAtLeastVersion("v1_21_6")){
 				Class<?> classJsonOps = ReflectionUtils.getClass("com.mojang.serialization.JsonOps");
 				Class<?> classDynamicOps = ReflectionUtils.getClass("com.mojang.serialization.DynamicOps");
-				Class<?> classRegistryOps = ReflectionUtils.getClass("net.minecraft.resources.RegistryOps");
+				Class<?> classRegistryOps = ReflectionUtils.getClass("{nm}.resources.RegistryOps");
 				Class<?> classDataResult = ReflectionUtils.getClass("com.mojang.serialization.DataResult");
 				Class<?> classCodec = ReflectionUtils.getClass("com.mojang.serialization.Codec");
-				Class<?> classComponentSerialization = ReflectionUtils.getClass("net.minecraft.network.chat.ComponentSerialization");
+				Class<?> classComponentSerialization = ReflectionUtils.getClass("{nm}.network.chat.ComponentSerialization");
 				Class<?> classCraftRegistry = ReflectionUtils.getClass("{cb}.CraftRegistry");
-				Class<?> classIRegistryCustom = ReflectionUtils.getClass("net.minecraft.core.IRegistryCustom");
+				Class<?> classIRegistryCustom = ReflectionUtils.getClass("{nm}.core.IRegistryCustom", "{nm}.core.RegistryAccess", "{nm}.core.HolderLookup$Provider");
 //				Class<?> clazzIChatBaseComponent = Class.forName("net.minecraft.network.chat.IChatBaseComponent");
 
 				objCODEC = ReflectionUtils.getStatic(ReflectionUtils.findField(classComponentSerialization, classCodec));
@@ -47,13 +47,13 @@ public class CompConverter{
 					final Object nmsServerObj = ReflectionUtils.call(method_CraftServer_getServer, Bukkit.getServer());
 					Class<?> classMinecraftServer = ReflectionUtils.getClass("{nm}.server.MinecraftServer");
 					Method method_MinecraftServer_getRegistryAccess = ReflectionUtils.findMethod(
-							classMinecraftServer, /*isStatic=*/false, ReflectionUtils.getClass("net.minecraft.core.IRegistryCustom$Dimension"));
+							classMinecraftServer, /*isStatic=*/false, ReflectionUtils.getClass("{nm}.core.IRegistryCustom$Dimension", "{nm}.core.RegistryAccess$Frozen"));
 					registryAccessObj = ReflectionUtils.call(method_MinecraftServer_getRegistryAccess, nmsServerObj);
 				}
-				final Class<?> iChatBaseComponentClass = ReflectionUtils.getClass("{nm}.network.chat.IChatBaseComponent");
+				final Class<?> iChatBaseComponentClass = ReflectionUtils.getClass("{nm}.network.chat.IChatBaseComponent", "{nm}.network.chat.Component");
 				final Class<?> chatSerializerClass = ReflectionUtils.getClass("{nm}.network.chat.IChatBaseComponent$ChatSerializer",
 						"{nm}.network.chat.ComponentSerialization");
-				final Class<?> classIChatMutableComponent = ReflectionUtils.getClass("{nm}.network.chat.IChatMutableComponent");
+				final Class<?> classIChatMutableComponent = ReflectionUtils.getClass("{nm}.network.chat.IChatMutableComponent", "{nm}.network.chat.MutableComponent");
 				final Class<?> holderLookupProviderClass = ReflectionUtils.getClass("{nm}.core.HolderLookup$Provider", "{nm}.core.HolderLookup$a");
 //				fromJsonMethod = chatSerializerClass.getMethod("fromJson", String.class, holderLookupProviderClass);
 				toCompMethod = ReflectionUtils.findMethod(chatSerializerClass, /*isStatic=*/true, classIChatMutableComponent, String.class, holderLookupProviderClass);
@@ -91,14 +91,14 @@ public class CompConverter{
 	public static final Object chatCompFromJsonStr(String jsonStr){
 		if(jsonStr == null) return null;
 		try{
-			if(toCompMethod != null) return (String)ReflectionUtils.callStatic(toStrMethod, jsonStr, registryAccessObj);
+			if(toCompMethod != null) return ReflectionUtils.callStatic(toCompMethod, jsonStr, registryAccessObj);
 
 			// 1.21.6+
 			Class<?> classJsonParser = ReflectionUtils.getClass("com.google.gson.JsonParser");
 			Method method_JsonParser_fromString = ReflectionUtils.findMethod(classJsonParser, /*isStatic=*/true, JsonElement.class, String.class);
 			JsonElement je = (JsonElement)ReflectionUtils.callStatic(method_JsonParser_fromString, jsonStr);
 			if(je == null) return null;
-	
+
 			Object objDynamicOps = ReflectionUtils.call(method_IRegistryCustom_createSerializationContext, objIRegistryCustom, objJsonOps);
 			Object objDataResult = ReflectionUtils.call(method_Decoder_parse, objCODEC, objDynamicOps, je);
 			Optional<?> objOptional = (Optional<?>)ReflectionUtils.call(method_DataResult_result, objDataResult);
